@@ -1,0 +1,88 @@
+<?php
+    use app\core\component\Component;
+    $component=new Component();
+
+?>
+<div class='upper-container'>
+    <!-- implement this -->
+    <?php echo $component->button('pending','','Pending Orders','button--class-0  width-10','pending');?>
+    <?php echo $component->button('processing','','Processing Orders','button--class-0  width-10','processing');?>
+    <?php echo $component->button('delivering','','Delivering Orders','button--class-0  width-10','delivering');?>
+</div>
+
+<div class='upper-container'>
+    <div class="search-bar-container">
+            <?php echo $component->searchbar($model,"name","search-bar--class1","Search by Patient ID, Cart ID, Order ID","searh");?>
+    </div>
+</div>
+   
+<div class="table-container">
+<table border="0">
+    <tr>
+        <th>Order ID</th><th>Date</th><th>Time</th><th>Status</th><th>Patient ID</th><th>Cart ID</th>
+    </tr>
+    <?php foreach($orders as $key=>$order): ?>
+    <tr class="table-row">
+        <td><?=$order['order_ID']?></td>
+        <td><?=$order['date']?></td> 
+        <td><?=$order['time']?></td> 
+        <td><?=$order['status']?></td> 
+        <td><?=$order['patient_ID']?></td> 
+        <td><?=$order['cart_ID']?></td> 
+        <td>
+            <div>
+                <!-- implement this -->
+                <?php
+                    if ( $order['status'] === 'Pending'){
+                        echo $component->button('', '', 'Process', 'button--class-2', $order['order_ID']);
+                    } else if ( $order['status'] === 'Processing' ) {
+                        echo $component->button('', '', 'Cancel Process', 'button--class-3', $order['order_ID']);
+                    } else if ( $order['status'] === 'Delivering' ) {
+                        echo $component->button('', '', 'Track Order', 'button--class-2', $order['order_ID']);
+                    }
+                     
+                ?>
+            </div>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+    </table>
+
+</div>
+
+
+<!-- ==================== -->
+<script>
+    // const btn=document.getElementById("processing");
+    // btn.addEventListener('click',function(){
+    //     location.href="handle-medicine";
+    // })
+
+    // elementsArray = document.querySelectorAll(".button--class-2");
+    // elementsArray.forEach(function(elem) {
+    //     elem.addEventListener("click", function() {
+    //         location.href='update-medicine?mod=update&id='+elem.id;
+    //     });
+    // });
+    // elementsArray = document.querySelectorAll(".button--class-3");
+    // elementsArray.forEach(function(elem) {
+    //     elem.addEventListener("click", function() {
+    //         location.href='handle-medicine?cmd=delete&id='+elem.id;
+    //     });
+    // });
+
+    const btn1=document.getElementById("pending");
+    btn1.addEventListener('click',function(){
+        location.href="pharmacy-orders-pending?mod=pending"; //get
+    })
+
+    const btn2=document.getElementById("processing");
+    btn2.addEventListener('click',function(){
+        location.href="pharmacy-orders-processing"; //get
+    })
+
+    const btn3=document.getElementById("delivering");
+    btn3.addEventListener('click',function(){
+        location.href="pharmacy-orders-delivering"; //get
+    })
+</script>
