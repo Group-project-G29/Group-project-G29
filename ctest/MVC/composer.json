@@ -1,0 +1,15 @@
+{
+    "name": "yasiru/mvc",
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "authors": [
+        {
+            "name": "YNimantha",
+            "email": "2020cs205@stu.ucsc.cmb.ac.lk"
+        }
+    ],
+    "require": {}
+}

@@ -1,0 +1,61 @@
+.field-container{
+    margin-top:10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.field-container table{
+    border-spacing: 1vh 2vh;
+}
+
+.search-bar-container{
+    gap:1vw;
+    margin-left:0vw;
+    display: flex;
+   margin-top: 1vh;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20vw;
+    
+    
+}
+.search-bar-btn{
+    padding-top: 0.7vh;
+    margin-left: 2vw;
+
+}
+.referral-popup-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:5vh;
+    padding-top:2vh ;
+    padding-inline: 1vw;
+    border-radius: 2px;
+   position:fixed;
+    top:30vh;
+    left:35vw;
+    width: 30vw;
+    height: 40vh;
+    z-index: 10;
+    background-color:white;
+}
+
+
+.upper-container{
+
+    margin-left: 10vw;
+    margin-top: 5vh;
+    width: 60vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.patient-detail{
+    background-color: white;
+    height: 10vh;
+    width:100%;
+    padding: 0.5vw;
+}
+
