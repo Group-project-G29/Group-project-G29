@@ -1,6 +1,8 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
+// var_dump($orders);
+// exit;
 
 ?>
 <div class='upper-container'>
@@ -12,8 +14,9 @@
 
 <div class='upper-container'>
     <div class="search-bar-container">
-            <?php echo $component->searchbar($model,"name","search-bar--class1","Search by Patient ID, Cart ID, Order ID","searh");?>
+        <?php echo $component->searchbar($model,"name","search-bar--class1","Search by order ID, patient 1D","searh");?>
     </div>
+    <?php echo $component->button('new-order','','Add New Order','button--class-0  width-10','new-order');?>
 </div>
    
 <div class="table-container">
@@ -24,20 +27,20 @@
     <?php foreach($orders as $key=>$order): ?>
     <tr class="table-row">
         <td><?=$order['order_ID']?></td>
-        <td><?=$order['date']?></td> 
-        <td><?=$order['time']?></td> 
-        <td><?=$order['status']?></td> 
+        <td><?=$order['time_of_creation']?></td> 
+        <td><?=$order['created_time']?></td> 
+        <td><?=$order['processing_status']?></td> 
         <td><?=$order['patient_ID']?></td> 
         <td><?=$order['cart_ID']?></td> 
         <td>
             <div>
                 <!-- implement this -->
                 <?php
-                    if ( $order['status'] === 'Pending'){
+                    if ( $order['processing_status'] === 'pending'){
                         echo $component->button('', '', 'Process', 'button--class-2', $order['order_ID']);
-                    } else if ( $order['status'] === 'Processing' ) {
+                    } else if ( $order['processing_status'] === 'processing' ) {
                         echo $component->button('', '', 'Cancel Process', 'button--class-3', $order['order_ID']);
-                    } else if ( $order['status'] === 'Delivering' ) {
+                    } else if ( $order['processing_status'] === 'packed' ) {
                         echo $component->button('', '', 'Track Order', 'button--class-2', $order['order_ID']);
                     }
                      
@@ -71,9 +74,16 @@
     //     });
     // });
 
+    elementsArray = document.querySelectorAll(".button--class-2");
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href='pharmacy-view-pending-order?id='+elem.id;
+        });
+    });
+
     const btn1=document.getElementById("pending");
     btn1.addEventListener('click',function(){
-        location.href="pharmacy-orders-pending?mod=pending"; //get
+        location.href="pharmacy-orders-pending"; //get
     })
 
     const btn2=document.getElementById("processing");
@@ -84,5 +94,10 @@
     const btn3=document.getElementById("delivering");
     btn3.addEventListener('click',function(){
         location.href="pharmacy-orders-delivering"; //get
+    })
+
+    const btn4=document.getElementById("new-order");
+    btn4.addEventListener('click',function(){
+        location.href="pharmacy-new-order"; //get
     })
 </script>

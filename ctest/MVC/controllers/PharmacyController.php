@@ -14,7 +14,125 @@ use app\models\Order;
 use app\models\PharmacyAdvertisement;
 
 class PharmacyController extends Controller{
-    
+ 
+//==============================Orders===========================================
+
+    //View Order
+    public function viewPendingOrder(){
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orderModel=new Order();
+        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'pending' order by time_of_creation asc");
+        // $orders=$orderModel->customFetchAll("Select * from medicine_in_order inner join medical_products on medicine_in_order.med_ID=medical_products.med_ID where medicine_in_order.order_ID = 1"); 
+        // $orders=$orderModel->customFetchAll("Select * from _order inner join medicine_in_order on _order.cart_ID=medicine_in_order.cart_ID inner join cart on medicine_in_order.cart_ID=cart.cart_ID inner join patient on cart.patient_ID=patient.patient_ID where processing_status = 'pending' order by _order.time_of_creation asc");
+        // $orders=$orderModel->customFetchAll("
+        //     SELECT * FROM medicine_in_order 
+        //     INNER JOIN _order ON medicine_in_order.order_ID=_order.order_ID
+        //     INNER JOIN cart ON _order.cart_ID  = cart.cart_ID
+        //     INNER JOIN patient ON cart.patient_ID = patient.patient_ID;
+        // ");
+        // var_dump($orders);
+        // exit;
+        return $this->render('pharmacy/pharmacy-orders-pending',[
+            'orders'=>$orders,
+            'model'=>$orderModel
+        ]);
+    }
+
+    public function DetailsPendingOrder(){
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orderModel=new Order();
+        $orders=$orderModel->customFetchAll("Select * from medical_products inner join medicine_in_order on medicine_in_order.med_ID=medical_products.med_ID where medicine_in_order.order_ID = 1"); 
+        return $this->render('pharmacy/pharmacy-view-pending-order',[
+            'orders'=>$orders,
+            'model'=>$orderModel
+        ]);
+    }
+
+    public function cancleProcessOrder(){
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orderModel=new Order();
+
+        //write the sql query to remove the process from table  
+
+        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by time_of_creation asc");
+        return $this->render('pharmacy/pharmacy-orders-processing',[
+            'orders'=>$orders,
+            'model'=>$orderModel
+        ]);
+    }
+
+    public function trackOrder(){
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        return $this->render('pharmacy/pharmacy-track-order',[
+        ]);
+    }
+
+    public function viewProcessingOrder(){
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orderModel=new Order();
+        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by time_of_creation asc");
+        return $this->render('pharmacy/pharmacy-orders-processing',[
+            'orders'=>$orders,
+            'model'=>$orderModel
+        ]);
+    }
+    public function viewDeliveringOrder(){
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orderModel=new Order();
+        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'packed' order by time_of_creation asc");
+        return $this->render('pharmacy/pharmacy-orders-delivering',[
+            'orders'=>$orders,
+            'model'=>$orderModel
+        ]);
+    }
+
+    public function createNewOrder(Request $request,Response $response){
+        // $parameters=$request->getParameters();
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orderModel=new Order();
+        // echo "dfasd";
+        // exit;
+
+        if($request->isPost()){
+        //     echo "jkhygadf";
+        // var_dump($request);
+
+        //     exit;
+            // update medicine
+            // $orderModel->loadData($request->getBody());
+            // $orderModel->loadFiles($_FILES);
+            // if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
+            //     if($orderModel->validate() && $orderModel->updateRecord(['med_ID'=>$parameters[1]['id']])){
+            //         $response->redirect('/ctest/view-medicine'); 
+            //         Application::$app->session->setFlash('success',"Medicine successfully updated ");
+            //         Application::$app->response->redirect('/ctest/pharmacy-view-medicine');
+            //         exit; 
+            //      };
+            // } 
+            
+            if($orderModel->validate() && $orderModel->addOrder()){
+               Application::$app->session->setFlash('success',"Order successfully added ");
+               Application::$app->response->redirect('pharmacy/pharmacy-orders-pending'); 
+               $this->setLayout("pharmacy",['select'=>'Orders']);
+            //    $orderModel=new Order();
+               $orders=$orderModel->customFetchAll("Select * from medical_products order by name asc");
+               return $this->render('pharmacy/pharmacy-orders-pending',[
+                   'orders'=>$orders,
+                   'model'=>$orderModel
+               ]);
+            }
+        }
+
+        // echo "here";
+        // exit;
+        return $this->render('pharmacy/pharmacy-new-order',[
+            'model'=>$orderModel
+        ]);
+    }
+
+
+//==============================Medicines===========================================    
+
     //delete update insert  medicine
     public function handleMedicine(Request $request,Response $response){
 
@@ -32,7 +150,7 @@ class PharmacyController extends Controller{
 
         //Go to update page of a medicine
         if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
-            $medicine=$medicineModel->customFetchAll("Select * from medicine where med_ID=".$parameters[1]['id']);
+            $medicine=$medicineModel->customFetchAll("Select * from medical_products where med_ID=".$parameters[1]['id']);
             $medicineModel->updateData($medicine,$medicineModel->fileDestination());
             Application::$app->session->set('medicine',$parameters[1]['id']);
             return $this->render('pharmacy/pharmacy-update-medicine',[
@@ -58,7 +176,7 @@ class PharmacyController extends Controller{
                Application::$app->response->redirect('/ctest/pharmacy-view-medicine'); 
                $this->setLayout("pharmacy",['select'=>'Medicines']);
                $medicineModel=new Medicine();
-               $medicines=$medicineModel->customFetchAll("Select * from medicine order by name asc");
+               $medicines=$medicineModel->customFetchAll("Select * from medical_products order by name asc");
                return $this->render('pharmacy/pharmacy-view-medicine',[
                    'medicines'=>$medicines,
                    'model'=>$medicineModel
@@ -75,7 +193,7 @@ class PharmacyController extends Controller{
     public function viewMedicine(){
         $this->setLayout("pharmacy",['select'=>'Medicines']);
         $medicineModel=new Medicine();
-        $medicines=$medicineModel->customFetchAll("Select * from medicine order by name asc");
+        $medicines=$medicineModel->customFetchAll("Select * from medical_products order by name asc");
         return $this->render('pharmacy/pharmacy-view-medicine',[
             'medicines'=>$medicines,
             'model'=>$medicineModel
@@ -83,6 +201,8 @@ class PharmacyController extends Controller{
 
     }
 
+
+//==============================Advertisements===========================================
 
     //delete update insert advertisement
     public function handleAdvertisement(Request $request,Response $response){
@@ -156,34 +276,8 @@ class PharmacyController extends Controller{
         ]);
     }
 
-    //View Order
-    public function viewPendingOrder(){
-        $this->setLayout("pharmacy",['select'=>'Orders']);
-        $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where status = 'pending' order by date asc");
-        return $this->render('pharmacy/pharmacy-orders-pending',[
-            'orders'=>$orders,
-            'model'=>$orderModel
-        ]);
-    }
-    public function viewProcessingOrder(){
-        $this->setLayout("pharmacy",['select'=>'Orders']);
-        $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where status = 'processing' order by date asc");
-        return $this->render('pharmacy/pharmacy-orders-processing',[
-            'orders'=>$orders,
-            'model'=>$orderModel
-        ]);
-    }
-    public function viewDeliveringOrder(){
-        $this->setLayout("pharmacy",['select'=>'Orders']);
-        $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where status = 'delivering' order by date asc");
-        return $this->render('pharmacy/pharmacy-orders-delivering',[
-            'orders'=>$orders,
-            'model'=>$orderModel
-        ]);
-    }
+
+//==============================Reports===========================================    
 
     //View Reports
     public function viewReports(){
@@ -195,6 +289,9 @@ class PharmacyController extends Controller{
             // 'user' => $user[0]
         ]);
     }
+
+
+//==============================My Details===========================================    
 
     //View My Details
     public function viewPersonalDetails(){
@@ -215,6 +312,17 @@ class PharmacyController extends Controller{
         // echo 'afdsaf';
         // exit;
 
+        if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
+            // echo "afkjsahdfkjsahfkjsahbdkj";
+            $employee=$employeeModel->customFetchAll("Select * from employee where emp_ID=".$parameters[1]['id']);
+            $employeeModel->updateData($employee,$employeeModel->fileDestination());
+            Application::$app->session->set('employee',$parameters[1]['id']);
+            return $this->render('pharmacy/pharmacy-update-personal-details',[
+                'model'=>$employeeModel,
+                'user' => $employee[0]
+            ]);
+        }
+
         if($request->isPost()){
             // update personal details
             $employeeModel->loadData($request->getBody());
@@ -222,10 +330,10 @@ class PharmacyController extends Controller{
             // var_dump($employeeModel);
             // exit;
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
-                // var_dump($parameters);
-                // exit;
+                var_dump($parameters);
+                exit;
                 if($employeeModel->updateRecord(['emp_ID'=>$parameters[1]['id']])){
-                    echo 'def';
+                    // echo 'def';
                     // exit;
                     $response->redirect('/ctest/pharmacy-view-personal-details'); 
                     Application::$app->session->setFlash('success',"Account successfully updated ");
@@ -249,17 +357,7 @@ class PharmacyController extends Controller{
             // }
         }
 
-        if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
-            echo "afkjsahdfkjsahfkjsahbdkj";
-            $employee=$employeeModel->customFetchAll("Select * from employee where emp_ID=".$parameters[1]['id']);
-            $employeeModel->updateData($employee,$employeeModel->fileDestination());
-            Application::$app->session->set('employee',$parameters[1]['id']);
-            return $this->render('pharmacy/pharmacy-update-personal-details',[
-                'model'=>$employeeModel,
-                'user' => $employee[0]
-            ]);
-        }
-        echo "finish";
+        // echo "finish";
         // exit;
         return $this->render('pharmacy/pharmacy-view-personal-details',[
             'model'=>$employeeModel,
