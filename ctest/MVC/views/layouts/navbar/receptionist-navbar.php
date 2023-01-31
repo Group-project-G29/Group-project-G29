@@ -33,7 +33,7 @@
                         <ul>
                             <div class="nav-box-item">
                                 <li>
-                                    <a href="/ctest/patient-all-appointment">Dashboard</a>
+                                    <a href="/ctest/receptionist-today-channelings">Dashboard</a>
                                 </li>
                             </div>
                             <div class="nav-box-item">

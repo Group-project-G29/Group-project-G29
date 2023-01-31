@@ -20,7 +20,7 @@ $form=Form::begin('','post');?>
     <?php echo $form->field($model,'contact','Contact*','field','text') ?>
     <?php echo $form->field($model,'email','Email*','field','text') ?>
     <?php echo $form->field($model,'address','Address','field ','text') ?>
-    <?php echo $form->select($model,'role','field',['select','doctor','nurse','pharmacist','receptionist'],'picker')?>
+    <?php echo $form->select($model,'role','field',['select','doctor','nurse','pharmacist','receptionist','lab Assistant'],'picker')?>
     <?php echo $form->select($model,'speciality','hide',['select','Cardiologist','Gastrologist','Radiologist'],'speciality');?>
     <?php echo $form->field($model,'description','Description','hide','text','description');?>
     <?php echo $form->field($model,'img','Profile Picture','field','file') ?>

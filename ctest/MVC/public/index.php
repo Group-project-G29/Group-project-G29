@@ -66,14 +66,23 @@ $app->router->get('/ctest/receptionist-view-personal-details',[ReceptionistContr
 $app->router->post('/ctest/receptionist-view-personal-details',[ReceptionistController::class,'viewPersonalDetails']);
 
 $app->router->get('/ctest/receptionist-all-channelings',[ReceptionistController::class,'allChannelings']);
-$app->router->get('/ctest/receptionist-all-channeling-more',[ReceptionistController::class,'channelingMore']);
+$app->router->get('/ctest/receptionist-channeling-more',[ReceptionistController::class,'channelingMore']);
 
-$app->router->get('/ctest/receptionist-all-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);
-$app->router->post('/ctest/receptionist-all-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);
-$app->router->get('/ctest/receptionist-all-channeling-session-patient-detail',[ReceptionistController::class,'patientDetail']);
+$app->router->get('/ctest/receptionist-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);
+$app->router->post('/ctest/receptionist-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);
+$app->router->get('/ctest/receptionist-channeling-session-patient-detail',[ReceptionistController::class,'patientDetail']);
+$app->router->post('/ctest/receptionist-channeling-session-patient-detail',[ReceptionistController::class,'patientDetail']);
+$app->router->get('/ctest/receptionist-channeling-session-patient-detail-more',[ReceptionistController::class,'patientMoreDetail']);
+$app->router->post('/ctest/receptionist-channeling-session-patient-detail-more',[ReceptionistController::class,'patientMoreDetail']);
+$app->router->get('/ctest/receptionist-channeling-set-appointment',[ReceptionistController::class,'setAppointment']);
+$app->router->get('/ctest/receptionist-channeling-payment',[ReceptionistController::class,'handlePayment']);
+
+
+// $app->router->get('/ctest/receptionist-all-channeling-session-patient-detail-more',[ReceptionistController::class,'patientMoreDetail']);
+
 
 $app->router->get('/ctest/receptionist-today-channelings',[ReceptionistController::class,'todayChannelings']);
-
+// $app->router->get('/ctest/receptionist-today-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);
 
 
 

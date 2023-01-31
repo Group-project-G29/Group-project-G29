@@ -49,7 +49,7 @@ $component = new Component();
   elementsArray = document.querySelectorAll(".table-row");
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {
-    //   location.href = 'receptionist-all-channeling-more?spec=channeling&id='+elem.id;  //pass the variable value
+      location.href = 'receptionist-channeling-more?id='+elem.id;  //pass the variable value
     });
   });
 
