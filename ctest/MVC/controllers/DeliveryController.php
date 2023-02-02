@@ -22,23 +22,21 @@ class DeliveryController extends Controller{
         $this->setLayout("delivery-rider",['select'=>'My Deliveries']);
         $deliveryModel=new Delivery();
         // $delivery=$deliveryModel->customFetchAll("SELECT * FROM delivery WHERE delivered_flag = 'N' AND delivery_rider = ".'"'.Application::$app->session->get('userObject')->emp_ID.'"');
-        $delivery=$deliveryModel->customFetchAll("SELECT * FROM delivery WHERE completed_time = 'NULL' AND delivery_rider = ".'"'.Application::$app->session->get('userObject')->emp_ID.'"');
-        var_dump($delivery);
-        exit;
+        $delivery=$deliveryModel->customFetchAll("SELECT * FROM delivery WHERE completed_time IS NULL AND delivery_rider = ".'"'.Application::$app->session->get('userObject')->emp_ID.'"');
+        // var_dump($delivery);
+        // exit;
         return $this->render('delivery/delivery-my-deliveries' ,[
             'deliveries'=>$delivery,
             'model'=>$deliveryModel
         ]);
     }
 
-    //view my deliveries
+    //view delivery details
     public function viewDeliveryDetails(Request $request,Response $response){
         $parameters=$request->getParameters();
-        // var_dump($parameters);
-        // exit;
         $this->setLayout("delivery-rider",['select'=>'My Deliveries']);
         $deliveryModel=new Delivery();
-        $delivery=$deliveryModel->customFetchAll("SELECT * FROM delivery WHERE delivery_ID = 100"); //pass id
+        $delivery=$deliveryModel->customFetchAll("SELECT * FROM delivery WHERE delivery_ID = ".$parameters[0]['id']); //pass id
         return $this->render('delivery/delivery-view-delivery' ,[
             'delivery'=>$delivery[0],
             'model'=>$deliveryModel
@@ -49,23 +47,21 @@ class DeliveryController extends Controller{
     public function viewAllDeliveries(){
         $this->setLayout("delivery-rider",['select'=>'All Deliveries']);
         $deliveryModel=new Delivery();
-        $delivery=$deliveryModel->customFetchAll("SELECT * FROM delivery WHERE completed_time != 'NULL' AND delivery_rider = ".'"'.Application::$app->session->get('userObject')->emp_ID.'"');
+        $delivery=$deliveryModel->customFetchAll("SELECT * FROM delivery WHERE completed_time IS NOT NULL AND delivery_rider = ".'"'.Application::$app->session->get('userObject')->emp_ID.'"');
         return $this->render('delivery/delivery-all-deliveries' ,[
             'deliveries'=>$delivery,
             'model'=>$deliveryModel
         ]);
-        // $advertisementModel=new PharmacyAdvertisement();
-        // $advertisements=$advertisementModel->customFetchAll("Select * from advertisement order by title asc");
-        // return $this->render('delivery/delivery-all-deliveries');
-        // ,[
-        //     'advertisements'=>$advertisements,
-        //     'model'=>$advertisementModel
-        // ]);
     }
 
+    //complete delivery using the PIN
     public function completeDelivery(){
+        $deliveryModel=new Delivery();
         $this->setLayout("delivery-rider",['select'=>'My Deliveries']);
-        return $this->render('delivery/delivery-complete',[
+        $delivery=$deliveryModel->customFetchAll("SELECT * FROM delivery WHERE completed_time IS NOT NULL AND delivery_rider = ".'"'.Application::$app->session->get('userObject')->emp_ID.'"');
+        return $this->render('delivery/delivery-all-deliveries' ,[
+            'deliveries'=>$delivery,
+            'model'=>$deliveryModel
         ]);
     }
 

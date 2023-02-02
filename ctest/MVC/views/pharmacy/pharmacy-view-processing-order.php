@@ -4,7 +4,7 @@
     $total = 0;
     // var_dump($orders);
     // var_dump($order_ID);
-        // exit;
+    //     exit;
 
 ?>
    
@@ -28,10 +28,15 @@
 </div>
     <h1>Total Price : <?=$total?></h1>
 
+<div class='upper-container'>
+    <?php echo $component->button('cancle-process','','Cancle Process','button--class-0  width-10','cancle-process');?>
+</div>
+
+
 <!-- ==================== -->
 <script>
-    const btn=document.getElementById(".table-row");
+    const btn=document.getElementById("cancle-process");
     btn.addEventListener('click',function(){
-        location.href="/ctest/pharmacy-track-order?id="+<?=$order_ID?>; //get
+        location.href="/ctest/pharmacy-take-pending-order?id="+<?=$order_ID?>; //get
     })
 </script>

@@ -54,7 +54,7 @@ class Medicine extends DbModel{
         return 'medicine_ID';
     }
     public function tableRecords(): array{
-        return ['medicine'=> ['name','brand','strength','availability','category','unit','unit_price','amount','img']];
+        return ['medical_products'=> ['name','brand','strength','availability','category','unit','unit_price','amount','img']];
     }
 
     public function attributes(): array

@@ -30,52 +30,41 @@
         <td><?=$order['processing_status']?></td> 
         <td><?=$order['patient_ID']?></td> 
         <td><?=$order['cart_ID']?></td> 
-        <td>
-            <div>
-                <!-- implement this -->
-                <?php
-                    if ( $order['processing_status'] === 'pending'){
-                        echo $component->button('', '', 'Process', 'button--class-2', $order['order_ID']);
-                    } else if ( $order['processing_status'] === 'processing' ) {
-                        echo $component->button('', '', 'Cancel Process', 'button--class-3', $order['order_ID']);
-                    } else if ( $order['processing_status'] === 'packed' ) {
-                        echo $component->button('', '', 'Track Order', 'button--class-2', $order['order_ID']);
-                    }
-                     
-                ?>
-            </div>
-        </td>
     </tr>
     <?php endforeach; ?>
     </table>
+
+    <div>
+        <!-- remove this -->
+        <?php
+            if ( $order['processing_status'] === 'pending'){
+                echo $component->button('', '', 'Process', 'button--class-2', $order['order_ID']);
+            } else if ( $order['processing_status'] === 'processing' ) {
+                echo $component->button('', '', 'Cancel Process', 'button--class-3', $order['order_ID']);
+            } else if ( $order['processing_status'] === 'packed' ) {
+                echo $component->button('', '', 'Track Order', 'button--class-2', $order['order_ID']);
+            }
+                
+        ?>
+    </div>
 
 </div>
 
 
 <!-- ==================== -->
 <script>
-    // const btn=document.getElementById("processing");
-    // btn.addEventListener('click',function(){
-    //     location.href="handle-medicine";
-    // })
 
-    // elementsArray = document.querySelectorAll(".button--class-2");
-    // elementsArray.forEach(function(elem) {
-    //     elem.addEventListener("click", function() {
-    //         location.href='update-medicine?mod=update&id='+elem.id;
-    //     });
-    // });
-    // elementsArray = document.querySelectorAll(".button--class-3");
-    // elementsArray.forEach(function(elem) {
-    //     elem.addEventListener("click", function() {
-    //         location.href='handle-medicine?cmd=delete&id='+elem.id;
-    //     });
-    // });
-
-    elementsArray = document.querySelectorAll(".button--class-3");
+    elementsArray = document.querySelectorAll(".table-row");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='pharmacy-cancle-order-process?id='+elem.id;
+            location.href='pharmacy-view-processing-order?id='+<?=$order['order_ID']?>;
+        });
+    });
+
+    elementsArray1 = document.querySelectorAll(".button--class-3");
+    elementsArray1.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href='pharmacy-cancle-order-process?id='+<?=$order['order_ID']?>;
         });
     });
 

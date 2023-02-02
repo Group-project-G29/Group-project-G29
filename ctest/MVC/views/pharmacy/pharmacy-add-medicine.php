@@ -29,7 +29,7 @@ $form=Form::begin('','post');?>
     <?php echo $form->spanfield($model,'amount','Amount','field ','text') ?>
     <?php echo $form->spanfield($model,'img','Medicine Picture','field','file') ?>
     </table>
-    <div><?php echo $component->button("add-medicine","submit","Add Medicine","button--class-0","update-medicine")?></div>
+    <div><?php echo $component->button("add-medicine","submit","Add Medicine","button--class-0","add-medicine")?></div>
     
     </div>
    

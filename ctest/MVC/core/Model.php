@@ -59,7 +59,7 @@ abstract class Model{
 
     public array $errors=[];
     public  function validate(){
-        echo "validate";
+        // echo "validate";
         foreach($this->rules() as $attribute=>$rules){
             $value=$this->{$attribute};
             foreach($rules as $rule){

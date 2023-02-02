@@ -75,7 +75,7 @@
 
         }
         public function updateRecord($where){
-        echo "updaterecord";
+        // echo "updaterecord";
             // var_dump($files);
             // $tablename=static::tableName();
              $where_attributes=array_keys($where);
