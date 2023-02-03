@@ -1,0 +1,101 @@
+/* channeling start page */
+.column-flex{
+    display: flex;
+    align-items: center;
+    gap:5vh;
+    flex-direction: column;
+}
+
+.main-detail-title{
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    gap:0.5vh;
+}
+.number-item--white{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:5vw;
+    height:7vh;
+    background-color:var(--clr-white);
+    color:var(--clr-dark);
+}
+.number-item--blue{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:5vw;
+    height:7vh;
+    background-color:var(--clr-dark);
+    color:var(--clr-white);
+}
+.number-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.number-pad{
+
+    display: flex;
+    justify-content: center;
+    gap:0vw;
+
+}
+
+.scheduled-info{
+    display: flex;
+    justify-content: right;
+    flex-direction: column;
+}
+
+.nurse-container{
+    display: flex;
+    align-items: center;
+    gap:1vw;
+    background-color: var(--clr-white);
+    width: 40vw;
+    height: 17vh;
+    padding-left:1.5vw ;
+    border-radius: 10%;;
+    overflow: scroll;
+}
+
+.nurse-item{
+    display: flex;
+    align-items: center;
+    gap:0.5vw;
+    
+
+}
+
+.nurse-item img{
+    width:5vw;
+    height: 10vh;
+    border-radius: 100%;
+}
+
+.start_button{
+    font-size:1.1em;
+    width:10vw;
+}
+
+/* channeling session  */
+.channeling-patient{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+.patient-navigator{
+    display: flex;
+    align-items: center;   
+    gap:1.5vw;
+
+}
+
+.patient-navigator img{
+    width: 2vw;
+    height: 4vh;
+}
