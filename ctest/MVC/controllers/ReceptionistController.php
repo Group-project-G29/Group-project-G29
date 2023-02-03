@@ -8,6 +8,7 @@ use app\core\Request;
 use app\core\Response;
 use app\models\Appointment;
 use app\models\Channeling;
+use app\models\Employee;
 use app\models\Patient;
 use app\models\Referral;
 use app\models\OpenedChanneling;
@@ -171,7 +172,15 @@ use app\models\OpenedChanneling;
         }
 
 
-
+        public function viewPersonalDetails(){
+            $this->setLayout("receptionist",['select'=>'My Detail']);
+            $userModel = new Employee();
+            // $user = $userModel->findOne(106);
+            $user = $userModel->customFetchAll("SELECT * FROM employee WHERE email=".'"'.Application::$app->session->get('user').'"');
+            return $this->render('receptionist/receptionist-view-personal-details',[
+                'user' => $user[0]
+            ]);
+        }
 
 
 

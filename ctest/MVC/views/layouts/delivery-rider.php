@@ -3,18 +3,12 @@
 use app\core\Application;
 use app\core\component\Sidebar;
 use app\models\Employee;
-include "../views/layouts/navbar/receptionist-navbar.php";
-
+include "../views/layouts/navbar/delivery-rider-navbar.php";
 ?>
-<div class="bg">
 
-</div>
+</nav>
     <div class="main-container">
-<<<<<<< HEAD
-         <?php $sidebar=new Sidebar(['Today Channelings'=>'#','All Channelings'=>'#','Patients'=>'/ctest/receptionist-handle-patient?mod=view','My Detail'=>'#'],$select);?>
-=======
-         <?php $sidebar=new Sidebar(['Today Channelings'=>'#','All Channelings'=>'#','Patients'=>'/ctest/receptionist-handle-patient?mod=view','My Detail'=>'/ctest/receptionist-view-personal-details'],$select);?>
->>>>>>> 20000804
+         <?php $sidebar=new Sidebar(['My Deliveries'=>'/ctest/delivery-my-deliveries','All Deliveries'=>'/ctest/delivery-all-deliveries','My Detail'=>'/ctest/delivery-view-personal-details'],$select);?>
          <?php echo $sidebar;  ?>
         
         
@@ -26,8 +20,6 @@ include "../views/layouts/navbar/receptionist-navbar.php";
                  </div>
                 <?php endif;?>
             </div>
-
-
             {{content}}
         </div>
     </div>

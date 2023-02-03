@@ -686,3 +686,7 @@ select{
     z-index: 9;
 }
 
+.detail-container {
+    width: 100px;
+    align-items: center;
+}

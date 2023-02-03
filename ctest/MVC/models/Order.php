@@ -13,6 +13,9 @@ use app\core\DbModel;
         public function __construct(){
 
         }
+        public function addOrder(){
+            return parent::save();
+        }
         public function rules(): array
         {
             return []; 

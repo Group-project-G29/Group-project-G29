@@ -17,6 +17,5 @@ class Controller{
     public function setLayout($layout,$params=[]){
         $this->layout=$layout;
         $this->layoutParams=$params;
-
     }
 }

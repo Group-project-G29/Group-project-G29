@@ -16,12 +16,21 @@ $form=Form::begin('','post');?>
     <?php echo $form->field($model,'name','Name*','field','text') ?>
     <?php echo $form->field($model,'nic','NIC*','field','text') ?>
     <?php echo $form->field($model,'age','Age*','field','text') ?>
+<<<<<<< HEAD
     <?php echo $form->select($model,'gender','Gender*','field',['select','male','female'],'gender')?>
     <?php echo $form->field($model,'contact','Contact*','field','text') ?>
     <?php echo $form->field($model,'email','Email*','field','text') ?>
     <?php echo $form->field($model,'address','Address','field ','text') ?>
     <?php echo $form->select($model,'role','Role','field',['select','doctor','nurse','pharmacist','receptionist'],'picker')?>
     <?php echo $form->select($model,'speciality','Speciality','hide',['select','Cardiologist','Gastrologist','Radiologist'],'speciality');?>
+=======
+    <?php echo $form->select($model,'gender','field',['select','male','female'],'gender')?>
+    <?php echo $form->field($model,'contact','Contact*','field','text') ?>
+    <?php echo $form->field($model,'email','Email*','field','text') ?>
+    <?php echo $form->field($model,'address','Address','field ','text') ?>
+    <?php echo $form->select($model,'role','field',['select','doctor','nurse','pharmacist','receptionist','delivery'],'picker')?>
+    <?php echo $form->select($model,'speciality','hide',['select','Cardiologist','Gastrologist','Radiologist'],'speciality');?>
+>>>>>>> 20000804
     <?php echo $form->field($model,'description','Description','hide','text','description');?>
     <?php echo $form->field($model,'img','Profile Picture','field','file') ?>
     <?php echo $form->field($model,'password','Password*','field','password') ?>

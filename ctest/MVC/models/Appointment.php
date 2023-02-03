@@ -33,7 +33,6 @@ class Appointment extends DbModel{
 
         ];
     }
-
     public function setAppointment($ap){
         $this->opened_channeling_ID=$ap[0];
         $this->patient_ID=$ap[1];

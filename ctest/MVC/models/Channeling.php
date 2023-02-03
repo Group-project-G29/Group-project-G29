@@ -57,17 +57,14 @@ class Channeling extends DbModel{
             return [false];
         }
     }
-
     public function fileDestination(): array
     {
         return [];
     }
-
     public function tableName(): string
     {
         return 'channeling';
     }
-
     public function primaryKey(): string
     {
         return 'channeling_ID';
