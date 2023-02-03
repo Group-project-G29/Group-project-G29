@@ -14,3 +14,11 @@ function set_location(elementsArray,url){
     });
 }
 
+function hide(element,hideClass='hide',visibleClass='field'){
+    element.classList.remove(visibleClass);
+    element.classList.add(hideClass);
+}
+function visible(element,hideClass='hide',visibleClass='field'){
+    element.classList.remove(hideClass);
+    element.classList.add(visibleClass);
+}

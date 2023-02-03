@@ -10,7 +10,7 @@ use app\core\form\Form;
 
     </div>
     <div>
-        <?= $form->select($model,'reports','','',['Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report'],'select-main') ?>
+        <?= $form->select($model,'reports','','',['SOAP Report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report'],'select-main') ?>
     </div>
     <div>
         <?= $form->textarea($model,'medication','medication','Passed Medication',10,130,'');?>
@@ -30,6 +30,7 @@ use app\core\form\Form;
 <script src="./media/js/main.js"></script>
 <script>
     const mainSelect=e('select-main','id');
+    mainSelect.value="medical-history-report";
     mainSelect.addEventListener('change',()=>{
 
         location.href="/ctest/doctor-report?spec="+mainSelect.value;

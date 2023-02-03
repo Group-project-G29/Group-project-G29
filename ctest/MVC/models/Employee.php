@@ -79,7 +79,9 @@ class Employee extends DbModel{
         if($role==''){
             return $this->customFetchAll("SELECT * FROM employee where role<>'admin' order by role ");
         }
-        return $this->customFetchAll("SELECT * FROM employee left join doctor on doctor.nic=employee.nic where employee.role='$role'" );
+        if($role=='doctor'){
+            return $this->customFetchAll("SELECT * FROM employee left join doctor on doctor.nic=employee.nic where employee.role='$role' order by speciality" );
+        }
 
     }
     public function getChannelings($doctor):array{

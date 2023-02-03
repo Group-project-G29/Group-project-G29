@@ -36,23 +36,23 @@ class AdminController extends Controller{
         foreach($Doctors as $row){
             $Doctor[$row['name']]=$row['nic'];
         }
-       
-
+        
+        
         //handle post request from channeling scheduling form
         if($request->isPost()){
             //load all data in $_POST into the model
             $ChannelingModel->loadData($request->getBody());
             //find if the new channeling session get overlapped with channeling session already scheduled
-            $result=$ChannelingModel->checkOverlap();
+            //$result=$ChannelingModel->checkOverlap();
             //if overlapp occurs set error
-            if($result[0]){ 
-                $ChannelingModel->customAddError('time',"Time overlap with ".$result[1]." channeling session"."<a href='#'>See Channeling Timetable</a>");
-            }
-
+            // if(isSet($result[0])){ 
+            //     $ChannelingModel->customAddError('time',"Time overlap with ".$result[1]." channeling session"."<a href='#'>See Channeling Timetable</a>");
+            // }
+            
+            
             if($ChannelingModel->validate() ){
                 //save data in database
                 $return_id=$ChannelingModel->savedata();
-                
                 if($return_id){
                     $success=true; //success variable is used to identify if a channeling session is successfully created
                     $nurseAllocationModel->loadData($request->getBody());

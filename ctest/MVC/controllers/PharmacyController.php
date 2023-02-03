@@ -24,7 +24,7 @@ class PharmacyController extends Controller{
         }
         //Go to update page of a medicine
         if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
-            $medicine=$medicineModel->customFetchAll("Select * from medicine where med_ID=".$parameters[1]['id']);
+            $medicine=$medicineModel->customFetchAll("Select * from medical_products where med_ID=".$parameters[1]['id']);
             $medicineModel->updateData($medicine,$medicineModel->fileDestination());
             Application::$app->session->set('medicine',$parameters[1]['id']);
             return $this->render('pharmacy/pharmacy-update-medicine',[
@@ -55,7 +55,7 @@ class PharmacyController extends Controller{
                Application::$app->response->redirect('/ctest/pharmacist'); 
                $this->setLayout("pharmacy",['select'=>'Medicines']);
                $medicineModel=new Medicine();
-               $medicines=$medicineModel->customFetchAll("Select * from medicine order by name asc");
+               $medicines=$medicineModel->customFetchAll("Select * from medical_products order by name asc");
                return $this->render('pharmacy/pharmacy-view-medicine',[
                    'medicines'=>$medicines,
                    'model'=>$medicineModel
