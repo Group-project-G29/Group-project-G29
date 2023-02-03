@@ -3,9 +3,12 @@
 
 use app\core\component\Component;
 use app\core\Application;
+use app\models\Appointment;
+
     $component=new Component();
     use app\models\OpenedChanneling;
         $openedChanneling=new OpenedChanneling();
+        $appointmentModel=new Appointment();
        
    
        
@@ -32,25 +35,34 @@ use app\core\Application;
                         <h3>Fee :LKR <?=$value['fee']?></h3>
                     </div>
                     <?php if($openedChanneling->isPatientIn(Application::$app->session->get('user'),$value['opened_channeling_ID'])):?>
-                    <?php echo "Already have an appointment" ?>
-                    <?php else: ?>
-                        <?= $component->button('add-appointment','','+ Add Appointment','button--class-1',$value['opened_channeling_ID']);?>
+                        <?php echo "Already have an appointment" ?>
+                        <?php else: ?>
+                            <?php if($appointmentModel->labReportEligibility(Application::$app->session->get('user'),$value['nic'],$value['opened_channeling_ID'])):?>
+                                <?= $component->button('add-appointment','','+ Add Medical Report Consultation','button--class-5',$value['opened_channeling_ID']);?>
+                            <?php endif; ?>
+                        <?= $component->button('add-appointment','','+ Add Consultation Appointment','button--class-1',$value['opened_channeling_ID']);?>
                     <?php endif; ?>
                 </div>
             </div>
-            
         <?php endforeach; ?>
   
 </div>
 
 <script>
 
-        let elementsArray = document.querySelectorAll(".button--class-1");
+        let elementsArrayOne = document.querySelectorAll(".button--class-1");
   
-        elementsArray.forEach(function(elem) {
+        elementsArrayOne.forEach(function(elem) {
             elem.addEventListener("click", function() {
-                location.href='patient-appointment?cmd=add&id='+elem.id;
-               ;
+                location.href='patient-appointment?cmd=add&id='+elem.id+'&type=consultation';
+               
+            });
+        });
+        let elementsArrayTwo=document.querySelectorAll('.button--class-5')
+        elementsArrayTwo.forEach(function(elem) {
+            elem.addEventListener("click", function() {
+                location.href='patient-appointment?cmd=add&id='+elem.id+'&type=labtest';
+               
             });
         });
      

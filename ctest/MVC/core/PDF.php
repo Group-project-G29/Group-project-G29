@@ -4,8 +4,9 @@
     //view pdf file when location is given
     class PDF{
         public function viewPDF($location){
-            header('Content-type:application/pdf');
-            header('Content-Description:inline;filename="'.$location.'"');
+            Application::$app->response->redirect($location);
+            // header('Content-type:application/pdf');
+            // header('Content-Description:inline;filename="'.$location.'"');
         }
     }
 

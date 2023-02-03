@@ -1,5 +1,7 @@
 <?php
 namespace app\models;
+
+use app\core\Application;
 use app\core\DbModel;
 
     class Cart extends DbModel{
@@ -64,7 +66,45 @@ use app\core\DbModel;
 
         }
         public function createCart($patientID){
-            $this->customFetchAll("insert into cart (patient_ID) values('$patientID')");
+            return $this->customFetchAll("insert into cart (patient_ID) values('$patientID')");
+            return $this->saveByName(['patient_ID'=>'134'],'patient');
+        }
+        public function getCartItem($cartID){
+            return $this->fetchAssocAllByName(['cart_ID'=>$cartID],'medicine_in_cart');
+        }
+        //transfer item in cart to order and remove item in the cart
+        //if order is a pickup $pickup_status should be true
+        public function transferCartItem($cartID,$pickup_status,$deliveryModel=new Delivery()){
+            //create order
+            $orderModel=new Order();
+            $medicineModel=new Medicine();
+            $orderModel->pickup_status=$pickup_status;
+            $orderModel->patient_ID=Application::$app->session->get('user');
+            $orderModel->cart_ID=$cartID;
+            if($pickup_status=='pickup'){
+                $orderModel->delivery_ID=null;      
+            }
+            else{
+                //create an delivery 
+                $delivery_id=$deliveryModel->save();
+                $orderModel->delivery_ID=$delivery_id[0]['last_insert_id()'];
+            }
+            $orderID=$orderModel->save()[0]['last_insert_id()'];
+            //get all item in cart
+            //['0=>["cart_ID"=>"121"...]']
+            $cartItems=$this->getCartItem($cartID);
+            // ---------------create a function to check whether cart has old items 
+            //transfer item in to order
+            foreach($cartItems as $item ){
+                if(!$medicineModel->checkStock($item['med_ID'])) continue;
+                $orderModel->addItem($orderID,$item['med_ID'],$item['amount']);
+                //reduce medicine
+                $medicineModel->reduceMedicine($item['mde_ID'],$item['amount'],true);
+            }
+            //check whether there is prescription in the cart
+            //transfer prescription
+            //delete all item in cart
+            $this->deleteRecordByName(['cart_ID'=>$cartID],'medicine_in_cart');
         }
         
     }

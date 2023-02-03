@@ -27,23 +27,26 @@
         
     </div>
     
-    <section class="homepage-main-container">
+    <section class="pharmacy-main-container">
+        
         <div>
-        <?php echo $component->searchbar('',"name","search-bar--class1","Search by medicine name","search");?>
-        <script>
-            const searchbar=e('search');
-            const btn=e('bsearch');
-            btn.addEventListener("click",()=>{
-                location.href="patient-pharmacy?cmd=search&value="+searchbar.value+"&page=1";
-            });
-        </script>
+            <?php echo $component->searchbar('',"name","search-bar--class1","Search by medicine name","search");?>
+            <script>
+                const searchbar=e('search');
+                const btn=e('bsearch');
+                btn.addEventListener("click",()=>{
+                    location.href="patient-pharmacy?cmd=search&value="+searchbar.value+"&page=1";
+                });
+                </script>
      </div>
+   
+
      <div>
-        <div>
+        <div class="pharmacy-main-page--upload-prescription">
             <h3>Upload Your precriptoin here</h3>
             <?= $component->button('upload-precription','',"Upload Prescription","prescription-button"); ?>
         </div>
-        <div>
+        <div class="pharmacy-main-page--track-orders"> 
             <h3>Track you orders here</h3>
             <?= $component->button('track-order','',"Track Your Order",'',''); ?>
         </div>

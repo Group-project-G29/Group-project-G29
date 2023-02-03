@@ -23,7 +23,17 @@
             return $this->customFetchAll("select last_insert_id()");
            
         }
-
+        public function saveByName($values){
+            $this->fileStore();
+            foreach($values as $tablename=>$attributes){
+                var_dump($attributes);
+                $tablerecords=array_keys($attributes);
+                $params=array_map(fn($attr)=>$attributes[$attr],$tablerecords);
+                $statement=self::prepare("Insert into $tablename (".implode(',',$tablerecords).") VALUES (".implode(',',$params).")");
+                $statement->execute();
+            }
+            return $this->customFetchAll("select last_insert_id()");
+        }
         //returns an object
         public function findOne($where){        //[email=>'dfdf',name=>'dfd]
             $tablename=static::tableName();
@@ -105,7 +115,7 @@
             return $statement->fetchAll(\PDO::FETCH_ASSOC);
 
         }
-        //delete data in a table
+        //delete data in a table      $where= ['patient_ID'=>'34']
         public function deleteRecord($where){
             $tablename=static::tableName();
             $attributes=array_keys($where);
@@ -153,24 +163,20 @@
         public function prepare($sql){
             return Application::$app->db->pdo->prepare($sql);
         }
-
-        public function updateRecord_v2($record_where){
+        //updateRecord(['_order'=>['order_ID'=>12]],['_order'=>['name'=>'dfdf']])  -this will update the name as dfdf in the table order
+        public function updateRecordv2($record_where,$values){
             $this->fileStore();
-            foreach ($record_where as $where) {
-                $where_attributes = array_keys($where);
-                $tablename = $this->tableName();
-                $attributes = $this->attributes();
-                $values = array_map(fn($attr) => "$attr=:$attr", $attributes);
+            foreach ($record_where as $tablename=>$where) {
+                $value_attributes = array_keys($values[$tablename]); //['name']
+                $where_attributes=array_keys($where);//['order_ID']
+                $values = array_map(fn($attr) => "$attr=$values[$tablename][$attr]", $value_attributes);
                 $where = array_map(fn($attr) => "$attr=$where[$attr]", $where_attributes);
 
                 $statement = self::prepare("update $tablename set " . implode(',', $values) . " where " . implode('AND', $where));
-                foreach ($attributes as $attribute) {
-                    $statement->bindValue(":$attribute", $this->{$attribute});
-                }
                 $statement->execute();
-
-                return $this->customFetchAll("select last_insert_id()");
             }
+
+            return $this->customFetchAll("select last_insert_id()");
         }
     }
 

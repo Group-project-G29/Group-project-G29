@@ -99,14 +99,27 @@
     justify-content: center;
     padding-top: 7vh;
     gap:7vw;
-    background-color: rgba(255, 255, 255, 0.96);
+    background-color: rgba(255, 255, 255, 0.98);
     width: 100vw;
     height:70vh;
     margin-top: 47.5vh;
    transition:transform 1.2s ease-out;
   
 }
-
+.pharmacy-main-container{
+    position: absolute;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding-top:3vh;
+    gap:2vh;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.96);
+    width: 100vw;
+    height:70vh;
+    margin-top: 47.5vh;
+   
+}
 .homepage-main-container:hover{
     transform:translateY(-3vw);
     
@@ -311,3 +324,52 @@
     background-color:white;
 }
 
+/* pharmacy pages styles */
+.medicine-main-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap:8vw;
+}
+
+.cart-item{
+    display: flex;
+
+}
+
+.cart-item img{
+    height:5vh;
+    width: auto;
+}
+
+.cart-title{
+    color:var(--clr-white);
+    background-color: var(--clr-dark);
+    width:100%;
+    font-size: 1.4em;
+
+}
+.medicine-right-container{
+    display: flex;
+}
+.medicine-item{
+    display: flex;
+    flex-direction: column;
+}
+.medicine-item img{
+    height:20vh;
+    width:auto;
+}
+
+/* doctor list */
+.doctor-item-identity--one{
+    display: flex;
+    align-items: center;
+    gap:4vw;
+
+}
+
+.doctor-item-identity--one img{
+    height:10vh;
+    width: auto;
+}

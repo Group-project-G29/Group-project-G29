@@ -8,6 +8,7 @@ use app\core\UserModel;
 class ConsultationReport extends DbModel{
     public string $consultation='';
     public string $examination='';
+    public string $recommendation='';
     public string $type = '';
     public string $name = '';
     public string $label = '';
@@ -38,12 +39,12 @@ class ConsultationReport extends DbModel{
         return 'report_ID';
     }
     public function tableRecords(): array{
-        return ['medical_report'=> ['type','name','label'],'consultation_report'=>['consultation','examination']];
+        return ['medical_report'=> ['type','name','label'],'consultation_report'=>['consultation','examination','recommendation']];
     }
 
     public function attributes(): array
     {
-        return  ['type','name','label','consultation','examintation'];
+        return  ['type','name','label','consultation','examintation','recommendation'];
     }
 
     public function getReports($patient,$doctor):array

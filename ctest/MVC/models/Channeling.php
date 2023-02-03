@@ -32,10 +32,10 @@ class Channeling extends DbModel{
         return [
             'doctor'=>[self::RULE_REQUIRED],
             'speciality'=>[self::RULE_REQUIRED],
-             'fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
-             'room'=>[self::RULE_REQUIRED],
+            'fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
+            'room'=>[self::RULE_REQUIRED],
             'total_patients'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
-             'extra_patients'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
+            'extra_patients'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
             'max_free_appointments'=>[self::RULE_NUMBERS],       
             'day'=>[self::RULE_REQUIRED],
             'time'=>[self::RULE_REQUIRED],

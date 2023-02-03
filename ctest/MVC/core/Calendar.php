@@ -5,7 +5,7 @@ use app\core\Date;
 
 class Calendar{
   public array $months=['1'=>31,'2'=>28,'2L'=>29,'3'=>31,'4'=>30,'5'=>'31','6'=>30,'7'=>31,'8'=>30,'9'=>31,'10'=>30,'11'=>31,'12'=>30];
-
+    //given start day and date this function return the date of the first day given as third parameter
     public function findDateByDay($startdate,$startday,$findday){
  
          
@@ -46,6 +46,33 @@ class Calendar{
       
 
     } 
+    
+    public function addDaysToDate($date,$days){
+      //strip the date
+      $dateModel=new Date();
+      $day=$dateModel->get($date,'day');
+      $month=$dateModel->get($date,'month');
+      $year=$dateModel->get($date,'year');
+      //add days to date part
+      $day+=$days;
+      //check with this month total day 
+      $monthdays=($this->months)[$month];
+      //if clause return date in strin formate
+      if($day>$monthdays){
+        $day-=$monthdays;
+        $month+=1;
+      }
+      if($month>=13){
+        $month-=12;
+        $year+=1;
+      }
+      return  $dateModel->arrayToDate([$day,$month,$year]);
+
+
+
+
+  }
+
     
 
 }
