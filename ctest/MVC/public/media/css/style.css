@@ -336,7 +336,7 @@ select{
     height:4vh;
     border:none;
     border-radius:10px 0px 0px 10px;
-    background-color:var(--clr-bg-grey);
+    background-color:var(--clr-white);
     border: 1px solid var(--clr-borders);
 }
 
@@ -686,3 +686,7 @@ select{
     z-index: 9;
 }
 
+.detail-container {
+    width: 100px;
+    align-items: center;
+}

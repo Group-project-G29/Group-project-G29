@@ -14,14 +14,18 @@ class SOAPReport extends DbModel{
     public string $additional_note = '';
     public string $type="";
     public string $label="";
+    public string $patient="";
+    public string $doctor="";
     
-    public function setReport($type,$label,$name='e-report'){
+    public function setReport($type,$label,$patient,$doctor,$name='e-report'){
         $this->type = $type;
         $this->name = $name;
         $this->label = $label;
+        $this->patient=$patient;
+        $this->doctor=$doctor;
      }
     public function addReport(){
-        parent::save();
+        return parent::save();
     }
  
     public function rules(): array
@@ -41,12 +45,12 @@ class SOAPReport extends DbModel{
         return 'report_ID';
     }
     public function tableRecords(): array{
-        return ['medical_report'=> ['type','name','label'],'soap_report'=>['subjective','objective','assessment','plan','additional_note']];
+        return ['medical_report'=> ['type','name','label','patient','doctor'],'soap_report'=>['subjective','objective','assessment','plan','additional_note']];
     }
 
     public function attributes(): array
     {
-        return  ['type','name','label','subjective','objective','assessment','plan','additional_note'];
+        return  ['type','name','label','subjective','objective','assessment','doctor','patient','plan','additional_note'];
     }
 
     

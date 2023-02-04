@@ -37,3 +37,10 @@
     border-style: hidden;
     border-spacing: 0px 3vh;
 }
+
+/* ===============My detail==================== */
+
+.detail-container {
+    width: 50%;
+    align-content: center;
+}

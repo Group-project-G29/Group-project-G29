@@ -43,11 +43,11 @@ class AdminController extends Controller{
             //load all data in $_POST into the model
             $ChannelingModel->loadData($request->getBody());
             //find if the new channeling session get overlapped with channeling session already scheduled
-            //$result=$ChannelingModel->checkOverlap();
+            $result=$ChannelingModel->checkOverlap();
             //if overlapp occurs set error
-            // if(isSet($result[0])){ 
-            //     $ChannelingModel->customAddError('time',"Time overlap with ".$result[1]." channeling session"."<a href='#'>See Channeling Timetable</a>");
-            // }
+            if(isSet($result[0])){ 
+                $ChannelingModel->customAddError('time',"Time overlap with ".$result[1]." channeling session"."<a href='#'>See Channeling Timetable</a>");
+            }
             
             
             if($ChannelingModel->validate() ){

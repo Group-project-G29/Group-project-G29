@@ -12,14 +12,18 @@ class MedicalHistory extends DbModel{
     public string $type = '';
     public string $name = '';
     public string $label = '';
+    public string $patient= '';
+    public string $doctor='';
     
-    public function setReport($type,$name,$label){
+    public function setReport($type,$label,$patient,$doctor,$name='e-report'){
         $this->type = $type;
         $this->name = $name;
         $this->label = $label;
-    }
+        $this->patient=$patient;
+        $this->doctor=$doctor;
+     }
     public function addReport(){
-        parent::save();
+        return parent::save();
     }
  
     public function rules(): array
@@ -39,12 +43,12 @@ class MedicalHistory extends DbModel{
         return 'report_ID';
     }
     public function tableRecords(): array{
-        return ['medical_report'=> ['type','name','label'],'Medical_history'=>['allergies','medication','note']];
+        return ['medical_report'=> ['type','patient','doctor','name','label'],'Medical_history'=>['allergies','medication','note']];
     }
 
     public function attributes(): array
     {
-        return  ['type','name','label','allergies','medication','note'];
+        return  ['type','name','label','patient','doctor','allergies','medication','note'];
     }
 
     

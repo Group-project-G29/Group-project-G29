@@ -96,6 +96,4 @@ $form=Form::begin('','post');
         })
     }
     searchBar.addEventListener('input',checker);
-   
-</script>
-   
+    </script>

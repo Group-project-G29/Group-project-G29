@@ -56,7 +56,7 @@
         </div>
     </div>
     <div class="top-stripe">
-            <a href="#">Meidcation</a>
+            <a href="#">Medication</a>
             <a href="#">Wellness</a>
             <a href="#">Personal Care</a>
             <a href="#">Medical Devices</a>

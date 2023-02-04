@@ -140,7 +140,7 @@ class PatientAuthController extends Controller{
             $ReferralModel->loadData($request);
             $ReferralModel->loadFiles($_FILES);
             $appointment_detail=$appointment->customFetchAll("select * from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on doctor.nic=channeling.doctor where appointment_ID=".$parameter[1]['id'])[0];
-            $ReferralModel->setter($appointment_detail['doctor'],$appointment_detail['appointment_ID'],$appointment_detail['speciality'],"","softcopy","");
+            $ReferralModel->setter($appointment_detail['doctor'],$appointment_detail['patient_ID'],$appointment_detail['speciality'],"","softcopy","");
             if($ReferralModel->addReferral()){
                 Application::$app->session->setFlash('success',"Appointment successfully created");
                 Application::$app->response->redirect("/ctest/patient-all-appointment");

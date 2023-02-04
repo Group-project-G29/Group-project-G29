@@ -57,17 +57,14 @@ class Channeling extends DbModel{
             return [false];
         }
     }
-
     public function fileDestination(): array
     {
         return [];
     }
-
     public function tableName(): string
     {
         return 'channeling';
     }
-
     public function primaryKey(): string
     {
         return 'channeling_ID';
@@ -81,7 +78,15 @@ class Channeling extends DbModel{
     {
         return ['doctor','fee','total_patients','extra_patients','max_free_appointments','day','time','count','type','percentage','speciality','room','start_date'];
     }
-
+    public function getSpecialities(){
+        $specialities=$this->customFetchAll("Select  distinct speciality from channeling ");
+        $speciality=['select'=>''];
+        foreach($specialities as $row){
+           $speciality[$row['speciality']]=$row['speciality'];
+       }
+       return $speciality;
+       
+   }
     
 }   
 

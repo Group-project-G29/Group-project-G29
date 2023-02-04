@@ -3,9 +3,10 @@
 
 use app\core\component\Component;
 use app\models\Referral;
-
-  
- $appointment=$appointment[0]; ?>
+use app\core\Application;
+$appointment=$appointment[0]; 
+$referralModel=new Referral();
+?>
     <?php $component=new Component(); ?>
     <div class="asssistance-upper-container">
         <div class="number-pad">
@@ -52,13 +53,16 @@ use app\models\Referral;
                     <div class="variable-container">
                         <table>
                             <tr>
-                                <th>Referral</th><th>created date</th>
+                                <th>Referral</th><th>created date</th><th></th><th></th><th> <?=$component->button('write report','','Write Report','button--class-0','write-ref');?></th><th><?=$component->button('Upload report','','Upload Report','button--class-0','upload-ref');?></th>
                             </tr>
                             <?php foreach($referrals as $referral): ?>
-                            <?php var_dump($referral['ref_ID']); ?>
-                            <tr>
-                                <td><a href=<?="/ctest/doctor-report?spec=refferal&mod=view&id=".$referral['ref_ID']?>><?=$referral['refer_doctor']."-".$referral['type']."-".$referral['ref_ID']?></a></td><td><?=$referral['date'] ?></td>
-                            </tr>
+                                <tr>
+                                    <td><a href=<?="/ctest/doctor-report?spec=refferal&mod=view&id=".$referral['ref_ID']?>><?=$referral['issued_doctor']."-".$referral['type']."-".$referral['ref_ID']?></a></td><td><?=$referral['date'] ?></td>
+                                    <?php if($referralModel->isIssued($referral['ref_ID'],Application::$app->session->get('userObject')->nic)): ?>
+                                        <td><a href="#">update</a></td>
+                                        <td><a href="#">delete</a></td>
+                                    <?php endif; ?>
+                                </tr>
                             <?php endforeach; ?>
                         </table>
                     </div>
@@ -72,7 +76,7 @@ use app\models\Referral;
                             <?php foreach($referrals as $referral): ?>
                             
                             <tr>
-                                <td><a href="#"><?=$referral['refer_doctor']."-".$referral['type']."-".$referral['ref_ID']?></a></td><td><?=$referral['date'] ?></td>
+                                <td><a href="#"><?=$referral['issued_doctor']."-".$referral['type']."-".$referral['ref_ID']?></a></td><td><?=$referral['date'] ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </table>
@@ -93,19 +97,16 @@ use app\models\Referral;
                         <div>
                             <table>
                                 <tr>
-                                    <th>Medical Report</th><th>created date</th>
+                                    <th>Medical Report</th><th>created date</th><th><?=$component->button('write report','','Write Report','button--class-0','write-rep');?></th><th><?=$component->button('Upload report','','Upload Report','button--class-0','upload-rep');?></th>
+                            
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 
                                 <tr>
-                                    <td><a href="#"><?=$report['refer_doctor']."-".$report['type']."-".$report['ref_ID']?></a></td><td><?=$report['date'] ?></td>
+                                    <td><a href="#"><?=$report['type']."-".$report['report_ID']."-".$report['name']?></a></td><td><?=$report['uploaded_date'] ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </table>
-                        </div>
-                        <div>
-                            <?=$component->button('write report','','Write Report','button--class-0','write-rep');?>
-                            <?=$component->button('Upload report','','Upload Report','button--class-0','upload-rep');?>
                         </div>
                     </div>
                 </div>
@@ -114,20 +115,17 @@ use app\models\Referral;
                         <div>
                             <table>
                                 <tr>
-                                    <th>Prescription</th><th>created date</th>
+                                    <th>Prescription</th><th>created date</th><th><?=$component->button('write Prescription','','Write Prescription','button--class-0','write-pres');?></th><th> <?=$component->button('Upload Prescription','','Write Prescription','button--class-0','upload-pres');?></th>
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 
                                 <tr>
-                                    <td><a href="#"><?=$report['refer_doctor']."-".$report['type']."-".$report['ref_ID']?></a></td><td><?=$report['date'] ?></td>
+                                    <!-- <td><a href="#"><?=$report['issued_doctor']."-".$report['type']."-".$report['ref_ID']?></a></td><td><?=$report['date'] ?></td> -->
                                 </tr>
                                 <?php endforeach; ?>
                             </table>
                         </div>
-                        <div>
-                            <?=$component->button('write report','','Write Report','button--class-0','write-rep');?>
-                            <?=$component->button('Upload report','','Upload Report','button--class-0','upload-rep');?>
-                        </div>
+                        
                     </div>
                 </div>
                 <div class="wrapper--lab-tests none">
@@ -135,19 +133,17 @@ use app\models\Referral;
                         <div>
                             <table>
                                 <tr>
-                                    <th>Lab Test Report</th><th>created date</th>
+                                    <th>Lab Test Report</th><th>created date</th><th><?=$component->button('Request Lab Test','','Request Lab Test','button--class-0','req-lab');?></th>
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 
                                 <tr>
-                                    <td><a href="#"><?=$report['refer_doctor']."-".$report['type']."-".$report['ref_ID']?></a></td><td><?=$report['date'] ?></td>
+                                    <!-- <td><a href="#"><?=$report['issued_doctor']."-".$report['type']."-".$report['ref_ID']?></a></td><td><?=$report['date'] ?></td> -->
                                 </tr>
                                 <?php endforeach; ?>
                             </table>
                         </div>
-                        <div>
-                            <?=$component->button('Request Lab Test','','Write Report','button--class-0','req-lab');?>
-                        </div>
+                        
                     </div>
                 </div>
                 <div class="wrapper--medical-analysis none">
@@ -160,7 +156,7 @@ use app\models\Referral;
                                 <?php foreach($reports as $report): ?>
                                 
                                 <tr>
-                                    <td><a href="#"><?=$report['refer_doctor']."-".$report['type']."-".$report['ref_ID']?></a></td><td><?=$report['date'] ?></td>
+                                    <td><a href="#"><?=$report['issued_doctor']."-".$report['type']."-".$report['ref_ID']?></a></td><td><?=$report['date'] ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </table>
@@ -236,7 +232,21 @@ use app\models\Referral;
             // console.log(id_component);
             location.href="doctor-report?spec=consultation-report";
         })
-        
+        const refbtn=document.getElementById("write-ref");
+      
+        refbtn.addEventListener('click',()=>{
+           
+            // console.log(id_component);
+            location.href="doctor-report?spec=referral";
+        })
+        const presbtn=document.getElementById("write-pres");
+      
+        presbtn.addEventListener('click',()=>{
+           
+            // console.log(id_component);
+            location.href="doctor-prescription";
+        })
+       
 
 
 
