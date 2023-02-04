@@ -76,13 +76,22 @@ $app->router->get('/ctest/receptionist-channeling-session-patient-detail-more',[
 $app->router->post('/ctest/receptionist-channeling-session-patient-detail-more',[ReceptionistController::class,'patientMoreDetail']);
 $app->router->get('/ctest/receptionist-channeling-set-appointment',[ReceptionistController::class,'setAppointment']);
 $app->router->get('/ctest/receptionist-channeling-payment',[ReceptionistController::class,'handlePayment']);
-
-
-// $app->router->get('/ctest/receptionist-all-channeling-session-patient-detail-more',[ReceptionistController::class,'patientMoreDetail']);
-
-
 $app->router->get('/ctest/receptionist-today-channelings',[ReceptionistController::class,'todayChannelings']);
-// $app->router->get('/ctest/receptionist-today-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);
+
+$app->router->get('/ctest/lab-view-personal-details',[LabController::class,'viewPersonalDetails']);
+$app->router->get('/ctest/lab-view-all-test',[LabController::class,'viewTest']);
+$app->router->post('/ctest/lab-view-all-test',[LabController::class,'viewTest']);
+$app->router->get('/ctest/lab-add-new-test',[LabController::class,'handleTest']);
+$app->router->post('/ctest/lab-add-new-test',[LabController::class,'handleTest']);
+$app->router->get('/ctest/lab-test-update',[LabController::class,'handleTest']);
+$app->router->post('/ctest/lab-test-update',[LabController::class,'handleTest']);
+$app->router->get('/ctest/lab-test-delete',[LabController::class,'handleTest']);
+$app->router->post('/ctest/lab-test-delete',[LabController::class,'handleTest']);
+$app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']);
+$app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);
+$app->router->get('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
+$app->router->post('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
+
 
 
 

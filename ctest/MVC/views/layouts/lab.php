@@ -7,7 +7,7 @@ include "../views/layouts/navbar/pharmacy-navbar.php";
 
 </nav>
     <div class="main-container">
-         <?php $sidebar=new Sidebar(['Requests'=>'/ctest/','Tests'=>'/ctest/','Advertise'=>'/','My Detail'=>'/','My Detail'=>'/'],$select);?>
+         <?php $sidebar=new Sidebar(['Requests'=>'/ctest/lab-test-request','Tests'=>'/ctest/lab-view-all-test','Advertise'=>'/','My Detail'=>'/ctest/lab-view-personal-details'],$select);?>
          <?php echo $sidebar;  ?>
         
         
