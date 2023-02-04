@@ -331,6 +331,11 @@
     align-items: center;
     gap:8vw;
 }
+.medicine-right-container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 2vh;
+}
 
 .cart-item{
     display: flex;
@@ -349,16 +354,31 @@
     font-size: 1.4em;
 
 }
-.medicine-right-container{
+.medicine-right-subcontainer{
     display: flex;
+    justify-content: flex-start;
+    gap:5.5vw;
+    margin-top: 2vh;
+
 }
 .medicine-item{
     display: flex;
     flex-direction: column;
+    gap:0.5vh;
+    background-color: var(--clr-white);
+    padding-inline:1vw ;
+    padding-block:2vh;
+}
+.medicine-item h3{
+    font-size: 1.1rem;
 }
 .medicine-item img{
-    height:20vh;
-    width:auto;
+    height:15vh;
+    width:10vw;
+    border-radius: 5px;
+}
+.medicine-item [type='number']{
+    width:5vw;
 }
 
 /* doctor list */
@@ -373,3 +393,32 @@
     height:10vh;
     width: auto;
 }
+
+.doctor-container{
+    display: flex;
+    margin-left: 5vw;
+    margin-top: 3vw;;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap:3vw;
+
+}
+
+.search-bar-doctor-container{
+    align-items: center;
+    margin-top: 3vh;
+    margin-left: 30vw;
+}
+.doctor-item{
+    background-color: var(--clr-white);
+    width:27vw;
+    height: 14vh;
+    padding: 0.5vw;
+    border-radius: 5px;
+}
+
+.doctor-item h3{
+    font-size: 1.0rem;
+}
+
+

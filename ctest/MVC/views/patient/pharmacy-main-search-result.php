@@ -17,7 +17,10 @@ use app\models\Medicine;
                 <img src=<?="./media/images/medicine/".$item['img']?>>
                 <div class="scrollable-body">
                     <h3 class="fs-50"><?=$item['name']." ".$item['strength']." ".$item['unit']?></h3>
-                    <input type="number" id=<?='"'."amount2_".$item['med_ID'].'"'?> value=<?=$item['amount']?>>
+                    <div class="amount-container">
+                        <label>Amount :</label>
+                        <input type="number" id=<?='"'."amount2_".$item['med_ID'].'"'?> value=<?=$item['amount']?>>
+                    </div>
                     <?=$component->button('update','','Change Amount','update-buttons','cartbtn_'.$item['med_ID']); ?>
                     <a href=<?="patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID']?>><h3 class="fs-50">Remove</h3></a>
                 </div>
@@ -29,25 +32,39 @@ use app\models\Medicine;
             </div>
     </div>
     <div class="medicine-right-container">
-        <?php foreach($medicines as $medicine):?>
-            <?php if($model->checkStock($medicine['med_ID'])): ?>  <!--check whether medicine in stock or out-->
-                <div class="medicine-item">
-                    <img src=<?="./media/images/medicine/".$medicine['img']?>>
-                    <h3><?=$medicine['name']." ".$medicine['strength'] ?></h3>
-                    <h2><?="Rs.".$medicine['unit_price'] ?></h2>
-                    <input type="number" id=<?='"'."amount_".$medicine['med_ID'].'"'?>>
-                    <?= $component->button('','','add','button-class-3 add-medicine',$medicine['med_ID']); ?>
-                </div>
-            <?php else : ?>
-                <div class="medicine-item">
-                    <img src=<?="./media/images/medicine/".$medicine['img']?>>
-                    <h3><?=$medicine['name']." ".$medicine['strength'] ?></h3>
-                    <h2><?="Rs.".$medicine['unit_price'] ?></h2>
-                    <h3 color="red">Out of Stock</h3>
-                </div>
-            <?php endif; ?>
+    <?php
+        use app\models\OpenedChanneling;
+        $openedChanneling=new OpenedChanneling();
 
-        <?php endforeach; ?>
+
+        $component=new Component();
+        
+        echo $component->searchbar('','search','search-bar--class2','Search by name,specilaity','searchbar');
+    ?>
+        <div class="medicine-right-subcontainer">
+            <?php foreach($medicines as $medicine):?>
+                <?php if($model->checkStock($medicine['med_ID'])): ?>  <!--check whether medicine in stock or out-->
+                    <div class="medicine-item">
+                        <img src=<?="./media/images/medicine/".$medicine['img']?>>
+                        <h3><?=$medicine['name']." ".$medicine['strength'] ?></h3>
+                        <h2><?="Rs.".$medicine['unit_price'] ?></h2>
+                        <div>
+                            <label>Amount :</label>
+                            <input type="number" id=<?='"'."amount_".$medicine['med_ID'].'"'?>>
+                        </div>
+                        <?= $component->button('','','add','button-class-3 add-medicine',$medicine['med_ID']); ?>
+                    </div>
+                <?php else : ?>
+                    <div class="medicine-item">
+                        <img src=<?="./media/images/medicine/".$medicine['img']?>>
+                        <h3><?=$medicine['name']." ".$medicine['strength'] ?></h3>
+                        <h2><?="Rs.".$medicine['unit_price'] ?></h2>
+                        <h3 color="red">Out of Stock</h3>
+                    </div>
+                <?php endif; ?>
+
+            <?php endforeach; ?>
+        </div>
     </div>
 </section>
 <script src="./media/js/main.js"></script>

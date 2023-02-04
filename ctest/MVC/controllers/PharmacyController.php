@@ -21,7 +21,7 @@ class PharmacyController extends Controller{
     public function viewPendingOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'pending' order by time_of_creation asc");
+        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'pending' and order_ID in(select order_ID  from _order where processing_status='pending' order by created_date asc) order by created_time asc"); //change has been done
         return $this->render('pharmacy/pharmacy-orders-pending',[
             'orders'=>$orders,
             'model'=>$orderModel

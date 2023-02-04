@@ -63,7 +63,9 @@ class DoctorController extends Controller{
 
     // make a report model
     public function sessionAssistance(Request $request,Response $response){
-
+        //keep url in the seesion 
+        Application::$app->session->set('churl',$request->getURL());
+        
         $this->setLayout("doctor-striped");
         $parameters=$request->getParameters();
         $OpenedChanneling=new OpenedChanneling();
@@ -73,10 +75,12 @@ class DoctorController extends Controller{
         $appointmentMOdel=new Appointment();
         $doctor = Application::$app->session->get('userObject')->nic;
         if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='start'){
-           
+            
             $id=$parameters[1]['id']??'';
             $OpenedChanneling->customFetchAll("update opened_channeling set status='started' where opened_channeling_ID=".$id);
             $patient=$OpenedChanneling->getLastPatient("consultation",$id);
+            //get patient in the session
+            Application::$app->session->set('cur_patient',$patient);
             
             $appointment_detail=$OpenedChanneling->customFetchAll("SELECT * from appointment left join patient on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID='$id' and patient.patient_ID='".$patient."'");
             //$appointment_detail=$OpenedChanneling->customFetchAll("SELECT * from appointment left join patient on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where appointment.queue_no in (SELECT min(queue_no) from appointment where opened_channeling_ID=".$id.")"." and opened_channeling.opened_channeling_ID=".$id);
@@ -87,7 +91,7 @@ class DoctorController extends Controller{
             }
             
             Application::$app->session->set('channeling',$id);
-            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$id);
+            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             return $this->render("doctor/channeling-assistance-patient",[
                 'appointment'=>$appointment_detail, 
@@ -98,6 +102,7 @@ class DoctorController extends Controller{
         }
         if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='switch'){
             $id=$parameters[1]['id'];
+            Application::$app->session->set('cur_patient',$id);
             $channeling=Application::$app->session->get('channeling');
             $type=$appointmentMOdel->getAppointmentType($id,$channeling)[0]['type']??'';
             $patient="";
@@ -116,7 +121,7 @@ class DoctorController extends Controller{
                 //Application::$app->response->redirect('channeling-assistance?cmd=finish');
                 return false;
             }
-            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$appointment_detail[0]['opened_channeling_ID']);
+            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             return $this->render("doctor/channeling-assistance-patient",[
                 'appointment'=>$appointment_detail,
@@ -134,12 +139,12 @@ class DoctorController extends Controller{
             $channeling=Application::$app->session->get('channeling');
             $appointment_type=$appointmentMOdel->getAppointmentType($id,$channeling)[0]['type'];
             $appointment_detail[0]=$OpenedChanneling->getPatient($channeling,$id,'next',$appointment_type);
+            Application::$app->session->set('cur_patient',$appointment_detail[0]['patient_ID']);
             if(!$appointment_detail[0]){
                 Application::$app->response->redirect('channeling-assistance?cmd=finish');
-                var_dump($appointment_type);
                 return false;
             }
-            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$appointment_detail[0]['opened_channeling_ID']);
+            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             return $this->render("doctor/channeling-assistance-patient",[
                 'appointment'=>$appointment_detail,
@@ -153,14 +158,16 @@ class DoctorController extends Controller{
         }
         else if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='previous'){
             $id=$parameters[1]['id'];
+            Application::$app->session->set('cur_patient',$id);
             $channeling=Application::$app->session->get('channeling');
             $appointment_type=$appointmentMOdel->getAppointmentType($id,$channeling)[0]['type'];
             $appointment_detail[0]=$OpenedChanneling->getPatient($channeling,$id,'previous',$appointment_type);
+            Application::$app->session->set('cur_patient',$appointment_detail[0]['patient_ID']);
             if(!$appointment_detail[0]){
                 Application::$app->response->redirect('channeling-assistance?cmd=finish');
                 return false;
             }
-            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$appointment_detail[0]['opened_channeling_ID']);
+            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             return $this->render("doctor/channeling-assistance-patient",[
                 'appointment'=>$appointment_detail,
@@ -182,23 +189,50 @@ class DoctorController extends Controller{
         $parameter=$request->getParameters();
         $consultationModel = new ConsultationReport();
         $medHistoryModel = new MedicalHistory();
+        $channeling=new Channeling();
+        $employeeModel=new Employee();
+        $refModel=new Referral();
         $soapModel=new SOAPReport();
         $reportModel=new ReportModel();
-        if($parameter[0]['spec']??''=='referral'){
-            if($parameter[1]['mod']??''=='view'){
+        $userDoctor=Application::$app->session->get('userObject')->nic;
+        $patient=Application::$app->session->get('cur_patient');
+        if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='referral'){
+            if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
                 $referralModel=new Referral();
                 $referrals=$referralModel->customFetchAll("Select * from referrel where ref_ID=".$parameter[2]['id']);
                 //$referralModel->findOne(['ref_ID'=>$parameter[2]['id']]);
-               
+                
                 $reportModel->openFile('./media/patient/referrals/'.$referrals[0]['name']);
             }
+            if ($request->isPost()) {
+                $url=$request->getURL();
+                $refModel->issued_doctor=$userDoctor;
+                $refModel->patient=Application::$app->session->get('cur_patient');
+                echo $refModel->patient;
+                $refModel->type='e-referral';
+                $refModel->loadData($request->getBody());
+                if ($refModel->validate() && $refModel->addReferral()) {
+                    Application::$app->response->redirect(Application::$app->session->get('churl'));
+                    exit;
+                }
+                //render on fall-through
+            }
+            $doctors=$employeeModel->getDoctors();
+            $specialities=$channeling->getSpecialities();
+            return $this->render('doctor/write-referral-report', [
+                'model' => $refModel,
+                'doctors'=>$doctors,
+                'specialities'=>$specialities
+            ]);
         }
         if(isset($parameter[0]['spec']) && $parameter[0]['spec']=="medical-history-report"){
             if($request->isPost()){
                 $medHistoryModel->loadData($request->getBody());
-                $medHistoryModel->setReport('medical-history','Medical-history-'.date('Y:m:d'),'e-report');
+                $medHistoryModel->setReport('medical-history','Medical-history-'.date('Y:m:d'),$patient,$userDoctor,'e-report');
                 if($medHistoryModel->validate() && $medHistoryModel->addReport()){
                     //redirect
+                    Application::$app->response->redirect(Application::$app->session->get('churl'));
+                    exit;
                 }
             }
             return $this->render('doctor/write-history-report',[
@@ -208,10 +242,12 @@ class DoctorController extends Controller{
         if (isset($parameter[0]['spec']) && $parameter[0]['spec'] == "consultation-report") {
             if ($request->isPost()) {
                 $consultationModel->loadData($request->getBody());
-                $consultationModel->setReport('consultation','Consultation-report-'.date('Y:m:d'),'e-report');
+                $consultationModel->setReport('consultation','Consultation-report-'.date('Y:m:d'),$patient,$userDoctor,'e-report');
 
                 if ($consultationModel->validate() && $consultationModel->addReport()) {
                     //redirect
+                    Application::$app->response->redirect(Application::$app->session->get('churl'));
+                    exit;
                 }
                 //render on fall-through
             }
@@ -223,9 +259,11 @@ class DoctorController extends Controller{
         if (isset($parameter[0]['spec']) && $parameter[0]['spec'] == "soap-report") {
             if ($request->isPost()) {
                 $soapModel->loadData($request->getBody());
-                $soapModel->setReport('medical-history','S.O.P-'.date('Y:m:d'),'e-report');
+                $soapModel->setReport('medical-history','S.O.P-'.date('Y:m:d'),$patient,$userDoctor,'e-report');
                 if ($soapModel->validate() && $soapModel->addReport()) {
                     //redirect
+                    Application::$app->response->redirect(Application::$app->session->get('churl'));
+                    exit;
                 }
                 //render on fall-through
             }
@@ -234,6 +272,14 @@ class DoctorController extends Controller{
                 ]);
 
         }
+        
+    }
+
+    public function handlePrescription(Request $request,Response $response){
+        $this->setLayout('doctor-striped');
+        return $this->render('doctor/write-prescription',[
+
+        ]);
     }
 
     

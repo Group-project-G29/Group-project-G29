@@ -5,6 +5,9 @@ namespace app\core;
  * @package app\core
  */
 class Request{
+    public function getURL(){
+        return $_SERVER['REQUEST_URI'];
+    }
     public function getPath(){
         $path=$_SERVER['REQUEST_URI'] ?? '/';
         $position=strpos($path,'?');

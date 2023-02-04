@@ -124,7 +124,11 @@
 
 
 }
-
+.wrapper--referrals{
+    display: flex;
+    justify-content: space-between;
+    gap:3vw;
+}
 .assistance-subcontainer{
     padding:3vh;
     background-color: var(--clr-white);

@@ -4,13 +4,16 @@ use app\core\form\Form;
 ?>
 
 <?php $form = new Form();?>
+<?php $component=new Component(); ?>
 
 <div>
     <div>
-
-    </div>
-    <div>
-        <?= $form->select($model,'reports','','',['SOAP report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report'],'select-main') ?>
+        <div>
+            <?= $form->select($model,'reports','','',['SOAP Report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report','Refferal'=>'referral'],'select-main') ?>
+        </div>
+        <div>
+            <?= $component->button('','submit','Add Report','button--class-0'); ?>
+        </div>
     </div>
     <div>
         <?= $form->textarea($model,'subjective','subjective','Subjective',10,130,'');?>
@@ -39,7 +42,7 @@ use app\core\form\Form;
 <script src="./media/js/main.js"></script>
 <script>
     const mainSelect=e('select-main','id');
-    mainSelect.value="medical-history-report";
+    mainSelect.value="soap-report";
     mainSelect.addEventListener('change',()=>{
 
         location.href="/ctest/doctor-report?spec="+mainSelect.value;

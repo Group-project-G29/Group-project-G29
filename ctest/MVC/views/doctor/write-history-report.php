@@ -3,14 +3,18 @@
 use app\core\form\Form;
 
     $form = new Form();
+    $component=new Component();
 ?>
-
+<?php $form->begin('','post'); ?>
 <div>
     <div>
-
-    </div>
-    <div>
-        <?= $form->select($model,'reports','','',['SOAP Report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report'],'select-main') ?>
+        <div>
+            <?= $form->select($model,'reports','','',['SOAP Report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report','Refferal'=>'referral'],'select-main') ?>
+        </div>
+        <div>
+            <?= $component->button('','submit','Add Report','button--class-0'); ?>
+            
+        </div>
     </div>
     <div>
         <?= $form->textarea($model,'medication','medication','Passed Medication',10,130,'');?>
@@ -27,6 +31,7 @@ use app\core\form\Form;
 
 
 </div>
+<?php $form->end(); ?>
 <script src="./media/js/main.js"></script>
 <script>
     const mainSelect=e('select-main','id');

@@ -19,7 +19,7 @@ class Employee extends DbModel{
     public string $password="";
     public string $cpassword="";
     public string $role="";
-    public string $speciality='';
+    public string $career_speciality='';
     public string $description='';
     public string $emp_ID='';
     // function isValidPassword($password) {
@@ -67,26 +67,36 @@ class Employee extends DbModel{
         return 'email';
     }
     public function tableRecords(): array{
-        if($this->role=='doctor') return ['employee'=>['name','nic','age','contact','email','address','gender','role','password','img'],'doctor'=>['nic','speciality','description']];
+        if($this->role=='doctor') return ['employee'=>['name','nic','age','contact','email','address','gender','role','password','img'],'doctor'=>['nic','career_speciality','description']];
         return ['employee'=>['name','nic','age','contact','email','gender','address','role','password','img']];
     }
 
     public function attributes(): array
     {
-        return ['name','nic','age','contact','email','address','gender','role','img','password','speciality','description'];
+        return ['name','nic','age','contact','email','address','gender','role','img','password','career_speciality','description'];
     }
     public function getAccounts($role=''):array{
         if($role==''){
             return $this->customFetchAll("SELECT * FROM employee where role<>'admin' order by role ");
         }
         if($role=='doctor'){
-            return $this->customFetchAll("SELECT * FROM employee left join doctor on doctor.nic=employee.nic where employee.role='$role' order by speciality" );
+            return $this->customFetchAll("SELECT * FROM employee left join doctor on doctor.nic=employee.nic where employee.role='$role' order by career_speciality" );
         }
 
     }
     public function getChannelings($doctor):array{
         return $this->customFetchAll("SELECT * from opened_channeling LEFT JOIN channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on doctor.nic=channeling.doctor left join employee on employee.nic=doctor.nic WHERE employee.emp_ID=".$doctor);
 
+    }
+
+    public function getDoctors(){
+         $Doctors=$this->customFetchAll("Select  name,nic from employee where role='doctor' and nic<>'".Application::$app->session->get('user')."'");
+         $Doctor=['select'=>''];
+         foreach($Doctors as $row){
+            $Doctor[$row['name']]=$row['nic'];
+        }
+        return $Doctor;
+        
     }
 
     

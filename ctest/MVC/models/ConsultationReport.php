@@ -12,14 +12,18 @@ class ConsultationReport extends DbModel{
     public string $type = '';
     public string $name = '';
     public string $label = '';
+    public string $patient='';
+    public string  $doctor=''; 
     
-    public function setReport($type,$name,$label){
+    public function setReport($type,$label,$patient,$doctor,$name='e-report'){
         $this->type = $type;
         $this->name = $name;
         $this->label = $label;
+        $this->patient=$patient;
+        $this->doctor=$doctor;
     }
     public function addReport(){
-        parent::save();
+        return parent::save();
     }
  
     public function rules(): array
@@ -39,7 +43,7 @@ class ConsultationReport extends DbModel{
         return 'report_ID';
     }
     public function tableRecords(): array{
-        return ['medical_report'=> ['type','name','label'],'consultation_report'=>['consultation','examination','recommendation']];
+        return ['medical_report'=> ['type','patient','doctor','name','label'],'consultation_report'=>['consultation','examination','recommendation']];
     }
 
     public function attributes(): array
