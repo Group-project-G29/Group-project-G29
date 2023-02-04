@@ -29,17 +29,17 @@
                             <?php echo Application::$app->session->get('userObject')->name ?>
                             <img src=<?php echo "./media/images/emp-profile-pictures/".Application::$app->session->get('userObject')->img ?>>
                         </div>
-                        <ul>
-                            <div class="nav-box-item">
-                                <li>
-                                    <a href="/ctest/patient-all-appointment">Dashboard</a>
+                        <ul class="dropdown">
+                            <!-- <div class="nav-box-item"> -->
+                                <li class="nav-box-item">
+                                    <a href="/ctest/pharmacy-orders-pending">Dashboard</a>
                                 </li>
-                            </div>
-                            <div class="nav-box-item">
-                                <li>
+                            <!-- </div> -->
+                            <!-- <div class="nav-box-item"> -->
+                                <li class="nav-box-item">
                                     <a href="/ctest/employee-logout">Log Out</a>
                                 </li>
-                            </div>
+                            <!-- </div> -->
                         </ul>
             </div>
            
@@ -51,6 +51,7 @@
        
     </div>
 </nav>
+
 <script>
     const button=document.getElementById('sign in');
     if(button){
