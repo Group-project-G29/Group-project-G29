@@ -5,9 +5,9 @@
 ?>
 <div class='upper-container'>
     <!-- implement this -->
-    <?php echo $component->button('pending','','Pending Orders','button--class-0  width-10','pending');?>
-    <?php echo $component->button('processing','','Processing Orders','button--class-0  width-10','processing');?>
-    <?php echo $component->button('delivering','','Delivering Orders','button--class-0  width-10','delivering');?>
+    <?php echo $component->button('pending','','Pending Orders','button--class-0-deactive  width-10','pending');?>
+    <?php echo $component->button('processing','','Processing Orders','button--class-0-deactive  width-10','processing');?>
+    <?php echo $component->button('delivering','','Delivering Orders','button--class-0-active  width-10','delivering');?>
 </div>
 
 <div class='upper-container'>
