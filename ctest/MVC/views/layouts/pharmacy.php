@@ -21,10 +21,6 @@ include "../views/layouts/navbar/pharmacy-navbar.php";
                 <?php endif;?>
             </div>
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 20001843
             {{content}}
         </div>
     </div>
