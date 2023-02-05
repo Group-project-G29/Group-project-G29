@@ -94,10 +94,13 @@
     align-items: center;
     gap:2vh;
 }
+
+
 .channeling-patient{
     display: flex;
+    align-items: center;
     flex-direction: column;
-
+    justify-content: center;
 }
 .patient-navigator{
     display: flex;

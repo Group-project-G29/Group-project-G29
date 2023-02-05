@@ -1,21 +1,13 @@
 <?php
-
 use app\core\Application;
 use app\core\component\Sidebar;
 use app\models\Employee;
-include "../views/layouts/navbar/receptionist-navbar.php";
-
+include "../views/layouts/navbar/nurse-navbar.php";
 ?>
-<div class="bg">
 
-</div>
+</nav>
     <div class="main-container">
-<<<<<<< HEAD
-
-         <?php $sidebar=new Sidebar(['Today Channelings'=>'/ctest/receptionist-today-channelings','All Channelings'=>'/ctest/receptionist-all-channelings','Patients'=>'/ctest/receptionist-handle-patient?mod=view','My Detail'=>'/ctest/receptionist-view-personal-details'],$select);?>
-=======
-         <?php $sidebar=new Sidebar(['Today Channelings'=>'#','All Channelings'=>'#','Patients'=>'/ctest/receptionist-handle-patient?mod=view','My Detail'=>'#'],$select);?>
->>>>>>> 20000758
+         <?php $sidebar=new Sidebar(['All Channelings'=>'/ctest/all-channelings','Today Channelings'=>'/ctest/today-channelings','Patients'=>'/','My Detail'=>'/ctest/my-detail'],$select);?>
          <?php echo $sidebar;  ?>
         
         

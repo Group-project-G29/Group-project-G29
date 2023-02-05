@@ -491,6 +491,14 @@ select{
 .semi-header-name ,.semi-name,.topic{
     text-align: center;
 }
+  
+  .normal-container{
+    padding-top:3vh;
+    position: absolute;
+    top:14vh;
+    left:8vw;
+    width:84vw
+  }
   .main-container--iso{
     position: absolute;
     top:14vh;
@@ -563,8 +571,15 @@ select{
     margin-left: 10vw;
     border-color:transparent;
     z-index: 0;
-    
-   
+}
+.table-div>table{
+    border-collapse: separate;
+    border-style: hidden;
+    border-spacing: 0px 1vh;
+    margin-top: 0vh;
+    width: 80vw;
+    border-color:transparent;
+    z-index: 0;
 }
 .row-height{
     height: 7vh; 
