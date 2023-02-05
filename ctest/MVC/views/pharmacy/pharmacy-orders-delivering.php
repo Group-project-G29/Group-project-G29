@@ -5,9 +5,9 @@
 ?>
 <div class='upper-container'>
     <!-- implement this -->
-    <?php echo $component->button('pending','','Pending Orders','button--class-0  width-10','pending');?>
-    <?php echo $component->button('processing','','Processing Orders','button--class-0  width-10','processing');?>
-    <?php echo $component->button('delivering','','Delivering Orders','button--class-0  width-10','delivering');?>
+    <?php echo $component->button('pending','','Pending Orders','button--class-0-deactive  width-10','pending');?>
+    <?php echo $component->button('processing','','Processing Orders','button--class-0-deactive  width-10','processing');?>
+    <?php echo $component->button('delivering','','Delivering Orders','button--class-0-active  width-10','delivering');?>
 </div>
 
 <div class='upper-container'>
@@ -25,7 +25,7 @@
     <?php foreach($orders as $key=>$order): ?>
     <tr class="table-row">
         <td><?=$order['order_ID']?></td>
-        <td><?=$order['time_of_creation']?></td> 
+        <td><?=$order['created_date']?></td> 
         <td><?=$order['created_time']?></td> 
         <td><?=$order['processing_status']?></td> 
         <td><?=$order['patient_ID']?></td> 
@@ -33,20 +33,6 @@
     </tr>
     <?php endforeach; ?>
     </table>
-
-    <div>
-        <!-- remove this -->
-        <?php
-            if ( $order['processing_status'] === 'pending'){
-                echo $component->button('', '', 'Process', 'button--class-2', $order['order_ID']);
-            } else if ( $order['processing_status'] === 'processing' ) {
-                echo $component->button('', '', 'Cancel Process', 'button--class-3', $order['order_ID']);
-            } else if ( $order['processing_status'] === 'packed' ) {
-                echo $component->button('', '', 'Track Order', 'button--class-2', $order['order_ID']);
-            }
-                
-        ?>
-    </div>
 
 </div>
 
