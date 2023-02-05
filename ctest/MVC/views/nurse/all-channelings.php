@@ -27,16 +27,26 @@ $component = new Component();
     <tbody>
     <?php foreach($clinics as $key=>$clinic): ?>
 
-      <tr class="table-row">
+      <tr class="table-row row-height hover" id="<?= $clinic['channeling_ID'] ?>">
 
         <td><?= $clinic['name'] ?></td>
         
         <td><?= $clinic['speciality'] ?></td>
         <td></td>
-        <td><a href="./all-clinic-more?id=<?=$clinic['channeling_ID']?>">More</a></td><td></td>
+        <td><a href="./all-channeling-more?id=<?=$clinic['channeling_ID']?>">More</a></td><td></td>
       </tr>
       
       <?php endforeach; ?>
 
+
+
+      <script>
+        elementsArray = document.querySelectorAll(".table-row");
+        elementsArray.forEach(function(elem) {
+            elem.addEventListener("click", function() {
+                location.href='all-channeling-more?id='+elem.id;
+            });
+        });
+      </script>
 </table>
 </div>

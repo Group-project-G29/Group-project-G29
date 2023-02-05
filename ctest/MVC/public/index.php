@@ -32,14 +32,16 @@ $app->router->post('/ctest/doctor',[SiteController::class, 'doctor']);
 // $app->router->get('/ctest/nurse',[SiteController::class, 'doctor']);
 $app->router->get('/ctest/nurse',[NurseController::class, 'viewAllClinics']);
 $app->router->get('/ctest/my-detail',[NurseController::class, 'viewUserDetails']);
-$app->router->get('/ctest/all-clinic',[NurseController::class, 'viewAllClinics']);
-$app->router->get('/ctest/all-clinic-more',[NurseController::class, 'viewAllClinicsMore']);
-$app->router->get('/ctest/today-clinics',[NurseController::class, 'todayClinics']);
+$app->router->get('/ctest/all-channelings',[NurseController::class, 'viewAllClinics']);
+$app->router->get('/ctest/all-channeling-more',[NurseController::class, 'viewAllClinicsMore']);
+$app->router->get('/ctest/today-channelings',[NurseController::class, 'todayClinics']);
+$app->router->get('/ctest/all-channeling-session',[NurseController::class,'viewChanneling']);
+$app->router->post('/ctest/all-channeling-session',[NurseController::class,'viewChanneling']);
+
 
 $app->router->get('/ctest/channeling',[DoctorController::class,'viewChanneling']);
 $app->router->post('/ctest/channeling',[DoctorController::class,'viewChanneling']);
-$app->router->get('/ctest/Channeling',[NurseController::class,'viewChanneling']);
-$app->router->post('/ctest/Channeling',[NurseController::class,'viewChanneling']);
+
 
 $app->router->get('/ctest/patient-registration',[PatientAuthController::class,'register']);
 $app->router->post('/ctest/patient-registration',[PatientAuthController::class,'register']);

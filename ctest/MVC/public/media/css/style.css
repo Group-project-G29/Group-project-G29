@@ -440,7 +440,7 @@ select{
     top:14vh;
   }
 /* table styles */
-.table-container{
+.table-container, .table-div{
     display: flex;
     margin-top: 3vh;
     align-items: center;
@@ -456,8 +456,15 @@ select{
     margin-left: 10vw;
     border-color:transparent;
     z-index: 0;
-    
-   
+}
+.table-div>table{
+    border-collapse: separate;
+    border-style: hidden;
+    border-spacing: 0px 1vh;
+    margin-top: 0vh;
+    width: 80vw;
+    border-color:transparent;
+    z-index: 0;
 }
 .row-height{
     height: 7vh; 
@@ -477,7 +484,7 @@ select{
     display: flex;
     align-items: center;
 }
-.table-container td{
+.table-container td, .table-div td{
     text-align: center;
     padding-block:2vh;
     padding-left: 2vw;
