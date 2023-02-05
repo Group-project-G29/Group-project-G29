@@ -9,24 +9,16 @@
         public string $id;
         public string $attribute;
         public array $options;
-<<<<<<< HEAD
         public string $label;
 
         public function __construct(Model $model,string $attribute,string $label,string $class,array $options,string $id)
-=======
-
-        public function __construct(Model $model,string $attribute,string $class,array $options,string $id)
->>>>>>> 20000758
         {
             $this->model=$model;
             $this->class=$class;
             $this->options=$options;   
             $this->attribute=$attribute;
             $this->id=$id;
-<<<<<<< HEAD
             $this->label = $label;
-=======
->>>>>>> 20000758
         }
         public function __toString()
         {

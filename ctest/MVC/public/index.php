@@ -41,8 +41,6 @@ $app->router->get('/ctest/logout',[PatientAuthController::class,'logout']);
 $app->router->get('/ctest/doctor-patient-appointment', [PatientAuthController::class, 'doctorAppointment']);
 $app->router->get('/ctest/patient-pharmacy',[PatientAuthController::class,'medicineOrder']);
 $app->router->get('/ctest/patient-medicine-order',[PatientAuthController::class,'orderMedicine']);
-$app->router->get('/ctest/', [SiteController::class, 'home']);
-$app->router->post('/ctest/', [SiteController::class, 'home']);
 $app->router->post('/ctest/patient-medicine-order',[PatientAuthController::class,'orderMedicine']);
 $app->router->get('/ctest/patient-dashboard',[PatientAuthController::class,'patientDashboard']);
 $app->router->get('/ctest/patient-payment',[PatientAuthController::class,'patientPayment']);
