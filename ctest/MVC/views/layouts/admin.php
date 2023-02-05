@@ -9,11 +9,7 @@ include "../views/layouts/navbar/admin-navbar.php";
 <body>
     
     <div class="main-container">
-<<<<<<< HEAD
-         <?php $sidebar=new Sidebar(['Reports'=>'#','Channelings Sessions'=>'/ctest/schedule-channeling','Schedule Channelings'=>'/ctest/schedule-channeling?mod=add','Manage Users'=>'/ctest/admin','Manage Rooms'=>'#','Notification'=>'#','Advertisement'=>'#'],$select);?>
-=======
          <?php $sidebar=new Sidebar(['Reports'=>'#','Channelings Sessions'=>'/ctest/schedule-channeling','Schedule Channelings'=>'/ctest/schedule-channeling?mod=add','Manage Users'=>'/ctest/admin','Manage Rooms'=>'#','Notification'=>'#','Advertisement'=>'/ctest/main-adds'],$select);?>
->>>>>>> 20000758
          <?php echo $sidebar;  ?>
         
         
