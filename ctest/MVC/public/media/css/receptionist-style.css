@@ -43,9 +43,13 @@
 
 
 .upper-container{
+
+    margin-left: 10vw;
+    margin-top: 5vh;
+    width: 60vw;
     display: flex;
- 
     align-items: center;
+    justify-content: space-between;
 }
 
 .patient-detail{
@@ -54,3 +58,4 @@
     width:100%;
     padding: 0.5vw;
 }
+
