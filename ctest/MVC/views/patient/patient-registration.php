@@ -17,7 +17,7 @@ $form=Form::begin('','post');?>
     <?php echo $form->field($model,'name','Name*','field','text') ?>
     <?php echo $form->field($model,'nic','NIC*','field','text') ?>
     <?php echo $form->field($model,'age','Age*','field','text') ?>
-    <?php echo $form->select($model,'gender','field',['select','male','female'],'gender')?>
+    <?php echo $form->select($model,'gender',"Gender *",'field',['select','male','female'],'gender')?>
     <?php echo $form->field($model,'contact','Contact*','field','text') ?>
     <?php echo $form->field($model,'email','Email*','field','text') ?>
     <!-- <?php echo $form->field($model,'contact','Contact','field','text') ?> -->

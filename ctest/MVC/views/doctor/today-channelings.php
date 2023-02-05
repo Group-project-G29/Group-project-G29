@@ -22,7 +22,6 @@
     </table>
   
 </div>
-
 <script>
         elementsArray = document.querySelectorAll(".table-row");
         elementsArray.forEach(function(elem) {

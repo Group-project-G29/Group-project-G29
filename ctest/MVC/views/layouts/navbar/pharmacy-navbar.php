@@ -51,7 +51,6 @@
        
     </div>
 </nav>
-
 <script>
     const button=document.getElementById('sign in');
     if(button){

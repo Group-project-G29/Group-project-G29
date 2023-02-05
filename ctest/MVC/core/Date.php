@@ -62,7 +62,7 @@ class Date{
         }
         return  $array[2]."-".$month."-".$day;
     }
-
+    //true if $time1<$time2
     public function greaterthan($time1,$time2){
         $day_1=$this->get($time1,'day');
         $month_1=$this->get($time1,'month');

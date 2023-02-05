@@ -1,3 +1,7 @@
+.flex-0{
+    display: flex;
+    gap:0vw;
+}
 /* channeling start page */
 .column-flex{
     display: flex;
@@ -82,11 +86,18 @@
 }
 
 /* channeling session  */
-.channeling-patient{
+.asssistance-upper-container{
+    width:100%;
     display: flex;
-    align-items: center;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    gap:2vh;
+}
+.channeling-patient{
+    display: flex;
+    flex-direction: column;
+
 }
 .patient-navigator{
     display: flex;
@@ -98,4 +109,49 @@
 .patient-navigator img{
     width: 2vw;
     height: 4vh;
+}
+
+.assistance-container{
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  
+    margin-left: -17vw;
+    width: 100vw;
+ 
+    
+
+
+}
+.wrapper--referrals{
+    display: flex;
+    justify-content: space-between;
+    gap:3vw;
+}
+.assistance-subcontainer{
+    padding:3vh;
+    background-color: var(--clr-white);
+    display: flex;
+    flex-direction: column;
+    width:45vw;
+    min-height: 50vh;
+}
+
+.button--class-doc1{
+    height:5vh;
+    border:2px solid var(--clr-dark);
+    border-right: none;
+    background-color: var(--clr-white);
+    padding-inline:0.5vw;
+}
+.button--class-doc1:hover,.button--class-doc1:last-child:hover{
+    background-color: var(--clr-dark);
+    color:var(--clr-white);
+
+}
+.button--class-doc1:last-child{
+    height:5vh;
+    border-right:2px solid var(--clr-dark);
+    background-color: var(--clr-white);
 }

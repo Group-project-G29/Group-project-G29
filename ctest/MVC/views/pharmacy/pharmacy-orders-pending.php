@@ -24,32 +24,21 @@
     <tr>
         <th>Order ID</th><th>Date</th><th>Time</th><th>Status</th><th>Patient ID</th><th>Cart ID</th>
     </tr>
-    <?php foreach($orders as $key=>$order): ?>
-    <tr class="table-row">
-        <td><?=$order['order_ID']?></td>
-        <td><?=$order['time_of_creation']?></td> 
-        <td><?=$order['created_time']?></td> 
-        <td><?=$order['processing_status']?></td> 
-        <td><?=$order['patient_ID']?></td> 
-        <td><?=$order['cart_ID']?></td> 
-    </tr>
-    <?php endforeach; ?>
+    <?php if($orders): ?>
+        
+        <?php foreach($orders as $key=>$order): ?>
+            <tr class="table-row">
+                <td><?=$order['order_ID']?></td>
+                <td><?=$order['created_date']?></td> 
+                <td><?=$order['created_time']?></td> 
+                <td><?=$order['processing_status']?></td> 
+                <td><?=$order['patient_ID']?></td> 
+                <td><?=$order['cart_ID']?></td> 
+            </tr>
+        <?php endforeach; ?>
     </table>
-    
-    <div>
-        <!-- remove this -->
-        <?php
-            if ( $order['processing_status'] === 'pending'){
-                echo $component->button('', '', 'View Order', 'button--class-2', $order['order_ID']);
-            } else if ( $order['processing_status'] === 'processing' ) {
-                echo $component->button('', '', 'Cancel Process', 'button--class-3', $order['order_ID']);
-            } else if ( $order['processing_status'] === 'packed' ) {
-                echo $component->button('', '', 'Track Order', 'button--class-2', $order['order_ID']);
-            }
-                
-        ?>
-    </div>
 
+    <?php endif; ?>
 </div>
 
 

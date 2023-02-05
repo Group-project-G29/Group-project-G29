@@ -11,20 +11,31 @@
         public string $id;
         public string $attribute;
         public array $options;
+        public string $label;
 
-        public function __construct(Model $model,string $attribute,string $class,array $options,string $id=""){
+        public function __construct(Model $model,string $attribute,string $label,string $class,array $options,string $id)
+        {
             $this->model=$model;
             $this->class=$class;
             $this->options=$options;   
             $this->attribute=$attribute;
             $this->id=$id;
+            $this->label = $label;
         }
-
         public function __toString(){
             $str="";
+            $array = [];
+            $i=0;
             foreach($this->options as $name=>$value){
-                $str.="<option value='$value'>".ucfirst($name)."</option>";
+           
+                if ($this->model->{$this->attribute} && strcmp($this->model->{$this->attribute},$value)) {
+                    $str .= "<option value='$value' >" . ucfirst($name) . "</option>";
+                }
+                else{
+                    $str .= "<option value='$value' selected>" . ucfirst($name) . "</option>";
+                }
             }
+
             $str='
             <tr>
             <div class="%s">
@@ -39,7 +50,7 @@
                 </td>
                 </div>
             </tr>';
-          return sprintf($str,$this->class,$this->attribute,ucfirst($this->attribute),($this->model->errors)[$this->attribute][0] ?? '',$this->attribute,$this->id);
+          return sprintf($str,$this->class,$this->label,ucfirst($this->label),($this->model->errors)[$this->attribute][0] ?? '',$this->attribute,$this->id);
         }
     }
 

@@ -6,12 +6,16 @@ use app\core\DbModel;
 
 class Referral extends DbModel{
     public string $doctor='';
-    public string $appointment_ID='';
     public string $speciality='';
     public string $name='';
-    public string $text='';
+    public ?string $note='';
     public string $type='';
-    public string $refer_doctor='';
+    public string $issued_doctor='';
+    public ?string $history='';
+    public ?string $reason='';
+    public ?string $assessment='';
+    public string $patient='';
+     
    
     public function addReferral(){
         return parent::save();
@@ -20,24 +24,46 @@ class Referral extends DbModel{
     public function rules(): array
     {
         return [
-
+            'doctor'=>[self::RULE_REQUIRED],
+            
 
 
         ];
     }
-    public function setter($doctor,$appointment_ID,$speciality,$text,$type,$refer_doctor){
+    public function setter($doctor,$patient,$speciality,$text,$type,$refer_doctor){
         $this->doctor=$doctor;
-        $this->appointment_ID=$appointment_ID;
         $this->speciality=$speciality;
-        $this->text=$text;
+        $this->note=$text;
         $this->type=$type;
-        $this->refer_doctor=$refer_doctor;
+        $this->issued_doctor=$refer_doctor;
+        $this->patient=$patient;
 
     }
-    public function fileDestination(): array
-    {
-        return ['name'=>"media/patient/referrals/".$this->name];
+    public function getReferrals($patient,$doctor){
+        $referrals = $this->customFetchAll("select distinct * from referrel  where patient=".$patient." and (doctor='".$doctor."' or issued_doctor='".$doctor."')");
+        return $referrals;
     }
+    
+    public function fileDestination(): array
+    {   if($this->name){
+            return ['name'=>"media/patient/referrals/".$this->name];
+        }
+        else{
+            return [];
+        }
+    }
+    public function isIssued($referrel,$doctor){
+        $referrels=$this->customFetchAll("select * from referrel where issued_doctor='".$doctor."' and ref_ID='".$referrel."'");
+        if(isset($referrels)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+
     public function tableName(): string
     {
         return 'referrel';
@@ -47,12 +73,12 @@ class Referral extends DbModel{
         return 'ref_ID';
     }
     public function tableRecords(): array{
-        return ['referrel'=> ['doctor','appointment_ID','speciality','name','text','type','refer_doctor']];
+        return ['referrel'=> ['doctor','patient','speciality','name','note','type','issued_doctor','history','reason','assessment']];
     }
 
     public function attributes(): array
     {
-        return  ['doctor','appointment_ID','speciality','name','text','type','refer_doctor'];
+        return  ['doctor','patient','speciality','name','note','type','issued_doctor','history','reason','assessment'];
     }
 
     

@@ -5,6 +5,7 @@ use app\core\Model;
 
 class Sidebar{
     public array $item;
+    public string $select;
     public function __construct($item,$select)
     {
         $this->item=$item;

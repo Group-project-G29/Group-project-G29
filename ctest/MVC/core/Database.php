@@ -10,7 +10,7 @@ require_once "../views/env.php";
     public  \PDO $pdo;
    
     public function __construct(){
-        $dsn="mysql:host=127.0.0.1;port=3306;dbname=new";
+        $dsn="mysql:host=127.0.0.1;port=3306;dbname=Anspaugh_care";
         $user="root";
         $password="";
         try{

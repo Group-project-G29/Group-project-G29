@@ -34,11 +34,7 @@ class Router{
     public function resolve(){
         $path=$this->request->getPath(); // Get the URL
         $method=$this->request->method(); // Get the Method
-        // var_dump($path);
-        // exit;
         $callback=$this->routes[$method][$path] ?? false;
-        // var_dump($callback);
-        // exit;
         if($callback==false){
             $this->response->setStatusCode(404);
             return $this->renderContent("Not found");

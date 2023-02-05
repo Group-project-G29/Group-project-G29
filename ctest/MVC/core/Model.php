@@ -16,7 +16,7 @@ abstract class Model{
     public const RULE_NUMBERS='num';
 
 
-    public function loadData($data){    
+    public function loadData($data){
         foreach($data as $key=>$value){
          
             if(property_exists($this,$key)){
@@ -38,7 +38,6 @@ abstract class Model{
 
         }
     }
-    
     public function updateData($data,$fileDestination){
         foreach($data[0] as $key=>$value){
             if(property_exists($this,$key) && $value!=NULL){
@@ -59,7 +58,6 @@ abstract class Model{
 
     public array $errors=[];
     public  function validate(){
-        // echo "validate";
         foreach($this->rules() as $attribute=>$rules){
             $value=$this->{$attribute};
             foreach($rules as $rule){

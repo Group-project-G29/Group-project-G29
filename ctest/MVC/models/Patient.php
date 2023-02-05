@@ -25,7 +25,7 @@ class Patient extends DbModel{
     public function register(){
         $this->password=password_hash($this->password,PASSWORD_DEFAULT);
         $last_id=parent::save();
-        $this->emp_ID=$last_id[0]['last_insert_id()'];
+        $this->patient_ID=$last_id[0]['last_insert_id()'];
         Application::$app->login($this,'patient');
         return true; 
         

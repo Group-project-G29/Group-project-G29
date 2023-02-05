@@ -22,7 +22,7 @@ use app\models\OpenedChanneling;
             $this->setLayout('receptionist',['select'=>'Patients']);
             if(isSet($parameters[0]['mod']) && $parameters[0]['mod']=='view'){
                 if(isSet($parameters[1]['id'])){
-                    $patient=$patientModel->customFetchAll("Select * from patient where patient_ID=".$parameters[1]['id']);
+                    $patient=$patientModel->fetchAssocOne(['patient_ID'=>$parameters[1]['id']]);
                     return $this->render("receptionist/patien-detail",[
                         'patient'=>$patient
                     ]);
@@ -35,19 +35,16 @@ use app\models\OpenedChanneling;
             }
            
            
-            else if($request->isPost()){
-                // update patient
+            else if($request->isPost()){ //post request can be either to update or create patient
                 $patientModel->loadData($request->getBody());
                 $patientModel->loadFiles($_FILES);
+                // update patient
                 if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
-                        
-                    
                     if(  $patientModel->updateRecord(['patient_ID'=>$parameters[1]['id']])){
                         Application::$app->session->setFlash('success',"Patient successfully updated ");
                         Application::$app->response->redirect('/ctest/receptionist-patient-information?mod=view&id='.$parameters[1]['id']);
-                        
-
                     }
+                    //if failed to update show uddate patient form
                     else{
                         return $this->render('receptionist/update-patient',[
                             'model'=>$patientModel,
@@ -55,13 +52,12 @@ use app\models\OpenedChanneling;
                     }
                     
                 } 
-            
-                
-                
+                //create new patient if post request is not a update one
                 else if($patientModel->validate() && $patientModel->register_non_session()){
                      Application::$app->session->setFlash('success',"Patient successfully added ");
                      Application::$app->response->redirect('/ctest/receptionist-handle-patient?mod=view');
                 }
+                //if failed to create a new patient show add patient form
                 else{
                     return $this->render("receptionist/add-patient",[
                         'model'=>$patientModel
@@ -70,13 +66,15 @@ use app\models\OpenedChanneling;
 
                 
             }
+            //show add new patient form
             else if(isSet($parameters[0]['mod']) && $parameters[0]['mod']=='add'){
                 return $this->render("receptionist/add-patient",[
                     'model'=>$patientModel
                 ]);
             }
+            //show patient update form
             else if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
-                $patient=$patientModel->customFetchAll("Select * from patient where patient_ID=".$parameters[1]['id']);
+                $patient=$patientModel->fetchAssocOne(['patient_ID'=>$parameters[1]['id']]);
                 $patientModel->updateData($patient,$patientModel->fileDestination());
                 Application::$app->session->set('patient',$parameters[1]['id']);
                 return $this->render('receptionist/update-patient',[
@@ -90,7 +88,7 @@ use app\models\OpenedChanneling;
 
         public function handleAppointments(Request $request,Response $response){
             $this->setLayout('receptionist',['select'=>'Patients']);
-            $parameters=$request->getParameters();
+            $parameters=$request->getParameters(); //[0=>['mod'=>'add],1=>['id'=>119],] $parameter[1]['id']
             $AppointmentModel=new Appointment();
             $ChannelingModel=new Channeling();
             $PatientModel=new Patient();
@@ -100,7 +98,7 @@ use app\models\OpenedChanneling;
             if(isSet($parameters[0]['mod']) && $parameters[0]['mod']=='view'){
                $channelings=$ChannelingModel->customFetchAll("Select * from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on  doctor.nic=channeling.doctor left join employee on employee.nic=doctor.nic"); 
                Application::$app->session->set('patient',$parameters[1]['id']);
-               $patient=$PatientModel->customFetchAll("Select * from patient where patient_ID=".$parameters[1]['id']);
+               $patient=$PatientModel->fetchAssocOne(['patient_ID'=>$parameters[1]['id']]);
                return $this->render('receptionist/receptionist-patient-channeling-search',[
                     'channelings'=>$channelings,
                     'patient'=>$patient
@@ -162,13 +160,13 @@ use app\models\OpenedChanneling;
         }
 
         public function patientInformation(Request $request){
-            $this->setLayout("receptionist");
+            $this->setLayout("receptionist",['select'=>'Patients']);
             $parameters=$request->getParameters();
             $AppointmentModel=new Appointment();
             $appointments=$AppointmentModel->customFetchAll("Select * from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on doctor.nic=channeling.doctor left join employee on employee.nic=doctor.nic where appointment.patient_ID=".$parameters[1]['id']);
                 if(isSet($parameters[0]['mod']) && $parameters[0]['mod']=='view'){
                     return $this->render("receptionist/patient-appointment-list",[
-                        'appointments'=>$appointments
+                        'appointments'=>$appointments //[[0]=>(first row),[1]=>(second)]
                     ]);
                 }
         }

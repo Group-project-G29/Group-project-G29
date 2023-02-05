@@ -19,6 +19,7 @@ include "../views/layouts/navbar/pharmacy-navbar.php";
                  </div>
                 <?php endif;?>
             </div>
+
             {{content}}
         </div>
     </div>

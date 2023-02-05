@@ -8,7 +8,7 @@ class Button{
     public string $value;
     public string $class;
     public string $id;
-
+    public string $type;
     public function __construct(string $name,string $type,string $value,string $class,string $id="")
     {
         $this->name=$name;

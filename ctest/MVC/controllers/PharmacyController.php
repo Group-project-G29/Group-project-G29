@@ -7,8 +7,8 @@ use app\core\Request;
 use app\models\User;
 use app\core\DbModel;
 use app\core\Response;
-use app\models\Employee;
 use app\models\Medicine;
+use app\models\Employee;
 use app\models\Advertisement;
 use app\models\Order;
 use app\models\PharmacyAdvertisement;
@@ -21,7 +21,7 @@ class PharmacyController extends Controller{
     public function viewPendingOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'pending' order by time_of_creation asc");
+        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'pending' and order_ID in(select order_ID  from _order where processing_status='pending' order by created_date asc) order by created_date and created_time asc"); //change has been done
         return $this->render('pharmacy/pharmacy-orders-pending',[
             'orders'=>$orders,
             'model'=>$orderModel
@@ -43,7 +43,7 @@ class PharmacyController extends Controller{
         //Alter table here
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by time_of_creation asc");
+        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by created_date and created_time asc");
         return $this->render('pharmacy/pharmacy-orders-processing',[
             'orders'=>$orders,
             'model'=>$orderModel
@@ -56,7 +56,7 @@ class PharmacyController extends Controller{
 
         //write the sql query to remove the process from table  -> update processing to pending
 
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by time_of_creation asc");
+        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by created_date and created_time asc");
         return $this->render('pharmacy/pharmacy-orders-processing',[
             'orders'=>$orders,
             'model'=>$orderModel
@@ -79,7 +79,7 @@ class PharmacyController extends Controller{
     public function viewProcessingOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by time_of_creation asc");
+        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by created_date and created_time asc");
         return $this->render('pharmacy/pharmacy-orders-processing',[
             'orders'=>$orders,
             'model'=>$orderModel
@@ -101,7 +101,7 @@ class PharmacyController extends Controller{
     public function viewDeliveringOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'packed' order by time_of_creation asc");
+        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'packed' order by created_date and created_time asc");
         return $this->render('pharmacy/pharmacy-orders-delivering',[
             'orders'=>$orders,
             'model'=>$orderModel
@@ -211,7 +211,6 @@ class PharmacyController extends Controller{
             'model'=>$medicineModel,
         ]);
     }
-
     //view medicine
     public function viewMedicine(){
         $this->setLayout("pharmacy",['select'=>'Medicines']);

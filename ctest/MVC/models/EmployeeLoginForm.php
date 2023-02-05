@@ -16,7 +16,7 @@ use app\core\Model;
         }
         public function login(){
             $employee=new Employee();
-            $user=$employee->findOne(['email'=>$this->username]);
+            $user=$employee->findOne(['email'=>$this->username]);// return an object of the user
             if(!$user){
                 $this->customAddError('username','User does not exist with this email address');
                 return false;
