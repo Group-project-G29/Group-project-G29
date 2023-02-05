@@ -5,12 +5,17 @@ use app\core\component\Component;
 $component = new Component();
 // var_dump($user);
 ?>
-<div class="search-bar-container">
+<div class="search-bar-container" style="padding-left:19vw">
   <?php echo $component->searchbar('', 'search', 'search-bar--class2', 'Search by name,specilaity', 'searchbar'); ?>
 </div>
-<div class="button-1" style="margin-left: 35%; margin-top:2vh;">
+<div class="sub-header-container" style="padding:2vh 0 2vh 0">
+
+<div class="button-1" style="margin-left: 35%;">
   <?php echo $component->button('edit-details', '', 'Add New Test', 'button--class-0  width-10', 'edit-details'); ?>
 </div>
+</div>
+<div class="sub-header-container">
+
 <?php foreach ($tests as $test) : ?>
 
   <div class="detail-container">
@@ -38,6 +43,7 @@ $component = new Component();
 
   </div>
 <?php endforeach; ?>
+</div>
 
 
 
