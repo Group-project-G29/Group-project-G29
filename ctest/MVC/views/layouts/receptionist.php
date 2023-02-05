@@ -10,11 +10,7 @@ include "../views/layouts/navbar/receptionist-navbar.php";
 
 </div>
     <div class="main-container">
-<<<<<<< HEAD
-         <?php $sidebar=new Sidebar(['Today Channelings'=>'#','All Channelings'=>'#','Patients'=>'/ctest/receptionist-handle-patient?mod=view','My Detail'=>'#'],$select);?>
-=======
          <?php $sidebar=new Sidebar(['Today Channelings'=>'#','All Channelings'=>'#','Patients'=>'/ctest/receptionist-handle-patient?mod=view','My Detail'=>'/ctest/receptionist-view-personal-details'],$select);?>
->>>>>>> 20000804
          <?php echo $sidebar;  ?>
         
         
