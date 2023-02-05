@@ -21,13 +21,7 @@ include "../views/layouts/navbar/pharmacy-navbar.php";
                 <?php endif;?>
             </div>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> c9612a7f9b4ccb2af04ac81f9858298b29d36a1e
-=======
->>>>>>> 20000804
             {{content}}
         </div>
     </div>
