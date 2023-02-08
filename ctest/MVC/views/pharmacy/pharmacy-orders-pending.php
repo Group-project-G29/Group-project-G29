@@ -22,18 +22,23 @@
 <div class="table-container">
 <table border="0">
     <tr>
-        <th>Order ID</th><th>Date</th><th>Time</th><th>Status</th><th>Patient ID</th><th>Cart ID</th>
+        <th>Order ID</th>
+        <th>Patient ID</th>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Date</th>
+        <th>Time</th>
     </tr>
     <?php if($orders): ?>
         
         <?php foreach($orders as $key=>$order): ?>
-            <tr class="table-row">
+            <tr class="table-row" id=<?=$order['order_ID']?> >
                 <td><?=$order['order_ID']?></td>
+                <td><?=$order['patient_ID']?></td> 
+                <td><?=$order['name']?></td> 
+                <td><?=$order['contact']?></td> 
                 <td><?=$order['created_date']?></td> 
                 <td><?=$order['created_time']?></td> 
-                <td><?=$order['processing_status']?></td> 
-                <td><?=$order['patient_ID']?></td> 
-                <td><?=$order['cart_ID']?></td> 
             </tr>
         <?php endforeach; ?>
     </table>
@@ -47,8 +52,7 @@
     elementsArray = document.querySelectorAll(".table-row");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            // location.href='pharmacy-view-pending-order?id='+elem.id;
-            location.href='pharmacy-view-pending-order?id='+<?=$order['order_ID']?>;
+            location.href='pharmacy-view-pending-order?id='+elem.id; 
         });
     });
 

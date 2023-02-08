@@ -14,16 +14,35 @@
 <div class="table-container">
 <table border="0">
     <tr>
-        <th>Delivery ID</th><th>Date</th><th>Time</th><th>Contact</th><th>Address</th><th>Postal Code</th>
+        <th>Delivery ID</th>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>Postal Code</th>
+        <th>Comment</th>
+        <th>Completed Date</th>
+        <th>Completed Time</th>
     </tr>
     <?php foreach($deliveries as $key=>$delivery): ?>
-    <tr class="table-row">
+    <tr class="table-row" id=<?=$delivery['delivery_ID']?> >
         <td><?=$delivery['delivery_ID']?></td>  
-        <td><?=$delivery['completed_date']?></td>  
-        <td><?=$delivery['completed_time']?></td>  
+        <td><?=$delivery['name']?></td>  
         <td><?=$delivery['contact']?></td>  
         <td><?=$delivery['address']?></td>  
-        <td><?=$delivery['postal_code']?></td>  
+        <td><?=$delivery['city']?></td>  
+        <td><?=$delivery['postal_code']?></td> 
+        <td>
+            <?php   
+                if($delivery['comment']){
+                    echo $delivery['comment'];
+                } else {
+                    echo "None";
+                }
+            ?>
+        </td>   
+        <td><?=$delivery['completed_date']?></td>  
+        <td><?=$delivery['completed_time']?></td>  
     </tr>
     <?php endforeach; ?>
     </table>
