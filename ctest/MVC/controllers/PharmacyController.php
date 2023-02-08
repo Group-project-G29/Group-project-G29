@@ -21,7 +21,7 @@ class PharmacyController extends Controller{
     public function viewPendingOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'pending' and order_ID in(select order_ID  from _order where processing_status='pending' order by created_date asc) order by created_date and created_time asc"); //change has been done
+        $orders=$orderModel->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'pending' ORDER BY created_date ASC"); //change has been done
         return $this->render('pharmacy/pharmacy-orders-pending',[
             'orders'=>$orders,
             'model'=>$orderModel
@@ -32,32 +32,68 @@ class PharmacyController extends Controller{
         $parameters=$request->getParameters();
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from medical_products inner join medicine_in_order on medicine_in_order.med_ID=medical_products.med_ID where medicine_in_order.order_ID =".$parameters[0]['id']);
+        // $orders=$orderModel->customFetchAll("Select * from medical_products inner join medicine_in_order on medicine_in_order.med_ID=medical_products.med_ID where medicine_in_order.order_ID =".$parameters[0]['id']);
+        $orders=$orderModel->customFetchAll("SELECT 
+        patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
+        _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
+        medicine_in_order.amount, medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price 
+        FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID =".$parameters[0]['id']);
         return $this->render('pharmacy/pharmacy-view-pending-order',[
             'orders'=>$orders,
             'model'=>$orderModel,
         ]);
     }
 
-    public function TakePendingOrder(){
+    public function TakePendingOrder($request){
         //Alter table here
+        $parameters=$request->getParameters();
+        // var_dump($parameters);
+        // exit;
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+
+        $orderModel=new Order();
+        $updated_order=$orderModel->customFetchAll("UPDATE _order SET processing_status = 'processing' WHERE order_ID = ".$parameters[0]['id']);
+        
+        // $orders=$orderModel->customFetchAll("Select * from medical_products inner join medicine_in_order on medicine_in_order.med_ID=medical_products.med_ID where medicine_in_order.order_ID =".$parameters[0]['id']);
+
+        $orders=$orderModel->customFetchAll("SELECT 
+        patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
+        _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
+        medicine_in_order.amount, medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price 
+        FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID =".$parameters[0]['id']);
+        return $this->render('pharmacy/pharmacy-view-processing-order',[
+            'orders'=>$orders,
+            'model'=>$orderModel,
+        ]);
+    }
+
+    public function cancleProcessOrder($request){
+        $parameters=$request->getParameters();
+        // var_dump($parameters[0]['id']);
+        // exit;
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by created_date and created_time asc");
-        return $this->render('pharmacy/pharmacy-orders-processing',[
+        $updated_order=$orderModel->customFetchAll("UPDATE _order SET processing_status = 'pending' WHERE order_ID = ".$parameters[0]['id']);
+        //write the sql query to remove the process from table  -> update processing to pending
+
+        $orders=$orderModel->customFetchAll("Select * from _order inner join patient on _order.patient_ID = patient.patient_ID where _order.processing_status = 'pending' order by created_date asc"); //change has been done
+        return $this->render('pharmacy/pharmacy-orders-pending',[
             'orders'=>$orders,
             'model'=>$orderModel
         ]);
     }
 
-    public function cancleProcessOrder(){
+    public function finishProcessingOrder($request){
+        $parameters=$request->getParameters();
+        // var_dump($parameters[0]['id']);
+        // exit;
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-
+        $updated_order=$orderModel->customFetchAll("UPDATE _order SET processing_status = 'packed' WHERE order_ID = ".$parameters[0]['id']);
         //write the sql query to remove the process from table  -> update processing to pending
 
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by created_date and created_time asc");
-        return $this->render('pharmacy/pharmacy-orders-processing',[
+        $orders=$orderModel->customFetchAll("Select * from _order inner join patient on _order.patient_ID = patient.patient_ID where _order.processing_status = 'packed' order by created_date asc"); //change has been done
+        return $this->render('pharmacy/pharmacy-orders-delivering',[
             'orders'=>$orders,
             'model'=>$orderModel
         ]);
@@ -69,7 +105,14 @@ class PharmacyController extends Controller{
         // exit;
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from medical_products inner join medicine_in_order on medicine_in_order.med_ID=medical_products.med_ID where medicine_in_order.order_ID =".$parameters[0]['id']);
+        // $orders=$orderModel->customFetchAll("Select * from medical_products inner join medicine_in_order on medicine_in_order.med_ID=medical_products.med_ID where medicine_in_order.order_ID =".$parameters[0]['id']);
+
+        $orders=$orderModel->customFetchAll("SELECT 
+        patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
+        _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
+        medicine_in_order.amount, medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price 
+        FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID =".$parameters[0]['id']);
+        
         return $this->render('pharmacy/pharmacy-track-order',[
             'orders'=>$orders,
             'model'=>$orderModel,
@@ -79,7 +122,7 @@ class PharmacyController extends Controller{
     public function viewProcessingOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'processing' order by created_date and created_time asc");
+        $orders=$orderModel->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'processing' ORDER BY created_date ASC");
         return $this->render('pharmacy/pharmacy-orders-processing',[
             'orders'=>$orders,
             'model'=>$orderModel
@@ -90,7 +133,13 @@ class PharmacyController extends Controller{
         $parameters=$request->getParameters();
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from medical_products inner join medicine_in_order on medicine_in_order.med_ID=medical_products.med_ID where medicine_in_order.order_ID =".$parameters[0]['id']);
+        // $orders=$orderModel->customFetchAll("Select * from medical_products inner join medicine_in_order on medicine_in_order.med_ID=medical_products.med_ID where medicine_in_order.order_ID =".$parameters[0]['id']);
+        $orders=$orderModel->customFetchAll("SELECT 
+        patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
+        _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
+        medicine_in_order.amount, medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price 
+        FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID =".$parameters[0]['id']);
+
         return $this->render('pharmacy/pharmacy-view-processing-order',[
             'orders'=>$orders,
             'model'=>$orderModel,
@@ -101,7 +150,7 @@ class PharmacyController extends Controller{
     public function viewDeliveringOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->customFetchAll("Select * from _order where processing_status = 'packed' order by created_date and created_time asc");
+        $orders=$orderModel->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'packed' ORDER BY created_date ASC");
         return $this->render('pharmacy/pharmacy-orders-delivering',[
             'orders'=>$orders,
             'model'=>$orderModel
@@ -289,7 +338,7 @@ class PharmacyController extends Controller{
 
     //view advertisement
     public function viewAdvertisement(){
-        $this->setLayout("pharmacy",['select'=>'PharmacyAdvertisement']);
+        $this->setLayout("pharmacy",['select'=>'Advertisement']);
         $advertisementModel=new PharmacyAdvertisement();
         $advertisements=$advertisementModel->customFetchAll("Select * from advertisement order by title asc");
         return $this->render('pharmacy/pharmacy-view-advertisement',[
@@ -303,7 +352,7 @@ class PharmacyController extends Controller{
 
     //View Reports
     public function viewReports(){
-        $this->setLayout("pharmacy",['select'=>'Reports']);
+        $this->setLayout("pharmacy",['select'=>'Report']);
         // $userModel = new Employee();
         // $user = $userModel->findOne(106);
         // $user = $userModel->customFetchAll("SELECT * FROM employee WHERE email=".'"'.Application::$app->session->get('user').'"');
