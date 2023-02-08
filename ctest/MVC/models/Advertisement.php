@@ -52,7 +52,10 @@ class Advertisement extends DbModel{
     }
 
     public function fileDestination(): array {
-        return ['image'=>"media/images/advertisements/".$this->img];
+        if($this->type='pharmacy'){
+            return ['img'=>"media/images/advertisements/pharmacy/".$this->img];
+        }
+        return ['img'=>"media/images/advertisements/".$this->img];
     }
     public function deleteImage($imgName){
         $path = "media/images/advertisements/".$imgName['ad_ID'];

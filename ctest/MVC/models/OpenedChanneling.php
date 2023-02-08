@@ -32,11 +32,15 @@ class OpenedChanneling extends DbModel{
     public function getPatient($channeling,$current_patient,$type,$queuetype):array{
         $patient_queue=$this->customFetchAll("select * from  patient right join appointment on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID =".$channeling." and appointment.type='$queuetype' order by appointment.queue_no");
         $i=0;
+        
 
         while(isSet($patient_queue[$i]['patient_ID']) && $patient_queue[$i]['patient_ID']!=$current_patient){
             $i+=1;
              
         }
+        
+        
+        
         if($type=="this"){
             return $patient_queue[$i]??[];
         }
@@ -51,9 +55,12 @@ class OpenedChanneling extends DbModel{
             }
             return $patient_queue[$i-1]??[];
         }
+        
     }
 
-
+    public function getAllAppointments($id){
+        return $this->customFetchAll("select * from appointment left join patient on patient.patient_ID=appointment.patient_ID where appointment.opened_channeling_ID='$id'");
+    }
     public function rules(): array
     {
         return [
@@ -105,12 +112,12 @@ class OpenedChanneling extends DbModel{
 
     }
     public function getLastPatient($type,$channelingID){
-        $patient=$this->customFetchAll("select patient_ID from appointment where opened_channeling_ID=$channelingID and  queue_no in (select max(queue_no) from appointment where opened_channeling_ID=$channelingID and type='$type' and status='used' ) ");
+        $patient=$this->customFetchAll("select patient_ID from appointment where opened_channeling_ID=$channelingID and  queue_no in (select max(queue_no) from appointment where opened_channeling_ID=$channelingID and type='$type' and status='used' ) and status='used' ");
         if(isSet($patient[0]['patient_ID'])){
             return $patient[0]['patient_ID'];
         }
         else{
-            return $this->customFetchAll("select patient_ID from appointment where opened_channeling_ID=$channelingID and queue_no in (select min(queue_no) from appointment where opened_channeling_ID=$channelingID and type='$type')")[0]['patient_ID']??'';
+            return $this->customFetchAll("select patient_ID from appointment where opened_channeling_ID=$channelingID and queue_no in (select min(queue_no) from appointment where opened_channeling_ID=$channelingID and type='$type') and type='$type'")[0]['patient_ID']??'';
         }
     }
 
@@ -120,7 +127,7 @@ class OpenedChanneling extends DbModel{
         $timeModel=new Time();
         //get channeling date
         $channeling_date=$this->fetchAssocAll(['opened_channeling'=>$id])[0]['channeling_date'];
-        //check if today date<channeling_date
+        //check if today date<channeling_date"in"
         $today=date('Y-m-d');
         if($dateModel->greaterthan($today,$channeling_date)){
             return true;
@@ -161,6 +168,7 @@ class OpenedChanneling extends DbModel{
         return ['remaining_free_appointments','remaining_appointments','channeling_date','status','channeling_ID'];
     }
 
+   
     
 }   
 

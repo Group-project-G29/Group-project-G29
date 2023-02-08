@@ -23,7 +23,7 @@ $form=Form::begin('receptionist-handle-patient?cmd=update&id='.Application::$app
         <?php echo $form->spanfield($model,'name','Name*','field','text') ?>
         <?php echo $form->spanfield($model,'nic','NIC*','field','text') ?>
         <?php echo $form->spanfield($model,'age','Age*','field','text') ?>
-        <?php echo $form->spanselect($model,'gender','field',['select'=>'select','male'=>'male','female'=>'female'],'gender')?>
+        <?php echo $form->spanselect($model,'gender','Gender','field',['select'=>'select','male'=>'male','female'=>'female'],'gender')?>
         <?php echo $form->spanfield($model,'contact','Contact*','field','text') ?>
         <?php echo $form->spanfield($model,'email','Email*','field','text') ?>
         <!-- <?php echo $form->spanfield($model,'contact','Contact','field','text') ?> -->

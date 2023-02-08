@@ -11,31 +11,7 @@ use app\models\Medicine;
 
 ?>
 <section>
-    <div class="pharmacy-cart-pane">
-            <div class="cart-title">
-                <center><h3>Your Cart Items </h3></center>
-            </div>
-            <?php foreach($cartItems as $item):   ?>
-                <div class="cart-item">
-                    <img src=<?="./media/images/medicine/".$item['img']?>>
-                    <div class="scrollable-body">
-                        <h3 class="fs-50"><?=$item['name']." ".$item['strength']." ".$item['unit']?></h3>
-                        <?php if($medicineModel->checkStock($item['med_ID'])):?>
-                            <input type="number" id=<?='"'."amount2_".$item['med_ID'].'"'?> value=<?=$item['amount']?>>
-                            <?=$component->button('update','','Change Amount','update-buttons','cartbtn_'.$item['med_ID']); ?>
-
-                        <?php else: ?>
-                            echo "<h3 color="red">Out of stock</h3>"
-                        <?php endif; ?>
-                        <a href=<?="patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID']?>><h3 class="fs-50">Remove</h3></a>
-                    </div>
-                </div>
-                
-                <?php endforeach;  ?>
-                <div>
-                    <?=$component->button('payment','','Proceed Payment','','proceed-to-payment');  ?>
-                </div> 
-        </div>
+  
     <div class="pharmacy-main-form">
         <?php $form=Form::begin("patient-medicine-order?spec=order&cmd=complete",'post');?> 
         <div class="reg-body_fields">

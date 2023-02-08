@@ -112,7 +112,7 @@
     display: flex;
     flex-direction: column;
     padding-top:3vh;
-    gap:2vh;
+    gap:7vh;
     align-items: center;
     background-color: rgba(255, 255, 255, 0.96);
     width: 100vw;
@@ -336,11 +336,17 @@
     flex-direction: column;
     margin-top: 2vh;
 }
+.button-class--yellow{
+    background-color:rgb(255, 218, 7);
+    border-radius: 20px;
+    height:4vh;
 
+}
 .cart-item{
     display: flex;
 
 }
+
 
 .cart-item img{
     height:5vh;
@@ -353,6 +359,55 @@
     width:100%;
     font-size: 1.4em;
 
+}
+/* --------------cart------------------- */
+.cart-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--clr-dark);
+    border-radius: 100%;
+    width: 3vw;
+    height:5.5vh;
+}
+
+
+.cart-container img{
+    width: 2vw;
+    height:2.2vh;
+}
+.cart-counter{
+    position: relative;
+    left:2.0vw;
+    top:-1.4vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    width:1.2vw;
+    height:1.2vw;
+    background-color: red;
+    border:0.7px solid var(--clr-white);
+    color: var(--clr-white);
+
+    
+}
+.hover-cart{
+    position: absolute;
+    top:2vh;
+
+}
+.cart-content{
+    display: none;
+}
+.hover-cart:hover .cart-content{
+    display:block;
+}
+.hover-cart:active .cart-content{
+    display:block;
+}
+.main-cart-container{
+    margin-top: 3vh;
 }
 .medicine-right-subcontainer{
     display: flex;
@@ -380,7 +435,40 @@
 .medicine-item [type='number']{
     width:5vw;
 }
-
+.search-medicine-container{
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:3vw;
+   
+}
+.pharmacy-main-page--upload-prescription{
+    width: 30vw;
+    height:30vh;
+    background-size: cover;
+    background-image: linear-gradient(to right,var(--clr-light) , transparent),url('images/service-medicine.jpg');
+}
+.pharmacy-main-page--track-orders{
+    width: 30vw;
+    height:30vh;
+    background-size: cover;
+    background-image:url('images/service-delivery.jpg');
+}
+.service-content--2{
+    position:relative;
+    right: 0vw;
+    top:20vh;
+    height: 10vh;
+    width: 30vw;
+    z-index: 100;
+    background-color: rgba(255,255,255,0.7);
+}
+.ph-main-services{
+    display: flex;
+    justify-content:space-between;
+    gap:2vw;
+}
 /* doctor list */
 .doctor-item-identity--one{
     display: flex;

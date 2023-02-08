@@ -141,10 +141,10 @@ $app->router->get('/ctest/receptionist-today-channelings',[ReceptionistControlle
 
 // --------------------------------administrator controllers-----------------------------------------
 $app->router->get('/ctest/main-adds', [AdminController::class, 'viewAdvertisement']);
-$app->router->get('/ctest/handle-advertisement', [AdminController::class, 'handleAdvertisement']);
-$app->router->post('/ctest/handle-advertisement', [AdminController::class, 'handleAdvertisement']);
-$app->router->get('/ctest/update-advertisement', [AdminController::class, 'handleAdvertisement']);
-$app->router->post('/ctest/update-advertisement', [AdminController::class, 'handleAdvertisement']);
+// $app->router->get('/ctest/handle-advertisement', [AdminController::class, 'handleAdvertisement']);
+// $app->router->post('/ctest/handle-advertisement', [AdminController::class, 'handleAdvertisement']);
+// $app->router->get('/ctest/update-advertisement', [AdminController::class, 'handleAdvertisement']);
+// $app->router->post('/ctest/update-advertisement', [AdminController::class, 'handleAdvertisement']);
 $app->router->get('/ctest/schedule-channeling',[AdminController::class,'schedulingChanneling']);
 $app->router->post('/ctest/schedule-channeling',[AdminController::class,'schedulingChanneling']);
 //-------------------administrator routers--------------------------------------

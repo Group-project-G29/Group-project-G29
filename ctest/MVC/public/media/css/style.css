@@ -718,7 +718,7 @@ padding-left:5vh;
     border-radius:5px;
 }
 
-.button--class-0:hover,
+/* .button--class-0:hover,
 .button--class-0-deactive:hover {
     scale: 1.05;
     transition: 0.5s;
@@ -726,7 +726,7 @@ padding-left:5vh;
 
 .button--class-0-deactive:hover {
     opacity: 80%;
-}
+} */
 
 .button--class-1{
     height:4vh;

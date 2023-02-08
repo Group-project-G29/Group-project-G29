@@ -31,15 +31,16 @@ $appointmentModel=new Appointment();
                                     <td><a href=<?="/ctest/doctor-report?spec=referral&mod=view&id=".$referral['ref_ID']?>><?=$referral['issued_doctor']."-".$referral['type']."-".$referral['ref_ID']?></a></td><td><?=$referral['date'] ?></td>
                                     <?php if($referralModel->isIssued($referral['ref_ID'],Application::$app->session->get('userObject')->nic)): ?>
                                         <td><?=$component->button('update','','Update','button--class-2-small'); ?></td>
-                                        <td><?=$component->button('delete','','Delete','button--class-3-small'); ?></td>
+                                        <td><?=$component->button('delete','','Delete','button--class-3-small'); ?></td><td><a href="#">update</a></td>
+    
                                     <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
                         </table>
                     </div>
                     <div class="ass-button-set">
-                            <?=$component->button('write report','','Write Report','button--class-0','write-ref');?>
-                            <?=$component->button('Upload report','','Upload Report','button--class-0','upload-ref');?>
+                            <?=$component->button('write report','','Write Report','button-class--lightblue','write-ref');?>
+                            <?=$component->button('Upload report','','Upload Report','button-class--lightblue','upload-ref');?>
                     </div>
                 </div>
                 <div class="wrapper--last-consultation none">
@@ -66,7 +67,7 @@ $appointmentModel=new Appointment();
                     <?=$appointmentModel->getUsedPatient(Application::$app->session->get('channeling'))?>
                     
                 </div>
-                <div class="number-item--blue">
+                <div class="number-item--lightblue">
                     <?=$appointmentModel->getTotoalPatient(Application::$app->session->get('channeling'))?>
                 </div>
             </div>
@@ -91,7 +92,7 @@ $appointmentModel=new Appointment();
                 </table>
                 </center>
                 
-                <?=$component->button('btn','','Switch to Report Consultation Queue','button-class--darkblue switch',$appointment['patient_ID']);?>
+                <?=$component->button('btn','','Switch to Consultation Queue','button-class--lightblue switch',$appointment['patient_ID']);?>
             </div>
             <div class="result-container">
                 <table class="fs-100">
@@ -128,8 +129,8 @@ $appointmentModel=new Appointment();
                         </div>
                     </div>
                     <div class="ass-button-set">
-                        <?=$component->button('Upload report','','Upload Report','button--class-0','upload-rep');?>
-                        <?=$component->button('write report','','Write Report','button--class-0','write-rep');?>
+                        <?=$component->button('Upload report','','Upload Report','button-class--lightblue','upload-rep');?>
+                        <?=$component->button('write report','','Write Report','button-class--lightblue','write-rep');?>
                     </div>
                 </div>
                 <div class="wrapper--prescriptions none">
@@ -137,7 +138,7 @@ $appointmentModel=new Appointment();
                         <div>
                             <table>
                                 <tr>
-                                    <th>Prescription</th><th>created date</th><th></th><th> </th>
+                                    <th>Prescription</th><th>created date</th><th><?=$component->button('write Prescription','','Write Prescription','button-class--lightblue','write-pres');?></th><th> <?=$component->button('Upload Prescription','','Write Prescription','button-class--lightblue','upload-pres');?></th>
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 
@@ -148,10 +149,6 @@ $appointmentModel=new Appointment();
                             </table>
                         </div>
                         
-                    </div>
-                    <div class="ass-button-set">    
-                        <?=$component->button('write Prescription','','Write Prescription','button--class-0','write-pres');?>
-                        <?=$component->button('Upload Prescription','','Write Prescription','button--class-0','upload-pres');?>
                     </div>
                 </div>
                 <div class="wrapper--lab-tests none">
@@ -159,7 +156,7 @@ $appointmentModel=new Appointment();
                         <div>
                             <table>
                                 <tr>
-                                    <th>Lab Test Report</th><th>created date</th><th></th>
+                                    <th>Lab Test Report</th><th>created date</th><th><?=$component->button('Request Lab Test','','Request Lab Test','button-class--lightblue','req-lab');?></th>
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 
@@ -170,9 +167,6 @@ $appointmentModel=new Appointment();
                             </table>
                         </div>
                         
-                    </div>
-                    <div class="ass-button-set">
-                        <?=$component->button('Request Lab Test','','Request Lab Test','button--class-0','req-lab');?>
                     </div>
                 </div>
                 <div class="wrapper--medical-analysis none">
