@@ -1,5 +1,4 @@
 <?php
-
 namespace app\controllers;
 
 use app\controllers\PatientAuthController;
@@ -28,7 +27,7 @@ class ReceptionistController extends Controller
         if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'view') {
             if (isset($parameters[1]['id'])) {
                 $patient = $patientModel->customFetchAll("Select * from patient where patient_ID=" . $parameters[1]['id']);
-                return $this->render("receptionist/patien-detail", [
+                return $this->render("receptionist/patient-detail", [
                     'patient' => $patient
                 ]);
             }
@@ -47,7 +46,7 @@ class ReceptionistController extends Controller
 
                 if ($patientModel->updateRecord(['patient_ID' => $parameters[1]['id']])) {
                     Application::$app->session->setFlash('success', "Patient successfully updated ");
-                    Application::$app->response->redirect('/ctest/receptionist-patient-information?mod=view&id=' . $parameters[1]['id']);
+                    Application::$app->response->redirect('/ctest/receptionist-handle-patient?mod=view&id=' . $parameters[1]['id']);
                 } else {
                     return $this->render('receptionist/update-patient', [
                         'model' => $patientModel,

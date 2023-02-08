@@ -2,12 +2,12 @@
 use app\core\Application;
 use app\core\component\Sidebar;
 use app\models\Employee;
-include "../views/layouts/navbar/pharmacy-navbar.php";
+include "../views/layouts/navbar/nurse-navbar.php";
 ?>
 
 </nav>
     <div class="main-container">
-         <?php $sidebar=new Sidebar(['Requests'=>'/ctest/lab-test-request','Tests'=>'/ctest/lab-view-all-test','Advertise'=>'/','My Detail'=>'/ctest/lab-view-personal-details'],$select);?>
+         <?php $sidebar=new Sidebar(['All Channelings'=>'/ctest/all-channelings','Today Channelings'=>'/ctest/today-channelings','Patients'=>'/','My Detail'=>'/ctest/my-detail'],$select);?>
          <?php echo $sidebar;  ?>
         
         

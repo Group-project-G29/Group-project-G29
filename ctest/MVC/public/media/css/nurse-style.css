@@ -1,0 +1,40 @@
+.detail-container{
+    display: flex;
+    margin-top: 2vh;
+    justify-content: center;
+}
+
+.detail-container-left{
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(213, 237, 243);
+    margin-right: 1vw;
+}
+.detail-container-left img{
+    width: 10vw;
+    height: 10vw;
+    margin: 0 0 5vh 0;
+    border-radius: 50%;
+}
+
+.detail-container-right{
+    line-height: 5vh;
+    font-size: 1.1rem;
+    background-color: rgb(213, 237, 243);
+    padding: 6vh 6vw;
+}
+.data-row{
+    display: flex;
+}
+.data-row-left{
+    width: 10vw;
+}
+
+
+.no-clinic-desc{
+    font-size: 2rem;
+    font-weight: bold;
+}

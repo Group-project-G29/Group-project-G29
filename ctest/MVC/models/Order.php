@@ -1,5 +1,7 @@
 <?php
 namespace app\models;
+
+use app\core\Application;
 use app\core\DbModel;
 
     class Order extends DbModel{
@@ -77,6 +79,11 @@ use app\core\DbModel;
         public function getOrderItem($orderID){
             //create view here
             return $this->customFetchAll("select * from medicine_in_order left join _order on _order.order_ID=medicine_in_order.order_ID right join medical_products on medical_products.med_ID=medicine_in_order.med_ID where medicine_in_order.order_ID=$orderID");
+        }
+
+        public function getPatientOrder(){
+            $patientID=Application::$app->session->get('user');
+            return $this->customFetchAll("select * from delivery left join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'completed'")[0];
         }
     }
 

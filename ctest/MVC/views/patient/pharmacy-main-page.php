@@ -3,8 +3,11 @@
 </script>
 <?php
 
-    use app\core\component\Component;
+use app\core\Application;
+use app\core\component\CartView;
+use app\core\component\Component;
     $component=new Component();
+
 
 ?>
 
@@ -29,26 +32,35 @@
     
     <section class="pharmacy-main-container">
         
-        <div>
+        <div class="search-medicine-container">
             <?php echo $component->searchbar('',"name","search-bar--class1","Search by medicine name","search");?>
+            <?php if(Application::$app->session->get('user')):?>
+                <div class="main-cart-container">
+                    <?= $component->cartview() ?>
+                </div>
+            <?php endif; ?>
             <script>
                 const searchbar=e('search');
                 const btn=e('bsearch');
                 btn.addEventListener("click",()=>{
                     location.href="patient-pharmacy?cmd=search&value="+searchbar.value+"&page=1";
                 });
-                </script>
-     </div>
+            </script>
+        </div>
    
 
-     <div>
+     <div class="ph-main-services">
         <div class="pharmacy-main-page--upload-prescription">
-            <h3>Upload Your precriptoin here</h3>
-            <?= $component->button('upload-precription','',"Upload Prescription","prescription-button"); ?>
+            <div class="service-content--1">
+                <h3>Upload Your precriptoin here</h3>
+                <?= $component->button('upload-precription','',"Upload Prescription","button-class--yellow"); ?>
+            </div>
         </div>
         <div class="pharmacy-main-page--track-orders"> 
-            <h3>Track you orders here</h3>
-            <?= $component->button('track-order','',"Track Your Order",'',''); ?>
+            <div class="service-content--2">
+                <h3>Track you orders here</h3>
+                <?= $component->button('track-order','',"Track Your Order",'button-class--yellow','track-order'); ?>
+            </div>
         </div>
      </div>
        
@@ -101,6 +113,16 @@ function showSlides(){
     slides[slideIndex-1].style.display = "block";
     dots[slideIndex-1].className += " active";setTimeout(showSlides,10000)};
   
+</script>
+<script src="./media/js/main.js">
+
+</script>
+
+<script>
+    const trackOrderBtn=e('track-order');
+    trackOrderBtn.addEventListener('click',()=>{
+        location.href="patient-pharmacy?spec=order-main";
+    })
 </script>
 
 

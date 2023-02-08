@@ -1,19 +1,26 @@
+
 <?php
+// var_dump($channeling);
+// var_dump("<br><br>");
+// var_dump($openedchanneling);
+// var_dump("<br><br>");
+// var_dump($doctor);
+// var_dump("<br><br>");
+// var_dump($nurse);
+// var_dump("<br><br>");
 
-use app\core\Application;
-use app\models\Appointment;
-
-$appointmentModel=new Appointment();
 ?>
+
+
 <div class="column-flex">
     <div class="main-detail-title">
-        <h1><?=$channeling->speciality."-".$channeling->day?></h1>
+        <h1><?=$channeling->speciality." - ".$channeling->day?></h1>
     </div>
     <div class="number-content">
         <h2>Patients</h2>
         <div class="number-pad">
-            <div class="number-item--white fs-200"><?=$appointmentModel->getUsedPatient($openedchanneling->opened_channeling_ID)?></div>
-            <div class="number-item--blue fs-200"><?=$appointmentModel->getTotoalPatient($openedchanneling->opened_channeling_ID)?></div>
+            <div class="number-item--white fs-200"><?=$openedchanneling->remaining_appointments?></div>
+            <div class="number-item--blue fs-200"><?=$channeling->total_patients?></div>
         </div>
     </div>
     <div class="scheduled-info fs-100">
@@ -32,14 +39,16 @@ $appointmentModel=new Appointment();
             <?php endforeach; ?>
         </div>
     </div>
-    <button class="start button--class-0 start_button" id=<?=$openedchanneling->opened_channeling_ID?>>Start</button>
+    <button class="click button--class-0 start_button" id=<?=$openedchanneling->opened_channeling_ID?>>Patients List</button>
+
+    
 
 
 </div>
 <script>
-    const btn=document.querySelector(".start");
+    const btn=document.querySelector(".click");
     btn.addEventListener('click',()=>{
-        location.href="channeling-assistance?cmd=start&id="+btn.id;
+        location.href="patient?id="+btn.id;
     })
 
 </script>

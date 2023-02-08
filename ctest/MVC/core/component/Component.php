@@ -15,5 +15,8 @@ class Component{
     public function popup($value,$valuestyle,$style,$id){
         return new PopUp($value,$valuestyle,$style,$id);
     }
+    public function cartview(){
+        return new CartView();
+    }
   }
 ?>
