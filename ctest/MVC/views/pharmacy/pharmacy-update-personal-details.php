@@ -30,7 +30,7 @@ $form=Form::begin('/ctest/pharmacy-update-personal-details?cmd=update&id='.Appli
     <table>
     <?php echo $form->spanfield($model,'name','Employee Name','field','text') ?>
     <?php echo $form->spanfield($model,'contact','Contact Number','field','text') ?>
-    <?php echo $form->spanselect($model,'gender','field',['select'=>'select','male'=>'Male',"female"=>"Female"],'gender')?>
+    <?php echo $form->spanselect($model,'gender','Gender','form',['select'=>'select','male'=>'Male',"female"=>"Female"],'gender')?>
     <?php echo $form->spanfield($model,'address','Address','field','text') ?>
     </table>
     <div><?php echo $component->button("update-personalDetails","submit","Save","button--class-0","update-personalDetails")?></div>

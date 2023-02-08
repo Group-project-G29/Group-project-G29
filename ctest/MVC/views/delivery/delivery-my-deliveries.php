@@ -14,21 +14,33 @@
 <div class="table-container">
 <table border="0">
     <tr>
-        <th>Delivery ID</th><th>Date</th><th>Time</th><th>Contact</th><th>Address</th><th>Postal Code</th><th></th>
+        <th>Delivery ID</th>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>Postal Code</th>
+        <th>Comment</th>
+        <th>Created Date Time</th>
     </tr>
     <?php foreach($deliveries as $key=>$delivery): ?>
-    <tr class="table-row">
+    <tr class="table-row" id=<?=$delivery['delivery_ID']?> >
         <td><?=$delivery['delivery_ID']?></td>  
-        <td><?=$delivery['completed_date']?></td>  
-        <td><?=$delivery['completed_time']?></td>  
+        <td><?=$delivery['name']?></td>  
         <td><?=$delivery['contact']?></td>  
         <td><?=$delivery['address']?></td>  
+        <td><?=$delivery['city']?></td>  
         <td><?=$delivery['postal_code']?></td>  
         <td>
-            <div>
-                <?php echo $component->button('view','','View','button--class-2',$delivery['delivery_ID']) ?>
-            </div>
-        </td>
+            <?php   
+                if($delivery['comment']){
+                    echo $delivery['comment'];
+                } else {
+                    echo "-";
+                }
+            ?>
+        </td>  
+        <td><?=$delivery['time_of_creation']?></td>
     </tr>
     <?php endforeach; ?>
     </table>
@@ -40,7 +52,7 @@
     // btn.addEventListener('click',function(){
     //     location.href="handle-delivery";
     // })
-    elementsArray = document.querySelectorAll(".button--class-2");
+    elementsArray = document.querySelectorAll(".table-row");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href='delivery-view-delivery?id='+elem.id;

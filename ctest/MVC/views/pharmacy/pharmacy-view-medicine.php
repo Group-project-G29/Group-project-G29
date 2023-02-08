@@ -17,7 +17,7 @@
     </tr>
     <?php foreach($medicines as $key=>$medicine): ?>
     <tr class="table-row">
-        <td><img src=<?="./media/images/medicine/".$medicine['img']?> alt="No image"></td>
+        <td class="row-img-col"><img class="row-img" src=<?="./media/images/medicine/".$medicine['img']?> alt="No image"></td>
         <td><?=$medicine['name']." ".$medicine['strength']." ".$medicine['unit']?></td>
         <td><?=$medicine['unit_price']?></td>  
         <td><?=($medicine['availability']=="NA")?"Not Available":"Available"; ?></td>
