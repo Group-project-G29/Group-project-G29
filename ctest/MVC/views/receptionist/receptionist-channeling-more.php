@@ -16,7 +16,7 @@ $component = new Component();
   <table border="0">
 
     <tr class="row-height header-underline">
-      <th>channeling</th>
+      <th>Channeling Type</th>
       <th>Date</th>
       <th>Time</th>
       <th>Room</th>
@@ -30,7 +30,7 @@ $component = new Component();
       
       <tr class='table-row  row-height hover' id=<?=$channeling['emp_ID']?>>
         <td><?= $channeling ['speciality']?></td>
-        <td>All <?= $channeling['day'] ?> </td>
+        <td>All <?= $channeling['day'] ?>s </td>
         <td><?= $channeling['time'] ?> </td>
         <td><?= $channeling['room'] ?> </td>
         <td> </td>

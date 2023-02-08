@@ -62,10 +62,15 @@ $app->router->post('/ctest/receptionist-patient-appointment',[ReceptionistContro
 $app->router->get('/ctest/receptionist-patient-information',[ReceptionistController::class,'patientInformation']);
 $app->router->post('/ctest/receptionist-patient-information',[ReceptionistController::class,'patientInformaton']);
 
+
 $app->router->get('/ctest/receptionist-view-personal-details',[ReceptionistController::class,'viewPersonalDetails']);
 $app->router->post('/ctest/receptionist-view-personal-details',[ReceptionistController::class,'viewPersonalDetails']);
+$app->router->get('/ctest/receptionist-personal-detail-update',[ReceptionistController::class,'handleReceptionist']);
+$app->router->post('/ctest/receptionist-personal-detail-update',[ReceptionistController::class,'handleReceptionist']);
+
 
 $app->router->get('/ctest/receptionist-all-channelings',[ReceptionistController::class,'allChannelings']);
+$app->router->get('/ctest/receptionist-all-channeling-type',[ReceptionistController::class,'allChannelingType']);
 $app->router->get('/ctest/receptionist-channeling-more',[ReceptionistController::class,'channelingMore']);
 
 $app->router->get('/ctest/receptionist-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);
@@ -79,6 +84,9 @@ $app->router->get('/ctest/receptionist-channeling-payment',[ReceptionistControll
 $app->router->get('/ctest/receptionist-today-channelings',[ReceptionistController::class,'todayChannelings']);
 
 $app->router->get('/ctest/lab-view-personal-details',[LabController::class,'viewPersonalDetails']);
+$app->router->post('/ctest/lab-view-personal-details',[LabController::class,'viewPersonalDetails']);
+$app->router->get('/ctest/lab-personal-detail-update',[LabController::class,'handleLab']);
+$app->router->post('/ctest/lab-personal-detail-update',[LabController::class,'handleLab']);
 $app->router->get('/ctest/lab-view-all-test',[LabController::class,'viewTest']);
 $app->router->post('/ctest/lab-view-all-test',[LabController::class,'viewTest']);
 $app->router->get('/ctest/lab-add-new-test',[LabController::class,'handleTest']);

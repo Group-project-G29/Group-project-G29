@@ -48,10 +48,20 @@
         </table>
     </div>
 
-    <div class="button" style="margin-left: 35%;">
+    <div class="button" style="margin-left: 35%;" id=<?=$user['email']?>>
         <?php echo $component->button('edit-details','','Edit Details','button--class-0  width-10','edit-details');?>
     </div>
     
 </div>
 
 
+<script>
+  elementsArray = document.querySelectorAll(".button");
+  console.log(elementsArray);
+  elementsArray.forEach(function(elem) {
+    elem.addEventListener("click", function() {
+      location.href = 'lab-personal-detail-update?mod=update&id='+elem.id; //pass the variable value
+    });
+  });
+  
+</script>

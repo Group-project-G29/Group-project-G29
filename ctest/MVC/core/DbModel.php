@@ -93,13 +93,15 @@
             $tablename=$this->tableName();
             $attributes=$this->attributes();
             $values=array_map(fn($attr)=>"$attr=:$attr",$attributes);
+        // var_dump($values);
             $where=array_map(fn($attr)=>"$attr=$where[$attr]",$where_attributes);
             
             $statement=self::prepare("update $tablename set ".implode(',',$values)." where ".implode('AND',$where));
             foreach ($attributes as $attribute){
                 $statement->bindValue(":$attribute",$this->{$attribute});
             }
-            // var_dump($statement);
+        //      var_dump($statement);
+        // exit;
             $statement->execute();
             
             return $this->customFetchAll("select last_insert_id()");

@@ -38,8 +38,6 @@ class PharmacyController extends Controller{
             $medicineModel->loadData($request->getBody());
             $medicineModel->loadFiles($_FILES);
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
-                    
-                
                 if($medicineModel->validate() && $medicineModel->updateRecord(['med_ID'=>$parameters[1]['id']])){
                     $response->redirect('/ctest/view-medicine'); 
                     Application::$app->session->setFlash('success',"Medicine successfully updated ");

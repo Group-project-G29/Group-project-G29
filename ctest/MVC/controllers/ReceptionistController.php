@@ -146,7 +146,7 @@ class ReceptionistController extends Controller
 
     public function patientInformation(Request $request)
     {
-        $this->setLayout("receptionist");
+        $this->setLayout('receptionist', ['select' => 'Patients']);
         $parameters = $request->getParameters();
         $AppointmentModel = new Appointment();
         $appointments = $AppointmentModel->customFetchAll("SELECT * from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on doctor.nic=channeling.doctor left join employee on employee.nic=doctor.nic where appointment.patient_ID=" . $parameters[1]['id']);
@@ -161,34 +161,79 @@ class ReceptionistController extends Controller
     {
         $this->setLayout("receptionist", ['select' => 'My Detail']);
         $userModel = new Employee();
-        $user = $userModel->customFetchAll("SELECT * FROM employee WHERE email=" . '"' . Application::$app->session->get('user') . '"');
+        $userinfo = $userModel->customFetchAll("SELECT * FROM employee WHERE email=" . '"' . Application::$app->session->get('user') . '"');
         return $this->render('receptionist/receptionist-view-personal-details', [
-            'user' => $user[0]
+            'userinfo' => $userinfo[0]
         ]);
     }
 
 
-    public function allChannelings(Request $request)
+    public function handleReceptionist(Request $request, Response $response)
+    {
+        $this->setLayout("receptionist", ['select' => 'My Detail']);
+        $parameters = $request->getParameters();
+        $userModel = new Employee();
+
+        if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'update') {
+            $userinfo = $userModel->customFetchAll("SELECT * from employee where email=" . "'" . $parameters[1]['id'] . "'");
+            // var_dump($userinfo);
+            // exit;
+            $userModel->updateData($userinfo, $userModel->fileDestination());
+            Application::$app->session->set('userinfo', $parameters[1]['id']);
+            return $this->render('receptionist/receptionist-personal-detail-update', [
+                'model' => $userModel,
+                'userinfo'=>$userinfo[0]
+            ]);
+        }
+        if ($request->isPost()) {
+            // update medicine
+            $userModel->loadData($request->getBody());
+            $userModel->loadFiles($_FILES);
+            if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'update') {
+                if ($userModel->validate() && $userModel->updateRecord(['email' => $parameters[1]['id']])) {
+                    $response->redirect('/ctest/receptionist-view-personal-details');
+                    Application::$app->session->setFlash('success', "Receptionist Personal Detail successfully updated ");
+                    $response->redirect('/ctest/receptionist-view-personal-details');
+                    exit;
+                };
+            }
+
+        }
+        return $this->render('receptionist/receptionist-view-personal-details', [
+            'model' => $userModel,
+        ]);
+    }
+
+
+
+    public function allChannelingType(Request $request)
     {
         $channelingModel = new Channeling();
         $parameters = $request->getParameters();
-
-        // if (isset($parameters[0]['spec']) && $parameters[0]['spec'] == 'channeling') {
-        //     $channelingmore = $channelingModel->customFetchAll("SELECT distinct employee.name,doctor.speciality,channeling.day,channeling.time,channeling.room from employee inner join doctor on employee.nic = doctor.nic inner join channeling on doctor.nic=channeling.doctor where employee.emp_ID=" . $parameters[1]['id']);        //pass the variable value
-        //     // var_dump($channelingmore);
-        //     // exit;
-        //     return $this->render('receptionist/receptionist-all-channeling-more', [
-        //         'channelingmore' => $channelingmore
-        //     ]);
-        // }
-
         $this->setLayout("receptionist", ['select' => 'All Channelings']);
-        $channelings = $channelingModel->customFetchAll("SELECT * from employee  join doctor on employee.nic = doctor.nic");
-
-        return $this->render('receptionist/receptionist-all-channelings', [
-            'channelings' => $channelings
+        $channelings = $channelingModel->customFetchAll("SELECT employee.name,employee.emp_ID,employee.img,doctor.description,doctor.speciality from employee  join doctor on employee.nic = doctor.nic where doctor.speciality=" . "'" . $parameters[0]['id'] . "' ");
+        $channelingSp = $channelingModel->customFetchAll("SELECT * from doctor where speciality=" . "'" . $parameters[0]['id'] . "' ");
+        ;
+        return $this->render('receptionist/receptionist-all-channeling-type', [
+            'channelings' => $channelings,
+            'channelingSp'=>$channelingSp[0]
         ]);
     }
+
+    public function allChannelings(Request $request, Response $response)
+    {
+        $this->setLayout("receptionist", ['select' => 'All Channelings']);
+
+        $channelingModel = new Channeling();
+        $parameters = $request->getParameters();
+        $channelingmore = $channelingModel->customFetchAll("SELECT distinct speciality from doctor ");        //pass the variable value
+        // var_dump($channelingmore);
+        // exit;
+        return $this->render('receptionist/receptionist-all-channelings', [
+            'channelingmore' => $channelingmore
+        ]);
+    }
+
     public function channelingMore(Request $request, Response $response)
     {
         $channelingModel = new Channeling();
@@ -207,31 +252,23 @@ class ReceptionistController extends Controller
     public function sessionDetail(Request $request)
     {
         $channelingModel = new channeling();
+        $PatientModel = new patient();
+
         $parameters = $request->getParameters();
         $channelingSession = $channelingModel->customFetchAll("SELECT * from employee  inner join channeling on employee.nic = channeling.doctor inner join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where employee.emp_ID=" . $parameters[0]['id']);
-        return $this->render('receptionist/receptionist-channeling-session-detail', [
-            'channelingSession' => $channelingSession[0]
-        ]);
-    }
-
-    public function patientDetail(Request $request)
-    {
-        $channelingModel = new channeling();
-        $PatientModel = new patient();
-        $parameters = $request->getParameters();
-        $channelingAppo = $channelingModel->customFetchAll("SELECT * from employee  inner join channeling on employee.nic = channeling.doctor inner join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where employee.emp_ID=" . $parameters[0]['id']);
-        $channelingDoc = $channelingModel->customFetchAll("SELECT * from employee inner join doctor on employee.nic = doctor.nic inner join channeling on doctor.nic=channeling.doctor where employee.emp_ID=" . $parameters[0]['id']);
         $channelingPatient = $PatientModel->customFetchAll("SELECT patient.patient_ID,patient.name,opened_channeling.remaining_free_appointments from employee
         join channeling on employee.nic=channeling.doctor
         join opened_channeling on opened_channeling.channeling_ID=channeling.channeling_ID
         join appointment on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID
         join patient on patient.patient_ID=appointment.patient_ID where employee.emp_ID=" . $parameters[0]['id']);
-        return $this->render('receptionist/receptionist-channeling-session-patient-detail', [
-            'channelingDoc' => $channelingDoc[0],
+        return $this->render('receptionist/receptionist-channeling-session-detail', [
+            'channelingSession' => $channelingSession[0],
             'channelingPatient' => $channelingPatient,
-            'channelingAppo' => $channelingAppo[0]
+
         ]);
     }
+
+    
 
     public function patientMoreDetail(Request $request)
     {
@@ -251,7 +288,7 @@ class ReceptionistController extends Controller
         ]);
     }
 
- public function setAppointment(Request $request)
+    public function setAppointment(Request $request)
     {
         $channelingModel = new Channeling();
         // $PatientModel = new patient();
@@ -278,8 +315,7 @@ class ReceptionistController extends Controller
         $parameters = $request->getParameters();
 
 
-        return $this->render('receptionist/receptionist-channeling-payment', [
-        ]);
+        return $this->render('receptionist/receptionist-channeling-payment', []);
     }
     public function todayChannelings(Request $request)
     {
@@ -287,7 +323,7 @@ class ReceptionistController extends Controller
         $parameters = $request->getParameters();
 
         $this->setLayout("receptionist", ['select' => 'Today Channelings']);
-        $channelings = $channelingModel->customFetchAll("SELECT * from employee  inner join channeling on employee.nic = channeling.doctor inner join doctor on channeling.doctor=doctor.nic where employee.emp_ID" . $parameters[0]['id']);
+        $channelings = $channelingModel->customFetchAll("SELECT * from employee  inner join channeling on employee.nic = channeling.doctor inner join doctor on channeling.doctor=doctor.nic where employee.emp_ID=" . $parameters[0]['id']);
 
         return $this->render('receptionist/receptionist-today-channelings', [
             'channelings' => $channelings
