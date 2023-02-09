@@ -321,7 +321,7 @@ class PharmacyController extends Controller{
                Application::$app->response->redirect('/ctest/pharmacy-view-advertisement'); 
                $this->setLayout("pharmacy",['select'=>'Advertisement']);
                $advertisementModel=new PharmacyAdvertisement();
-               $advertisements=$advertisementModel->customFetchAll("Select * from advertisement order by name asc");
+               $advertisements=$advertisementModel->customFetchAll("Select * from advertisement where type='Pharmacy' order by name asc");
                return $this->render('pharmacy/pharmacy-view-advertisement',[
                    'advertisements'=>$advertisements,
                    'model'=>$advertisementModel
@@ -340,7 +340,7 @@ class PharmacyController extends Controller{
     public function viewAdvertisement(){
         $this->setLayout("pharmacy",['select'=>'Advertisement']);
         $advertisementModel=new PharmacyAdvertisement();
-        $advertisements=$advertisementModel->customFetchAll("Select * from advertisement order by title asc");
+        $advertisements=$advertisementModel->customFetchAll("Select * from advertisement where type='Pharmacy' order by title asc");
         return $this->render('pharmacy/pharmacy-view-advertisement',[
             'advertisements'=>$advertisements,
             'model'=>$advertisementModel
