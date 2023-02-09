@@ -120,6 +120,15 @@
     margin-top: 47.5vh;
    
 }
+
+.pharmacy-main-form{
+    display: flex;
+    margin-top: 5vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap:1vh;
+}
 .homepage-main-container:hover{
     transform:translateY(-3vw);
     
@@ -247,7 +256,7 @@
     height:4vh;
     width: 2.5vw;
 } 
-/* styles for channeling doctor list on specility */
+/* styles for channeling doctor list on speciality */
 
 .identity-container{
     display: flex;
@@ -399,7 +408,16 @@
 }
 .cart-content{
     display: none;
+    background-color: white;
+    width: 20vw;
+    min-height: 29vh;
+    height: 100%;
+    padding: 1vw;
 }
+.cart-content [type="number"]{
+    width:4vw;
+}
+
 .hover-cart:hover .cart-content{
     display:block;
 }
@@ -454,6 +472,16 @@
     height:30vh;
     background-size: cover;
     background-image:url('images/service-delivery.jpg');
+}
+.pharmacy-order-container{
+    background-color:var(--clr-white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    margin-left: 30vw;
+    margin-top: 3vh;
+    width: 40vw;
 }
 .service-content--2{
     position:relative;

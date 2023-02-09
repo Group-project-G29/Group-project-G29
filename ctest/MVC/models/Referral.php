@@ -43,7 +43,10 @@ class Referral extends DbModel{
         $referrals = $this->customFetchAll("select distinct * from referrel  where patient=".$patient." and (doctor='".$doctor."' or issued_doctor='".$doctor."')");
         return $referrals;
     }
-    
+    public function getReferralsByPatient($patient){
+        $referrals = $this->customFetchAll("select distinct * from referrel  where patient=".$patient);
+        return $referrals;
+    } 
     public function fileDestination(): array
     {   if($this->name){
             return ['name'=>"media/patient/referrals/".$this->name];

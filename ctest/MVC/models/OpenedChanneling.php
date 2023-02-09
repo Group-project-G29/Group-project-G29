@@ -17,7 +17,7 @@ class OpenedChanneling extends DbModel{
    
 
     public function saveData(){
-        parent::save();
+        return parent::save();
     }
     public function setter($channeling_ID,$rem_free_app,$rem_app,$max_app_free,$date,$status){
         $this->channeling_ID=$channeling_ID;

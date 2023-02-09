@@ -425,6 +425,12 @@ class PatientAuthController extends Controller{
             
         }
         if(isSet($parameters[0]['spec']) &&  $parameters[0]['spec']??''=='documentation'){
+            // if(isSet($parameters[1]['id']) && $parameters[1]['id']=='referrals')
+            // $documents=
+            // return $this->render('patient/dashboard-order',[
+            //     'documents'=>$documents,
+                
+            // ]);
         
         }
         if(isSet($parameters[0]['spec']) && $parameters[0]['spec']??''=='appointments'){

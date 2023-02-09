@@ -10,7 +10,7 @@ use app\models\Medicine;
     $medicineModel=new Medicine();
 
 ?>
-<section>
+<section class="pharmacy-order-container">
   
     <div class="pharmacy-main-form">
         <?php $form=Form::begin("patient-medicine-order?spec=order&cmd=complete",'post');?> 

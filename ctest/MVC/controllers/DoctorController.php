@@ -22,16 +22,28 @@ use app\models\SOAPReport;
 
 class DoctorController extends Controller{
 
-    public function todayChannelings(){
-        $this->setLayout('doctor',['select'=>'All Channelings']);
+    public function todayChannelings(Request $request,Response $response){
+        $parameter=$request->getParameters();
         $Channeling=new Channeling();
         $OpenedChanneling=new OpenedChanneling();
         $Channelings=$OpenedChanneling->customFetchAll("select * from opened_channeling where channeling_ID in (select channeling_ID from channeling where doctor=".Application::$app->session->get('userObject')->nic.")");
-        return $this->render('doctor/today-channelings',[
-           'channeling_model'=>$Channeling,
-           'opened_channeling'=>$Channelings
+        if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='all'){
+            echo "in";
+            $this->setLayout('doctor',['select'=>'All Channelings']);
+            $Channelings=$OpenedChanneling->customFetchAll("select * from opened_channeling where channeling_ID in (select channeling_ID from channeling where doctor=".Application::$app->session->get('userObject')->nic.")");
+            return $this->render('doctor/all-channelings',[
+                'channeling_model'=>$Channeling,
+                'opened_channeling'=>$Channelings
+            ]);
+        }
+        else{
+            $this->setLayout('doctor',['select'=>'Today Channelings']);
+            return $this->render('doctor/today-channelings',[
+            'channeling_model'=>$Channeling,
+            'opened_channeling'=>$Channelings
 
-        ]);
+            ]);
+        }
     }
 
     public function viewChanneling(Request $request){
@@ -106,7 +118,7 @@ class DoctorController extends Controller{
             Application::$app->session->set('channeling',$id);
             $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
-            $type=$appointmentMOdel->getAppointmentType($patient,$id);
+            $type=$appointmentMOdel->getAppointmentType($patient,$id)[0]['type'];
             if($type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'appointment'=>$appointment_detail, 
@@ -141,7 +153,6 @@ class DoctorController extends Controller{
             else if($type=='consultation'){
                 //get last labtest patient
                 $patient=$OpenedChanneling->getLastPatient('labtest',$channeling);
-                echo "$patient"."--";
                 $type="labtest";
             }
             $appointment_detail[0]=$OpenedChanneling->getPatient($channeling,$patient,'this',$type);

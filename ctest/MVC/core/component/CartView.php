@@ -27,7 +27,7 @@ use app\models\Medicine;
                                 <h3 class="fs-50">'.$item["name"]." ".$item["strength"]." ".$item["unit"].'</h3>
                                 <input type="number" id='.'"'."amount2_".$item['med_ID'].'"'.' value='.$item['amount'].'>
                                 '.$component->button('update','','Change Amount','update-buttons','cartbtn_'.$item['med_ID'])
-                                .'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><h3 class="fs-50">Remove</h3></a>'.
+                                .'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><h3 class="fs-50">X</h3></a>'.
                             '</div>
                     </div>';
                 }

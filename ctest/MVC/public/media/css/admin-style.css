@@ -148,10 +148,6 @@ input [type="time"]::-webkit-time-picker-indicator{
   
    align-items: center;
    justify-content: center;
-
-   
-   
-    
 }
 
 .upper-container{
@@ -182,4 +178,10 @@ input [type="time"]::-webkit-time-picker-indicator{
 
 .check-box{
     margin-left: -10vw;
+}
+
+.ad-update-main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
