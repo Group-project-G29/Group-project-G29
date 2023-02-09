@@ -3,13 +3,43 @@
 use app\core\component\Component;
 
 $component = new Component();
-// var_dump($user);
+// var_dump($tests);
+// exit;
 ?>
-<div class="search-bar-container">
+<div class="search-bar-container" style="padding-left:19vw">
   <?php echo $component->searchbar('', 'search', 'search-bar--class2', 'Search by name,specilaity', 'searchbar'); ?>
 </div>
 
-<?php foreach ($tests as $test) : ?>
+<div class="main-card ">
+  <?php foreach ($tests as $test) : ?>
+
+    <div class="card" id=<?=$test['patient_ID']?> >
+
+      <div class="card-header-1 " style="padding-top: 5vh;padding-bottom:7.9vh">
+        <h5><b>Name :</b><?= $test['doc_name'] ?> </h5>
+
+        <h5><b>patient :</b><?= $test['patient_name'] ?> </h5>
+        <h5><b>Req date :</b><?= $test['requested_date_time'] ?> </h5>
+
+        <h5><b>Test :</b><?= $test['test_name'] ?> </h5>
+
+      </div>
+      <!-- <a href="lab-write-test-result.php"> -->
+      <div >
+      <?php echo $component->button('edit-details', '', 'Write Test Result', 'button--class-0  width-10', 'edit-details'); ?>
+      </div></a>
+      <div >
+      <?php echo $component->button('edit-details', '','Upload', 'button--class-00  width-10', 'edit-details'); ?>
+      </div>
+
+
+    </div>
+
+  <?php endforeach; ?>
+
+</div>
+
+<!-- <?php foreach ($tests as $test) : ?>
 
   <div class="detail-container">
 
@@ -45,7 +75,7 @@ $component = new Component();
     </div>
 
   </div>
-<?php endforeach; ?>
+<?php endforeach; ?> -->
 
 
 
@@ -61,15 +91,15 @@ $component = new Component();
     });
   });
 
-  elementsArray = document.querySelectorAll(".button");
+  elementsArray = document.querySelectorAll(".button--class-0");
   console.log(elementsArray);
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {
-      location.href = 'lab-test-update?mod=update&id='+elem.id; //pass the variable value
+      location.href = 'lab-write-test-result?id='+elem.id; //pass the variable value
     });
   });
 
-  elementsArray = document.querySelectorAll(".button-0");
+  elementsArray = document.querySelectorAll(".button--class-00");
   console.log(elementsArray);
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {

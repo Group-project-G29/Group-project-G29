@@ -112,53 +112,15 @@ $app->router->post('/ctest/receptionist-patient-appointment',[ReceptionistContro
 $app->router->get('/ctest/receptionist-patient-information',[ReceptionistController::class,'patientInformation']);
 $app->router->post('/ctest/receptionist-patient-information',[ReceptionistController::class,'patientInformaton']);
 
-$app->router->post('/ctest/receptionist-view-personal-details',[ReceptionistController::class,'viewPersonalDetails']);
-$app->router->get('/ctest/receptionist-view-personal-details',[ReceptionistController::class,'viewPersonalDetails']);
-
-$app->router->post('/ctest/pharmacy-view-medicine',[PharmacyController::class,'viewMedicine']);
-$app->router->get('/ctest/pharmacy-view-medicine',[PharmacyController::class,'viewMedicine']);
-$app->router->post('/ctest/handle-medicine',[PharmacyController::class,'handleMedicine']);
-$app->router->get('/ctest/handle-medicine',[PharmacyController::class,'handleMedicine']);
-$app->router->post('/ctest/update-medicine',[PharmacyController::class,'handleMedicine']);
-$app->router->get('/ctest/update-medicine',[PharmacyController::class,'handleMedicine']);
-
-$app->router->get('/ctest/pharmacy-view-personal-details',[PharmacyController::class,'viewPersonalDetails']);
-$app->router->post('/ctest/pharmacy-view-personal-details',[PharmacyController::class,'viewPersonalDetails']);
-$app->router->get('/ctest/pharmacy-update-personal-details',[PharmacyController::class,'editPersonalDetails']);
-$app->router->post('/ctest/pharmacy-update-personal-details',[PharmacyController::class,'editPersonalDetails']);
-
-$app->router->get('/ctest/pharmacy-view-advertisement',[PharmacyController::class,'viewAdvertisement']);
-$app->router->post('/ctest/pharmacy-view-advertisement',[PharmacyController::class,'viewAdvertisement']);
-$app->router->post('/ctest/update-advertisement',[PharmacyController::class,'handleAdvertisement']);
-$app->router->get('/ctest/update-advertisement',[PharmacyController::class,'handleAdvertisement']);
-$app->router->post('/ctest/handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
-$app->router->get('/ctest/handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
-
-$app->router->get('/ctest/pharmacy-orders-pending',[PharmacyController::class,'viewPendingOrder']);
-$app->router->get('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'DetailsPendingOrder']);
-$app->router->get('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
-$app->router->get('/ctest/pharmacy-orders-processing',[PharmacyController::class,'viewProcessingOrder']);
-$app->router->get('/ctest/pharmacy-view-processing-order',[PharmacyController::class,'DetailsProcessingOrder']);
-$app->router->get('/ctest/pharmacy-pharmacy-cancle-order-process',[PharmacyController::class,'cancleProcessOrder']);
-$app->router->get('/ctest/pharmacy-orders-delivering',[PharmacyController::class,'viewDeliveringOrder']);
-$app->router->get('/ctest/pharmacy-track-order',[PharmacyController::class,'trackOrder']);
-
-$app->router->get('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
-
-$app->router->get('/ctest/pharmacy-view-report',[PharmacyController::class,'viewReports']);
-
-
-$app->router->get('/ctest/delivery-view-personal-details',[DeliveryController::class,'viewPersonalDetails']);
-$app->router->get('/ctest/delivery-my-deliveries',[DeliveryController::class,'viewMyDeliveries']);
-$app->router->get('/ctest/delivery-all-deliveries',[DeliveryController::class,'viewAllDeliveries']);
-$app->router->get('/ctest/delivery-view-delivery',[DeliveryController::class,'viewDeliveryDetails']);
-$app->router->get('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
-
 
 $app->router->get('/ctest/receptionist-view-personal-details',[ReceptionistController::class,'viewPersonalDetails']);
 $app->router->post('/ctest/receptionist-view-personal-details',[ReceptionistController::class,'viewPersonalDetails']);
+$app->router->get('/ctest/receptionist-personal-detail-update',[ReceptionistController::class,'handleReceptionist']);
+$app->router->post('/ctest/receptionist-personal-detail-update',[ReceptionistController::class,'handleReceptionist']);
+
 
 $app->router->get('/ctest/receptionist-all-channelings',[ReceptionistController::class,'allChannelings']);
+$app->router->get('/ctest/receptionist-all-channeling-type',[ReceptionistController::class,'allChannelingType']);
 $app->router->get('/ctest/receptionist-channeling-more',[ReceptionistController::class,'channelingMore']);
 
 $app->router->get('/ctest/receptionist-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);
@@ -172,6 +134,9 @@ $app->router->get('/ctest/receptionist-channeling-payment',[ReceptionistControll
 $app->router->get('/ctest/receptionist-today-channelings',[ReceptionistController::class,'todayChannelings']);
 
 $app->router->get('/ctest/lab-view-personal-details',[LabController::class,'viewPersonalDetails']);
+$app->router->post('/ctest/lab-view-personal-details',[LabController::class,'viewPersonalDetails']);
+$app->router->get('/ctest/lab-personal-detail-update',[LabController::class,'handleLab']);
+$app->router->post('/ctest/lab-personal-detail-update',[LabController::class,'handleLab']);
 $app->router->get('/ctest/lab-view-all-test',[LabController::class,'viewTest']);
 $app->router->post('/ctest/lab-view-all-test',[LabController::class,'viewTest']);
 $app->router->get('/ctest/lab-add-new-test',[LabController::class,'handleTest']);
@@ -184,6 +149,8 @@ $app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']
 $app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);
 $app->router->get('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
 $app->router->post('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
+$app->router->get('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
+$app->router->post('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
 
 
 
