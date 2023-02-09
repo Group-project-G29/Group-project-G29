@@ -89,7 +89,7 @@ class LabController extends Controller
     {
         $this->setLayout("lab", ['select' => 'Requests']);
         $labTestModel = new LabTest();
-        $tests = $labTestModel->customFetchAll("SELECT lab_request.test_name as test_name ,lab_request.requested_date_time , patient.name as patient_name,employee.name as doc_name from lab_request join employee on employee.nic=lab_request.doctor join patient on patient.patient_ID=lab_request.patient_ID ");
+        $tests = $labTestModel->customFetchAll("SELECT patient.patient_ID,lab_request.test_name as test_name ,lab_request.requested_date_time , patient.name as patient_name,employee.name as doc_name from lab_request join employee on employee.nic=lab_request.doctor join patient on patient.patient_ID=lab_request.patient_ID ");
         return $this->render('lab/lab-test-request', [
             'tests' => $tests
         ]);
@@ -167,5 +167,15 @@ class LabController extends Controller
             'model'=>$userModel,
         ]);
 
+    }
+
+    public function writeReport()
+    {
+        $this->setLayout("lab", ['select' => 'Requests']);
+        // $userModel = new Employee();
+        // $user = $userModel->customFetchAll("SELECT * FROM employee WHERE email=" . '"' . Application::$app->session->get('user') . '"');
+        return $this->render('lab/lab-write-test-report', [
+            // 'user' => $user[0]
+        ]);
     }
 }

@@ -99,6 +99,8 @@ $app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']
 $app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);
 $app->router->get('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
 $app->router->post('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
+$app->router->get('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
+$app->router->post('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
 
 
 
