@@ -3,7 +3,7 @@
 ?>
 
 <p class="navigation-text-line-p"> 
-    <a class="navigation-text-line-link" href="/ctest/pharmacy-view-advertisement">advertisements</a>/
+    <a class="navigation-text-line-link" href="/ctest/lab-view-advertisement">advertisements</a>/
     <a class="navigation-text-line-link">add new advertisement</a> 
 </p>
 

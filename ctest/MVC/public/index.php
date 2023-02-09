@@ -81,6 +81,8 @@ $app->router->get('/ctest/admin',[AdminController::class,'registerAccounts']);
 $app->router->post('/ctest/admin',[AdminController::class,'registerAccounts']);
 $app->router->get('/ctest/schedule-channeling',[AdminController::class,'schedulingChanneling']);
 $app->router->post('/ctest/schedule-channeling',[AdminController::class,'schedulingChanneling']);
+$app->router->get('/ctest/admin-notification',[AdminController::class,'handleNotifications']);
+
 
 // ------------------laboratorist routers----------------------------------------
 $app->router->get('/ctest/test',[LabController::class,'viewTest']);
@@ -188,6 +190,13 @@ $app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']
 $app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);
 $app->router->get('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
 $app->router->post('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
+
+$app->router->get('/ctest/lab-view-advertisement',[LabController::class,'viewAdvertisement']);
+$app->router->post('/ctest/lab-view-advertisement',[LabController::class,'viewAdvertisement']);
+$app->router->post('/ctest/lab-update-advertisement',[LabController::class,'handleAdvertisement']);
+$app->router->get('/ctest/lab-update-advertisement',[LabController::class,'handleAdvertisement']);
+$app->router->post('/ctest/lab-handle-advertisement',[LabController::class,'handleAdvertisement']);
+$app->router->get('/ctest/lab-handle-advertisement',[LabController::class,'handleAdvertisement']);
 
 
 

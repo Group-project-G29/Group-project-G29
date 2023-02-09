@@ -64,6 +64,14 @@
     text-align: center;
 }
 
+.navigation-text-line-p,
+.navigation-text-line-link
+ {
+    color: #178891;
+    font-size: 15px;
+    text-decoration: none;
+    /* margin-top: -35px; */
+}
 
 /* ===============My detail==================== */
 

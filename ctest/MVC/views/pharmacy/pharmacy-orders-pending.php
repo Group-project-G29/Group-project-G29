@@ -5,6 +5,12 @@
 // exit;
 
 ?>
+
+<p class="navigation-text-line-p"> 
+    <a class="navigation-text-line-link" href="/ctest/pharmacy-orders-pending">orders</a>/
+    <a class="navigation-text-line-link">pending orders</a> 
+</p>
+
 <div class='upper-container'>
     <!-- implement this -->
     <?php echo $component->button('pending','','Pending Orders','button--class-0-active  width-10','pending');?>
@@ -16,7 +22,9 @@
     <div class="search-bar-container">
         <?php echo $component->searchbar($model,"name","search-bar--class1","Search by order ID, patient 1D","searh");?>
     </div>
-    <?php echo $component->button('new-order','','Add New Order','button--class-0  width-10','new-order');?>
+    <?php 
+    // echo $component->button('new-order','','Add New Order','button--class-0  width-10','new-order');
+    ?>
 </div>
    
 <div class="table-container">

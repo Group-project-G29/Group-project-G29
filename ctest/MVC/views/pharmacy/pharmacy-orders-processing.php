@@ -3,6 +3,12 @@
     $component=new Component();
 
 ?>
+
+<p class="navigation-text-line-p"> 
+    <a class="navigation-text-line-link" href="/ctest/pharmacy-orders-pending">orders</a>/
+    <a class="navigation-text-line-link">processing orders</a> 
+</p>
+
 <div class='upper-container'>
     <?php echo $component->button('pending','','Pending Orders','button--class-0-deactive  width-10','pending');?>
     <?php echo $component->button('processing','','Processing Orders','button--class-0-active  width-10','processing');?>

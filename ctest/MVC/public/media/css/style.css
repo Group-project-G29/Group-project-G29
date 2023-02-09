@@ -492,6 +492,16 @@ select {
     font-size:var(--fs-100);
 }
 
+.sidebar::before {
+    border-bottom-right-radius: 40px;
+    /* border-radius: 40px 0px 0px 40px; */
+
+}
+
+.sidebar::after {
+    border-top-right-radius: 40px;
+}
+
 /* =========== container in layouts =========== */
 .main-container {
     display:flex;

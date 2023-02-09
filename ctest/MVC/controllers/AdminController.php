@@ -13,6 +13,7 @@ use app\models\Employee;
 use app\models\NurseAllocation;
 use app\models\OpenedChanneling;
 use app\core\Time;
+use app\models\AdminNotification;
 
 class AdminController extends Controller{
     // create add,view channeling session
@@ -191,4 +192,15 @@ class AdminController extends Controller{
         }
         
     }  
+
+    public function handleNotifications(){
+        $this->setLayout('admin',['select'=>"Notification"]);
+        $notificationModel=new AdminNotification();
+        $notifications=$notificationModel->customFetchAll("Select * from admin_notification order by created_date_time");
+        return $this->render('administrator/view-notifications',[
+            'notifications'=>$notifications,
+            'model'=>$notificationModel
+        ]);
+
+    }
 }
