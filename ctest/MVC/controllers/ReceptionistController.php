@@ -234,17 +234,7 @@ class ReceptionistController extends Controller
         ]);
     }
 
-    public function channelingMore(Request $request, Response $response)
-    {
-        $channelingModel = new Channeling();
-        $parameters = $request->getParameters();
-        $channelingmore = $channelingModel->customFetchAll("SELECT * from employee inner join doctor on employee.nic = doctor.nic inner join channeling on doctor.nic=channeling.doctor where employee.emp_ID=" . $parameters[0]['id']);        //pass the variable value
-        // var_dump($channelingmore);
-        // exit;
-        return $this->render('receptionist/receptionist-channeling-more', [
-            'channelingmore' => $channelingmore
-        ]);
-    }
+
 
     
 
@@ -266,6 +256,19 @@ class ReceptionistController extends Controller
 
         ]);
     }
+    public function channelingMore(Request $request, Response $response)
+    {
+        $channelingModel = new Channeling();
+        $parameters = $request->getParameters();
+        $channelingmore = $channelingModel->customFetchAll("SELECT * from employee inner join doctor on employee.nic = doctor.nic inner join channeling on doctor.nic=channeling.doctor where employee.emp_ID=" . $parameters[0]['id']);        //pass the variable value
+        // var_dump($channelingmore);
+        // exit;
+        return $this->render('receptionist/receptionist-channeling-more', [
+            'channelingmore' => $channelingmore
+        ]);
+    }
+
+
 
     
 
@@ -307,7 +310,7 @@ class ReceptionistController extends Controller
             // 'PatientDetail'=>$PatientDetail
         ]);
     }
-
+ 
     public function handlePayment(Request $request)
     {
         $channelingModel = new Channeling();

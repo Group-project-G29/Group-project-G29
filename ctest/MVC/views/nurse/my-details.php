@@ -5,8 +5,9 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
+    // var_dump($user);exit;
 ?>
-<div class="detail-container">
+<div class="container">
 
     <div class="detail-container-left">
         <img src="./media/images/emp-profile-pictures/<?= $user['img'] ?>" >  

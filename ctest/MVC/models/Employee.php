@@ -75,6 +75,7 @@ class Employee extends DbModel{
     {
         return ['name','nic','age','contact','email','address','gender','role','img','password','career_speciality','description'];
     }
+    
     public function getAccounts($role=''):array{
         if($role==''){
             return $this->customFetchAll("SELECT * FROM employee where role<>'admin' order by role ");

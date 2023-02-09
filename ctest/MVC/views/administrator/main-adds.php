@@ -1,7 +1,7 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
-
+    // var_dump($advertisements);exit;
 ?>
 <div class='upper-container'>
     <div class="search-bar-container">
@@ -12,9 +12,7 @@
 </div>
 <div class="table-container">
 <table border="0">
-    <tr>
-        <th></th><th>Title</th><th>Description</th><th>Remark</th><th></th>
-    </tr>
+    
     <?php foreach($advertisements as $key=>$advertisement): ?>
     <tr class="table-row">
         <td><img src=<?="./media/images/advertisements/".$advertisement['img']?> alt="No image"></td>
@@ -36,18 +34,18 @@
 <script>
     const btn=document.getElementById("new-advertisement");
     btn.addEventListener('click',function(){
-        location.href="handle-advertisement";
+        location.href="admin-handle-advertisement";
     })
     elementsArray = document.querySelectorAll(".button--class-2");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='update-advertisement?mod=update&id='+elem.id;
+            location.href='admin-update-advertisement?mod=update&id='+elem.id;
         });
     });
     elementsArray = document.querySelectorAll(".button--class-3");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='handle-advertisement?cmd=delete&id='+elem.id;
+            location.href='admin-handle-advertisement?cmd=delete&id='+elem.id;
         });
     });
 </script>

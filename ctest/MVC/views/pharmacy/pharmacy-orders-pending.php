@@ -34,18 +34,10 @@
         <?php foreach($orders as $key=>$order): ?>
             <tr class="table-row" id=<?=$order['order_ID']?> >
                 <td><?=$order['order_ID']?></td>
-<<<<<<< HEAD
-<<<<<<< HEAD
                 <td><?=$order['time_of_creation']?></td> 
-=======
-=======
-                <td><?=$order['patient_ID']?></td> 
-                <td><?=$order['name']?></td> 
-                <td><?=$order['contact']?></td> 
->>>>>>> 20000804
                 <td><?=$order['created_date']?></td> 
->>>>>>> 20000804
-                <td><?=$order['created_time']?></td> 
+
+
             </tr>
         <?php endforeach; ?>
     </table>
@@ -60,6 +52,7 @@
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href='pharmacy-view-pending-order?id='+elem.id; 
+
         });
     });
 

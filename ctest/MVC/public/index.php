@@ -58,13 +58,16 @@ $app->router->get('/ctest/employee-logout',[EmployeeAuthController::class,'logou
 
 // -----------------------nurse routers-------------------------------------
 // $app->router->get('/ctest/nurse',[SiteController::class, 'doctor']);
-$app->router->get('/ctest/nurse',[NurseController::class, 'viewAllClinics']);
+$app->router->get('/ctest/nurse',[NurseController::class, 'channelingCategoriesView']);
 $app->router->get('/ctest/my-detail',[NurseController::class, 'viewUserDetails']);
-$app->router->get('/ctest/all-channelings',[NurseController::class, 'viewAllClinics']);
+$app->router->get('/ctest/all-channelings',[NurseController::class, 'channelingCategoriesView']);
 $app->router->get('/ctest/all-channeling-more',[NurseController::class, 'viewAllClinicsMore']);
 $app->router->get('/ctest/today-channelings',[NurseController::class, 'todayClinics']);
 $app->router->get('/ctest/all-channeling-session',[NurseController::class,'viewChanneling']);
 $app->router->post('/ctest/all-channeling-session',[NurseController::class,'viewChanneling']);
+$app->router->get('/ctest/nurse-list-patient',[NurseController::class,'viewSessionPatients']);
+$app->router->post('/ctest/nurse-list-patient',[NurseController::class,'viewSessionPatients']);
+$app->router->get('/ctest/nurse-patient',[NurseController::class,'viewPatient']);
 
 
 
@@ -155,12 +158,13 @@ $app->router->get('/ctest/receptionist-today-channelings',[ReceptionistControlle
 
 // --------------------------------administrator controllers-----------------------------------------
 $app->router->get('/ctest/main-adds', [AdminController::class, 'viewAdvertisement']);
-$app->router->get('/ctest/handle-advertisement', [AdminController::class, 'handleAdvertisement']);
-$app->router->post('/ctest/handle-advertisement', [AdminController::class, 'handleAdvertisement']);
-$app->router->get('/ctest/update-advertisement', [AdminController::class, 'handleAdvertisement']);
-$app->router->post('/ctest/update-advertisement', [AdminController::class, 'handleAdvertisement']);
+$app->router->get('/ctest/admin-handle-advertisement', [AdminController::class, 'handleAdvertisement']);
+$app->router->post('/ctest/admin-handle-advertisement', [AdminController::class, 'handleAdvertisement']);
+$app->router->get('/ctest/admin-update-advertisement', [AdminController::class, 'handleAdvertisement']);
+$app->router->post('/ctest/admin-update-advertisement', [AdminController::class, 'handleAdvertisement']);
 $app->router->get('/ctest/schedule-channeling',[AdminController::class,'schedulingChanneling']);
 $app->router->post('/ctest/schedule-channeling',[AdminController::class,'schedulingChanneling']);
+$app->router->get('/ctest/admin-notification',[AdminController::class,'handleNotifications']);
 //-------------------administrator routers--------------------------------------
 $app->router->get('/ctest/admin',[AdminController::class,'registerAccounts']);
 $app->router->post('/ctest/admin',[AdminController::class,'registerAccounts']);
