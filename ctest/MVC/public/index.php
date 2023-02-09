@@ -77,6 +77,7 @@ $app->router->get('/ctest/doctor-report',[DoctorController::class,'handleReports
 $app->router->post('/ctest/doctor-report',[DoctorController::class,'handleReports']);
 $app->router->get('/ctest/doctor-prescription',[DoctorController::class,'handlePrescription']);
 $app->router->post('/ctest/doctor-prescription',[DoctorController::class,'handlePrescription']);
+$app->router->get('/ctest/recent-patients',[DoctorController::class,'viewPatient']);
 
 //-------------------pharmacy routers-----------------------------------------
 $app->router->post('/ctest/handle-medicine',[PharmacyController::class,'handleMedicine']);

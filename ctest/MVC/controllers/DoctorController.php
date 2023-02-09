@@ -18,6 +18,7 @@ use app\models\Referral;
 use app\core\FileModel;
 use app\core\ReportModel;
 use app\models\Appointment;
+use app\models\Patient;
 use app\models\SOAPReport;
 
 class DoctorController extends Controller{
@@ -70,6 +71,14 @@ class DoctorController extends Controller{
             'nurse'=>$Nurses
             
 
+        ]);
+    }
+    public function viewPatient(Request $request){
+        $patientModel=new Patient();
+        $this->setLayout('doctor',['select'=>'patients']);
+        $patients=$patientModel->getRecentPatientDoctor();
+        return $this->render('doctor/doctor-all-patient',[
+            'patients'=>$patients
         ]);
     }
 
