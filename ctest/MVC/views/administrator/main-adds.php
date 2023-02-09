@@ -17,7 +17,7 @@
     </tr>
     <?php foreach($advertisements as $key=>$advertisement): ?>
     <tr class="table-row">
-        <td><img src=<?="./media/images/advertisements/".$advertisement['image']?> alt="No image"></td>
+        <td><img src=<?="./media/images/advertisements/".$advertisement['img']?> alt="No image"></td>
         <td style="width: 8vw;"><?=$advertisement['title']?></td>
         <td style="width: 20vw;"><?=$advertisement['description']?></td>  
         <td style="width: 8vw;"><?=$advertisement['remark']?></td>

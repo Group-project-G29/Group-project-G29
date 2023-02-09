@@ -262,6 +262,7 @@ $appointmentModel=new Appointment();
         const btn2=document.querySelectorAll(".btn-2");
         btn2.forEach(el=>{
             el.addEventListener('click',()=>{
+                el.classList.add('doc-button--selected');
                 traverseHide(['reports','prescriptions','lab-tests'],el);
             })
         })

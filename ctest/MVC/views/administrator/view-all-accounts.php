@@ -56,7 +56,7 @@ use app\models\Employee;
             <?php if($able):?>
             <div>
                 <?php echo $component->button('update','','Update','button--class-2',$account['emp_ID']) ?>
-                <?php echo $component->button('delete',' ','Delete','button--class-3',$account['emp_ID']) ?>
+                <?php echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']) ?>
             </div>
             <?php endif;?>
         </td>

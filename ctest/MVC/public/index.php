@@ -81,6 +81,7 @@ $app->router->post('/ctest/doctor-prescription',[DoctorController::class,'handle
 //-------------------pharmacy routers-----------------------------------------
 $app->router->post('/ctest/handle-medicine',[PharmacyController::class,'handleMedicine']);
 $app->router->get('/ctest/handle-medicine',[PharmacyController::class,'handleMedicine']);
+$app->router->get('/ctest/pharmacy-view-medicine',[PharmacyController::class,'viewMedicine']);
 $app->router->post('/ctest/pharmacist',[PharmacyController::class,'viewMedicine']);
 $app->router->get('/ctest/pharmacist',[PharmacyController::class,'viewMedicine']);
 $app->router->post('/ctest/update-medicine',[PharmacyController::class,'handleMedicine']);
@@ -91,16 +92,21 @@ $app->router->get('/ctest/pharmacy-update-personal-details',[PharmacyController:
 $app->router->post('/ctest/pharmacy-update-personal-details',[PharmacyController::class,'editPersonalDetails']);
 $app->router->get('/ctest/pharmacy-view-advertisement',[PharmacyController::class,'viewAdvertisement']);
 $app->router->post('/ctest/pharmacy-view-advertisement',[PharmacyController::class,'viewAdvertisement']);
-$app->router->post('/ctest/update-advertisement',[PharmacyController::class,'handleAdvertisement']);
-$app->router->get('/ctest/update-advertisement',[PharmacyController::class,'handleAdvertisement']);
-$app->router->post('/ctest/handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
-$app->router->get('/ctest/handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
+$app->router->post('/ctest/pharmacy-update-advertisement',[PharmacyController::class,'handleAdvertisement']);
+$app->router->get('/ctest/pharmacy-update-advertisement',[PharmacyController::class,'handleAdvertisement']);
+$app->router->post('/ctest/pharmacy-handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
+$app->router->get('/ctest/pharmacy-handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
+
 $app->router->get('/ctest/pharmacy-orders-pending',[PharmacyController::class,'viewPendingOrder']);
 $app->router->get('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'DetailsPendingOrder']);
 $app->router->get('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
+// $app->router->post('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'TakePendingOrder']);
+// $app->router->post('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
 $app->router->get('/ctest/pharmacy-orders-processing',[PharmacyController::class,'viewProcessingOrder']);
 $app->router->get('/ctest/pharmacy-view-processing-order',[PharmacyController::class,'DetailsProcessingOrder']);
-$app->router->get('/ctest/pharmacy-pharmacy-cancle-order-process',[PharmacyController::class,'cancleProcessOrder']);
+$app->router->get('/ctest/pharmacy-finish-processing-order',[PharmacyController::class,'finishProcessingOrder']);
+$app->router->get('/ctest/pharmacy-cancle-processing-order',[PharmacyController::class,'cancleProcessOrder']);
+
 $app->router->get('/ctest/pharmacy-orders-delivering',[PharmacyController::class,'viewDeliveringOrder']);
 $app->router->get('/ctest/pharmacy-track-order',[PharmacyController::class,'trackOrder']);
 $app->router->get('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
@@ -141,10 +147,10 @@ $app->router->get('/ctest/receptionist-today-channelings',[ReceptionistControlle
 
 // --------------------------------administrator controllers-----------------------------------------
 $app->router->get('/ctest/main-adds', [AdminController::class, 'viewAdvertisement']);
-// $app->router->get('/ctest/handle-advertisement', [AdminController::class, 'handleAdvertisement']);
-// $app->router->post('/ctest/handle-advertisement', [AdminController::class, 'handleAdvertisement']);
-// $app->router->get('/ctest/update-advertisement', [AdminController::class, 'handleAdvertisement']);
-// $app->router->post('/ctest/update-advertisement', [AdminController::class, 'handleAdvertisement']);
+$app->router->get('/ctest/handle-advertisement', [AdminController::class, 'handleAdvertisement']);
+$app->router->post('/ctest/handle-advertisement', [AdminController::class, 'handleAdvertisement']);
+$app->router->get('/ctest/update-advertisement', [AdminController::class, 'handleAdvertisement']);
+$app->router->post('/ctest/update-advertisement', [AdminController::class, 'handleAdvertisement']);
 $app->router->get('/ctest/schedule-channeling',[AdminController::class,'schedulingChanneling']);
 $app->router->post('/ctest/schedule-channeling',[AdminController::class,'schedulingChanneling']);
 //-------------------administrator routers--------------------------------------
