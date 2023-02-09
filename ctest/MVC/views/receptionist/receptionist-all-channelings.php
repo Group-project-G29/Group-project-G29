@@ -3,7 +3,6 @@
 use app\core\component\Component;
 
 $component = new Component();
-
 // var_dump($channelings);
 // exit;
 ?>

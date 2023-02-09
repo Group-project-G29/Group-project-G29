@@ -19,6 +19,7 @@ use app\models\Medicine;
     <?php
         use app\models\OpenedChanneling;
         $openedChanneling=new OpenedChanneling();
+<<<<<<< HEAD
 
 
         $component=new Component();
@@ -61,6 +62,36 @@ use app\models\Medicine;
                     </div>
                 <?php endif; ?>
 
+=======
+
+
+        $component=new Component();
+        
+        ?>
+        
+        <div class="medicine-right-subcontainer">
+            <?php foreach($medicines as $medicine):?>
+                <?php if($model->checkStock($medicine['med_ID'])): ?>  <!--check whether medicine in stock or out-->
+                    <div class="medicine-item">
+                        <img src=<?="./media/images/medicine/".$medicine['img']?>>
+                        <h3><?=$medicine['name']." ".$medicine['strength'] ?></h3>
+                        <h2><?="Rs.".$medicine['unit_price'] ?></h2>
+                        <div>
+                            <label>Amount :</label>
+                            <input type="number" id=<?='"'."amount_".$medicine['med_ID'].'"'?>>
+                        </div>
+                        <?= $component->button('','','add','button-class-3 add-medicine',$medicine['med_ID']); ?>
+                    </div>
+                <?php else : ?>
+                    <div class="medicine-item">
+                        <img src=<?="./media/images/medicine/".$medicine['img']?>>
+                        <h3><?=$medicine['name']." ".$medicine['strength'] ?></h3>
+                        <h2><?="Rs.".$medicine['unit_price'] ?></h2>
+                        <h3 color="red">Out of Stock</h3>
+                    </div>
+                <?php endif; ?>
+
+>>>>>>> 20002051
             <?php endforeach; ?>
         </div>
     </div>

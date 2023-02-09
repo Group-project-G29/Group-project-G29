@@ -462,10 +462,21 @@
    
 }
 .pharmacy-main-page--upload-prescription{
+    
     width: 30vw;
     height:30vh;
     background-size: cover;
     background-image: linear-gradient(to right,var(--clr-light) , transparent),url('images/service-medicine.jpg');
+}
+.service-content--1{
+    position: relative;
+    top:10vh;
+    left: 2vw;
+    color: white;
+}
+.service-content--2{
+    color:black;
+    padding-inline: 2vw;
 }
 .pharmacy-main-page--track-orders{
     width: 30vw;
@@ -535,6 +546,9 @@
 
 .doctor-item h3{
     font-size: 1.0rem;
+}
+.ph-main-stripe{
+    margin-top: -3vh;
 }
 
 

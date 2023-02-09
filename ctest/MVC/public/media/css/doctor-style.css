@@ -290,3 +290,62 @@
     border-radius: 2px;
     height:3vh;
 }
+
+
+/* -------------patient finish page------------ */
+
+.finish-patient-list{
+    display: flex;
+    justify-content: flex-start;
+    width: 60vw;
+    height:50vh;
+    background-color: white;
+    flex-wrap: wrap;
+    gap:1vw;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    padding: 5vh;
+    border:20px;
+}
+
+.finish-page{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap:3vh;
+}
+.finish-patient-item{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F0F0F0;
+    border: 1px solid #cfcfcf;
+    width: 20vw;
+    height: 5vh;
+    border-radius: 10px;
+}
+.finish-patient-item-red{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fcd9d9;
+    border: 1px solid #fc7f7f;
+    width: 20vw;
+    height: 5vh;
+    border-radius: 10px;
+}
+.finish-patient-item:hover{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F0F0F0;
+    border: 1px solid #cfcfcf;
+    width: 20vw;
+    height: 5vh;
+    border-radius: 10px;
+}
+.finish-channeling{
+    height: 4vh;
+    width: 20vw;
+    border-radius: 5px;
+}

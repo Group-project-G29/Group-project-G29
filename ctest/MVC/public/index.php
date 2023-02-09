@@ -139,6 +139,8 @@ $app->router->post('/ctest/receptionist-personal-detail-update',[ReceptionistCon
 
 $app->router->get('/ctest/receptionist-all-channelings',[ReceptionistController::class,'allChannelings']);
 $app->router->get('/ctest/receptionist-all-channeling-type',[ReceptionistController::class,'allChannelingType']);
+
+$app->router->get('/ctest/receptionist-all-channelings',[ReceptionistController::class,'allChannelings']);
 $app->router->get('/ctest/receptionist-channeling-more',[ReceptionistController::class,'channelingMore']);
 
 $app->router->get('/ctest/receptionist-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);

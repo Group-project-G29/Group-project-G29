@@ -205,7 +205,7 @@ class ReceptionistController extends Controller
     }
 
 
-
+ 
     public function allChannelingType(Request $request)
     {
         $channelingModel = new Channeling();
@@ -246,8 +246,7 @@ class ReceptionistController extends Controller
         ]);
     }
 
-
-
+    
 
     public function sessionDetail(Request $request)
     {

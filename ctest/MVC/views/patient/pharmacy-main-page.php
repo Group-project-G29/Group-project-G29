@@ -31,6 +31,7 @@ use app\core\component\Component;
     </div>
     
     <section class="pharmacy-main-container">
+<<<<<<< HEAD
         
         <div class="search-medicine-container">
             <?php echo $component->searchbar('',"name","search-bar--class1","Search by medicine name","search");?>
@@ -47,18 +48,32 @@ use app\core\component\Component;
                 });
             </script>
         </div>
+=======
+    <div class="ph-main-stripe">
+        <img src="./media/images/patient/striper.png">
+    </div>  
+   
+>>>>>>> 20002051
    
 
      <div class="ph-main-services">
         <div class="pharmacy-main-page--upload-prescription">
             <div class="service-content--1">
                 <h3>Upload Your precriptoin here</h3>
+<<<<<<< HEAD
+=======
+                <h4>We provide medicine to any valid prescription</h4>
+>>>>>>> 20002051
                 <?= $component->button('upload-precription','',"Upload Prescription","button-class--yellow"); ?>
             </div>
         </div>
         <div class="pharmacy-main-page--track-orders"> 
             <div class="service-content--2">
                 <h3>Track you orders here</h3>
+<<<<<<< HEAD
+=======
+                <h4>Track yout order at comfort of your own home.</h4>
+>>>>>>> 20002051
                 <?= $component->button('track-order','',"Track Your Order",'button-class--yellow','track-order'); ?>
             </div>
         </div>
@@ -117,6 +132,14 @@ function showSlides(){
 <script src="./media/js/main.js">
 
 </script>
+
+<script>
+    const trackOrderBtn=e('track-order');
+    trackOrderBtn.addEventListener('click',()=>{
+        location.href="patient-pharmacy?spec=order-main";
+    })
+</script>
+
 
 <script>
     const trackOrderBtn=e('track-order');
