@@ -57,10 +57,19 @@ class Patient extends DbModel{
         ];
     }
     // get recent patient 
-    public function getRecentPatient(){
+    public function getRecentPatientDoctor(){
         //get the last patients in past channelin session
         //also get the patient where nurse got involoved in today channeling session
-        $patient= $this->customFetchAll("select * from past_channeling as p left join opened_channeling as o on p.opened_channeling_ID=o.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID left join appointment as a on a.opened_channeling_ID=o.opened_channeling_ID left join nurse_channeling_allocataion as n on n.channeling_ID=c.channeling_ID left join employee as e on e.emp_ID=n.emp_ID left join patient as pa on  pa.patient_ID=a.patient_ID order by o.channeling_date ;") ;
+        $doctor=Application::$app->session->get('userObject')->nic;
+        $patient= $this->customFetchAll("select * from past_channeling as p left join opened_channeling as o on p.opened_channeling_ID=o.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID left join appointment as a on a.opened_channeling_ID=o.opened_channeling_ID left join nurse_channeling_allocataion as n on n.channeling_ID=c.channeling_ID left join employee as e on e.emp_ID=n.emp_ID left join patient as pa on  pa.patient_ID=a.patient_ID  where c.doctor='".$doctor."' order by o.channeling_date") ;
+        return $patient;
+
+    }
+    public function getRecentPatientNurse(){
+        //get the last patients in past channelin session
+        //also get the patient where nurse got involoved in today channeling session
+        $nurse=Application::$app->session->get('userObject')->emp_ID;
+        $patient= $this->customFetchAll("select * from past_channeling as p left join opened_channeling as o on p.opened_channeling_ID=o.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID left join appointment as a on a.opened_channeling_ID=o.opened_channeling_ID left join nurse_channeling_allocataion as n on n.channeling_ID=c.channeling_ID left join employee as e on e.emp_ID=n.emp_ID left join patient as pa on  pa.patient_ID=a.patient_ID  where c.emp_ID=".$nurse." order by o.channeling_date") ;
         return $patient;
 
     }
