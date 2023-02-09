@@ -1,6 +1,5 @@
 <?php
     namespace app\core;
-    
 
     abstract class FileModel extends Model{
         abstract public function fileDestination():Array;
@@ -13,6 +12,8 @@
                 move_uploaded_file($fileTempName,$destination);
             }
         }
+
+
 
         
     }

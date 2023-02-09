@@ -5,12 +5,39 @@ use app\core\DbModel;
 use app\core\Application;
 use app\core\UserModel;
 
-class Advertisement extends DbModel {
+class Advertisement extends DbModel{
+    public string $id='';
     public string $title='';
     public string $description='';
     public string $remark='';
+    public string $img='';
     public string $type='main';
-    public string $image='';
+
+   
+  
+
+    public function getAdvertisements($type){
+        return $this->fetchAssocAll(['type'=>$type]);
+    }
+   
+    public function tableName(): string
+    {
+        return 'advertisement';
+    }
+    public function primaryKey(): string
+    {
+        return 'ad_ID';
+    }
+    public function tableRecords(): array{
+        return ['advertisement'=>['title','description','remark','img','type']];
+    }
+
+    public function attributes(): array
+    {
+        return ['title','description','remark','img','type'];
+    }
+
+ 
     
     public function addAdvertisement(){
         return parent::save();
@@ -25,29 +52,18 @@ class Advertisement extends DbModel {
     }
 
     public function fileDestination(): array {
-        return ['image'=>"media/images/advertisements/".$this->image];
+        return ['img'=>"media/images/advertisements/".$this->img];
     }
     public function deleteImage($imgName){
         $path = "media/images/advertisements/".$imgName['ad_ID'];
         unlink($path);
     }
 
-    public function tableName(): string {
-        return 'advertisement';
-    }
+ 
 
-    public function primaryKey(): string {
-        return 'ad_ID';
-    }
+  
 
-    public function tableRecords(): array {
-        return ['advertisement'=> ['title','description','remark','type','image']];
-    }
-
-    public function attributes(): array {
-        return  ['title','description','remark','type','image'];
-    }
-
+ 
     
 }   
 

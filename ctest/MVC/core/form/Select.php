@@ -9,20 +9,28 @@
         public string $id;
         public string $attribute;
         public array $options;
+        public string $label;
 
-        public function __construct(Model $model,string $attribute,string $class,array $options,string $id)
+        public function __construct(Model $model,string $attribute,string $label,string $class,array $options,string $id)
         {
             $this->model=$model;
             $this->class=$class;
             $this->options=$options;   
             $this->attribute=$attribute;
             $this->id=$id;
+            $this->label = $label;
         }
         public function __toString()
         {
             $str="";
             foreach($this->options as $option){
-                $str.="<option value='$option'>".ucfirst($option)."</option>";
+                
+                if ($this->model->{$this->attribute}??'' && strcmp($this->model->{$this->attribute},$option)) {
+                    $str.="<option value='$option'>".ucfirst($option)."</option>";
+                }
+                else{
+                    $str .= "<option value='$option' selected>" .ucfirst($option) . "</option>";
+                }
             }
             $str='<div class="%s" id=%s>
                     <div class="field-upper_text">
@@ -33,7 +41,7 @@
                          $str
                    .'</select>
                   </div>';
-            return sprintf($str,$this->class,$this->attribute,$this->attribute,ucfirst($this->attribute),($this->model->errors)[$this->attribute][0] ?? '',$this->attribute,$this->id);
+            return sprintf($str,$this->class,$this->attribute,$this->label,ucfirst($this->label),($this->model->errors)[$this->attribute][0] ?? '',$this->attribute,$this->id);
         }
     }
 

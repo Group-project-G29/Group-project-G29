@@ -9,7 +9,9 @@ include "../views/layouts/navbar/patient-navbar.php";
 
 </div>
     <div class="main-container">
-         <?php $sidebar=new Sidebar(['Appointments'=>'#','My Documentation'=>'#','My Orders'=>'#','My Payments'=>'#','Medical Analysis'=>'#','My Detail'=>'#'],$select);?>
+
+         <?php $sidebar=new Sidebar(['Appointments'=>'patient-dashboard?spec=appointments','My Documentation'=>'patient-dashboard?spec=documentation','My Orders'=>'patient-dashboard?spec=orders','My Payments'=>'patient-dashboard?spec=payments','Medical Analysis'=>'patient-dashboard?spec=medical-analysis','My Detail'=>'patient-dashboard?spec=my-detail'],$select);?>
+
          <?php echo $sidebar;  ?>
         
         
@@ -20,6 +22,7 @@ include "../views/layouts/navbar/patient-navbar.php";
                      <?php echo Application::$app->session->getFlash('success');?>
                  </div>
                 <?php endif;?>
+
             </div>
 
 

@@ -6,7 +6,6 @@ use app\core\form\SpanSelect;
 
 class Component{
     
-    
     public function searchbar($model,$attribute,$class,$placeholder="",$id=""){
         return new SearchBar($model,$attribute,$class,$placeholder,$id);
     } 

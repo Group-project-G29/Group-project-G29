@@ -3,6 +3,7 @@
     namespace app\core;
     class Session{
         protected const FLASH_KEY='flash_messsage';
+        // flash messages should be removed once it is used 
         public function __construct(){
             session_start();
             $flashMessages=$_SESSION[self::FLASH_KEY] ?? [];

@@ -117,9 +117,6 @@ abstract class Model{
 
             }
         }
-
-        // var_dump($this->errors);
-        // exit();
         
         return empty($this->errors);
     }

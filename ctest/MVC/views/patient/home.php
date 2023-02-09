@@ -30,22 +30,22 @@
 </div>
 <section class="homepage-main-container">
      
-        <div class="main-container-tile" id="">
-            <img src="./media/images/patient/Meet Doctor.png" id="patient-doctor-main">
+        <div class="main-container-tile" id="doctor-patient-appointment?spec=doctor">
+            <img src="./media/images/patient/Meet Doctor.png" id="">
             <h3 class="fs-100">Meet Doctor</h3>
         </div>
         <div class="main-container-tile" id="patient-channeling-category-view">
             <img src="./media/images/patient/Channeling.png">
             <h3>Channelings</h3>
         </div>
-        <div class="main-container-tile" id="patient-pharamcy-main">
+        <div class="main-container-tile" id="patient-pharmacy?spec=main">
             <img src="./media/images/patient/Pharmacy.png">
             <h3>Pharmacy</h3>
         </div>
-        <!-- <div class="main-container-tile" id="patient-lab-main">
+        <div class="main-container-tile" id="patient-lab-main">
             <img src="./media/images/patient/Laboratory.png">
             <h3>Laboratory</h3>
-        </div> -->
+        </div>
         <div class="main-container-tile" id="contact-us">
             <img src="./media/images/patient/operator.png">
             <h3>Contact Us</h3>

@@ -9,6 +9,7 @@ class Field{
     public string $class;
     public string $type;
     public string $id;
+    public string $label;
     public function __construct(Model $model,string $attribute,string $label,string $class, string $type,string $id="")
     {
         $this->model=$model;

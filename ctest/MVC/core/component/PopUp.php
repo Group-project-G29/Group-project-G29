@@ -6,6 +6,10 @@
     
     class PopUp{
         public array $item;
+        public string $value;
+        public string $valuestyle;
+        public string  $style;
+        public string $id;
         public function __construct($value,$valuestyle,$style,$id='yes')
         {
             $this->value=$value;

@@ -34,10 +34,7 @@ class Router{
     public function resolve(){
         $path=$this->request->getPath(); // Get the URL
         $method=$this->request->method(); // Get the Method
-        // var_dump($path);
-        // var_dump($method);
         $callback=$this->routes[$method][$path] ?? false;
-        // var_dump($callback);
         if($callback==false){
             $this->response->setStatusCode(404);
             return $this->renderContent("Not found");
@@ -47,8 +44,6 @@ class Router{
             return $this->renderView($callback);
         }
         if(is_array($callback)){
-            // var_dump($callback);
-            // exit;
             Application::$app->controller=new $callback[0]();
             $callback[0]=Application::$app->controller;
         }

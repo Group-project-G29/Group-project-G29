@@ -19,13 +19,17 @@ class EmployeeAuthController extends Controller{
 
         if($request->isPost()){
             $EmployeeLoginForm->loadData($request->getBody());
+            //login is called only if validate is true
             if($EmployeeLoginForm->validate() && $EmployeeLoginForm->login()){
                 $Employee=new Employee();
                 $user=$Employee->findOne(['email'=>$EmployeeLoginForm->username]);
                 
-                Application::$app->session->setFlash('success',"Welcome ".$EmployeeLoginForm->name);
+                Application::$app->session->setFlash('success',"Welcome ".$EmployeeLoginForm->username);
                 if($user->role=="receptionist"){
                     $response->redirect('/ctest/receptionist-handle-patient?mod=view');
+                }
+                else if($user->role=='lab'){
+                    $response->redirect('/ctest/lab-view-all-test');
                 }
                 else{
                     $response->redirect('/ctest/'.$user->role);

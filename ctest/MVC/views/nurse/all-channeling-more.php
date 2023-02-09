@@ -51,9 +51,10 @@ $component = new Component();
     <table border="0">
         <thead>
             <tr>
-                <th></th>
+                <th>Day</th>
                 <th>Date</th>
                 <th>Remaining Appointments</th>
+                <th>Remaining Free Appointments</th>
                 <th>Status</th>
                 <th></th>
             </tr>
@@ -66,6 +67,7 @@ $component = new Component();
                 <td><?php echo("Day - ".$day); ?></td>
                 <td><?= $clinic['channeling_date'] ?></td>
                 <td><?= $clinic['remaining_appointments'] ?></td>
+                <td><?= $clinic['remaining_free_appointments'] ?></td>
                 <td><?= $clinic['status'] ?></td>
 
                 <?php $day = $day + 1; ?>

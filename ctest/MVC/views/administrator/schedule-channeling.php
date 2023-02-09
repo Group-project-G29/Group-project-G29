@@ -11,34 +11,19 @@ $form=Form::begin('','post');
     <div class="form-body">
         <div class="input-container">
             <table>
-                <?php echo $form->spanselect($employeemodel,'doctor','field',$doctors)?>
-                <?php echo $form->spanselect($channelingmodel,'speciality','field',['Dental'=>'Dental','Cardiology'=>'Cardiology','Radiology'=>'Radiology','Gastrology'=>'Gastrology'])?>
+                <?php echo $form->spanselect($channelingmodel,'doctor','Doctor','field',$doctors)?>
+                <?php echo $form->spanselect($channelingmodel,'speciality','Speciality','field',['Dental'=>'Dental','Cardiology'=>'Cardiology','Radiology'=>'Radiology','Gastrology'=>'Gastrology'])?>
                 <?php echo $form->spanfield($channelingmodel,'start_date','Starting Date*','field','date') ?>
                 <?php echo $form->spanfield($channelingmodel,'time','Starting Time*','field','time') ?>
-                <?php echo $form->spanselect($channelingmodel,'day','field',['Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursay','Friday'=>'Friday','Saturday'=>'Saturday'])?>
+                <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursay','Friday'=>'Friday','Saturday'=>'Saturday'])?>
                 <?php echo $form->spanfield($channelingmodel,'count','Frequency count*','field','text') ?>
-                <?php echo $form->spanselect($channelingmodel,'type','field',['Week'=>'Week','Month'=>'Month','Year'=>'Year'])?>
-                <?php //echo $form->spanfield($channelingmodel,'total_patients','Total Patient Count*','field','text') ?>
-                <?php //echo $form->spanfield($channelingmodel,'extra_patients','Number of Extra Patients*','field','text') ?>
-                
-                <tr>
-                    <td>
-                        <label for="limitCheckbox">Limit Patients</label>
-                    </td>
-                    <td>
-                        <input type="checkbox" class="limitCheckbox" name="limitCheckbox" id="limitCheckbox" onclick="checkMe()"/>
-                    </td>
-                </tr>
-                <!-- <tr class="hideLine" hidden>
-                    <td>fhgfhljkx</td>
-                    <td>jghjkl</td>
-                </tr>    -->
-                <div class="hideLine" ><?php echo $form->spanfield($channelingmodel,'total_patients','Limit Patient Count','field','text') ?></div>   
-                
-                <!-- <?php // echo $form->spanfield($channelingmodel,'max_free_appointments','Maximum Free Appointments*','field','text') ?> -->
+                <?php echo $form->spanselect($channelingmodel,'type','Type','field',['Week'=>'Week','Month'=>'Month','Year'=>'Year'])?>
+                <?php echo $form->spanfield($channelingmodel,'total_patients','Total Patient Count*','field','text') ?>
+                <?php echo $form->spanfield($channelingmodel,'extra_patients','Number of Extra Patients*','field','text') ?>
+                <?php echo $form->spanfield($channelingmodel,'max_free_appointments','Maximum Free Appointments*','field','text') ?>
                 <?php echo $form->spanfield($channelingmodel,'fee','Baic Fee*','field','text') ?>
                 <?php echo $form->spanfield($channelingmodel,'percentage','Doctor\'s Income Percentage*','field','text') ?>
-                <?php echo $form->spanselect($channelingmodel,'room','field',$rooms)?>
+                <?php echo $form->spanselect($channelingmodel,'room','Room','field',$rooms)?>
             </table>
         </div>
     </div>
@@ -111,30 +96,4 @@ $form=Form::begin('','post');
         })
     }
     searchBar.addEventListener('input',checker);
-
-
-    function checkMe(){
-        const checkActive = document.querySelector(".limitCheckbox");
-        const popLine = document.querySelector(".hideLine");
-        if(checkActive.checked){
-            visible(popLine)
-            
-        }
-        else{
-            hide(popLine)
-        }
-    }
-
-    // const checkActive = document.getElementById("limitCheckbox");
-    // const popLine = document.querySelector(".hideLine");
-    // checkActive.addEventListener("click", ()=>{
-    //     if(checkActive.checked){
-    //         popLine.hidden=false;
-    //     }
-    //     else{
-    //         popLine.hidden=true;
-    //     }
-    // });
-   
-</script>
-   
+    </script>

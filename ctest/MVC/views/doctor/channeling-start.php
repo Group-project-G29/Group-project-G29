@@ -1,6 +1,6 @@
 <div class="column-flex">
     <div class="main-detail-title">
-        <h1><?=$doctor[0]['speciality']."-".$channeling->day?></h1>
+        <h1><?=$channeling->speciality."-".$channeling->day?></h1>
     </div>
     <div class="number-content">
         <h2>Patients</h2>
