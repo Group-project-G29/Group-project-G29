@@ -226,7 +226,7 @@ class ReceptionistController extends Controller
 
         $channelingModel = new Channeling();
         $parameters = $request->getParameters();
-        $channelingmore = $channelingModel->customFetchAll("SELECT distinct speciality from doctor ");        //pass the variable value
+        $channelingmore = $channelingModel->customFetchAll("SELECT distinct career_speciality from doctor ");        //pass the variable value
         // var_dump($channelingmore);
         // exit;
         return $this->render('receptionist/receptionist-all-channelings', [
