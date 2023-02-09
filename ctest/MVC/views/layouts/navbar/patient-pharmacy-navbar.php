@@ -26,6 +26,26 @@
         <div class="nav_row--top_logo">
             <img src="./media/images/logo-1.png">
         </div>
+        <div>
+            <div class="search-medicine-container">
+            <?php echo $component->searchbar('',"name","search-bar--class1","Search by medicine name","search");?>
+            <?php if(Application::$app->session->get('user')):?>
+                <div class="main-cart-container">
+                    <?= $component->cartview() ?>
+                </div>
+            <?php endif; ?>
+            <script src="./media/js/main.js">
+
+            </script>
+            <script>
+                const searchbar=e('search');
+                const btn=e('bsearch');
+                btn.addEventListener("click",()=>{
+                    location.href="patient-pharmacy?cmd=search&value="+searchbar.value+"&page=1";
+                });
+            </script>
+        </div>
+        </div>
         <div class="nav_row--top_user flex ">
         <?php if(Application::$app->session->get('user')) :?>
                 <div class="bell-container">
