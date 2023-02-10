@@ -213,8 +213,13 @@ class PatientAuthController extends Controller{
                 $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
-            else if($parameters[2]['type'] && $parameters[2]['type']??''=='labtest'){
+            else if(isSet($parameters[2]['type']) && $parameters[2]['type']??''=='labtest'){
                 $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'labtest']);
+                $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
+                Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
+            }
+            else{
+                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
                 $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }

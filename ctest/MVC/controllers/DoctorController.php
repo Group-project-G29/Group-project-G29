@@ -18,10 +18,7 @@ use app\models\Referral;
 use app\core\FileModel;
 use app\core\ReportModel;
 use app\models\Appointment;
-<<<<<<< HEAD
 use app\models\Patient;
-=======
->>>>>>> 20000758
 use app\models\SOAPReport;
 
 class DoctorController extends Controller{
@@ -98,7 +95,6 @@ class DoctorController extends Controller{
         $reportModel = new ConsultationReport();
         $appointmentMOdel=new Appointment();
         $doctor = Application::$app->session->get('userObject')->nic;
-<<<<<<< HEAD
 
         if(isset($parameters[2]['set']) && $parameters[2]['set']=='used'){
             $appointmentMOdel->updateStatus($appointmentMOdel->getAppointment($parameters[1]['id'],Application::$app->session->get('channeling')),'used');
@@ -109,19 +105,14 @@ class DoctorController extends Controller{
 
         }
         //check whether the appointment is used or not
-=======
->>>>>>> 20000758
         if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='start'){
             
             $id=$parameters[1]['id']??'';
             $OpenedChanneling->customFetchAll("update opened_channeling set status='started' where opened_channeling_ID=".$id);
             $patient=$OpenedChanneling->getLastPatient("consultation",$id);
-<<<<<<< HEAD
             if(!$patient){
                 $patient=$OpenedChanneling->getLastPatient("labtest",$id);
             }
-=======
->>>>>>> 20000758
             //get patient in the session
             Application::$app->session->set('cur_patient',$patient);
             
@@ -129,7 +120,6 @@ class DoctorController extends Controller{
             //$appointment_detail=$OpenedChanneling->customFetchAll("SELECT * from appointment left join patient on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where appointment.queue_no in (SELECT min(queue_no) from appointment where opened_channeling_ID=".$id.")"." and opened_channeling.opened_channeling_ID=".$id);
             if(!$appointment_detail){
                 Application::$app->response->redirect('channeling-assistance?cmd=finish'); // if(!$appointment_detail){
-<<<<<<< HEAD
                     Application::$app->response->redirect('channeling-assistance?cmd=finish');
                     return false;
                 }
@@ -200,54 +190,6 @@ class DoctorController extends Controller{
                 
                 ]);
             }
-=======
-                Application::$app->response->redirect('channeling-assistance?cmd=finish');
-                return false;
-            }
-            
-            Application::$app->session->set('channeling',$id);
-            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
-            $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
-            return $this->render("doctor/channeling-assistance-patient",[
-                'appointment'=>$appointment_detail, 
-                'referrals'=>$referrals,
-                'reports'=>$reports
-            ]);
-
-        }
-        if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='switch'){
-            $id=$parameters[1]['id'];
-            Application::$app->session->set('cur_patient',$id);
-            $channeling=Application::$app->session->get('channeling');
-            $type=$appointmentMOdel->getAppointmentType($id,$channeling)[0]['type']??'';
-            $patient="";
-            if($type=='labtest'){
-                //get last consultation patient
-                $patient=$OpenedChanneling->getLastPatient('consultation',$channeling);
-                $type="consultation";
-            }
-            else if($type=='consultation'){
-                //get last labtest patient
-                $patient=$OpenedChanneling->getLastPatient('labtest',$channeling);
-                $type="labtest";
-            }
-            $appointment_detail[0]=$OpenedChanneling->getPatient($channeling,$patient,'this',$type);
-            if(!$appointment_detail[0]){
-                //Application::$app->response->redirect('channeling-assistance?cmd=finish');
-                return false;
-            }
-            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
-            $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
-            return $this->render("doctor/channeling-assistance-patient",[
-                'appointment'=>$appointment_detail,
-                'referrals'=>$referrals,
-                'reports'=>$reports
-                 // if(!$appointment_detail){
-            //     Application::$app->response->redirect('channeling-assistance?cmd=finish');
-            //     return false;
-            // }
-            ]);
->>>>>>> 20000758
 
         }
         if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='next'){
@@ -262,7 +204,6 @@ class DoctorController extends Controller{
             }
             $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
-<<<<<<< HEAD
             if($appointment_type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'appointment'=>$appointment_detail,
@@ -281,17 +222,6 @@ class DoctorController extends Controller{
                 
                 ]);
             }
-=======
-            return $this->render("doctor/channeling-assistance-patient",[
-                'appointment'=>$appointment_detail,
-                'referrals'=>$referrals,
-                'reports'=>$reports
-                 // if(!$appointment_detail){
-            //     Application::$app->response->redirect('channeling-assistance?cmd=finish');
-            //     return false;
-            // }
-            ]);
->>>>>>> 20000758
         }
         else if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='previous'){
             $id=$parameters[1]['id'];
@@ -303,7 +233,6 @@ class DoctorController extends Controller{
             if(!$appointment_detail[0]){
                 Application::$app->response->redirect('channeling-assistance?cmd=finish');
                 return false;
-<<<<<<< HEAD
             }
             $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
@@ -326,16 +255,6 @@ class DoctorController extends Controller{
                 
                 ]);
             }
-=======
-            }
-            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
-            $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
-            return $this->render("doctor/channeling-assistance-patient",[
-                'appointment'=>$appointment_detail,
-                'referrals'=>$referrals,
-                'reports'=>$reports
-            ]);
->>>>>>> 20000758
         }
         else if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='finish'){
             $openedChannelingModel=new OpenedChanneling();
@@ -366,11 +285,7 @@ class DoctorController extends Controller{
                 $referrals=$referralModel->customFetchAll("Select * from referrel where ref_ID=".$parameter[2]['id']);
                 //$referralModel->findOne(['ref_ID'=>$parameter[2]['id']]);
                 
-<<<<<<< HEAD
                 $response->redirect('./media/patient/referrals/'.$referrals[0]['name']);
-=======
-                $reportModel->openFile('./media/patient/referrals/'.$referrals[0]['name']);
->>>>>>> 20000758
             }
             if ($request->isPost()) {
                 $url=$request->getURL();

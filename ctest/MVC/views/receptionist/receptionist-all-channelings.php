@@ -17,11 +17,11 @@ $component = new Component();
 <div class="main-card ">
   <?php foreach ($channelingmore as $key => $channeling) : ?>
 
-      <div class="card-0" id=<?= $channeling['speciality'] ?>>
+      <div class="card-0" id=<?= $channeling['career_speciality'] ?>>
          
           <div class="card-header-1 " style="padding-top: 15vh;">
 
-            <h1><?= $channeling['speciality'] ?> </h1>
+            <h1><?= $channeling['career_speciality'] ?> </h1>
           </div>
 
        

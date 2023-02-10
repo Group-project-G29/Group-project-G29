@@ -1142,8 +1142,7 @@ padding-left:5vh;
     left: 25%;
 }
 .button-0{
-    width: 50%;
-    left: 40%;
+   
     position: absolute;
 }
   .table-row {
@@ -1249,16 +1248,9 @@ padding-left:5vh;
       left: 25%;
   }
 
-  .button-0 {
-      width: 50%;
-      left: 40%;
-      position: absolute;
-
-  }
+ 
 
   .button--class-0 {
-      height: 5.5vh;
-      width: 17vw;
       font-size: 0.9em;
       color: var(--clr-white);
       background-color: var(--clr-dark);
@@ -1636,4 +1628,26 @@ padding-left:5vh;
 .detail-container {
     width: 100px;
     align-items: center;
+}
+
+
+
+/* sort by and filter */
+
+.filter-by  select ,.sort-by select{
+    height: 4vh;
+    width: 9vw;
+    border:1px solid #c2c2c2;
+    color:#c2c2c2;
+    padding-inline: 2vw;
+    background-color: transparent;
+    border-radius: 5px;
+}
+.filter-by  option ,.sort-by option{
+    height: 3vh;
+    width: 9vw;
+    border:1px solid #cfcfcf;
+    color:#cfcfcf;
+    padding-inline: 2vw;
+    background-color: transparent;
 }

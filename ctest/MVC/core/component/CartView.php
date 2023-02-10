@@ -26,8 +26,8 @@ use app\models\Medicine;
                             <div class="scrollable-body">
                                 <h3 class="fs-50">'.$item["name"]." ".$item["strength"]." ".$item["unit"].'</h3>
                                 <input type="number" id='.'"'."amount2_".$item['med_ID'].'"'.' value='.$item['amount'].'>
-                                '.$component->button('update','','Change Amount','update-buttons','cartbtn_'.$item['med_ID'])
-                                .'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><h3 class="fs-50">X</h3></a>'.
+                                '.$component->button('update','','Change Amount','update-buttons-cart','cartbtn_'.$item['med_ID'])
+                                .'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><font class="fs-50">X</font></a>'.
                             '</div>
                     </div>';
                 }
@@ -38,7 +38,7 @@ use app\models\Medicine;
                             <div class="scrollable-body">
                                 <h3 class="fs-50">'.$item["name"]." ".$item["strength"]." ".$item["unit"].'</h3>
                                 <h3 color="red">Out of stock</h3>'.'>
-                                '.'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><h3 class="fs-50">Remove</h3></a>'.
+                                '.'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><font class="fs-50">X</font></a>'.
                             '</div>
                     </div>';
                 }
@@ -51,10 +51,10 @@ use app\models\Medicine;
                 <div class="cart-counter">
                     <h6>%s</h6>
                 </div>
-                <div class="cart-content">'.
-                    $stritem.$component->button("","","Process to Patyment","",'proceed-to-payment')
+                <div class="cart-content"> <div class="cart--wrapper">'.
+                    $component->button("","","Proceed to Payment","cart-payment-button",'proceed-to-payment')."</hr>".$stritem
 
-                .'</div>
+                .'</div></div>
                 </section> 
             <script>
                 const cart=document.querySelectorAll(".cart");

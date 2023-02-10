@@ -206,7 +206,6 @@ class NurseController extends Controller{
         $this->setLayout('nurse',['select'=>'patients']);
         $patients=$patientModel->getRecentPatientNurse();
 
-        
 
         return $this->render('nurse/nurse-patient',[
             'patients'=>$patients,

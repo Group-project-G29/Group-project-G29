@@ -18,7 +18,7 @@ $component = new Component();
 </div>
 <div class="main-card ">
 <div class="">
-        <h1 style="text-align:center"><?= $channelingSp['speciality'] ?> Specialists</h1>
+        <h1 style="text-align:center"><?= $channelingSp['career_speciality'] ?> Specialists</h1>
         
     </div>
     <?php foreach ($channelings as $key => $channeling) : ?>

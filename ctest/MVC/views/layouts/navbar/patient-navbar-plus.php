@@ -24,7 +24,7 @@
 <nav class="nav" >
     <div class="nav_row--top shadow">
         <div class="nav_row--top_logo">
-            <img src="./media/images/logo-1.png">
+            <img src="./media/images/logo-1.png" id="logo">
         </div>
         <div class="nav_row--top_user flex ">
         <?php if(Application::$app->session->get('user')) :?>
@@ -75,4 +75,8 @@
             location.href="/ctest/";
         })
     }
+    const image=document.getElementById("logo");
+    image.addEventListener('click',()=>{
+        location.href="/ctest/patient-main"
+    })
 </script>

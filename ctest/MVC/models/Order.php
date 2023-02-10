@@ -10,7 +10,7 @@ use app\core\DbModel;
         public string $cart_ID="";
         public ?string $delivery_ID="";
         public string $payment_status="pending"; //pending,completed
-        public string $processing_status="processing";
+        public string $processing_status="pending";
         
         public function __construct(){
 

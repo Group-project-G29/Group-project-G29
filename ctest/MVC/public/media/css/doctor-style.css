@@ -233,10 +233,6 @@
     color:var(--clr-white);
 
 }
-.doc-button--selected{
-    background-color: var(--clr-dark);
-    color:var(--clr-whiteactive);
-}
 .button--class-doc1:active,.button--class-doc1:last-child:active,.button--class-doc1:first-child:active{
     background-color: var(--clr-dark);
     color:var(--clr-whiteactive);

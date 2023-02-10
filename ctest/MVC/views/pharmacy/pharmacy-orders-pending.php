@@ -23,18 +23,17 @@
 <table border="0">
     <tr>
         <th>Order ID</th>
-        <th>Patient ID</th>
-        <th>Name</th>
-        <th>Contact</th>
-        <th>Date</th>
-        <th>Time</th>
+        <th>Created Time</th>
+        <th>Created Date</th>
+      
+        
     </tr>
     <?php if($orders): ?>
         
         <?php foreach($orders as $key=>$order): ?>
             <tr class="table-row" id=<?=$order['order_ID']?> >
                 <td><?=$order['order_ID']?></td>
-                <td><?=$order['time_of_creation']?></td> 
+                <td><?=$order['created_time']?></td> 
                 <td><?=$order['created_date']?></td> 
 
 
