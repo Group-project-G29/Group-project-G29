@@ -1,5 +1,6 @@
 <?php
 
+use app\core\Application;
 use app\core\component\Component;
 use app\core\form\Form;
 use app\models\Medicine;
@@ -7,29 +8,12 @@ use app\models\Medicine;
     $form=new Form();
     $model=new Medicine();
 ?>
+<script src="./media/js/main.js">
+
+</script>
 <section class="medicine-main-container">
     <div class="medicine-left-container">
-        <div class="cart-title">
-            <center><h3>Your Cart Items </h3></center>
-        </div>
-        <?php foreach($cartItems as $item):   ?>
-            <div class="cart-item">
-                <img src=<?="./media/images/medicine/".$item['img']?>>
-                <div class="scrollable-body">
-                    <h3 class="fs-50"><?=$item['name']." ".$item['strength']." ".$item['unit']?></h3>
-                    <div class="amount-container">
-                        <label>Amount :</label>
-                        <input type="number" id=<?='"'."amount2_".$item['med_ID'].'"'?> value=<?=$item['amount']?>>
-                    </div>
-                    <?=$component->button('update','','Change Amount','update-buttons','cartbtn_'.$item['med_ID']); ?>
-                    <a href=<?="patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID']?>><h3 class="fs-50">Remove</h3></a>
-                </div>
-            </div>
-            
-            <?php endforeach;  ?>
-            <div>
-                <?=$component->button('payment','','Proceed Payment','','proceed-to-payment');  ?>
-            </div>
+       
     </div>
     <div class="medicine-right-container">
     <?php
@@ -39,8 +23,12 @@ use app\models\Medicine;
 
         $component=new Component();
         
-        echo $component->searchbar('','search','search-bar--class2','Search by name,specilaity','searchbar');
-    ?>
+        ?>
+      
+        
+
+
+        
         <div class="medicine-right-subcontainer">
             <?php foreach($medicines as $medicine):?>
                 <?php if($model->checkStock($medicine['med_ID'])): ?>  <!--check whether medicine in stock or out-->
@@ -101,4 +89,6 @@ use app\models\Medicine;
     paymentbtn.addEventListener('click',()=>{
         location.href="patient-medicine-order?spec=order&mod=view";
     })
+    // const cart=e('.cart','class');
+    // const cartBody=e('.');
 </script>

@@ -39,14 +39,14 @@
 }
 
 .row-img-col {
-    max-height: 200px;
-    width: 250px;
-    min-width: 250px;
+    
+    width: 10v;
+
 }
 
 .row-img {
     width: auto;
-    min-height: 200px;
+    height: 10vh;
     background-position: center;
     background-size: 100%;
     object-fit: cover;
@@ -64,14 +64,6 @@
     text-align: center;
 }
 
-.navigation-text-line-p,
-.navigation-text-line-link
- {
-    color: #178891;
-    font-size: 15px;
-    text-decoration: none;
-    /* margin-top: -35px; */
-}
 
 /* ===============My detail==================== */
 

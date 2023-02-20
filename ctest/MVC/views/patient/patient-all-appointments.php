@@ -5,7 +5,11 @@
     echo $popup;
 ?>
 
-
+<div class="filter-holder">
+    <?php 
+        echo $component->filtersortby('','',[],['Speciality'=>'speciality','Doctor'=>'Doctor']);
+    ?>
+</div>
 <div class="table-container">
 <?php if($channelings):?>
 <table border="0">

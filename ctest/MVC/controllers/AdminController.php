@@ -8,12 +8,13 @@ use app\core\Date;
 use app\core\Request;
 use app\core\Response;
 use app\models\Channeling;
+use app\models\Advertisement;
+use app\models\AdminNotification;
 
 use app\models\Employee;
 use app\models\NurseAllocation;
 use app\models\OpenedChanneling;
 use app\core\Time;
-use app\models\AdminNotification;
 
 class AdminController extends Controller{
     // create add,view channeling session
@@ -191,15 +192,91 @@ class AdminController extends Controller{
             ]);
         }
         
-    }  
+    }
+    
+    //view advertisement
+    public function viewAdvertisement(){
+
+        $this->setLayout("admin",['select'=>'Advertisement']);
+        $advertisementModel=new Advertisement();
+        $advertisements=$advertisementModel->customFetchAll("Select * from advertisement order by title asc");
+        return $this->render('administrator/main-adds',[
+            'advertisements'=>$advertisements,
+            'model'=>$advertisementModel
+        ]);
+    }
+    
+    //delete update insert advertisement
+    public function handleAdvertisement(Request $request, Response $response){
+        $parameters=$request->getParameters();
+        $this->setLayout('admin',['select'=>'Advertisement']);
+        $advertisementModel=new Advertisement();
+            
+        //Delete operation
+        if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
+            $delRow= $advertisementModel->customFetchAll("Select * from advertisement where ad_ID = ".$parameters[1]['id']);
+            $advertisementModel->deleteImage(['ad_ID'=>$delRow[0]['img']]);
+            $advertisementModel->deleteRecord(['ad_ID'=>$parameters[1]['id']]);
+            Application::$app->session->setFlash('success',"Advertisement successfully deleted ");
+            $response->redirect('/ctest/main-adds');
+            return true;
+        }
+
+        //Go to update page of a advertisement
+        if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
+            $advertisement=$advertisementModel->customFetchAll("Select * from advertisement where ad_ID=".$parameters[1]['id']);
+            $advertisementModel->updateData($advertisement,$advertisementModel->fileDestination());
+            Application::$app->session->set('advertisement',$parameters[1]['id']);
+            return $this->render('administrator/main-adds-update',[
+                'model'=>$advertisementModel,
+            ]);
+        }
+
+        if($request->isPost()){
+            // update advertisement
+            $advertisementModel->loadData($request->getBody());
+            $advertisementModel->loadFiles($_FILES);
+            if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
+                  
+                if($advertisementModel->validate() && $advertisementModel->updateRecord(['ad_ID'=>$parameters[1]['id']])){
+                    $response->redirect('/ctest/main-adds'); 
+                    Application::$app->session->setFlash('success',"Advertisement successfully updated ");
+                    Application::$app->response->redirect('/ctest/main-adds');
+                    exit; 
+                };
+                
+            } 
+            
+            // add advertisement
+            if($advertisementModel->validate() && $advertisementModel->addAdvertisement()){
+                Application::$app->session->setFlash('success',"Advertisement successfully added ");
+                Application::$app->response->redirect('/ctest/main-adds'); 
+                $this->setLayout("admin",['select'=>'Advertisement']);
+                $advertisementModel=new Advertisement();
+                $advertisements=$advertisementModel->customFetchAll("Select * from advertisement order by name asc");
+                return $this->render('administrator/main-adds',[
+                    'advertisements'=>$advertisements,
+                    'model'=>$advertisementModel
+                ]);
+       
+            }
+        }
+
+        return $this->render('administrator/add-main-adds',[
+            'model'=>$advertisementModel,
+        ]);
+    }
+
+
 
     public function handleNotifications(){
         $this->setLayout('admin',['select'=>"Notification"]);
         $notificationModel=new AdminNotification();
         $notifications=$notificationModel->customFetchAll("Select * from admin_notification order by created_date_time");
+
         return $this->render('administrator/view-notifications',[
-            'notifications'=>$notifications,
-            'model'=>$notificationModel
+            "notifications"=>$notifications,
+            "model"=>$notificationModel,
         ]);
 
     }

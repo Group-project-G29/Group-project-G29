@@ -8,7 +8,7 @@ use app\core\DbModel;
         public string $contact="";
         public string $address="";
         public string $delivery_rider="";
-        public string $PIN="";
+        public string $confirmation_PIN="";
         public string $postal_code="";
         public string $name="";
         public string $city="";
@@ -44,26 +44,26 @@ use app\core\DbModel;
         }
         
         public function tableRecords(): array{
-            return ['delivery'=>['contact','address','postal_code','name','city','comment','PIN']];
+            return ['delivery'=>['contact','address','postal_code','name','city','comment','confirmation_PIN']];
         }
 
         public function attributes(): array
         {
-            return ['contact','address','postal_code','name','city','comment','PIN'];
+            return ['contact','address','postal_code','name','city','comment','confirmation_PIN'];
         }
-        public function setAttributes($contact,$address,$delivery_rider,$PIN,$postal_code,$name,$comment){
+        public function setAttributes($contact,$address,$delivery_rider,$confirmation_PIN,$postal_code,$name,$comment){
             $this->contact=$contact;
             $this->address=$address;
             $this->delivery_rider=$delivery_rider;
-            $this->PIN=$PIN;
+            $this->confirmation_PIN=$confirmation_PIN;
             $this->postal_code=$postal_code;
-            $this->PIN=$PIN;
+            $this->confirmation_PIN=$confirmation_PIN;
             $this->name=$name;
             $this->comment=$comment;
         }
-        public function createPIN(){
+        public function createconfirmation_PIN(){
             
-            $this->PIN= "".(rand(0,9)).(rand(0,9)).(rand(0,9)).(rand(0,9));
+            $this->confirmation_PIN= "".(rand(0,9)).(rand(0,9)).(rand(0,9)).(rand(0,9));
         }
         
     }

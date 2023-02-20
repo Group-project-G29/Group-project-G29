@@ -1,26 +1,25 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
-
+    // var_dump($advertisements);exit;
 ?>
 <div class='upper-container'>
     <div class="search-bar-container">
         <?php echo $component->searchbar($model,"title","search-bar--class1","Search by advertisement title","searh");?>
     </div>
-    <?php echo $component->button('new-advertisement','','Add New Advertisement','button--class-0  width-10','new-advertisement');?>
+    <?php echo $component->button('new-advertisement','','Add New advertisement','button--class-0  width-10','new-advertisement');?>
     
 </div>
 <div class="table-container">
 <table border="0">
-    <tr>
-    </tr>
+    
     <?php foreach($advertisements as $key=>$advertisement): ?>
     <tr class="table-row">
-        <td class="row-img-col"><img class="row-img" src=<?="./media/images/advertisements/lab/".$advertisement['img']?> alt="No image"></td>
-        <td class="add-dec">
-            <?=$advertisement['title']?><br><hr>
-            <?=$advertisement['description']?><br>
-            <?=$advertisement['remark']?><br>
+        <td><img src=<?="./media/images/advertisements/".$advertisement['img']?> alt="No image"></td>
+        <td style="width: 8vw;"><?=$advertisement['title']?></td>
+        <td style="width: 20vw;"><?=$advertisement['description']?></td>  
+        <td style="width: 8vw;"><?=$advertisement['remark']?></td>
+        <td>
             <div>
                 <?php echo $component->button('update','','Update','button--class-2',$advertisement['ad_ID']) ?>
                 <?php echo $component->button('delete',' ','Delete','button--class-3',$advertisement['ad_ID']) ?>
@@ -35,18 +34,18 @@
 <script>
     const btn=document.getElementById("new-advertisement");
     btn.addEventListener('click',function(){
-        location.href="lab-handle-advertisement";
+        location.href="admin-handle-advertisement";
     })
     elementsArray = document.querySelectorAll(".button--class-2");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='lab-update-advertisement?mod=update&id='+elem.id;
+            location.href='admin-update-advertisement?mod=update&id='+elem.id;
         });
     });
     elementsArray = document.querySelectorAll(".button--class-3");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='lab-handle-advertisement?cmd=delete&id='+elem.id;
+            location.href='admin-handle-advertisement?cmd=delete&id='+elem.id;
         });
     });
 </script>

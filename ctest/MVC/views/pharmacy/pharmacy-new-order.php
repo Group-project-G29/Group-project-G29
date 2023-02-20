@@ -4,11 +4,6 @@
     /** @var $model \app\models\User */
 ?>
 
-<p class="navigation-text-line-p"> 
-    <a class="navigation-text-line-link" href="/ctest/pharmacy-orders-pending">orders</a>/
-    <a class="navigation-text-line-link">add new order</a> 
-</p>
-
 
 <?php
 

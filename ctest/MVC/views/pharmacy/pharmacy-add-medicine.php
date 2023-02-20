@@ -2,10 +2,6 @@
     /** @var $model \app\models\User */
 ?>
 
-<p class="navigation-text-line-p"> 
-    <a class="navigation-text-line-link" href="/ctest/pharmacy-view-medicine">medicines</a>/
-    <a class="navigation-text-line-link">add new medicine</a> 
-</p>
 
 <?php
 
@@ -15,6 +11,7 @@ use app\core\component\Component;
 
 $component=new Component();
 $form=Form::begin('','post');?> 
+
 <section class="form-body" style="padding-bottom:100px">
 
     <div class="main_title">

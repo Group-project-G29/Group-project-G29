@@ -26,10 +26,8 @@ $component = new Component();
 
     </tr>
 
-
     <?php foreach ($channelings as $key => $channeling) : ?>
-      
-      
+    <?php if($channeling['channeling_date']==date('Y-m-d')): ?>
       <tr class='table-row  row-height hover' id=<?=$channeling['emp_ID']?>>
         <td><?= $channeling['name'] ?></td>
         <td><?= $channeling['speciality'] ?> </td>
@@ -38,6 +36,7 @@ $component = new Component();
         <td><?= $channeling['fee'] ?> </td>
 
       </tr>
+      <?php endif; ?>
     <?php endforeach; ?>
 
 

@@ -2,11 +2,6 @@
     /** @var $model \app\models\User */
 ?>
 
-<p class="navigation-text-line-p"> 
-    <a class="navigation-text-line-link" href="/ctest/pharmacy-view-advertisement">advertisements</a>/
-    <a class="navigation-text-line-link">add new advertisement</a> 
-</p>
-
 
 <?php
 

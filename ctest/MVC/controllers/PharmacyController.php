@@ -4,6 +4,7 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
+use app\models\Delivery;
 use app\models\User;
 use app\core\DbModel;
 use app\core\Response;
@@ -67,7 +68,7 @@ class PharmacyController extends Controller{
         ]);
     }
 
-    public function cancleProcessOrder($request){
+    public function cancleProcessingOrder($request){
         $parameters=$request->getParameters();
         // var_dump($parameters[0]['id']);
         // exit;
@@ -85,12 +86,41 @@ class PharmacyController extends Controller{
 
     public function finishProcessingOrder($request){
         $parameters=$request->getParameters();
-        // var_dump($parameters[0]['id']);
-        // exit;
         $this->setLayout("pharmacy",['select'=>'Orders']);
+        $riderMOdel = new Employee;
+        // $deleteRiderMOdel = new Employee;
         $orderModel=new Order();
-        $updated_order=$orderModel->customFetchAll("UPDATE _order SET processing_status = 'packed' WHERE order_ID = ".$parameters[0]['id']);
-        //write the sql query to remove the process from table  -> update processing to pending
+        
+        //selected the available rider 
+        $postal_code = $orderModel->customFetchAll("SELECT delivery.postal_code, _order.order_ID, delivery.delivery_ID FROM delivery INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.order_ID = ".$parameters[0]['id']);
+        $min_postal_code = $postal_code[0]["postal_code"]-10;
+        $max_postal_code = $postal_code[0]["postal_code"]+10;
+
+        $rider = $riderMOdel->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID WHERE delivery_rider.availability='AV' AND delivery.postal_code BETWEEN ". $min_postal_code ." AND ". $max_postal_code ." AND delivery_rider.availability='AV';");
+        $deliveryModel = new Delivery;
+        
+        if($rider) {
+            // update the rider id
+            $updated_rider_ID=$deliveryModel->customFetchAll("UPDATE delivery SET delivery_rider = '".$rider[0]["emp_ID"]."' WHERE delivery_ID = ".$postal_code[0]["delivery_ID"]);
+
+        } else {
+            $rider = $riderMOdel->customFetchAll("SELECT * FROM delivery_riders_queue;");
+            
+            //update the rider ID
+            $updated_rider_ID=$deliveryModel->customFetchAll("UPDATE delivery SET delivery_rider = '".$rider[0]["delivery_rider_ID"]."' WHERE delivery_ID = ".$postal_code[0]["delivery_ID"]);
+
+            //dequeue a delivery rider - check something went wrong deleted few records at once
+            $riderMOdel = $riderMOdel->customFetchAll("DELETE FROM delivery_riders_queue WHERE delivery_rider_ID = ". $rider[0]["delivery_rider_ID"] );
+        }
+        
+        // var_dump($rider[0]);
+        // var_dump($min_postal_code);
+        // var_dump($postal_code);
+        // exit;
+            
+
+            $updated_order=$orderModel->customFetchAll("UPDATE _order SET processing_status = 'packed'  WHERE order_ID = ".$parameters[0]['id']);
+            //write the sql query to remove the process from table  -> update processing to pending
 
         $orders=$orderModel->customFetchAll("Select * from _order inner join patient on _order.patient_ID = patient.patient_ID where _order.processing_status = 'packed' order by created_date asc"); //change has been done
         return $this->render('pharmacy/pharmacy-orders-delivering',[
@@ -111,7 +141,8 @@ class PharmacyController extends Controller{
         patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
         _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
         medicine_in_order.amount, medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price 
-        FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID =".$parameters[0]['id']);
+        FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID 
+        INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID =".$parameters[0]['id']);
         
         return $this->render('pharmacy/pharmacy-track-order',[
             'orders'=>$orders,
@@ -321,7 +352,7 @@ class PharmacyController extends Controller{
                Application::$app->response->redirect('/ctest/pharmacy-view-advertisement'); 
                $this->setLayout("pharmacy",['select'=>'Advertisement']);
                $advertisementModel=new PharmacyAdvertisement();
-               $advertisements=$advertisementModel->customFetchAll("Select * from advertisement where type='Pharmacy' order by name asc");
+               $advertisements=$advertisementModel->customFetchAll("Select * from advertisement order by name asc");
                return $this->render('pharmacy/pharmacy-view-advertisement',[
                    'advertisements'=>$advertisements,
                    'model'=>$advertisementModel
@@ -340,7 +371,7 @@ class PharmacyController extends Controller{
     public function viewAdvertisement(){
         $this->setLayout("pharmacy",['select'=>'Advertisement']);
         $advertisementModel=new PharmacyAdvertisement();
-        $advertisements=$advertisementModel->customFetchAll("Select * from advertisement where type='Pharmacy' order by title asc");
+        $advertisements=$advertisementModel->customFetchAll("Select * from advertisement order by title asc");
         return $this->render('pharmacy/pharmacy-view-advertisement',[
             'advertisements'=>$advertisements,
             'model'=>$advertisementModel

@@ -2,11 +2,6 @@
     /** @var $model \app\models\User */
 ?>
 
-<p class="navigation-text-line-p"> 
-    <a class="navigation-text-line-link" href="/ctest/lab-view-advertisement">advertisements</a>/
-    <a class="navigation-text-line-link">add new advertisement</a> 
-</p>
-
 
 <?php
 
@@ -17,7 +12,7 @@ use app\core\component\Component;
 $component=new Component();
 $form=Form::begin('','post');?> 
 
-<section class="form-body" style="padding-bottom:100px">
+<section class="form-body-adds" style="margin: auto;" >
 
     <div class="main_title">
         <h2 class="fs-150 fc-color--dark">Add Advertisement</h2>
@@ -33,9 +28,9 @@ $form=Form::begin('','post');?>
     <div><?php echo $component->button("add-advertisement","submit","Add Advertisement","button--class-0","add-advertisement")?></div>
     
     </div>
-   
+
     
     <?php Form::end() ?>   
- 
+    </section>
     </body>
 </html>

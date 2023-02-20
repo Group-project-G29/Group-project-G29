@@ -53,7 +53,10 @@ class SOAPReport extends DbModel{
         return  ['type','name','label','subjective','objective','assessment','doctor','patient','plan','additional_note'];
     }
 
-    
+    public function getMedicalReports(){
+        $patient=Application::$app->session->get('user');
+        return $this->customFetchAll("Select * from medical_report where patient=".$patient);
+    }   
 }   
 
 
