@@ -123,6 +123,16 @@ class Medicine extends DbModel{
         return  ['name','brand','strength','availability','category','unit','unit_price','amount','img'];
     }
 
+    //functions
+
+    public function get_medicine_details( $med_ID ) {
+        return $this->customFetchAll("SELECT * FROM medical_products WHERE med_ID=$med_ID");
+    }
+
+    public function select_medical_products() {
+        return $this->customFetchAll("SELECT * FROM medical_products ORDER BY name ASC");
+    }
+
     
 }   
 

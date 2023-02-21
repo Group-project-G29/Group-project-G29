@@ -66,6 +66,34 @@ use app\core\DbModel;
             $this->confirmation_PIN= "".(rand(0,9)).(rand(0,9)).(rand(0,9)).(rand(0,9));
         }
         
+// functions
+
+        public function get_unfinished_deliveries( $emp_ID ) {
+            return $this->customFetchAll("SELECT * FROM delivery WHERE completed_date IS NULL AND delivery_rider = $emp_ID");
+        }
+
+        public function get_finished_deliveries( $emp_ID ) {
+            return $this->customFetchAll("SELECT * FROM delivery WHERE completed_date IS NOT NULL AND delivery_rider = $emp_ID");
+        }
+
+        public function view_delivery_details( $delivery_ID ) {
+            return $this->customFetchAll("SELECT * FROM delivery INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE delivery.delivery_ID = $delivery_ID");
+        }
+
+        public function get_processing_delivery( $delivery_ID ) {
+            return $this->customFetchAll("SELECT * FROM delivery WHERE delivery_ID = $delivery_ID");
+        }
+
+        public function update_completed_date_time( $delivery_ID ) {
+            return $this->customFetchAll("UPDATE delivery SET completed_date = CURRENT_TIMESTAMP, completed_time = CURRENT_TIMESTAMP  WHERE delivery_ID = $delivery_ID");
+        }
+
+        public function update_rider_ID( $delivery_ID, $delivery_rider ) {
+            return $this->customFetchAll("UPDATE delivery SET delivery_rider = $delivery_rider WHERE delivery_ID = $delivery_ID");
+        }
+
+
+
     }
 
 ?>

@@ -39,6 +39,7 @@ class Employee extends DbModel{
         Application::$app->logout();
         return true;
     }
+
     public function rules(): array
     {
         return [
@@ -100,7 +101,13 @@ class Employee extends DbModel{
         
     }
 
+    public function select_suitable_rider( $postal_code ) {
+        return $this->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID WHERE delivery_rider.availability='AV' AND delivery.postal_code BETWEEN  $postal_code-10 AND $postal_code+10 AND delivery_rider.availability='AV'");
+    }
 
+    public function dequeue_rider( $rider_ID ) {
+        return $this->customFetchAll("DELETE FROM delivery_riders_queue WHERE delivery_rider_ID = $rider_ID");
+    }
     
 }   
 

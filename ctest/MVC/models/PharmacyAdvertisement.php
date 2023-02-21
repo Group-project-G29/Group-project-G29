@@ -44,7 +44,17 @@ class PharmacyAdvertisement extends DbModel {
         return  ['title','description','remark','type','img'];
     }
 
-    
+    public function get_selected_advertisement_details( $ad_ID ) {
+        return $this->customFetchAll("SELECT * FROM advertisement WHERE ad_ID=$ad_ID");
+    }
+
+    public function select_pharmacy_advertisements( $ad_ID ) {
+        return $this->customFetchAll("SELECT * FROM advertisement WHERE type='Pharmacy' ORDER BY name ASC");
+    }
+
+    public function get_advertisements() {
+        return $this->customFetchAll("SELECT * FROM advertisement WHERE type='Pharmacy' ORDER BY title ASC");
+    }
 }   
 
 

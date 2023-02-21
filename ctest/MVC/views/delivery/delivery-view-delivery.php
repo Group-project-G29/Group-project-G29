@@ -2,9 +2,6 @@
     use app\core\component\Component;
     use \app\core\form\Form;
     $component=new Component();
-var_dump($delivery);
-// exit;
-
 ?>
 
 <div class="detail">
@@ -37,7 +34,7 @@ $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID']."&pin=
     <div class="form-body-fields">
     <table>
         <!-- form for chcheckbox -->
-    <?php echo $form->spanfield($model,'PIN','Enter PIN here','field','text') ?>
+    <?php echo $form->spanfield($model,'confirmation_PIN','Enter PIN here','field','text') ?>
     </table>
     <div><?php echo $component->button("complete","submit","Complete Order","button--class-0","complete")?></div>
     
