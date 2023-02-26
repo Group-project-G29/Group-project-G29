@@ -18,7 +18,6 @@ use LogicException;
 
 class DeliveryController extends Controller{
     
-
     //view my deliveries
     public function viewMyDeliveries(){
         $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
@@ -95,10 +94,11 @@ class DeliveryController extends Controller{
     //complete the delivery using the PIN
     public function completeDelivery(Request $request, Response $response){
         $parameters=$request->getParameters();
-        $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
+        $this->setLayout("delivery-rider",['select'=>'Completed Deliveries']);
         
         $deliveryModel=new Delivery();
         $riderMOdel = new Employee;
+        $orderMOdel = new Order;
 
         $deliveryModel->loadData($request->getBody());
         $confirming_delivery = $deliveryModel->get_processing_delivery($parameters[0]['id']);
@@ -106,13 +106,27 @@ class DeliveryController extends Controller{
         if ( $confirming_delivery[0]['PIN'] === $_POST['confirmation_PIN'] ) {
 
             $update_status = $deliveryModel->update_completed_date_time($parameters[0]['id']);
-            $delivery=$deliveryModel->get_finished_deliveries(Application::$app->session->get('userObject')->emp_ID);
+            $delivery=$deliveryModel->get_unfinished_deliveries(Application::$app->session->get('userObject')->emp_ID);
 
             //enque the rider to the queue if there is no deliveries to him
             if ( !$delivery ) {
-                $rider = $riderMOdel->enqueue_rider(Application::$app->session->get('userObject')->emp_ID);
+                $null_rider_deliveries = $deliveryModel->get_null_rider_deliveries();
+                if ($null_rider_deliveries) {
+                    $updated_rider_ID=$deliveryModel->update_rider_ID($null_rider_deliveries[0]["delivery_ID"], Application::$app->session->get('userObject')->emp_ID);
+                    $postal_code = $null_rider_deliveries[0]["postal_code"];
+                    $nearby_deliveries = $deliveryModel->get_nearby_deliveries($postal_code);
+
+                    //loop for assign all
+                    foreach ( $nearby_deliveries as $key=>$nearby_delivery) {
+                        $updated_rider_ID=$deliveryModel->update_rider_ID($nearby_delivery["delivery_ID"],Application::$app->session->get('userObject')->emp_ID);
+                    }
+                    
+                } else {
+                    $rider = $riderMOdel->enqueue_rider(Application::$app->session->get('userObject')->emp_ID);
+                }
             }
 
+            $delivery=$deliveryModel->get_finished_deliveries(Application::$app->session->get('userObject')->emp_ID);
             return $this->render('delivery/delivery-my-deliveries' ,[
                 'deliveries'=>$delivery,
                 'model'=>$deliveryModel
@@ -121,7 +135,6 @@ class DeliveryController extends Controller{
         } else {
             //error msg
             //this part has to be implemented
-
             $delivery=$deliveryModel->view_delivery_details($parameters[0]['id']); 
             return $this->render('delivery/delivery-view-delivery' ,[
                 'delivery'=>$delivery[0],

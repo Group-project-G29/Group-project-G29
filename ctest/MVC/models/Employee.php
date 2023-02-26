@@ -121,6 +121,8 @@ class Employee extends DbModel{
     public function make_rider_offline( $delivery_rider_ID ) {
         return $this->customFetchAll("UPDATE delivery_rider SET availability = 'NA' WHERE emp_ID = $delivery_rider_ID;");
     }
+
+    //update personal info
 }   
 
 

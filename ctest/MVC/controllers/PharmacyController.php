@@ -80,9 +80,16 @@ class PharmacyController extends Controller{
 
         } else {
             $rider = $riderMOdel->select_queue_rider();
-            $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider_ID"]);
-            //dequeue a delivery rider - check something went wrong-> deleted few records at once
-            $deleted_rider = $riderMOdel->dequeue_rider($rider[0]["delivery_rider_ID"]);
+
+            if ($rider) {
+                $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider_ID"]);
+                //dequeue a delivery rider - check something went wrong-> deleted few records at once
+                $deleted_rider = $riderMOdel->dequeue_rider($rider[0]["delivery_rider_ID"]);
+            } else {
+                //if there were no rider available in the queue
+                $updated_order=$deliveryModel->set_delivery_without_rider($parameters[0]['id']);
+            }
+            
         }
             
         $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'packed');
@@ -358,6 +365,7 @@ class PharmacyController extends Controller{
     //Update My Details
     public function editPersonalDetails(Request $request,Response $response){
         $parameters=$request->getParameters();
+
         $this->setLayout('pharmacy',['select'=>'My Detail']);
         $employeeModel=new Employee();
 
@@ -372,6 +380,8 @@ class PharmacyController extends Controller{
         }
 
         if($request->isPost()){
+            var_dump($_POST);
+            exit;
             // update personal details
             $employeeModel->loadData($request->getBody());
             $employeeModel->loadFiles($_FILES);

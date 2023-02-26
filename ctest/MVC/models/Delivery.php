@@ -92,7 +92,17 @@ use app\core\DbModel;
             return $this->customFetchAll("UPDATE delivery SET delivery_rider = $delivery_rider WHERE delivery_ID = $delivery_ID");
         }
 
+        public function set_delivery_without_rider( $delivery_ID ) {
+            return $this->customFetchAll("UPDATE delivery SET delivery_rider = NULL WHERE delivery_ID = $delivery_ID");
+        }
 
+        public function get_null_rider_deliveries() {
+            return $this->customFetchAll("SELECT * FROM delivery WHERE delivery_rider IS NULL");
+        }
+
+        public function get_nearby_deliveries( $postal_code ) {
+            return $this->customFetchAll("SELECT * FROM delivery WHERE delivery_rider IS NULL AND postal_code BETWEEN $postal_code-10 AND $postal_code+10");
+        }
 
 
     }

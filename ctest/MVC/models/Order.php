@@ -92,7 +92,15 @@ use app\core\DbModel;
         public function get_pending_orders() {
             return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'pending' ORDER BY created_date ASC");
         }
-
+        
+        public function get_processing_orders() {
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'processing' ORDER BY created_date ASC");
+        }
+        
+        public function get_delivering_orders() {
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'packed' ORDER BY created_date ASC");
+        }
+        
         public function view_order_details( $order_ID ) {
             return $this->customFetchAll("SELECT patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
             _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
@@ -103,15 +111,7 @@ use app\core\DbModel;
         public function set_processing_status ( $order_ID, $status ) {
             return $this->customFetchAll("UPDATE _order SET processing_status = '$status' WHERE order_ID = $order_ID");
         }
-
-        public function get_processing_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'processing' ORDER BY created_date ASC");
-        }
-
-        public function get_delivering_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'packed' ORDER BY created_date ASC");
-        }
-
+        
         public function get_postal_code( $order_ID ) {
             return $this->customFetchAll("SELECT delivery.postal_code, _order.order_ID, delivery.delivery_ID FROM delivery INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.delivery_ID = $order_ID");
         }
