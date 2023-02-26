@@ -27,18 +27,18 @@ class NurseController extends Controller{
       
     }
 
-    //view all clinics
-    public function viewAllClinics(){
-        $this->setLayout("nurse",['select'=>'All Channelings']);
-        $allChanneling=new Channeling();
-        $clinics=$allChanneling->customFetchAll("SELECT * FROM `channeling` INNER JOIN `employee` ON channeling.doctor = employee.nic;");
-        var_dump($clinics);exit;
-        return $this->render('nurse/all-channelings',[
-            "clinics" => $clinics
-        ]);
-    }
+    // //view all clinics
+    // public function viewAllClinics(){
+    //     $this->setLayout("nurse",['select'=>'All Channelings']);
+    //     $allChanneling=new Channeling();
+    //     $clinics=$allChanneling->customFetchAll("SELECT * FROM `channeling` INNER JOIN `employee` ON channeling.doctor = employee.nic;");
+    //     var_dump($clinics);exit;
+    //     return $this->render('nurse/all-channelings',[
+    //         "clinics" => $clinics
+    //     ]);
+    // }
 
-    //view all clinics
+    //view today clinics
     public function todayClinics(){
         $this->setLayout("nurse",['select'=>'Today Channelings']);
         $OpenedChanneling=new OpenedChanneling();
@@ -124,10 +124,7 @@ class NurseController extends Controller{
         // var_dump($day);exit;
         
         $ChannelingModel=new Channeling();
-        $OpenedChannelingModel=new OpenedChanneling();
-        $Doctor=new Employee();
-        $patient_appointments=
-        // $Channeling=$Doctor->customFetchAll("Select * from opened_channeling left JOIN channeling on opened_channeling.channeling_ID=channeling.channeling_ID left join doctor on channeling.doctor=doctor.nic left join employee on doctor.nic=employee.nic where channeling.speciality="."'".$speciality."'");
+        
         $Channeling=$ChannelingModel->customFetchAll("SELECT * FROM `channeling` INNER JOIN `employee` ON channeling.doctor = employee.nic INNER JOIN `opened_channeling` ON channeling.channeling_ID = opened_channeling.channeling_ID  where opened_channeling.status != 'end' AND opened_channeling.status != 'not open' AND channeling.speciality='$speciality' GROUP BY opened_channeling.channeling_ID ORDER BY channeling.time; ");
 
         if($speciality){ //var_dump($speciality);exit;
@@ -140,16 +137,6 @@ class NurseController extends Controller{
                
             ]);
         }
-
-        // if($speciality && $day){
-        //     Application::$app->session->set('channelings',$Channeling);
-        //     return $this->render('nurse/nurse-all-channeling-category-list-by-day',[
-                
-        //         'channelings'=>$Channeling,
-        //         'day'=>$day
-               
-        //     ]);
-        // }
        
         $ChannelingModel=new Channeling();
         $specialities=$ChannelingModel->customFetchAll("Select distinct channeling.speciality from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID");
@@ -206,7 +193,6 @@ class NurseController extends Controller{
         $this->setLayout('nurse',['select'=>'patients']);
         $patients=$patientModel->getRecentPatientNurse();
 
-        
 
         return $this->render('nurse/nurse-patient',[
             'patients'=>$patients,

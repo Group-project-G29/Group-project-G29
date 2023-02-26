@@ -4,7 +4,11 @@
     $component=new Component();
 ?>
 
-
+<div class="filter-holder">
+    <?php 
+        echo $component->filtersortby('','',[],['Speciality'=>'speciality','Doctor'=>'Doctor']);
+    ?>
+</div>
 <div class="table-container">
 <?php if($orders):?>
 <table border="0">

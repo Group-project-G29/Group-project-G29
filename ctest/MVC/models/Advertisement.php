@@ -11,7 +11,7 @@ class Advertisement extends DbModel{
     public string $description='';
     public string $remark='';
     public string $img='';
-    public string $type='main';
+    public string $type='';
 
    
   
@@ -29,12 +29,12 @@ class Advertisement extends DbModel{
         return 'ad_ID';
     }
     public function tableRecords(): array{
-        return ['advertisement'=>['title','description','remark','img','type']];
+        return ['advertisement'=>['ad_ID','title','description','remark','img','type']];
     }
 
     public function attributes(): array
     {
-        return ['title','description','remark','img','type'];
+        return ['ad_ID','title','description','remark','img','type'];
     }
 
  
@@ -52,6 +52,9 @@ class Advertisement extends DbModel{
     }
 
     public function fileDestination(): array {
+        if($this->type='pharmacy'){
+            return ['img'=>"media/images/advertisements/pharmacy/".$this->img];
+        }
         return ['img'=>"media/images/advertisements/".$this->img];
     }
     public function deleteImage($imgName){

@@ -13,7 +13,7 @@
     </div>
     <div class="scheduled-info fs-100">
         <span>Age :<?=$patient[0]['age']?></span>
-        <span>Gender :<?php if($patient[0]['gender'] == 'F'){echo "Femail";}else{echo "Mail";}?></span>
+        <span>Gender :<?php if($patient[0]['gender'] == 'F'){echo "Female";}else{echo "Male";}?></span>
         <span>Contact No :<?=$patient[0]['contact'] ?></span>
 
     </div>

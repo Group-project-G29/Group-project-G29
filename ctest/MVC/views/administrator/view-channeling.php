@@ -6,7 +6,7 @@
 ?>
 <div class="upper-container">
     <div class="search-bar-container ">
-        <?= $component->searchbar('','channeling','search-bar--class1','Search by speciality,Doctor name',"") ?>
+        <?= $component->searchbar('','channeling','search-bar--class1','Search by speciality,Doctor name',"searchbar") ?>
     </div>
     <div class="set-margin-30">
         <?=$component->button('add','','Add New Channeling','button--class-0','add-new')?>
@@ -21,7 +21,7 @@
     </tr>
     
         <?php foreach($channelings as $key=>$channeling): ?>
-        <tr class="table-row">
+        <tr class="table-row" id=<?="'".$channeling['doctor']."-".$channeling['speciality']."-".$channeling['day']."'" ?>>
             
             <td><?=$channeling['speciality']?></td>
             <td><?=$channeling['name']?></td>  
@@ -52,5 +52,36 @@
             bg.classList.add("background");
         });
     });
+  
+    const patients=document.querySelectorAll('.table-row');
+        const searchBar=document.getElementById('searchbar');
+       
+    
+        function checker(){
+        
+        var re=new RegExp("^"+searchBar.value)
+        patients.forEach((el)=>{
+            comp=""+el.id;
+            console.log(el.id);
+            comp=comp.split("-");
+          ;
+            if(searchBar.value.length==0){
+                // el.classList.add("none")
+            }
+            else if(re.test(comp[0]) || re.test(comp[1]) || re.test(comp[2])){
+                el.classList.remove("none");
+            }
+            else{
+                el.classList.add("none");
+               
+            }
+            })
+            if(searchBar.value.length==0){
+                patients.forEach((el)=>{
+                    el.classList.remove("none");
+                }) 
+            }
+        }
+        searchBar.addEventListener('input',checker);
     
 </script>

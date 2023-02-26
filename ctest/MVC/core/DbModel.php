@@ -149,6 +149,7 @@
             $tablename=$this->tableName();
             $attributes=$this->attributes();
             $values=array_map(fn($attr)=>"$attr=:$attr",$attributes);
+        // var_dump($values);
             $where=array_map(fn($attr)=>"$attr=$where[$attr]",$where_attributes);
             
             $statement=self::prepare("update $tablename set ".implode(',',$values)." where ".implode('AND',$where));

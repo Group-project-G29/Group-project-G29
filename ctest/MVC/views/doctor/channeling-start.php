@@ -1,3 +1,10 @@
+<?php
+
+use app\core\Application;
+use app\models\Appointment;
+
+$appointmentModel=new Appointment();
+?>
 <div class="column-flex">
     <div class="main-detail-title">
         <h1><?=$channeling->speciality."-".$channeling->day?></h1>
@@ -5,8 +12,8 @@
     <div class="number-content">
         <h2>Patients</h2>
         <div class="number-pad">
-            <div class="number-item--white fs-200"><?=$openedchanneling->remaining_appointments?></div>
-            <div class="number-item--blue fs-200"><?=$channeling->total_patients?></div>
+            <div class="number-item--white fs-200"><?=$appointmentModel->getUsedPatient($openedchanneling->opened_channeling_ID)?></div>
+            <div class="number-item--blue fs-200"><?=$appointmentModel->getTotoalPatient($openedchanneling->opened_channeling_ID)?></div>
         </div>
     </div>
     <div class="scheduled-info fs-100">

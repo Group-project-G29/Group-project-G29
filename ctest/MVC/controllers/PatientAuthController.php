@@ -213,8 +213,13 @@ class PatientAuthController extends Controller{
                 $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
-            else if($parameters[2]['type'] && $parameters[2]['type']??''=='labtest'){
+            else if(isSet($parameters[2]['type']) && $parameters[2]['type']??''=='labtest'){
                 $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'labtest']);
+                $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
+                Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
+            }
+            else{
+                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
                 $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
@@ -259,6 +264,14 @@ class PatientAuthController extends Controller{
         $patient=Application::$app->session->get('userObject');
         $cart=$cartModel->getPatientCart($patient->patient_ID??'')[0]['cart_ID']??'';
         $cartItems=$cartModel->fetchAssocAllByName(['cart_ID'=>$cart],'medicine_cart');
+        //show order detail page
+        if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='order-main'){
+            $order=new Order();
+            return $this->render('patient/patient-track-order',[
+                'order'=>$order->getPatientOrder()
+            ]);
+
+        }
         //show main page
         if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='main'){
             $adModel=new Advertisement();
@@ -376,6 +389,9 @@ class PatientAuthController extends Controller{
             }
             else if($parameter[1]['mod']??''=='view'){
                 $cartModel=new Cart();
+                if($cartModel->getItemCount()==0){
+                    Application::$app->response->redirect("patient-pharmacy?cmd=search&value=".Application::$app->session->get('value')."&page=".Application::$app->session->get('page'));
+                }
                 $patient=Application::$app->session->get('userObject');
                 $deliveryModel=new Delivery();
                 $orderModel=new Order();
@@ -414,6 +430,12 @@ class PatientAuthController extends Controller{
             
         }
         if(isSet($parameters[0]['spec']) &&  $parameters[0]['spec']??''=='documentation'){
+            // if(isSet($parameters[1]['id']) && $parameters[1]['id']=='referrals')
+            // $documents=
+            // return $this->render('patient/dashboard-order',[
+            //     'documents'=>$documents,
+                
+            // ]);
         
         }
         if(isSet($parameters[0]['spec']) && $parameters[0]['spec']??''=='appointments'){
@@ -466,6 +488,10 @@ class PatientAuthController extends Controller{
         return $this->render("patient/patient-payment-page");
 
     }
+   
+
+
+
    
 
 

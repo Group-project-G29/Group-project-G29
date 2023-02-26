@@ -78,7 +78,20 @@ class AdminController extends Controller{
                         $dateModel=new Date();
                         $date=$dateModel->arrayToDate($date);
                         //decide whether to close or opened fucntin should goes here
-                        $openedChannelingModel->setter($return_id[0]['last_insert_id()'],$ChannelingModel->max_free_appointments,0,0,$date,"Opened"); 
+                        
+                        
+                        
+                        // $Channeling=new Channeling();
+                        // $rem_app=$Channeling->remAppointment();
+                        // if($rem_app>0){
+                        //     $rem = $rem_app;
+                        // }
+                        // else{
+                        //     $rem = -1;
+                        // }
+                        // var_dump($rem_app, $rem);
+                        
+                        $openedChannelingModel->setter($return_id[0]['last_insert_id()'],-1,$date,"Opened"); 
                         if($openedChannelingModel->saveData()){
                             Application::$app->session->setFlash('success',"Channeling Session Added Successfully");
                             Application::$app->response->redirect("/ctest/schedule-channeling");
@@ -105,12 +118,52 @@ class AdminController extends Controller{
         
         //if reques is not a post or mod=get show all channeling page
         $channelings=$ChannelingModel->customFetchAll("Select * from channeling left join doctor on doctor.nic=channeling.doctor left join employee on employee.nic=doctor.nic");
+        var_dump($channelings);exit;
         return $this->render('administrator/view-channeling',[
                 'channelings'=>$channelings
         ]);
         
        
     }
+
+    // Channeling sessions view
+    public function channelingSessionsView(Request $request){
+        $this->setLayout("admin",['select'=>'Channelings Sessions']);
+        
+        $parameters=$request->getParameters();
+        $speciality=$parameters[0]['spec']??'';
+        // var_dump($parameters);exit;
+        // $day=$parameters[1]['day']??'';
+        // var_dump($day);exit;
+        
+        $ChannelingModel=new Channeling();
+        
+        $Channeling=$ChannelingModel->customFetchAll("SELECT * FROM `channeling` INNER JOIN `employee` ON channeling.doctor = employee.nic where channeling.speciality='$speciality' ORDER BY channeling.time; ");
+
+        if($speciality){ //var_dump($speciality);exit;
+            Application::$app->session->set('channelings',$Channeling);
+            return $this->render('administrator/admin-all-channeling-category-list',[
+                
+                'channelings'=>$Channeling,
+                'speciality'=>$speciality
+               
+               
+            ]);
+        }
+       
+        $ChannelingModel=new Channeling();
+        $specialities=$ChannelingModel->customFetchAll("Select distinct channeling.speciality from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID");
+        // var_dump($specialities);exit;
+        return $this->render('administrator/admin-all-channeling-categories',[
+
+            'specialities'=>$specialities, 
+            'app'=>$ChannelingModel
+            
+        
+        ]);
+    }
+
+
     // admin employee account crud
     public function registerAccounts(Request $request,Response $response){
         $parameters=$request->getParameters();// [[0]=>['mod'=>'add'],[1]=>['id=>'2']]
@@ -168,6 +221,7 @@ class AdminController extends Controller{
                 'select'=>"Manage Users"
             ]);
         }
+
         //show update form
         else if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
             $employee=$registerModel->customFetchAll("Select * from employee where emp_ID=".$parameters[1]['id']);//take account to be updated from database
@@ -193,6 +247,7 @@ class AdminController extends Controller{
         }
         
     }
+
     
     //view advertisement
     public function viewAdvertisement(){

@@ -13,13 +13,13 @@ class Channeling extends DbModel{
     public  $fee=0;
     public string $room='';
     public  $total_patients=0;
-    public  $extra_patients=0;
-    public  $max_free_appointments=0;
     public string $day="";
     public string $time="";
     public ?string $start_date="";
-    public  $count=0;
-    public string $type='';
+    public  $schedule_for=0;
+    public string $schedule_type='';
+    public  $frequency=0;
+    public string $frequency_type='';
     public  $percentage=0;
     
 
@@ -33,19 +33,22 @@ class Channeling extends DbModel{
             'doctor'=>[self::RULE_REQUIRED],
             'speciality'=>[self::RULE_REQUIRED],
             'fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
-            'room'=>[self::RULE_REQUIRED],
-            'total_patients'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
-            'extra_patients'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
-            'max_free_appointments'=>[self::RULE_NUMBERS],       
+            'room'=>[self::RULE_REQUIRED],      
             'day'=>[self::RULE_REQUIRED],
             'time'=>[self::RULE_REQUIRED],
             'start_date'=>[self::RULE_REQUIRED,self::RULE_DATE_VALIDATION],
-            'count'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
-            'type'=>[self::RULE_REQUIRED],
+            'schedule_for'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
+            'schedule_type'=>[self::RULE_REQUIRED],
+            'frequency'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
+            'frequency_type'=>[self::RULE_REQUIRED],
             'percentage'=>[self::RULE_REQUIRED,self::RULE_NUMBERS]
 
         ];
     }
+
+    // public function remAppointment(){
+    //     return $total_patients;
+    // }
 
     public function checkOverlap(){
         $channelings=$this->customFetchAll("select * from channeling where doctor='".$this->doctor."' and day='".$this->day."'");
@@ -71,12 +74,12 @@ class Channeling extends DbModel{
     }
     
     public function tableRecords(): array{
-        return ['channeling'=>['doctor','fee','total_patients','extra_patients','max_free_appointments','day','time','count','speciality','type','percentage','room','start_date']];
+        return ['channeling'=>['doctor','fee','total_patients','day','time','schedule_for','speciality','schedule_type','percentage','room','start_date', 'frequency', 'frequency_type']];
     }
 
     public function attributes(): array
     {
-        return ['doctor','fee','total_patients','extra_patients','max_free_appointments','day','time','count','type','percentage','speciality','room','start_date'];
+        return ['doctor','fee','total_patients','day','time','schedule_for','schedule_type','percentage','speciality','room','start_date', 'frequency', 'frequency_type'];
     }
     public function getSpecialities(){
         $specialities=$this->customFetchAll("Select  distinct speciality from channeling ");

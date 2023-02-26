@@ -4,46 +4,17 @@
 use app\core\component\Component;
 use app\models\Referral;
 use app\core\Application;
+use app\models\Appointment;
+
 $appointment=$appointment[0]; 
 $referralModel=new Referral();
+$appointmentModel=new Appointment();
 ?>
     <?php $component=new Component(); ?>
-    <div class="asssistance-upper-container">
-        <div class="number-pad">
-            <div class="number-item--white">
-                <?=$appointment['queue_no']?>
-            
-            </div>
-            <div class="number-item--blue">
-                <?=$appointment['total_patients']?>
-            </div>
-        </div>
-        <div class="patient-navigator">
-            <img src="media/images/channeling assistance/left-chevron.png" class="previous" id=<?="previous-".$appointment['patient_ID']?>>
-            <h3>Patient Name : <?=$appointment['name']?></h3>
-            <img src="media/images/channeling assistance/right-chevron.png" class="next" id=<?="next-".$appointment['patient_ID']?>>
-        </div>
-        <div>
-            Checked Patient :<input type="checkbox" name="checked" id="checkbox">
-        </div>
-        <div>
-            <table>
-                <td>Age :</td><td><?=$appointment['age']." yrs"?></td>
-                <td>Gender :</td><td><?=$appointment['gender']?></td>
-            </table>
-        </div>
-       
-    </div>
+  
     <div class="assistance-container">
-        <div class="assistance-subcontainer">
-            <div>
-                <table class="fs-100">
-                    <tr><td>Blood Sugar :</td><td>99 mg/dL</td></tr>
-                    <tr><td>Blood Pressure(systolic) :</td><td>120 mmHg</td></tr>
-                    <tr><td>Weight :</td><td>70 kg</td></tr>
-                    </tr><td>Height :</td><td>170.6 cm</td></tr>
-                </table>
-            </div>
+        <div class="assistance-subcontainer ">
+            
             <div class="flex-0">
                 <?= $component->button('referal','','Referral','button--class-doc1 btn-1','referrals');?>
                 <?=  $component->button('consultaion','','Last consultation report ','button--class-doc1 btn-1',"last-consultation");?>
@@ -53,27 +24,31 @@ $referralModel=new Referral();
                     <div class="variable-container">
                         <table>
                             <tr>
-                                <th>Referral</th><th>created date</th><th></th><th></th><th> <?=$component->button('write report','','Write Report','button--class-0','write-ref');?></th><th><?=$component->button('Upload report','','Upload Report','button--class-0','upload-ref');?></th>
+                                <th>Referral</th><th>Created Date</th><th></th><th></th>
                             </tr>
                             <?php foreach($referrals as $referral): ?>
                                 <tr>
-                                    <td><a href=<?="/ctest/doctor-report?spec=refferal&mod=view&id=".$referral['ref_ID']?>><?=$referral['issued_doctor']."-".$referral['type']."-".$referral['ref_ID']?></a></td><td><?=$referral['date'] ?></td>
+                                    <td><a href=<?="/ctest/doctor-report?spec=referral&mod=view&id=".$referral['ref_ID']?>><?=$referral['issued_doctor']."-".$referral['type']."-".$referral['ref_ID']?></a></td><td><?=$referral['date'] ?></td>
                                     <?php if($referralModel->isIssued($referral['ref_ID'],Application::$app->session->get('userObject')->nic)): ?>
-                                        <td><a href="#">update</a></td>
-                                        <td><a href="#">delete</a></td>
+                                        <td><?=$component->button('update','','Update','button--class-2-small'); ?></td>
+                                        <td><?=$component->button('delete','','Delete','button--class-3-small'); ?></td>
                                     <?php endif; ?>
                                 </tr>
                             <?php endforeach; ?>
                         </table>
                     </div>
+                    <div class="ass-button-set">
+                            <?=$component->button('write report','','Write Report','button--class-0','write-ref');?>
+                            <?=$component->button('Upload report','','Upload Report','button--class-0','upload-ref');?>
+                    </div>
                 </div>
                 <div class="wrapper--last-consultation none">
                     <div class="variable-container">
-                        <table>
-                            <tr>
-                                <th>LastConsultation Report</th><th>created date</th>
-                            </tr>
-                            <?php foreach($referrals as $referral): ?>
+                    <table>
+                        <tr>
+                            <th>LastConsultation Report</th><th>created date</th>
+                        </tr>
+                        <?php foreach($referrals as $referral): ?>
                             
                             <tr>
                                 <td><a href="#"><?=$referral['issued_doctor']."-".$referral['type']."-".$referral['ref_ID']?></a></td><td><?=$referral['date'] ?></td>
@@ -84,12 +59,55 @@ $referralModel=new Referral();
                 </div>
             </div>
         </div>
+            
+        <div class="asssistance-sub-container main-detail-container">
+            <div class="number-pad">
+                <div class="number-item--white">
+                    <?=$appointmentModel->getUsedPatient(Application::$app->session->get('channeling'))?>
+                    
+                </div>
+                <div class="number-item--blue">
+                    <?=$appointmentModel->getTotoalPatient(Application::$app->session->get('channeling'))?>
+                </div>
+            </div>
+            <div class="patient-navigator">
+                <img src="media/images/channeling assistance/left-chevron.png" class="previous" id=<?="previous-".$appointment['patient_ID']?>>
+                <h3>Patient Name : <?=$appointment['name']?></h3>
+                <img src="media/images/channeling assistance/right-chevron.png" class="next" id=<?="next-".$appointment['patient_ID']?>>
+            </div>
+            <div>
+                
+                <?php  if($status=='used'): ?>
+                    Checked Patient :<input type="checkbox" name="checked" id="checkbox" checked>
+                <?php else:?>
+                    Checked Patient :<input type="checkbox" name="checked" id="checkbox">
+                <?php endif;?>
+            </div>
+            <div>
+                <center>
+                <table>
+                    <tr><td>Age :</td><td><?=$appointment['age']." yrs"?></td></tr>
+                    <tr><td>Gender :</td><td><?=$appointment['gender']?></td></tr>
+                </table>
+                </center>
+                
+                <?=$component->button('btn','','Switch to Report Consultation Queue','button-class--darkblue switch',$appointment['patient_ID']);?>
+            </div>
+            <div class="result-container">
+                <table class="fs-100">
+                    <tr><td>Blood Sugar :</td><td>99 mg/dL</td></tr>
+                    <tr><td>Blood Pressure(systolic) :</td><td>120 mmHg</td></tr>
+                    <tr><td>Weight :</td><td>70 kg</td></tr>
+                    </tr><td>Height :</td><td>170.6 cm</td></tr>
+                </table>
+            </div>
+       
+        </div>
         <div class="assistance-subcontainer">
             <div class="flex-0">
                 <?=$component->button('report','','View Reports','button--class-doc1 btn-2',"reports");?>
                 <?=$component->button('prescription','','View Prescription','button--class-doc1 btn-2',"prescriptions");?>
                 <?=$component->button('lab test','','View Lab Tests','button--class-doc1 btn-2',"lab-tests");?>
-                <?=$component->button('medical_analysis','','Medical Analysis','button--class-doc1 btn-2',"medical-analyisis");?>
             </div>
             <div class="variable-container--2">
                 <div class="wrapper--reports">
@@ -97,17 +115,21 @@ $referralModel=new Referral();
                         <div>
                             <table>
                                 <tr>
-                                    <th>Medical Report</th><th>created date</th><th><?=$component->button('write report','','Write Report','button--class-0','write-rep');?></th><th><?=$component->button('Upload report','','Upload Report','button--class-0','upload-rep');?></th>
+                                    <th>Medical Report</th><th>created date</th>
                             
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 
-                                <tr>
+                                <tr class="table-row">
                                     <td><a href="#"><?=$report['type']."-".$report['report_ID']."-".$report['name']?></a></td><td><?=$report['uploaded_date'] ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </table>
                         </div>
+                    </div>
+                    <div class="ass-button-set">
+                        <?=$component->button('Upload report','','Upload Report','button--class-0','upload-rep');?>
+                        <?=$component->button('write report','','Write Report','button--class-0','write-rep');?>
                     </div>
                 </div>
                 <div class="wrapper--prescriptions none">
@@ -115,7 +137,7 @@ $referralModel=new Referral();
                         <div>
                             <table>
                                 <tr>
-                                    <th>Prescription</th><th>created date</th><th><?=$component->button('write Prescription','','Write Prescription','button--class-0','write-pres');?></th><th> <?=$component->button('Upload Prescription','','Write Prescription','button--class-0','upload-pres');?></th>
+                                    <th>Prescription</th><th>created date</th><th></th><th> </th>
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 
@@ -127,13 +149,17 @@ $referralModel=new Referral();
                         </div>
                         
                     </div>
+                    <div class="ass-button-set">    
+                        <?=$component->button('write Prescription','','Write Prescription','button--class-0','write-pres');?>
+                        <?=$component->button('Upload Prescription','','Write Prescription','button--class-0','upload-pres');?>
+                    </div>
                 </div>
                 <div class="wrapper--lab-tests none">
                     <div class="variable-container-item flex">
                         <div>
                             <table>
                                 <tr>
-                                    <th>Lab Test Report</th><th>created date</th><th><?=$component->button('Request Lab Test','','Request Lab Test','button--class-0','req-lab');?></th>
+                                    <th>Lab Test Report</th><th>created date</th><th></th>
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 
@@ -144,6 +170,9 @@ $referralModel=new Referral();
                             </table>
                         </div>
                         
+                    </div>
+                    <div class="ass-button-set">
+                        <?=$component->button('Request Lab Test','','Request Lab Test','button--class-0','req-lab');?>
                     </div>
                 </div>
                 <div class="wrapper--medical-analysis none">
@@ -162,8 +191,8 @@ $referralModel=new Referral();
                             </table>
                         </div>
                         <div>
-                            <?=$component->button('write referral','','Write Referral','button--class-0','write-ref');?>
-                            <?=$component->button('Upload referral','','Upload Referral','button--class-0','upload-ref');?>
+                            <?=$component->button('write referral','','Write Referral','button-class--lightblue','write-ref');?>
+                            <?=$component->button('Upload referral','','Upload Referral','button-class--lightblue','upload-ref');?>
                         </div>
                     </div>
                 </div>
@@ -177,21 +206,38 @@ $referralModel=new Referral();
 
         const next=document.querySelector(".next");
         const previous=document.querySelector(".previous");
+        const checkbox=document.getElementById('checkbox');
+        const switchBtn=document.querySelector('.switch');
+        
         function redirect(element,location){
             return element.addEventListener('click',()=>{
                 location.href=location;
             })
         }
-    
+        switchBtn.addEventListener('click',()=>{
+            location.href="channeling-assistance?cmd=switch&id="+switchBtn.id;
+        })
         next.addEventListener('click',()=>{
             id_component=(next.id).split("-");
             // console.log(id_component);
-            location.href="channeling-assistance?cmd=next&id="+id_component[1];
+            if(checkbox.checked){
+                location.href="channeling-assistance?cmd=next&id="+id_component[1]+"&set=used";
+            }
+            else{
+                location.href="channeling-assistance?cmd=next&id="+id_component[1]+"&set=unused";
+            }
         })
+
         previous.addEventListener('click',()=>{
             id_component=(next.id).split("-");
-            location.href="channeling-assistance?cmd=previous&id="+id_component[1];
+            if(checkbox.checked){
+                location.href="channeling-assistance?cmd=previous&id="+id_component[1]+"&set=used";
+            }
+            else{
+                location.href="channeling-assistance?cmd=previous&id="+id_component[1]+"&set=unused";
+            }
         })
+
         function hide(element,hideClass='none'){
             element.classList.add(hideClass);
             // console.log(element);
@@ -216,7 +262,8 @@ $referralModel=new Referral();
         const btn2=document.querySelectorAll(".btn-2");
         btn2.forEach(el=>{
             el.addEventListener('click',()=>{
-                traverseHide(['reports','prescriptions','lab-tests','medical-analysis'],el);
+                el.classList.add('doc-button--selected');
+                traverseHide(['reports','prescriptions','lab-tests'],el);
             })
         })
         const btn1=document.querySelectorAll(".btn-1");
