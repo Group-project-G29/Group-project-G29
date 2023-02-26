@@ -11,5 +11,7 @@
             "email": "2020cs205@stu.ucsc.cmb.ac.lk"
         }
     ],
-    "require": {}
+    "require": {
+        "dompdf/dompdf": "^0.6.2"
+    }
 }

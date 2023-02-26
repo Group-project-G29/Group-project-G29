@@ -13,17 +13,17 @@ use app\core\form\Form;
                 <?= $form->spanselect($model,'type','','field',['SOAP Report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report','Referral'=>'referral'],'select-main') ?>
 
             </div>
+            <?= $form->spanselect($model,'doctor','Refer to Doctor','field',$doctors,''); ?>
+            <?= $form->spanselect($model,'speciality','Select speciality','field',$specialities,'select-main') ?>
+            
+        </div>
+        <div>
+            <label>Refer External Party :</label><input type="checkbox" class="checkbox" > 
+        </div>
+        <div class="choose-doctor hide">
             <div>
-                <?= $form->field($model,'doctor','Refer to(Practitioner/Institute/Department)','field','text'); ?>
-            </div>
-            <div>
-                <label>Choose doctor or speciality :</label><input type="checkbox" class="checkbox" > 
-            </div>
-            <div class="choose-doctor hide">
-                <?= $form->spanselect($model,'doctor','Refer to Doctor','field',$doctors,''); ?>
-                
-                <?= $form->spanselect($model,'speciality','Select speciality','field',$specialities,'select-main') ?>
-
+                <?= $form->field($model,'thirdparty','Refer to(Practitioner/Institute/Department)','field','text'); ?>
+            
             </div>
         </div>
         <div>

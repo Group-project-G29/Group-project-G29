@@ -233,10 +233,6 @@
     color:var(--clr-white);
 
 }
-.doc-button--selected{
-    background-color: var(--clr-dark);
-    color:var(--clr-whiteactive);
-}
 .button--class-doc1:active,.button--class-doc1:last-child:active,.button--class-doc1:first-child:active{
     background-color: var(--clr-dark);
     color:var(--clr-whiteactive);
@@ -348,4 +344,51 @@
     height: 4vh;
     width: 20vw;
     border-radius: 5px;
+}
+/* prescription writing page */
+.min-strength{
+    display: flex;
+    gap:0.5vw;
+    align-items:center;
+    justify-content: center;
+}
+.prescription-field-container{
+    margin-left: -15vw;
+    display: flex;
+    justify-content: space-between;
+
+    align-items: center;
+    height: 10vh;
+    background-color: var(--clr-white);
+}
+.prescription-field-container [type="text"]{
+    width: 8vw;
+}
+
+.background--1 {
+    background-color: rgba(0, 0, 0, .75);
+    position: fixed;
+    left:0vw ;
+    top:14vh;
+    width: 100vw;
+    height: 100vh;
+    z-index:40;
+}
+
+.labtest-popup{
+    position: fixed;
+    z-index: 50;
+    top:30vh;
+    left: 35vw;
+    width:40vw;
+    height: 50vh;
+    border-radius: 20px;
+    padding: 2vw;
+    background-color: var(--clr-white);
+}
+/* referral styles */
+.show{
+    
+    color:red;
+
 }

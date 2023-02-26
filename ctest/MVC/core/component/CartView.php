@@ -3,6 +3,7 @@
     use app\core\Application;
     use app\models\Cart;
 use app\models\Medicine;
+use app\models\Prescription;
 
     class CartView{
         public int $count;
@@ -16,8 +17,16 @@ use app\models\Medicine;
             $component=new Component();
             $cartModel=new Cart();
             $medicineModel=new Medicine();
+            $prescriptionModel=new Prescription();
             $items= $cartModel->fetchAssocAllByName(['cart_ID'=>$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID']],'medicine_cart');
             $stritem="";
+            $prescriptions=$prescriptionModel->fetchAssocAllByName(['cart_ID'=>$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID']],'prescription');
+            foreach($prescriptions as $pres){
+                $stritem.="<div>
+                                <h5>Added Date:".$pres['uploaded_date']."</h5>
+                                <div class='cart-item'><a href=#>".$pres['type']."</a><a href=patient-pharmacy?spec=prescription&cmd=delete&id=".$pres['prescription_ID'].">x</a></div>
+                        </div>";
+            }
             foreach($items as $item){
                 if($medicineModel->checkStock($item['med_ID'])){
                     $stritem.= '
@@ -26,8 +35,8 @@ use app\models\Medicine;
                             <div class="scrollable-body">
                                 <h3 class="fs-50">'.$item["name"]." ".$item["strength"]." ".$item["unit"].'</h3>
                                 <input type="number" id='.'"'."amount2_".$item['med_ID'].'"'.' value='.$item['amount'].'>
-                                '.$component->button('update','','Change Amount','update-buttons','cartbtn_'.$item['med_ID'])
-                                .'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><h3 class="fs-50">X</h3></a>'.
+                                '.$component->button('update','','Change Amount','update-buttons-cart','cartbtn_'.$item['med_ID'])
+                                .'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><font class="fs-50">X</font></a>'.
                             '</div>
                     </div>';
                 }
@@ -38,7 +47,7 @@ use app\models\Medicine;
                             <div class="scrollable-body">
                                 <h3 class="fs-50">'.$item["name"]." ".$item["strength"]." ".$item["unit"].'</h3>
                                 <h3 color="red">Out of stock</h3>'.'>
-                                '.'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><h3 class="fs-50">Remove</h3></a>'.
+                                '.'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><font class="fs-50">X</font></a>'.
                             '</div>
                     </div>';
                 }
@@ -51,16 +60,16 @@ use app\models\Medicine;
                 <div class="cart-counter">
                     <h6>%s</h6>
                 </div>
-                <div class="cart-content">'.
-                    $stritem.$component->button("","","Process to Patyment","",'proceed-to-payment')
+                <div class="cart-content"> <div class="cart--wrapper">'.
+                    $component->button("","","Proceed to Payment","cart-payment-button",'proceed-to-payment')."</hr>".$stritem
 
-                .'</div>
+                .'</div></div>
                 </section> 
             <script>
-                const cart=document.querySelectorAll(".cart");
-                cart.addEventListener("click",()=>{
-                    location.href="#";
-                });
+                // const cart=document.querySelectorAll(".cart");
+                // cart.addEventListener("click",()=>{
+                //     location.href="#";
+                // });
             </script>
             ',$cartModel->getItemCount(),$this->count);     
             

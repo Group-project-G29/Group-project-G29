@@ -29,6 +29,12 @@ class Form{
     public function textarea(Model $model,$attribute,$name,$label,$row,$col,$id=""){
         return new TextArea($model, $attribute, $name, $label, $row, $col, $id);
     }
+    public function editableselect($name,$label,$class,$options){
+        return new EditableSelect($name,$label,$class,$options);
+    }
+    public function dispenseselect($name,$label,$class){
+        return new DispenseSelect($name,$label,$class);
+    }
    
 
 }

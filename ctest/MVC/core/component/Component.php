@@ -18,5 +18,8 @@ class Component{
     public function cartview(){
         return new CartView();
     }
+    public function filtersortby($link1,$link2,$array1,$array2){
+        return new FilterSortBy($link1,$link2,$array1,$array2);
+    }
   }
 ?>

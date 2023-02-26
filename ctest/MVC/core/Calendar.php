@@ -72,6 +72,31 @@ class Calendar{
 
 
   }
+  //get number of days as output, parameters=>[1,'week'],[2,'month',1]
+  public function getDayCount($array){
+    $mul=1;
+    if($array[1]=='year'){
+      $mul=365;
+    }
+    else if($array[1]=='month'){
+      $mul=$this->months[$array[2]];
+    }
+    else{
+      $mul=7;
+
+    }
+    return $mul*$array[0];
+
+  }
+  public function generateDays($startdate,$startday,$finday,$duration){
+      //get the start day
+
+      //get the last day
+
+      //get all the days:(date<last date)
+      
+
+  }
 
     
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace app\controllers;
 
 use app\core\Application;
@@ -12,7 +13,8 @@ use app\models\Medicine;
 use app\models\Employee;
 
 
-class LabController extends Controller{
+class LabController extends Controller
+{
     //delete update insert  medicine
     public function handleTest(Request $request,Response $response){
         $parameters=$request->getParameters();
@@ -35,7 +37,6 @@ class LabController extends Controller{
                 'model'=>$LabTestModel,
                 'labtest'=>$labtest[0]
             ]);
-            
         }
         if($request->isPost()){
             
@@ -63,26 +64,26 @@ class LabController extends Controller{
                 'labtest'=>$labtest
             ]);
             };
+        }
+        return $this->render('lab/lab-add-new-test', [
+            'model' => $LabTestModel,
+        ]);
+    }
+    //view test
+    public function viewTest()
+    {
+        $this->setLayout("lab", ['select' => 'Tests']);
+        $labTestModel = new LabTest();
+        $tests = $labTestModel->customFetchAll("SELECT * FROM lab_tests");
+        return $this->render('lab/lab-view-all-test', [
+            'tests' => $tests
+        ]);
+    }
 
             
                 
            
-        }
-        return $this->render('lab/lab-add-new-test',[
-            'model'=>$LabTestModel,
-        ]);
-    }
-    //view test
-    public function viewTest(){
-        $this->setLayout("lab", ['select' => 'Tests']);
-        $labTestModel=new LabTest();
-        $tests=$labTestModel->customFetchAll("SELECT * FROM lab_tests");
-        return $this->render('lab/lab-view-all-test',[
-            'tests'=>$tests
-        ]);
-      
-    }
-
+     
     public function testRequest(){
         $this->setLayout("lab", ['select' => 'Requests']);
         $labTestModel=new LabTest();
@@ -112,7 +113,37 @@ class LabController extends Controller{
         return $this->render('lab/lab-view-personal-details', [
             'user' => $user[0]
         ]);
-      
+
     }
 
+    public function writeReport()
+    {
+        $this->setLayout("lab", ['select' => 'Requests']);
+        // $userModel = new Employee();
+        // $user = $userModel->customFetchAll("SELECT * FROM employee WHERE email=" . '"' . Application::$app->session->get('user') . '"');
+        return $this->render('lab/lab-write-test-report', [
+            // 'user' => $user[0]
+        ]);
+    }
+    public function handleTemplate(Request $request,Response $response){
+        //create template object
+
+        //object->title
+
+        //$id=object->save()[0]['last_insert_id()];
+
+        //insert id in session (Application::$app->session->set())
+
+    
+
+    }
+    //create object for template content
+    public function handleTemplateContent(){
+        //creaTe new content object
+        //define attributes as   public ?string metric=null in content object;
+        //load data object
+        //object->save();
+        
+
+    }
 }

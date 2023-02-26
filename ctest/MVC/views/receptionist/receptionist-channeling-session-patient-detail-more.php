@@ -42,7 +42,7 @@ $component = new Component();
         <?php foreach ($channelings as $channeling) : ?>
 
             <tr>
-                <td><?= $channeling['speciality'] ?></td>
+                <td><?= $channeling['career_speciality'] ?></td>
                 <td><?= $channeling['name'] ?></td>
                 <td><?= $channeling['day'] ?></td>
                 <td><?= $channeling['time'] ?></td>

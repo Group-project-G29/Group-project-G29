@@ -14,6 +14,7 @@ abstract class Model{
     public const RULE_PASSWORD_VALIDATION="regexx";
     public const RULE_DATE_VALIDATION="date";
     public const RULE_NUMBERS='num';
+    
 
 
     public function loadData($data){
@@ -104,10 +105,14 @@ abstract class Model{
                 }
                 if($ruleName==self::RULE_DATE_VALIDATION ){
                     $dateModel=new Date();
+                    if( $value){
+                        $this->addError($attribute,self::RULE_DATE_VALIDATION);
+                    }
                     if($dateModel->greaterthan($value,date("Y-m-d"))){
                         $this->addError($attribute,self::RULE_DATE_VALIDATION);
                     }
                 }
+
                 if($ruleName==self::RULE_NUMBERS && !(preg_match("/^[1-9][0-9]*$/",$value))){
                     $this->addError($attribute,self::RULE_NUMBERS);
                 }

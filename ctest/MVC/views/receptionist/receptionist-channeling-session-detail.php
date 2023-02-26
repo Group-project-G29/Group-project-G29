@@ -12,16 +12,7 @@
 </div>
 <div class="detail-container" >
         <table class="table-session" >
-        <tr class="table-row-session">
-                <td>Schedule For </td>
-                <td>:</td>
-                <td class="table-row-data">Every <?= $channelingSession['day'] ?></td>
-            </tr>
-            <tr class="table-row-session">
-                <td>Doctor Name</td>
-                <td>:</td>
-                <td class="table-row-data"><?= $channelingSession['name'] ?></td>
-            </tr>
+    
             <tr class="table-row-session">
                 <td>Date</td>
                 <td>:</td>
@@ -48,20 +39,35 @@
 
            
         </table>
-        <br>
-        <div class="button" id=<?=$channelingSession['emp_ID']?>>
-        <?php echo $component->button('edit-details','','View Patients','button--class-0  width-10','edit-details');?>
+    
     </div>
-    </div>
+    <div class="table-container">
+    <table border="0">
+
+        <tr class="row-height header-underline">
+            <th>Patient List</th>
+        </tr>
+
+
+        <?php foreach ($channelingPatient as $channeling) : ?>
+
+            <tr class='table-row  row-height hover' id=<?=$channeling['patient_ID']?> >
+                <td><?= $channeling['name'] ?></td>
+                
+
+            </tr>
+        <?php endforeach; ?>
+    </table>
+</div>
 </div>
 
 <script>
-  elementsArray = document.querySelectorAll(".button");
-  elementsArray.forEach(function(elem) {
-    elem.addEventListener("click", function() {
-      location.href = 'receptionist-channeling-session-patient-detail?id='+elem.id;  //pass the variable value
+   elementsArray = document.querySelectorAll(".table-row");
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href = 'receptionist-channeling-session-patient-detail-more?id=' + elem.id;
+        });
     });
-  });
 </script>
 
 

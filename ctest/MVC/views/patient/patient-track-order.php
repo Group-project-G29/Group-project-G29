@@ -5,6 +5,31 @@ use app\core\component\Component;
     $component=new Component();
 
 ?>
+<?php if($lacked): ?>
+<div class="background">
+
+</div>
+<div class="lacked-popup">
+    <div>
+        <h3>Following items that you ordered cannot be provided by us. Sorry for the inconvenience</h3>
+    </div>
+    <table>
+        <tr>
+            <th>Item name</th><th>Reason</th>
+        </tr>
+        <?php foreach($lacked as $item): ?>
+            <tr>
+                <td align='center'><?=$item ?></td><td align='center'>Out of Stock</td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+    <div>
+        <?= $component->button('btn1','','Accept Order','','acpt-btn');?>
+        <?= $component->button('btn2','','Reject Order','','rjct-btn');?>
+    </div>
+
+</div>
+<?php endif; ?>
 <section>
     <div>
         <h2>Track Your Orders</h2>
@@ -25,7 +50,9 @@ use app\core\component\Component;
         <?=$component->button('btn','','View Orders','button-class--0','') ?>
     </div>
     <div>
-        <h2>Order Status</h2>
+        <h2>Order Status</h2>if($prescriptions){
+                
+            }
     </div>
     <div>
         <div>

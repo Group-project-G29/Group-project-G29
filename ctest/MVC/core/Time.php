@@ -20,7 +20,7 @@ class Time{
         
         return $sum;
     }
-
+    //getTime(03:45,'hours') will return int(3)
     public function getTime($time,$type){
         $values=explode(":",$time);
         //fix hours
@@ -38,7 +38,7 @@ class Time{
         }
         
     }
-
+    //arrayToTime(['hours'=>3,'minutes'=>45]) will return 03:45
     public function arrayToTime($array){
         $time="";
         if($array['hours']<9){
@@ -56,7 +56,7 @@ class Time{
         }
         return $time;
     }
-
+    // add two time in the format 10:45 +02:03   => 12:48
     public function addTime($time_1,$time_2):array{
         $time_1=explode(":",$time_1);
         $time_2=explode(":",$time_2);
@@ -82,6 +82,7 @@ class Time{
 
     }
 
+    //time1<time2 will return true
     public function greaterthan($time1,$time2){
      
         $month_1=$this->getTime($time1,'minutes');
@@ -106,6 +107,7 @@ class Time{
 
 
     }
+    
     public function isInRange($time,$span,$intime){
         $add_time=$this->addTime($time,$span);
         if($add_time['day']){

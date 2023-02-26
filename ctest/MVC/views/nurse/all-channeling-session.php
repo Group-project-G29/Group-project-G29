@@ -1,10 +1,10 @@
 
 <?php
-// var_dump($channeling);
+//  var_dump($channeling);exit;
 // var_dump("<br><br>");
 // var_dump($openedchanneling);
 // var_dump("<br><br>");
-// var_dump($doctor);
+//  var_dump($doctor);exit;
 // var_dump("<br><br>");
 // var_dump($nurse);
 // var_dump("<br><br>");
@@ -14,7 +14,7 @@
 
 <div class="column-flex">
     <div class="main-detail-title">
-        <h1><?=$channeling->speciality." - ".$channeling->day?></h1>
+        <h1><?=$channeling->speciality." - ".$doctor[0]['name']?></h1>
     </div>
     <div class="number-content">
         <h2>Patients</h2>
@@ -48,7 +48,7 @@
 <script>
     const btn=document.querySelector(".click");
     btn.addEventListener('click',()=>{
-        location.href="patient?id="+btn.id;
+        location.href="nurse-list-patient?id="+btn.id;
     })
 
 </script>

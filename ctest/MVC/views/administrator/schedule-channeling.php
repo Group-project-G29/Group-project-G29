@@ -6,6 +6,7 @@ $component=new Component();
 $form=Form::begin('','post');
 
 ?> 
+
 <section class="scheduling-container">
     
     <div class="form-body">

@@ -7,7 +7,7 @@ use app\models\Employee;
 ?>
 <div class='upper-container'>
     <div class="search-bar-container">
-        <?php echo $component->searchbar('',"name","search-bar--class1","Search by medicine name","searh");?>
+        <?php echo $component->searchbar('',"name","search-bar--class1","Search by account name,nic,role","searchbar");?>
     </div>
     <?php echo $component->button('new-medicine','','Add New Employee','button--class-0  width-10','new-medicine');?>
     
@@ -18,7 +18,7 @@ use app\models\Employee;
        <th>Name</th><th>Role</th><th>Status</th><th></th>
     </tr>
     <?php foreach($accounts as $key=>$account): ?>
-    <tr class="table-row">
+    <tr class="table-row" id=<?="'".$account['name']."-".$account['nic']."-".$account['role']."'"?>>
        
         <td><?=$account['name']?></td>
         <td><?=$account['role']?></td>  
@@ -83,4 +83,34 @@ use app\models\Employee;
             location.href='admin?cmd=delete&id='+elem.id;
         });
     });
+    const patients=document.querySelectorAll('.table-row');
+        const searchBar=document.getElementById('searchbar');
+       
+    
+        function checker(){
+        
+        var re=new RegExp(("^"+searchBar.value).toLowerCase())
+        patients.forEach((el)=>{
+            comp=""+el.id;
+            console.log(el.id);
+            comp=comp.split("-");
+          ;
+            if(searchBar.value.length==0){
+                // el.classList.add("none")
+            }
+            else if(re.test(comp[0].toLowerCase()) || re.test(comp[1].toLowerCase()) || re.test(comp[2].toLowerCase())){
+                el.classList.remove("none");
+            }
+            else{
+                el.classList.add("none");
+               
+            }
+            })
+            if(searchBar.value.length==0){
+                patients.forEach((el)=>{
+                    el.classList.remove("none");
+                }) 
+            }
+        }
+        searchBar.addEventListener('input',checker);
 </script>

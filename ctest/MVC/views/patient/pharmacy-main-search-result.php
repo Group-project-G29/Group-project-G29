@@ -24,6 +24,10 @@ use app\models\Medicine;
         $component=new Component();
         
         ?>
+      
+        
+
+
         
         <div class="medicine-right-subcontainer">
             <?php foreach($medicines as $medicine):?>

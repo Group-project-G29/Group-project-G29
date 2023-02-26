@@ -9,6 +9,7 @@ use app\core\Request;
 use app\core\Response;
 use app\models\Channeling;
 use app\models\Advertisement;
+use app\models\AdminNotification;
 
 use app\models\Employee;
 use app\models\NurseAllocation;
@@ -44,8 +45,8 @@ class AdminController extends Controller{
             //load all data in $_POST into the model
             $ChannelingModel->loadData($request->getBody());
             //find if the new channeling session get overlapped with channeling session already scheduled
-            $result=$ChannelingModel->checkOverlap();
             //if overlapp occurs set error
+            $result=$ChannelingModel->checkOverlap();
             if(isSet($result[0])){ 
                 $ChannelingModel->customAddError('time',"Time overlap with ".$result[1]." channeling session"."<a href='#'>See Channeling Timetable</a>");
             }
@@ -210,11 +211,11 @@ class AdminController extends Controller{
         $parameters=$request->getParameters();
         $this->setLayout('admin',['select'=>'Advertisement']);
         $advertisementModel=new Advertisement();
-
+            
         //Delete operation
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
             $delRow= $advertisementModel->customFetchAll("Select * from advertisement where ad_ID = ".$parameters[1]['id']);
-            $advertisementModel->deleteImage(['ad_ID'=>$delRow[0]['image']]);
+            $advertisementModel->deleteImage(['ad_ID'=>$delRow[0]['img']]);
             $advertisementModel->deleteRecord(['ad_ID'=>$parameters[1]['id']]);
             Application::$app->session->setFlash('success',"Advertisement successfully deleted ");
             $response->redirect('/ctest/main-adds');
@@ -236,7 +237,7 @@ class AdminController extends Controller{
             $advertisementModel->loadData($request->getBody());
             $advertisementModel->loadFiles($_FILES);
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
-                    
+                  
                 if($advertisementModel->validate() && $advertisementModel->updateRecord(['ad_ID'=>$parameters[1]['id']])){
                     $response->redirect('/ctest/main-adds'); 
                     Application::$app->session->setFlash('success',"Advertisement successfully updated ");
@@ -266,4 +267,17 @@ class AdminController extends Controller{
         ]);
     }
 
+
+
+    public function handleNotifications(){
+        $this->setLayout('admin',['select'=>"Notification"]);
+        $notificationModel=new AdminNotification();
+        $notifications=$notificationModel->customFetchAll("Select * from admin_notification order by created_date_time");
+
+        return $this->render('administrator/view-notifications',[
+            "notifications"=>$notifications,
+            "model"=>$notificationModel,
+        ]);
+
+    }
 }

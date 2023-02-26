@@ -6,7 +6,10 @@
 use app\core\Application;
 use app\core\component\CartView;
 use app\core\component\Component;
+use app\core\form\Form;
+
     $component=new Component();
+    $form=new Form();
 
 
 ?>
@@ -20,6 +23,9 @@ use app\core\component\Component;
     
 
 </style>
+<div class="bg">
+
+</div>
 <div class="slideshow-container">
     <?php foreach($advertisements as $advertisement): ?>
         <div class="mySlides fade">
@@ -30,19 +36,28 @@ use app\core\component\Component;
         
     </div>
     
+    <div class="prescription-popup hide" id="popup-main">
+        <div class="prescription-popup-wrapper">
+            <h3 class="fs-50">Add prescriptions here. Prescrition should be a valid one or else it would be rejected.</h3>
+            <h3>Make sure to capture any authentication detail on the Prescription when uploading prescription.</h3>
+            <?php $form=Form::begin("patient-pharmacy?spec=prescription&cmd=add",'post');?>
+            <input type='file' name='prescription[]' multiple/> 
+            <?=$component->button("Done","submit","Done","button--class-0",);?>
+            <?php $form=Form::end();?>
+        </div>        
+    </div>
     <section class="pharmacy-main-container">
     <div class="ph-main-stripe">
         <img src="./media/images/patient/striper.png">
     </div>  
    
    
-
      <div class="ph-main-services">
         <div class="pharmacy-main-page--upload-prescription">
             <div class="service-content--1">
                 <h3>Upload Your precriptoin here</h3>
                 <h4>We provide medicine to any valid prescription</h4>
-                <?= $component->button('upload-precription','',"Upload Prescription","button-class--yellow"); ?>
+                <?= $component->button('upload-precription','',"Upload Prescription","button-class--yellow",'upload-prescription'); ?>
             </div>
         </div>
         <div class="pharmacy-main-page--track-orders"> 
@@ -104,13 +119,27 @@ function showSlides(){
     dots[slideIndex-1].className += " active";setTimeout(showSlides,10000)};
   
 </script>
+<script src="./media/js/main.js">
 
+</script>
 
 <script>
+    const bg=document.querySelector(".bg");
     const trackOrderBtn=e('track-order');
     trackOrderBtn.addEventListener('click',()=>{
         location.href="patient-pharmacy?spec=order-main";
     })
+      const paymentbtn=e('proceed-to-payment');
+    paymentbtn.addEventListener('click',()=>{
+        location.href="patient-medicine-order?spec=order&mod=view";
+    })
+    const uploadPres=e('upload-prescription');
+    const popUp=e('.prescription-popup','class');
+    uploadPres.addEventListener('click',()=>{
+        bg.classList.add("background");
+        popUp.classList.remove('hide');
+    })
+    
 </script>
 
 

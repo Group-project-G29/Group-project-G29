@@ -4,14 +4,44 @@
 use app\core\component\Component;
 use app\models\Referral;
 use app\core\Application;
+use app\core\form\Form;
 use app\models\Appointment;
+use app\models\LabTest;
+use app\models\LabTestRequest;
 
 $appointment=$appointment[0]; 
 $referralModel=new Referral();
 $appointmentModel=new Appointment();
+$labTestModel= new LabTest();
+$labrequestModel=new LabTestRequest();
+$form=new Form();
+$class='';
+$popup=Application::$app->session->get('popup')??null;
+if( !(isset($popup)) || $popup=='unset' ) $class='hide';
+Application::$app->session->set('popup','unset');
+
+
 ?>
+<div class=<?="'background--1 ".$class."'"?>>
+
+</div>
     <?php $component=new Component(); ?>
-  
+    <div class=<?='"labtest-popup'.' '."$class".'"'?> id=<?="'".$class."'"?>>
+        <h3>Add labtest here</h3>
+        <?php $form->begin('/ctest/doctor-labtest','post'); ?>
+        <?=  $form->editableselect('name','Test Name*','',$labTestModel->getAllTests()); ?>
+        <?= $form->textarea(new LabTestRequest,'note','note','Note',3,5,'');?>
+        <?= $component->button('btn','submit','Request','',''); ?>
+        <?php $form->end(); ?>
+        <div class="scrollable-labtest-container">
+            <?php $labrequests=$labrequestModel->getLabTestRequests();?>
+            <?php foreach($labrequests as $labrequest): ?>
+                <h3><?=$labrequest['name']."  date :".$labrequest['requested_date_time']?></h3>
+                <?=$component->button('btn','','Cancel','rqst-rmv',$labrequest['request_ID']); ?>
+            <?php endforeach; ?>
+        </div>
+
+    </div>
     <div class="assistance-container">
         <div class="assistance-subcontainer ">
             
@@ -24,7 +54,7 @@ $appointmentModel=new Appointment();
                     <div class="variable-container">
                         <table>
                             <tr>
-                                <th>Referral</th><th>Created Date</th><th></th><th></th>
+                                <th>Referral</th><th>Added Date</th><th></th><th></th>
                             </tr>
                             <?php foreach($referrals as $referral): ?>
                                 <tr>
@@ -38,8 +68,7 @@ $appointmentModel=new Appointment();
                         </table>
                     </div>
                     <div class="ass-button-set">
-                            <?=$component->button('write report','','Write Report','button--class-0','write-ref');?>
-                            <?=$component->button('Upload report','','Upload Report','button--class-0','upload-ref');?>
+                            <?=$component->button('write referral','','Write Referral','button--class-0','write-ref');?>
                     </div>
                 </div>
                 <div class="wrapper--last-consultation none">
@@ -119,9 +148,8 @@ $appointmentModel=new Appointment();
                             
                                 </tr>
                                 <?php foreach($reports as $report): ?>
-                                
                                 <tr class="table-row">
-                                    <td><a href="#"><?=$report['type']."-".$report['report_ID']."-".$report['name']?></a></td><td><?=$report['uploaded_date'] ?></td>
+                                    <td><a href=<?="/ctest/doctor-report?spec=".$report['type']."&mod=view&id=".$report['report_ID']?>><?=$report['type']."-".$report['report_ID']."-".$report['name']?></a></td><td><?=$report['uploaded_date'] ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </table>
@@ -151,7 +179,6 @@ $appointmentModel=new Appointment();
                     </div>
                     <div class="ass-button-set">    
                         <?=$component->button('write Prescription','','Write Prescription','button--class-0','write-pres');?>
-                        <?=$component->button('Upload Prescription','','Write Prescription','button--class-0','upload-pres');?>
                     </div>
                 </div>
                 <div class="wrapper--lab-tests none">
@@ -277,7 +304,7 @@ $appointmentModel=new Appointment();
         repbtn.addEventListener('click',()=>{
            
             // console.log(id_component);
-            location.href="doctor-report?spec=consultation-report";
+            location.href="doctor-report?spec=consultation";
         })
         const refbtn=document.getElementById("write-ref");
       
@@ -294,6 +321,27 @@ $appointmentModel=new Appointment();
             location.href="doctor-prescription";
         })
        
+        const bg=document.querySelector(".background--1");
+       // bg.classList.add('hide');
+        const reqBtn=document.getElementById('req-lab');
+        const reqPopup=document.querySelector('.labtest-popup');
+        
+        //reqPopup.classList.add('hide');
+        if(""+reqPopup.id=='visible'){
+            reqPopup.classList.remove('hide');
+            bg.classList.remove('hide');
+        }
+        reqBtn.addEventListener('click',()=>{
+            bg.classList.remove('hide');
+            reqPopup.classList.remove('hide');
+        })
+        const rqstRmv=document.querySelectorAll('.rqst-rmv');
+        rqstRmv.forEach((elem)=>{
+            elem.addEventListener('click',()=>{
+                location.href="/ctest/doctor-labtest?cmd=delete&id="+elem.id;
+            })
+
+        })
 
 
 

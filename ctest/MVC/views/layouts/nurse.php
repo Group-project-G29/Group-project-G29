@@ -7,7 +7,7 @@ include "../views/layouts/navbar/nurse-navbar.php";
 
 </nav>
     <div class="main-container">
-         <?php $sidebar=new Sidebar(['All Channelings'=>'/ctest/all-channelings','Today Channelings'=>'/ctest/today-channelings','Patients'=>'/','My Detail'=>'/ctest/my-detail'],$select);?>
+         <?php $sidebar=new Sidebar(['All Channelings'=>'/ctest/all-channelings','Today Channelings'=>'/ctest/today-channelings','Patients'=>'/ctest/nurse-patient','My Detail'=>'/ctest/my-detail'],$select);?>
          <?php echo $sidebar;  ?>
         
         

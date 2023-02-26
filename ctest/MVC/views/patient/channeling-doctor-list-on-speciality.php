@@ -34,14 +34,16 @@ use app\models\Appointment;
                         <h3>Date :<?=$value['channeling_date']?></h3>
                         <h3>Fee :LKR <?=$value['fee']?></h3>
                     </div>
-                    <?php if($openedChanneling->isPatientIn(Application::$app->session->get('user'),$value['opened_channeling_ID'])):?>
-                        <?php echo "Already have an appointment" ?>
-                        <?php else: ?>
-                            <?php if($appointmentModel->labReportEligibility(Application::$app->session->get('user'),$value['nic'],$value['opened_channeling_ID'])):?>
-                                <?= $component->button('add-appointment','','+ Add Medical Report Consultation','button--class-5',$value['opened_channeling_ID']);?>
-                            <?php endif; ?>
-                        <?= $component->button('add-appointment','','+ Add Consultation Appointment','button--class-1',$value['opened_channeling_ID']);?>
-                    <?php endif; ?>
+                    <div>
+                        <?php if($openedChanneling->isPatientIn(Application::$app->session->get('user'),$value['opened_channeling_ID'])):?>
+                            <?php echo "Already have an appointment" ?>
+                            <?php else: ?>
+                                <?php if($appointmentModel->labReportEligibility(Application::$app->session->get('user'),$value['nic'],$value['opened_channeling_ID'])):?>
+                                    <?= $component->button('add-appointment','','+ Add Medical Report Consultation','button--class-5 width-10',$value['opened_channeling_ID']);?>
+                                <?php endif; ?>
+                            <?= $component->button('add-appointment','','+ Add Consultation Appointment','button--class-1 width-10',$value['opened_channeling_ID']);?>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -66,4 +68,4 @@ use app\models\Appointment;
             });
         });
      
-   </script>
+   </script width-10>

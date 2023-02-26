@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="./media/css/pharmacy-style.css">
     <link rel="stylesheet" href="./media/css/doctor-style.css">
     <link rel="stylesheet" href="./media/css/nurse-style.css">
+
     <!-- <link rel="stylesheet" href="./media/header-footer.css"> -->
     <link rel="stylesheet" href="https:unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
