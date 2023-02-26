@@ -22,8 +22,9 @@
 <input type="checkbox" id="payment_status" name="payment_status" value="payment_status">
 <label for="payment_status"> Payment Successful</label><br>
 
+<!-- pass the pin to url - $POST[pin] -->
 <?php
-$form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID']."&pin=5948",'post');?> 
+$form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID'],'post');?> 
 <section class="form-body" style="padding-bottom:100px">
 
 
@@ -36,8 +37,9 @@ $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID']."&pin=
         <!-- form for chcheckbox -->
     <?php echo $form->spanfield($model,'confirmation_PIN','Enter PIN here','field','text') ?>
     </table>
-    <div><?php echo $component->button("complete","submit","Complete Order","button--class-0","complete")?></div>
-    
+    <div><?php echo $component->button("complete","submit","Complete Order","button--class-0","complete")?></div><br>
+    <!-- <div><?php echo $component->button("pass_order","submit","Pass Order","button--class-0","pass_order")?></div> -->
+    <!-- have comented above line -->
     </div>
    
     

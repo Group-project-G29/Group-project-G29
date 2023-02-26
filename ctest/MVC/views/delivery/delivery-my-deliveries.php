@@ -1,9 +1,6 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
-// var_dump($deliveries);
-// exit;
-
 ?>
 <div class='upper-container'>
     <div class="search-bar-container">
@@ -22,6 +19,8 @@
         <th>Postal Code</th>
         <th>Comment</th>
         <th>Created Date Time</th>
+        <th></th>
+        <th></th>
     </tr>
     <?php foreach($deliveries as $key=>$delivery): ?>
     <tr class="table-row" id=<?=$delivery['delivery_ID']?> >
@@ -41,6 +40,8 @@
             ?>
         </td>  
         <td><?=$delivery['time_of_creation']?></td>
+        <td><a class='more-details' id=<?=$delivery['delivery_ID']?>>More Details</a></td>
+        <td><a class='pass-delivery' id=<?=$delivery['delivery_ID']?>>Pass Delivery</a></td>
     </tr>
     <?php endforeach; ?>
     </table>
@@ -48,20 +49,24 @@
 </div>
 
 <script>
-    // const btn=document.getElementById("new-delivery");
-    // btn.addEventListener('click',function(){
-    //     location.href="handle-delivery";
-    // })
-    elementsArray = document.querySelectorAll(".table-row");
-    elementsArray.forEach(function(elem) {
+    // elementsArray = document.querySelectorAll(".table-row");
+    // elementsArray.forEach(function(elem) {
+    //     elem.addEventListener("click", function() {
+    //         location.href='delivery-view-delivery?id='+elem.id;
+    //     });
+    // });
+
+    elementsArray1 = document.querySelectorAll(".more-details");
+    elementsArray1.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href='delivery-view-delivery?id='+elem.id;
         });
     });
-    // elementsArray = document.querySelectorAll(".button--class-3");
-    // elementsArray.forEach(function(elem) {
-    //     elem.addEventListener("click", function() {
-    //         location.href='handle-delivery?cmd=delete&id='+elem.id;
-    //     });
-    // });
+
+    elementsArray2 = document.querySelectorAll(".pass-delivery");
+    elementsArray2.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href='delivery-pass-delivery?id='+elem.id;
+        });
+    });
 </script>

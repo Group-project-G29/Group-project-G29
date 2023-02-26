@@ -72,18 +72,16 @@ class PharmacyController extends Controller{
         
         //selected the available rider 
         $postal_code = $orderModel->get_postal_code($parameters[0]['id']);
-        $rider = $riderMOdel->select_suitable_rider($postal_code[0]["postal_code"]);
-        
+        $rider = $riderMOdel->select_suitable_rider($postal_code[0]["postal_code"], $postal_code[0]["order_ID"]);
+
         $deliveryModel = new Delivery;
         if($rider) {
-            // update the rider id
-            $updated_rider_ID=$deliveryModel->customFetchAll("UPDATE delivery SET delivery_rider = '".$rider[0]["emp_ID"]."' WHERE delivery_ID = ".$postal_code[0]["delivery_ID"]);
+            $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider"]);
 
         } else {
-            $rider = $riderMOdel->customFetchAll("SELECT * FROM delivery_riders_queue;");
-            //update the rider ID
+            $rider = $riderMOdel->select_queue_rider();
             $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider_ID"]);
-            //dequeue a delivery rider - check something went wrong deleted few records at once
+            //dequeue a delivery rider - check something went wrong-> deleted few records at once
             $deleted_rider = $riderMOdel->dequeue_rider($rider[0]["delivery_rider_ID"]);
         }
             
@@ -362,11 +360,8 @@ class PharmacyController extends Controller{
         $parameters=$request->getParameters();
         $this->setLayout('pharmacy',['select'=>'My Detail']);
         $employeeModel=new Employee();
-        // echo 'afdsaf';
-        // exit;
 
         if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
-            // echo "afkjsahdfkjsahfkjsahbdkj";
             $employee=$employeeModel->customFetchAll("Select * from employee where emp_ID=".$parameters[1]['id']);
             $employeeModel->updateData($employee,$employeeModel->fileDestination());
             Application::$app->session->set('employee',$parameters[1]['id']);

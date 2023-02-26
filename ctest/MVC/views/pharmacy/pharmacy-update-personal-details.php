@@ -4,9 +4,6 @@
     use \app\core\form\Form;
     use app\core\Application;
     use app\core\component\Component;
-
-// var_dump($user);
-// exit;
 ?>
 
 

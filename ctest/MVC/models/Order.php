@@ -113,7 +113,7 @@ use app\core\DbModel;
         }
 
         public function get_postal_code( $order_ID ) {
-            return $this->customFetchAll("SELECT delivery.postal_code, _order.order_ID, delivery.delivery_ID FROM delivery INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.order_ID = $order_ID");
+            return $this->customFetchAll("SELECT delivery.postal_code, _order.order_ID, delivery.delivery_ID FROM delivery INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.delivery_ID = $order_ID");
         }
 
         

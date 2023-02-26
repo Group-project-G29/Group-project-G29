@@ -29,7 +29,6 @@
 <table border="0">
     <tr>
         <th>Order ID</th>
-        <th>Patient ID</th>
         <th>Name</th>
         <th>Contact</th>
         <th>Date</th>
@@ -40,7 +39,6 @@
         <?php foreach($orders as $key=>$order): ?>
             <tr class="table-row" id=<?=$order['order_ID']?> >
                 <td><?=$order['order_ID']?></td>
-                <td><?=$order['patient_ID']?></td> 
                 <td><?=$order['name']?></td> 
                 <td><?=$order['contact']?></td> 
                 <td><?=$order['created_date']?></td> 

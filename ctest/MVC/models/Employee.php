@@ -101,14 +101,26 @@ class Employee extends DbModel{
         
     }
 
-    public function select_suitable_rider( $postal_code ) {
-        return $this->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID WHERE delivery_rider.availability='AV' AND delivery.postal_code BETWEEN  $postal_code-10 AND $postal_code+10 AND delivery_rider.availability='AV'");
+    public function select_suitable_rider( $postal_code, $order_ID ) {
+        //error in query -> no elements in array
+        return $this->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE delivery_rider.availability='AV' AND _order.order_ID != $order_ID AND delivery.postal_code BETWEEN $postal_code-10 AND $postal_code+10");
+    }
+
+    public function select_queue_rider() {
+        return $this->customFetchAll("SELECT * FROM delivery_riders_queue");
     }
 
     public function dequeue_rider( $rider_ID ) {
         return $this->customFetchAll("DELETE FROM delivery_riders_queue WHERE delivery_rider_ID = $rider_ID");
     }
+
+    public function enqueue_rider( $rider_ID ) {
+        return $this->customFetchAll("INSERT INTO delivery_riders_queue (delivery_rider_ID) VALUES ($rider_ID);");
+    }
     
+    public function make_rider_offline( $delivery_rider_ID ) {
+        return $this->customFetchAll("UPDATE delivery_rider SET availability = 'NA' WHERE emp_ID = $delivery_rider_ID;");
+    }
 }   
 
 

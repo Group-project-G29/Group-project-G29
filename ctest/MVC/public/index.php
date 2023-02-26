@@ -126,6 +126,7 @@ $app->router->get('/ctest/delivery-view-delivery',[DeliveryController::class,'vi
 // $app->router->post('/ctest/delivery-view-delivery',[DeliveryController::class,'completeDelivery']);
 $app->router->get('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
 $app->router->post('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
+$app->router->get('/ctest/delivery-pass-delivery',[DeliveryController::class,'passDelivery']);
 
 
 
