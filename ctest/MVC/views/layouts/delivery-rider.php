@@ -8,7 +8,7 @@ include "../views/layouts/navbar/delivery-rider-navbar.php";
 
 </nav>
     <div class="main-container">
-         <?php $sidebar=new Sidebar(['My Deliveries'=>'/ctest/delivery-my-deliveries','All Deliveries'=>'/ctest/delivery-all-deliveries','My Detail'=>'/ctest/delivery-view-personal-details'],$select);?>
+         <?php $sidebar=new Sidebar(['Pending Deliveries'=>'/ctest/delivery-my-deliveries','Completed Deliveries'=>'/ctest/delivery-all-deliveries','My Detail'=>'/ctest/delivery-view-personal-details'],$select);?>
          <?php echo $sidebar;  ?>
         
         

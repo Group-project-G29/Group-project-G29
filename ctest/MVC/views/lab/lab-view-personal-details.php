@@ -16,7 +16,7 @@ $component = new Component();
     </div> -->
     <div class="card-wrapper">
         <div class="card-1">
-            <img src="./media/images/patient/Hospital-2.jpg" class="card-img">
+            <img src="./media/images/lab/CBC-Blood-Test.jpg" class="card-img">
             <img src="./media/images/emp-profile-pictures/<?= $user['img'] ?>" class="pro-img">
             <div class="content">
                 <p>

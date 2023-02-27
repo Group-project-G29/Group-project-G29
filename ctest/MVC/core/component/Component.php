@@ -15,5 +15,11 @@ class Component{
     public function popup($value,$valuestyle,$style,$id){
         return new PopUp($value,$valuestyle,$style,$id);
     }
+    public function cartview(){
+        return new CartView();
+    }
+    public function filtersortby($link1,$link2,$array1,$array2){
+        return new FilterSortBy($link1,$link2,$array1,$array2);
+    }
   }
 ?>

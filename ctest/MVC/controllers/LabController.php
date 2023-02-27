@@ -7,11 +7,15 @@ use app\core\Controller;
 use app\core\Request;
 use app\models\User;
 use app\core\DbModel;
+use app\core\Model;
 use app\core\Response;
+use app\models\Channeling;
 use app\models\LabTest;
+use app\models\Template;
+
 use app\models\Medicine;
 use app\models\Employee;
-
+use app\models\TemplateContent;
 
 class LabController extends Controller
 {
@@ -19,7 +23,9 @@ class LabController extends Controller
     public function handleTest(Request $request, Response $response)
     {
         $parameters = $request->getParameters();
+
         $LabTestModel = new Labtest();
+
         //Delete operation
         if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'delete') {
             $LabTestModel->deleteRecord(['name' => $parameters[1]['id']]);
@@ -27,51 +33,58 @@ class LabController extends Controller
             $response->redirect('/ctest/lab-view-all-test');
             return true;
         }
-        //Go to update page of a medicine
+        //Go to update page
         if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'update') {
-            $labtest = $LabTestModel->customFetchAll("SELECT * from lab_tests where name=" . "'" . $parameters[1]['id'] . "'");
+            $labtest = $LabTestModel->customFetchAll("Select * from lab_tests where name=" . "'" . $parameters[1]['id'] . "'");
 
             $LabTestModel->updateData($labtest, $LabTestModel->fileDestination());
             Application::$app->session->set('labtest', $parameters[1]['id']);
             return $this->render('lab/lab-test-update', [
                 'model' => $LabTestModel,
-                'labtest' => $labtest[0]
+                // 'labtest'=>$labtest
             ]);
         }
         if ($request->isPost()) {
+            echo 'ispost';
 
             // update medicine
             $LabTestModel->loadData($request->getBody());
             $LabTestModel->loadFiles($_FILES);
+
             if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'update') {
-                // var_dump($LabTestModel);
-               
-                // var_dump($parameters[1]['id']);
-                //  exit;
-
                 if ($LabTestModel->validate() && $LabTestModel->updateRecord(['name' => $parameters[1]['id']])) {
-                    // echo ('111');
-                    // exit;
                     $response->redirect('/ctest/lab-view-all-test');
-
                     Application::$app->session->setFlash('success', "lab test successfully updated ");
                     $response->redirect('/ctest/lab-view-all-test');
                     exit;
                 };
             }
 
+            //add test
             if ($LabTestModel->validate() && $LabTestModel->addTest()) {
+                echo 'add';
                 Application::$app->session->setFlash('success', "Lab Test successfully added ");
-                Application::$app->response->redirect('/ctest/lab');
-                $labtest = $LabTestModel->customFetchAll("Select * from lab_tests ");
+                Application::$app->response->redirect('/ctest/lab-view-all-test');
+                $this->setLayout("lab", ['select' => 'Tests']);
+                $labtest = $LabTestModel->customFetchAll("SELECT * FROM lab_report_template join lab_tests on lab_report_template.template_ID=lab_tests.template_ID");
                 return $this->render('lab/lab-view-all-test', [
                     'model' => $LabTestModel,
                     'labtest' => $labtest
                 ]);
             };
         }
+
+
+        $this->setLayout("lab", ['select' => 'Tests']);
+        $LabTestModel = new LabTest();
+        $template_name_list = $LabTestModel->customFetchAll("SELECT * FROM lab_report_template join lab_tests on lab_report_template.template_ID=lab_tests.template_ID");
+
         return $this->render('lab/lab-add-new-test', [
             'model' => $LabTestModel,
+            'template_name_list' => $template_name_list,
+            //03\7
+            //template [0], [1]
+
         ]);
     }
     //view test
@@ -85,41 +98,27 @@ class LabController extends Controller
         ]);
     }
 
-    public function testRequest(Request $request)
+
+
+
+
+    public function testRequest()
     {
         $this->setLayout("lab", ['select' => 'Requests']);
         $labTestModel = new LabTest();
-        $tests = $labTestModel->customFetchAll("SELECT patient.patient_ID,lab_request.test_name as test_name ,lab_request.requested_date_time , patient.name as patient_name,employee.name as doc_name from lab_request join employee on employee.nic=lab_request.doctor join patient on patient.patient_ID=lab_request.patient_ID ");
+        $tests = $labTestModel->customFetchAll("SELECT lab_request.test_name as test_name ,lab_request.requested_date_time , patient.name as patient_name,employee.name as doc_name from lab_request join employee on employee.nic=lab_request.doctor join patient on patient.patient_ID=lab_request.patient_ID");
         return $this->render('lab/lab-test-request', [
             'tests' => $tests
         ]);
     }
-    public function reportUpload(Request $request, Response $response)
+    public function reportUpload()
     {
         $labTestModel = new LabTest();
-        $parameters = $request->getParameters();
-
-        $tests = $labTestModel->customFetchAll("SELECT patient.patient_ID,lab_request.requested_date_time , patient.name as patient_name,employee.name as doc_name from lab_request join employee on employee.nic=lab_request.doctor join patient on patient.patient_ID=lab_request.patient_ID where patient_ID=" . $parameters[1]['id']);
+        $tests = $labTestModel->customFetchAll("SELECT lab_request.requested_date_time , patient.name as patient_name,employee.name as doc_name from lab_request join employee on employee.nic=lab_request.doctor join patient on patient.patient_ID=lab_request.patient_ID");
         return $this->render('lab/lab-report-upload', [
             'tests' => $tests[0]
         ]);
-        if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'add') {
-            if ($request->isPost()) {
-                $labTestModel->loadData($request->getBody());
-                $labTestModel->loadFiles($_FILES);
-                if ($labTestModel->validate() && $labTestModel->addTest()) {
-                    Application::$app->session->setFlash('success', "Thanks for registering");
-                    Application::$app->response->redirect('/ctest/admin');
-                    exit;
-                }
-            }
-            // return $this->render('lab/lab-test-request', [
-            //     'model' => $labTestModel,
-
-            // ]);
-        }
     }
-
 
 
 
@@ -135,40 +134,6 @@ class LabController extends Controller
         ]);
     }
 
-    public function handleLab(Request $request, Response $response)
-    {
-        $userModel = new Employee();
-        $parameters = $request->getParameters();
-
-        if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'update') {
-            $userinfo = $userModel->customFetchAll("SELECT * FROM employee WHERE email=" . "'" . $parameters[1]['id'] . "'");
-            $userModel->updateData($userinfo, $userModel->fileDestination());
-            Application::$app->session->set('userinfo', $parameters[1]['id']);
-            return $this->render('lab/lab-personal-detail-update', [
-                'model' => $userModel,
-                'userinfo' => $userinfo[0]
-            ]);
-        }
-        if ($request->isPost()) {
-
-            // update medicine
-            $userModel->loadData($request->getBody());
-            $userModel->loadFiles($_FILES);
-            if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'update') {
-                if ($userModel->validate() && $userModel->updateRecord(['name' => $parameters[1]['id']])) {
-                    $response->redirect('/ctest/lab-view-personal-details');
-                    Application::$app->session->setFlash('success', "lab test successfully updated ");
-                    Application::$app->response->redirect('/ctest/lab-view-personal-details');
-                    exit;
-                };
-            }
-        }
-        return $this->render('lab/lab-view-personal-details',[
-            'model'=>$userModel,
-        ]);
-
-    }
-
     public function writeReport()
     {
         $this->setLayout("lab", ['select' => 'Requests']);
@@ -177,5 +142,58 @@ class LabController extends Controller
         return $this->render('lab/lab-write-test-report', [
             // 'user' => $user[0]
         ]);
+    }
+
+    public function createTemplate(Request $request, Response $response)
+    {
+        $parameters = $request->getParameters();
+
+        $contentModel = new TemplateContent();
+        $TemplateModel = new Template();
+        $template = '';
+        $content='';
+
+
+        $this->setLayout("lab", ['select' => 'Tests']);
+
+        if ($request->isPost()) {
+
+            $TemplateModel->loadData($request->getBody());
+
+            $contentModel->loadData($request->getBody());
+            $contentModel->loadFiles($_FILES);
+
+            if (isset($parameters[0]['spec']) && $parameters[0]['spec'] == 'template') {
+
+                if ($TemplateModel->validate()) {
+
+                    $template = $TemplateModel->addTemplate()[0]['last_insert_id()'];
+                    Application::$app->session->set('template', $template);
+                    Application::$app->session->setFlash('success', "new template created ");
+                }
+            }
+            if (isset($parameters[0]['spec']) && $parameters[0]['spec'] == 'content') {
+
+                if ($TemplateModel->validate()) {
+
+                    $content = $contentModel->addContent()[0]['last_insert_id()'];
+                    Application::$app->session->set('content', $content);
+                    Application::$app->session->setFlash('success', "new template created ");
+                }
+            }
+            
+        }
+        return $this->render('lab/lab-test-template', [
+            'templatemodel' => $TemplateModel,
+            'template' => $template,
+            'content' =>$content,
+            'contentmodel'=>$contentModel
+
+        ]);
+       
+    }
+    public function handleTemplate(Request $request, Response $response)
+    {
+        $TemplateModel = new TemplateContent();
     }
 }

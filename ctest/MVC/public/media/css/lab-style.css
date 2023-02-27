@@ -1,0 +1,24 @@
+.button--class-5{
+    font-size: 0.9em;
+    color: var(--clr-white);
+    background-color: var(--clr-dark);
+    border: none;
+}
+
+.field-1{
+    display: flex;
+    flex-direction: column;
+    
+}
+.field-1-input--class1{
+    background: #F0F0F0;
+    border: 1px solid #cfcfcf;
+    border-radius: 10px;
+    width: 30vw;
+    height:4vh;
+    color:var(--clr-dark);
+    font-weight: normal;
+    font-size: var(--fs-50);
+    padding-inline: 15px;
+}
+

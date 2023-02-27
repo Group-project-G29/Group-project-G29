@@ -14,49 +14,46 @@
     <div class="search-bar-container">
         <?php echo $component->searchbar($model,"name","search-bar--class1","Search by order ID, patient 1D","searh");?>
     </div>
-    <?php echo $component->button('new-order','','Add New Order','button--class-0  width-10','new-order');?>
+    <?php 
+    // echo $component->button('new-order','','Add New Order','button--class-0  width-10','new-order');
+    ?>
 </div>
    
 <div class="table-container">
 <table border="0">
     <tr>
-        <th>Order ID</th><th>Date</th><th>Time</th><th>Status</th><th>Patient ID</th><th>Cart ID</th>
+        <th>Order ID</th>
+        <th>Patient ID</th>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Date</th>
+        <th>Time</th>
     </tr>
-    <?php foreach($orders as $key=>$order): ?>
-    <tr class="table-row">
-        <td><?=$order['order_ID']?></td>
-        <td><?=$order['time_of_creation']?></td> 
-        <td><?=$order['created_time']?></td> 
-        <td><?=$order['processing_status']?></td> 
-        <td><?=$order['patient_ID']?></td> 
-        <td><?=$order['cart_ID']?></td> 
-    </tr>
-    <?php endforeach; ?>
+    <?php if($orders): ?>
+        
+        <?php foreach($orders as $key=>$order): ?>
+            <tr class="table-row" id=<?=$order['order_ID']?> >
+                <td><?=$order['order_ID']?></td>
+                <td><?=$order['patient_ID']?></td> 
+                <td><?=$order['name']?></td> 
+                <td><?=$order['contact']?></td> 
+                <td><?=$order['created_date']?></td> 
+                <td><?=$order['created_time']?></td> 
+            </tr>
+        <?php endforeach; ?>
     </table>
 
-    <div>
-        <!-- remove this -->
-        <?php
-            if ( $order['processing_status'] === 'pending'){
-                echo $component->button('', '', 'Process', 'button--class-2', $order['order_ID']);
-            } else if ( $order['processing_status'] === 'processing' ) {
-                echo $component->button('', '', 'Cancel Process', 'button--class-3', $order['order_ID']);
-            } else if ( $order['processing_status'] === 'packed' ) {
-                echo $component->button('', '', 'Track Order', 'button--class-2', $order['order_ID']);
-            }
-                
-        ?>
-    </div>
-
+    <?php endif; ?>
 </div>
 
 
 <!-- ==================== -->
 <script>
+    
     elementsArray = document.querySelectorAll(".table-row");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='pharmacy-track-order?id='+<?=$order['order_ID']?>;
+            location.href='pharmacy-track-order?id='+elem.id; 
         });
     });
 

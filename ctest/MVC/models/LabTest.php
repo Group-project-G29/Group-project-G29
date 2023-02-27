@@ -7,8 +7,12 @@ use app\core\UserModel;
 
 class LabTest extends DbModel{
     public string $name='';
-    public int $fee=0;
+    public int $test_fee=0;
+    public int $hospital_fee=0;
+
+    public int $template_ID;
    
+
     public function addTest(){
         parent::save();
     }
@@ -17,7 +21,10 @@ class LabTest extends DbModel{
     {
         return [
             'name'=>[self::RULE_REQUIRED],
-            'fee'=>[self::RULE_REQUIRED]
+            'test_fee'=>[self::RULE_REQUIRED],
+            'hospital_fee'=>[self::RULE_REQUIRED],
+            'template_ID'=>[self::RULE_REQUIRED],
+
 
 
         ];
@@ -35,12 +42,12 @@ class LabTest extends DbModel{
         return 'name';
     }
     public function tableRecords(): array{
-        return ['lab_tests'=> ['name','fee']];
+        return ['lab_tests'=> ['name','fee','test_fee','hospital_fee','template_ID']];
     }
 
     public function attributes(): array
     {
-        return  ['name','fee'];
+        return  ['name','fee','test_fee','hospital_fee','template_ID'];
     }
 
     

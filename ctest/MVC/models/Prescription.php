@@ -48,4 +48,9 @@ class Prescription extends DbModel{
     public function getPrescriptionInOrder($orderID){
         return  $this->fetchAssocAll(['order_ID'=>$orderID]);
     }
+    public function getPrescriptionByPatient(){
+        $patient=Application::$app->session->get('user');
+        return $this->customFetchAll("select * from prescription where patient=".$patient);
+    }
+
 }   

@@ -7,25 +7,14 @@
 
 ?>
 
-<h1>Delivery ID : <?= $delivery['delivery_ID']?></h1>
-
-<div class="table-container">
-        <table border="0">
-            <tr class="table-row">
-                <td>Contact</td>
-                <td><?= $delivery['contact'] ?></td>
-            </tr>
-            <tr class="table-row">
-                <td>Address</td>
-                <td><?= $delivery['address'] ?></td>
-            </tr>
-            <tr class="table-row">
-                <td>Postal Code</td>
-                <td><?= $delivery['postal_code'] ?></td>
-            </tr>
-        </table>
+<div class="detail">
+    <h1>Delivery ID : <?= $delivery['delivery_ID']?></h1>
+    <h3>Contact Number : <?= $delivery['contact'] ?></h3>
+    <h3>Address : <?= $delivery['address'] ?></h3>
+    <h3>Postal Code : <?= $delivery['postal_code'] ?></h3>
 </div>
-<br><br><hr><br>
+<hr>
+<br>
 
 <?php
 $form=Form::begin('','post');?> 
@@ -38,7 +27,7 @@ $form=Form::begin('','post');?>
     </div>
     <div class="form-body-fields">
     <table>
-    <?php echo $form->spanfield($model,'pin','','field','text') ?>
+    <?php echo $form->spanfield($model,'PIN','','field','text') ?>
     </table>
     <div><?php echo $component->button("complete","submit","Complete Order","button--class-0","complete")?></div>
     
@@ -52,10 +41,9 @@ $form=Form::begin('','post');?>
 button to confirm -->
 
 <script>
-    elementsArray = document.querySelectorAll(".button--class-2");
-    elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href='delivery-view-delivery?id='+elem.id;
-        });
-    });
+
+    const btn1=document.getElementById("complete");
+    btn1.addEventListener('click',function(){
+        location.href="delivery-complete?id="+<?=$delivery['order_ID']?>; //get
+    })
 </script>

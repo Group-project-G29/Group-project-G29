@@ -38,6 +38,33 @@
     border-spacing: 0px 3vh;
 }
 
+.row-img-col {
+    
+    width: 10v;
+
+}
+
+.row-img {
+    width: auto;
+    height: 10vh;
+    background-position: center;
+    background-size: 100%;
+    object-fit: cover;
+}
+
+.add-dec {
+    padding: 20px;
+}
+
+.table-row:hover {
+    cursor: pointer;
+}
+
+.detail {
+    text-align: center;
+}
+
+
 /* ===============My detail==================== */
 
 .detail-container {

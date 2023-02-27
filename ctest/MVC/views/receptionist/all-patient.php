@@ -11,7 +11,7 @@
 
     </div>
     <div class="search-bar-btn" style="width:5vw;color:brown">
-        <?= $component->button('btn', '', 'Add New Patient', 'button--class-02', "new"); ?>
+        <?= $component->button('btn', '', 'Add New Patient', 'button--class-0 exbutton', "new"); ?>
     </div>
 </div>
 <!-- <div class="main-card ">
