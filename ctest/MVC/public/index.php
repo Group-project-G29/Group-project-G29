@@ -193,6 +193,8 @@ $app->router->get('/ctest/lab-write-test-report',[LabController::class,'writeRep
 $app->router->post('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
 $app->router->get('/ctest/lab-test-template',[LabController::class,'createTemplate']);
 $app->router->post('/ctest/lab-test-template',[LabController::class,'createTemplate']);
+$app->router->get('/ctest/lab-test-template-main',[LabController::class,'TemplateMain']);
+$app->router->post('/ctest/lab-test-template-main',[LabController::class,'TemplateMain']);
 
 
 $app->run();

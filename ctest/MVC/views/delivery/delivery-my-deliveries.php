@@ -52,7 +52,7 @@
     // btn.addEventListener('click',function(){
     //     location.href="handle-delivery";
     // })
-    elementsArray = document.querySelectorAll(".table-row");
+    elementsArray = document.queryorAll(".table-row");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href='delivery-view-delivery?id='+elem.id;

@@ -11,6 +11,7 @@ class LabTest extends DbModel{
     public int $hospital_fee=0;
 
     public int $template_ID;
+    
    
 
     public function addTest(){
@@ -23,7 +24,7 @@ class LabTest extends DbModel{
             'name'=>[self::RULE_REQUIRED],
             'test_fee'=>[self::RULE_REQUIRED],
             'hospital_fee'=>[self::RULE_REQUIRED],
-            'template_ID'=>[self::RULE_REQUIRED],
+            'template_ID'=>[],
 
 
 
@@ -42,12 +43,12 @@ class LabTest extends DbModel{
         return 'name';
     }
     public function tableRecords(): array{
-        return ['lab_tests'=> ['name','fee','test_fee','hospital_fee','template_ID']];
+        return ['lab_tests'=> ['name','test_fee','hospital_fee','template_ID']];
     }
 
     public function attributes(): array
     {
-        return  ['name','fee','test_fee','hospital_fee','template_ID'];
+        return  ['name','test_fee','hospital_fee','template_ID'];
     }
 
     

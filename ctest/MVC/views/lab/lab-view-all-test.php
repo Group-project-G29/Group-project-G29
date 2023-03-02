@@ -24,7 +24,7 @@ $component = new Component();
         <h5><b>Name :</b><?= $test['name'] ?> </h5>
         <h5><b>Test Fee :</b><?= $test['test_fee'] ?> </h5>
         <h5><b>Hospital Fee :</b><?= $test['hospital_fee'] ?> </h5>
-        <h5><b>Template ID :</b><?= $test['template_ID'] ?> </h5>
+        
 
 
       </div>

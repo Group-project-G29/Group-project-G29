@@ -22,3 +22,12 @@
     padding-inline: 15px;
 }
 
+.popup-container{
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    top:0;
+    left: 0;
+    background-color: aqua;
+}
+

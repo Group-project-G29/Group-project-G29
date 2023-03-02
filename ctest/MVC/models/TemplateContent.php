@@ -7,7 +7,6 @@ use app\core\UserModel;
 
 class TemplateContent extends DbModel{
     public ?string $name=null;
-  
     public ?string $reference_ranges=null;
     public ?string $position=null;
     public string $type='';
@@ -17,14 +16,14 @@ class TemplateContent extends DbModel{
    
     public string $template_ID='';
     public function addContent(){
-        parent::save();  
+       return parent::save();  
     }
  
     public function rules(): array
     {
         return [
            
-            'name'=>[self::RULE_REQUIRED],
+            'name'=>[],
             'reference_ranges'=>[],
             'position'=>[],
             'type'=>[],
@@ -47,14 +46,31 @@ class TemplateContent extends DbModel{
         return 'content_ID';
     }
     public function tableRecords(): array{
-        return ['lab_report_template'=> ['content_ID', 'name', 'reference_ranges', 'position', 'type', 'metric','title', 'template_ID']];
+        return ['lab_report_content'=> [ 'name', 'reference_ranges', 'position', 'type', 'metric', 'template_ID']];
     }
 
     public function attributes(): array
     {
-        return  ['content_ID', 'name', 'reference_ranges', 'position', 'type', 'metric','title', 'template_ID'];
+        return  [ 'name', 'reference_ranges', 'position', 'type', 'metric', 'template_ID'];
     }
 
+    public function select_last_ID() {
+        return $this->customFetchAll(" SELECT * FROM lab_report_template ORDER BY template_ID DESC;");
+    }
+
+    public function add_text_type( $description, $template_ID ) {
+         return $this->customFetchAll("INSERT INTO lab_report_content (name, reference_ranges, position, type, metric, description, template_ID) VALUES ( NULL, NULL, NULL, 'text', NULL, '$description', '$template_ID');");
+    }
+
+    public function add_image_type( $position, $description, $template_ID ) {
+        return $this->customFetchAll("INSERT INTO lab_report_content (name, reference_ranges, position, type, metric, description, template_ID) VALUES ( NULL, NULL, '$position', 'image', NULL, '$description', '$template_ID');");
+
+    }
+
+    public function add_field_type ( $name, $reference_ranges, $metric, $template_ID  ) {
+        return $this->customFetchAll("INSERT INTO lab_report_content (name, reference_ranges, position, type, metric, description, template_ID) VALUES ( '$name', '$reference_ranges', NULL, 'field', '$metric', NULL, '$template_ID');");
+
+    }
     
 }   
 

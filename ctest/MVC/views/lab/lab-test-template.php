@@ -18,23 +18,24 @@ $form = Form::begin('', 'post'); ?>
         <h1 class="fs-200 fc-color--dark" style="padding-bottom: 0vh;">Add Report Template</h1>
     </div>
     <div class="semi-header-container">
-        <?php echo $form->field($templatemodel, 'title', 'Title*', 'field', 'text', 'title-1') ?>
-        <?php echo $form->field($templatemodel, 'subtitle', 'Sub Title', 'field', 'text', 'sub') ?>
-        <div class="button" style="margin-top: 2vh;">
+        <!-- <?php echo $form->field($templatemodel, 'title', 'Title*', 'field', 'text', 'title-1') ?>
+        <?php echo $form->field($templatemodel, 'subtitle', 'Sub Title', 'field', 'text', 'sub') ?>  -->
+        <!-- <div class="button" style="margin-top: 2vh;">
             <?= $component->button('btn', '', '+ Add', 'button--class-0','btn-1'); ?>
-        </div>
+        </div> -->
 
 
     </div>
-    <?php Form::end() ?>
-    <?php $form = Form::begin('', 'post'); ?>
+    <!-- <?php Form::end() ?> -->
+   
     <div class="semi-header-container">
 
         <div class="field-container">
             <section class="reg_body-spec" style="padding-bottom:50px">
-
+            <?php $form = Form::begin('', 'post'); ?>
 
                 <!-- <div class="reg-body-spec fields" style="padding-left:15vw"> -->
+
                 <table class="template">
                     <?php echo $form->select($contentmodel, 'type', 'Type', 'field', ['select','image', 'field', 'text'], 'picker'); ?>
                     <?php echo $form->field($contentmodel, 'name', 'Name', 'hide', 'text', 'name'); ?>
@@ -47,6 +48,7 @@ $form = Form::begin('', 'post'); ?>
                 <div class="button" style="margin-top: 2vh;">
                     <?= $component->button('btn', '', 'Add', 'button--class-0','btn-2'); ?>
                 </div>
+                
 
                 <!-- </div> -->
 
@@ -55,30 +57,32 @@ $form = Form::begin('', 'post'); ?>
         <?php Form::end() ?>
         </section>
 
-        <div class="output" id="output">
+        <div class="main-card ">
+  <?php foreach ($contents as $content) : ?>
 
-        </div>
+    <div class="card" >
+
+      <div class="card-header-1 " style="padding-top: 5vh;padding-bottom:7.9vh">
+        <h5><b>Name :</b><?= $content['metric'] ?> </h5>
+
+        <h5><b>Patient :</b><?= $content['reference_ranges'] ?> </h5>
+        <!-- <h5><b>Req date & Time :</b><?= $content['requested_date_time'] ?> </h5>
+
+        <h5><b>content :</b><?= $content['test_name'] ?> </h5> -->
+
+      </div>
+      <!-- <a href="lab-write-test-result.php"> -->
+     
+
+
+    </div>
+
+  <?php endforeach; ?>
+
+</div>
     </div>
 </div>
 
-
-
-<script>
-    elementsArray = document.querySelectorAll("#btn-1");
-    console.log(elementsArray);
-    elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function () {
-            location.href = 'lab-test-template'; //pass the variable value
-        });
-    });
-    elementsArray = document.querySelectorAll("#btn-2");
-    console.log(elementsArray);
-    elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href = 'lab-test-template'; //pass the variable value
-        });
-    });
-</script>
 
 
 <script>
@@ -128,15 +132,15 @@ $form = Form::begin('', 'post'); ?>
 </script>
 
 <script>
-    const txt1 = document.getElementById('template');
-    const btn1 = document.getElementById('button');
-    const out1 = document.getElementById('output');
+    // const txt1 = document.getElementById('template');
+    // const btn1 = document.getElementById('button');
+    // const out1 = document.getElementById('output');
 
-    function fun1() {
-        out1.innerHTML = txt1.value;
+    // function fun1() {
+    //     out1.innerHTML = txt1.value;
 
-    }
+    // }
 
-    btn1.addEventListener('click', fun1);
+    // btn1.addEventListener('click', fun1);
 </script>
 

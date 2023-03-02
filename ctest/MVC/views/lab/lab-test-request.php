@@ -18,8 +18,8 @@ $component = new Component();
       <div class="card-header-1 " style="padding-top: 5vh;padding-bottom:7.9vh">
         <h5><b>Name :</b><?= $test['doc_name'] ?> </h5>
 
-        <h5><b>patient :</b><?= $test['patient_name'] ?> </h5>
-        <h5><b>Req date :</b><?= $test['requested_date_time'] ?> </h5>
+        <h5><b>Patient :</b><?= $test['patient_name'] ?> </h5>
+        <h5><b>Req date & Time :</b><?= $test['requested_date_time'] ?> </h5>
 
         <h5><b>Test :</b><?= $test['test_name'] ?> </h5>
 

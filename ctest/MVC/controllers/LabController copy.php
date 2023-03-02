@@ -7,7 +7,6 @@ use app\core\Controller;
 use app\core\Request;
 use app\models\User;
 use app\core\DbModel;
-use app\core\form\Select;
 use app\core\Model;
 use app\core\Response;
 use app\models\Channeling;
@@ -50,6 +49,7 @@ class LabController extends Controller
 
             // update medicine
             $LabTestModel->loadData($request->getBody());
+            $LabTestModel->loadFiles($_FILES);
 
             if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'update') {
                 if ($LabTestModel->validate() && $LabTestModel->updateRecord(['name' => $parameters[1]['id']])) {
@@ -63,10 +63,10 @@ class LabController extends Controller
             //add test
             if ($LabTestModel->validate() && $LabTestModel->addTest()) {
                 echo 'add';
-                $this->setLayout("lab", ['select' => 'Tests']);
-                $labtest = $LabTestModel->customFetchAll("SELECT * FROM lab_report_template join lab_tests on lab_report_template.template_ID=lab_tests.template_ID");
                 Application::$app->session->setFlash('success', "Lab Test successfully added ");
                 Application::$app->response->redirect('/ctest/lab-view-all-test');
+                $this->setLayout("lab", ['select' => 'Tests']);
+                $labtest = $LabTestModel->customFetchAll("SELECT * FROM lab_report_template join lab_tests on lab_report_template.template_ID=lab_tests.template_ID");
                 return $this->render('lab/lab-view-all-test', [
                     'model' => $LabTestModel,
                     'labtest' => $labtest
@@ -77,15 +77,15 @@ class LabController extends Controller
 
         $this->setLayout("lab", ['select' => 'Tests']);
         $LabTestModel = new LabTest();
-        $TemplateModel = new Template();
+        $TemplateModel= new Template();
         $template = $LabTestModel->customFetchAll("SELECT * from lab_tests ");
-        $template_name_list = $TemplateModel->customFetchAll("SELECT title,template_ID from lab_report_template");
+        $template_name_list=$TemplateModel->customFetchAll("SELECT title from lab_report_template");
         // $result=mysqli_query($connection,$template_name_list)
         return $this->render('lab/lab-add-new-test', [
             'model' => $LabTestModel,
-            'tempmodel' => $TemplateModel,
+            'tempmodel'=>$TemplateModel,
             'template' => $template,
-            'template_name_list' => $template_name_list
+            'template_name_list'=>$template_name_list
             //03\7
             //template [0], [1]
 
@@ -104,11 +104,13 @@ class LabController extends Controller
 
 
 
+
+
     public function testRequest()
     {
         $this->setLayout("lab", ['select' => 'Requests']);
         $labTestModel = new LabTest();
-        $tests = $labTestModel->customFetchAll("SELECT patient.patient_ID,lab_request.name as test_name ,lab_request.requested_date_time , patient.name as patient_name,employee.name as doc_name from lab_request join employee on employee.nic=lab_request.doctor join patient on patient.patient_ID=lab_request.patient_ID");
+        $tests = $labTestModel->customFetchAll("SELECT lab_request.test_name as test_name ,lab_request.requested_date_time , patient.name as patient_name,employee.name as doc_name from lab_request join employee on employee.nic=lab_request.doctor join patient on patient.patient_ID=lab_request.patient_ID");
         return $this->render('lab/lab-test-request', [
             'tests' => $tests
         ]);
@@ -152,64 +154,20 @@ class LabController extends Controller
         $contentModel = new TemplateContent();
         $TemplateModel = new Template();
         $template = '';
-        $contents = '';
+        $content='';        
 
         $this->setLayout("lab", ['select' => 'Tests']);
-
-
         if ($request->isPost()) {
+
+            // var_dump($parameters);
+            // var_dump($_POST);
+            // exit;
             $TemplateModel->loadData($request->getBody());
 
             $contentModel->loadData($request->getBody());
             $contentModel->loadFiles($_FILES);
-// ------------------------------check whether if it is templte-------------//
-            // if (isset($parameters[0]['spec']) && $parameters[0]['spec'] == 'template') {
 
-            //     if ($TemplateModel->validate()) {
-
-            //         $template = $TemplateModel->addTemplate()[0]['last_insert_id()'];
-            //         Application::$app->session->set('template', $template);
-            //         Application::$app->session->setFlash('success', "new template created ");
-            //     }
-            // }
-            // ------------------------------check whether if it is content-------------//
-
-            // if (isset($parameters[1]['spec']) && $parameters[1]['spec'] == 'content') {
-
-                $newly_created_temp_ID = $contentModel->select_last_ID();
-
-
-                if ($_POST["type"] === 'text') {
-                    $content = $contentModel->add_text_type($_POST["description"], $newly_created_temp_ID[0]['template_ID']);  //pass template id from above created new template
-                } else if ($_POST["type"] === 'field') {
-                    $content = $contentModel->add_field_type($_POST["name"], $_POST["reference_ranges"], $_POST["metric"], $newly_created_temp_ID[0]['template_ID']);  //pass template id from above created new template
-                } else if ($_POST["type"] === 'image') {
-                    $content = $contentModel->add_image_type($_POST["position"], $_POST["description"], $newly_created_temp_ID[0]['template_ID']);  //pass template id from above created new template
-                }
-                Application::$app->session->setFlash('success', "new template created ");
-            }
-            $contents=$contentModel->customFetchAll("SELECT * from lab_report_content");
-        
-        return $this->render('lab/lab-test-template', [
-            'templatemodel' => $TemplateModel,
-            'template' => $template,
-            'contents' => $contents,
-            'contentmodel' => $contentModel
-
-        ]);
-    }
-
-    public function TemplateMain(Request $request, Response $response)
-    {
-        $parameters = $request->getParameters();
-      
-        $TemplateModel = new Template();
-        $template = '';
-        $this->setLayout("lab", ['select' => 'Tests']);
-        if ($request->isPost()) {
-            $TemplateModel->loadData($request->getBody());
-// ------------------------------check whether if it is templte-------------//
-            // if (isset($parameters[0]['spec']) && $parameters[0]['spec'] == 'template') {
+            if (isset($parameters[0]['spec']) && $parameters[0]['spec'] == 'template') {
 
                 if ($TemplateModel->validate()) {
 
@@ -217,13 +175,48 @@ class LabController extends Controller
                     Application::$app->session->set('template', $template);
                     Application::$app->session->setFlash('success', "new template created ");
                 }
-            // }
+            }
+            if (isset($parameters[1]['spec']) && $parameters[1]['spec'] == 'content') {
+           
+                $newly_created_temp_ID = $contentModel->select_last_ID();
+
+
+                if ( $_POST["type"] === 'text' ) {
+                    $content = $contentModel->add_text_type( $_POST["description"], $newly_created_temp_ID[0]['template_ID'] );  //pass template id from above created new template
+                    echo "hi";
+
+                } 
+                // else if ( $_POST["type"] === 'field' ) {
+                    $content = $contentModel->add_field_type( $_POST["name"],$_POST["reference_ranges"], $_POST["metric"],$newly_created_temp_ID[0]['template_ID'] );  //pass template id from above created new template
+
+                // } else if ( $_POST["type"] === 'image' ) {
+                    $content = $contentModel->add_image_type( $_POST["position"],$_POST["description"], $newly_created_temp_ID[0]['template_ID'] );  //pass template id from above created new template
+
+                // }
+            
+                // if ($contentModel->validate()) {
+                    echo '7';   
+                    // $content = $contentModel->addContent()[0]['last_insert_id()'];  //run the insert query
+                    echo '4';
+                    Application::$app->session->set('content', $content);
+                    echo '1';
+                    Application::$app->session->setFlash('success', "new template created ");
+                // }
+            }
+            
+        }
+        return $this->render('lab/lab-test-template', [
+            'templatemodel' => $TemplateModel,
+            'template' => $template,
+            'content' =>$content,
+            'contentmodel'=>$contentModel
+
+        ]);
+       
     }
-    return $this->render('lab/lab-test-template-main', [
-        'templatemodel' => $TemplateModel,
-        'template' => $template
 
-
-    ]);
+    public function handleTemplate(Request $request, Response $response)
+    {
+        $TemplateModel = new TemplateContent();
     }
 }
