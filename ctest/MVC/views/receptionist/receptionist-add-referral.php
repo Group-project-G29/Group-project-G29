@@ -19,7 +19,7 @@ $component=new Component();
     <?php $form=Form::begin("receptionist-patient-appointment?mod=referral&id=".$appointment->appointment_ID,'post');?>
     <?= $form->field($model,'name','Refarrel','field-input--class1 flex','file');?>
     <?=$component->button("Done","submit","Done","button--class-0",$appointment->appointment_ID);?>
-    <?php $form=Form::end();?>
+    <!-- <?php $form=Form::end();?> -->
 </div>        
 </div>
 

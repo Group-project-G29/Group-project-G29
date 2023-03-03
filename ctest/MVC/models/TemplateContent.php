@@ -12,7 +12,7 @@ class TemplateContent extends DbModel{
     public string $type='';
     public ?string $metric=null;
   
-    public ?string $description=null;
+
    
     public string $template_ID='';
     public function addContent(){
@@ -58,17 +58,17 @@ class TemplateContent extends DbModel{
         return $this->customFetchAll(" SELECT * FROM lab_report_template ORDER BY template_ID DESC;");
     }
 
-    public function add_text_type( $description, $template_ID ) {
-         return $this->customFetchAll("INSERT INTO lab_report_content (name, reference_ranges, position, type, metric, description, template_ID) VALUES ( NULL, NULL, NULL, 'text', NULL, '$description', '$template_ID');");
+    public function add_text_type( $name, $template_ID ) {
+         return $this->customFetchAll("INSERT INTO lab_report_content (name, reference_ranges, position, type, metric, template_ID) VALUES ( '$name', NULL, NULL, 'text', NULL, '$template_ID');");
     }
 
-    public function add_image_type( $position, $description, $template_ID ) {
-        return $this->customFetchAll("INSERT INTO lab_report_content (name, reference_ranges, position, type, metric, description, template_ID) VALUES ( NULL, NULL, '$position', 'image', NULL, '$description', '$template_ID');");
+    public function add_image_type(  $name,$position, $template_ID ) {
+        return $this->customFetchAll("INSERT INTO lab_report_content (name, reference_ranges, position, type, metric,  template_ID) VALUES ( '$name', NULL, '$position', 'image', NULL, '$template_ID');");
 
     }
 
     public function add_field_type ( $name, $reference_ranges, $metric, $template_ID  ) {
-        return $this->customFetchAll("INSERT INTO lab_report_content (name, reference_ranges, position, type, metric, description, template_ID) VALUES ( '$name', '$reference_ranges', NULL, 'field', '$metric', NULL, '$template_ID');");
+        return $this->customFetchAll("INSERT INTO lab_report_content (name, reference_ranges, position, type, metric, template_ID) VALUES ( '$name', '$reference_ranges', NULL, 'field', '$metric', '$template_ID');");
 
     }
     

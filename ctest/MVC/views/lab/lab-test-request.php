@@ -26,7 +26,7 @@ $component = new Component();
       </div>
       <!-- <a href="lab-write-test-result.php"> -->
       <div >
-      <?php echo $component->button('edit-details', '', 'Write Test Result', 'button--class-0  width-10', 'edit-details'); ?>
+      <?php echo $component->button('edit-details', '', 'Write Test Result', 'button--class-0  width-10', $test['patient_ID']); ?>
       </div></a>
       <div >
       <?php echo $component->button('edit-details', '','Upload', 'button--class-00  width-10', 'edit-details'); ?>
