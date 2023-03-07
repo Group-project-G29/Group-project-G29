@@ -41,9 +41,10 @@ class DeliveryController extends Controller{
         ]);
     }
     
+    //pass  deliveries to another delivery rider
     public function passDelivery(Request $request){
         $parameters=$request->getParameters();
-        var_dump($parameters);
+        // var_dump($parameters);
 
         $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
         
@@ -67,11 +68,17 @@ class DeliveryController extends Controller{
 
         } else {
             $rider = $riderMOdel->select_queue_rider();
-            $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider_ID"]);
-            //dequeue a delivery rider - check something went wrong-> deleted few records at once
-            $deleted_rider = $riderMOdel->dequeue_rider($rider[0]["delivery_rider_ID"]);
+
+            if (!$rider){
+                $updated_rider_ID=$deliveryModel->set_delivery_without_rider($parameters[0]['id']);
+            } else {
+                $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider_ID"]);
+                //dequeue a delivery rider - check something went wrong-> deleted few records at once
+                $deleted_rider = $riderMOdel->dequeue_rider($rider[0]["delivery_rider_ID"]);
+            }
         }
 
+        $user=$userModel->make_rider_online(Application::$app->session->get('userObject')->emp_ID);
         $deliveryModel=new Delivery();
         $delivery=$deliveryModel->get_unfinished_deliveries(Application::$app->session->get('userObject')->emp_ID);
         return $this->render('delivery/delivery-my-deliveries' ,[
@@ -122,6 +129,7 @@ class DeliveryController extends Controller{
                     }
                     
                 } else {
+                    $rider=$riderMOdel->make_rider_online(Application::$app->session->get('userObject')->emp_ID);
                     $rider = $riderMOdel->enqueue_rider(Application::$app->session->get('userObject')->emp_ID);
                 }
             }
@@ -136,12 +144,14 @@ class DeliveryController extends Controller{
             //error msg
             //this part has to be implemented
             $delivery=$deliveryModel->view_delivery_details($parameters[0]['id']); 
+            $this->setLayout("delivery-rider",['select'=>'Completed Deliveries']);
             return $this->render('delivery/delivery-view-delivery' ,[
                 'delivery'=>$delivery[0],
                 'model'=>$deliveryModel
             ]);
         }
     }
+
 
 
     //View My Details
@@ -152,6 +162,19 @@ class DeliveryController extends Controller{
         return $this->render('delivery/delivery-view-personal-details' ,[
             'user' => $user[0]
         ]);
+    }
+
+    public function makeOnline(){
+        $riderMOdel = new Employee;
+        $rider=$riderMOdel->make_rider_online(Application::$app->session->get('userObject')->emp_ID);
+        return json_encode(['status'=>true,'message'=>'user online']);
+    }
+
+
+    public function makeOffline(){
+        $riderMOdel = new Employee;
+        $rider=$riderMOdel->make_rider_offline(Application::$app->session->get('userObject')->emp_ID);
+        return json_encode(['status'=>true,'message'=>'User Offlined']);
     }
 
 }

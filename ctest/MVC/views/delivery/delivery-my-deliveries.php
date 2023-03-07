@@ -41,7 +41,11 @@
         </td>  
         <td><?=$delivery['time_of_creation']?></td>
         <td><a class='more-details' id=<?=$delivery['delivery_ID']?>>More Details</a></td>
-        <td><a class='pass-delivery' id=<?=$delivery['delivery_ID']?>>Pass Delivery</a></td>
+        <td>
+            <?php if(sizeof($deliveries)>1): ?>
+                <a class='pass-delivery' id=<?=$delivery['delivery_ID']?>>Pass Delivery</a>
+            <?php endif; ?>
+        </td>
     </tr>
     <?php endforeach; ?>
     </table>

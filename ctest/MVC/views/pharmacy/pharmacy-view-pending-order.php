@@ -2,10 +2,8 @@
     use app\core\component\Component;
     $component=new Component();
     $total = 0;
-    // var_dump($orders);
-    //     exit;
-
 ?>
+
 <div class="detail">
     <h3>Patient Name : <?=$orders[0]['p_name']?></h3>
     <h3>Contact Number : <?=$orders[0]['contact']?></h3>

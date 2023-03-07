@@ -122,7 +122,19 @@ class Employee extends DbModel{
         return $this->customFetchAll("UPDATE delivery_rider SET availability = 'NA' WHERE emp_ID = $delivery_rider_ID;");
     }
 
-    //update personal info
+    public function make_rider_online( $delivery_rider_ID ) {
+        return $this->customFetchAll("UPDATE delivery_rider SET availability = 'AV' WHERE emp_ID = $delivery_rider_ID;");
+    }
+
+    //update personal info - not working
+    public function change_details ( $user_ID, $new_name, $new_contact, $new_address ) {
+        return $this->customFetchAll("UPDATE employee SET name = '$new_name', contact = '$new_contact', address = '$new_address' WHERE emp_ID = $user_ID");
+    }
+
+    public function get_rider_availability( $delivery_rider ) {
+        return $this->customFetchAll("SELECT availability FROM delivery_rider WHERE emp_ID = $delivery_rider");
+    }
+
 }   
 
 

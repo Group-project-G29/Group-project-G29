@@ -380,24 +380,30 @@ class PharmacyController extends Controller{
         }
 
         if($request->isPost()){
-            var_dump($_POST);
-            exit;
             // update personal details
             $employeeModel->loadData($request->getBody());
             $employeeModel->loadFiles($_FILES);
             // var_dump($employeeModel);
             // exit;
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
+                var_dump(Application::$app->session->get('userObject')->emp_ID);
+                var_dump($_POST);
+                // exit;
+
+                
+                $employee = $employeeModel->change_details( $_POST['name'], $_POST['contact'], $_POST['address'],  Application::$app->session->get('user') );
                 // var_dump($parameters);
                 // exit;
-                if($employeeModel->updateRecord(['emp_ID'=>$parameters[1]['id']])){
-                    // echo 'def';
-                    // exit;
-                    $response->redirect('/ctest/pharmacy-view-personal-details'); 
-                    Application::$app->session->setFlash('success',"Account successfully updated ");
-                    Application::$app->response->redirect('/ctest/pharmacy-view-personal-details');
-                    exit; 
-                 };
+                // var_dump($_POST);
+                // exit;
+                // if($employeeModel->updateRecord(['emp_ID'=>$parameters[1]['id']])){
+                //     // echo 'def';
+                //     // exit;
+                //     $response->redirect('/ctest/pharmacy-view-personal-details'); 
+                //     Application::$app->session->setFlash('success',"Account successfully updated ");
+                //     Application::$app->response->redirect('/ctest/pharmacy-view-personal-details');
+                //     exit; 
+                //  };
             } 
             
             // if($employeeModel->validate() && $employeeModel->register()){

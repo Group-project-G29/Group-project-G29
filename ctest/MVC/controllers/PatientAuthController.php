@@ -490,7 +490,11 @@ class PatientAuthController extends Controller{
     }
    
 
+    public function contact_us() {
+        $this->setLayout('visitor');
 
+        return $this->render("patient/contact");
+    }
 
    
 

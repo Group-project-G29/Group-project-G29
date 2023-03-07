@@ -25,6 +25,9 @@ $app =new Application(dirname(__DIR__));
 // Routers
 //patient
 
+$app->router->get('/ctest/contact-us',[PatientAuthController::class,'contact_us']);
+
+
 
 $app->router->get('/ctest/patient-registration',[PatientAuthController::class,'register']);
 $app->router->post('/ctest/patient-registration',[PatientAuthController::class,'register']);
@@ -127,6 +130,11 @@ $app->router->get('/ctest/delivery-view-delivery',[DeliveryController::class,'vi
 $app->router->get('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
 $app->router->post('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
 $app->router->get('/ctest/delivery-pass-delivery',[DeliveryController::class,'passDelivery']);
+
+// active status
+$app->router->get('/ctest/delivery-online',[DeliveryController::class,'makeOnline']);
+$app->router->get('/ctest/delivery-offline',[DeliveryController::class,'makeOffline']);
+
 
 
 
