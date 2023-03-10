@@ -101,7 +101,7 @@ class DeliveryController extends Controller{
     //complete the delivery using the PIN
     public function completeDelivery(Request $request, Response $response){
         $parameters=$request->getParameters();
-        $this->setLayout("delivery-rider",['select'=>'Completed Deliveries']);
+        $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
         
         $deliveryModel=new Delivery();
         $riderMOdel = new Employee;
@@ -136,8 +136,20 @@ class DeliveryController extends Controller{
 
             if ( $confirming_delivery[0]['PIN'] === $_POST['confirmation_PIN'] ) {
                 $update_status = $deliveryModel->update_completed_date_time($parameters[0]['id']);
+                
+                // ==== pop up implement ===============>>>
+                if ( $confirming_delivery[0]['payment_status'] == 'pending'){
+                    // echo 'payment done now';
+                    //pop up msg is good
+                    // exit;
+                } else {
+                    // echo 'payment done earlier';
+                    //pop up msg is good
+                    // exit;
+                }
+                // ====================<<<<<<
+                
                 $delivery=$deliveryModel->get_unfinished_deliveries(Application::$app->session->get('userObject')->emp_ID);
-
                 //enque the rider to the queue if there is no deliveries to him
                 if ( !$delivery ) {
                     $null_rider_deliveries = $deliveryModel->get_null_rider_deliveries();
@@ -152,24 +164,12 @@ class DeliveryController extends Controller{
                         }
                         
                     } else {
-                        $rider=$riderMOdel->make_rider_online(Application::$app->session->get('userObject')->emp_ID);
                         $rider = $riderMOdel->enqueue_rider(Application::$app->session->get('userObject')->emp_ID);
                     }
+                    $rider=$riderMOdel->make_rider_online(Application::$app->session->get('userObject')->emp_ID);
                 }
-                
-// ==== pop up implement ===============>>>
-                if ( $confirming_delivery[0]['payment_status'] == 'pending'){
-                    // echo 'payment done now';
-                    //pop up msg is good
-                    // exit;
-                } else {
-                    // echo 'payment done earlier';
-                    //pop up msg is good
-                    // exit;
-                }
-// ====================<<<<<<
 
-                $delivery=$deliveryModel->get_finished_deliveries(Application::$app->session->get('userObject')->emp_ID);
+                $delivery=$deliveryModel->get_unfinished_deliveries(Application::$app->session->get('userObject')->emp_ID);
                 return $this->render('delivery/delivery-my-deliveries' ,[
                     'deliveries'=>$delivery,
                     'model'=>$deliveryModel
@@ -201,6 +201,7 @@ class DeliveryController extends Controller{
         ]);
     }
 
+    //Online Offline Handling
     public function makeOnline(){
         $riderMOdel = new Employee;
         $rider=$riderMOdel->make_rider_online(Application::$app->session->get('userObject')->emp_ID);
