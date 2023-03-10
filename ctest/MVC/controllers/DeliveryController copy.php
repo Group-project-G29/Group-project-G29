@@ -122,7 +122,12 @@ class DeliveryController extends Controller{
                 'err'=>'pending_payment'
             ]);
 
-        } else {
+        } else if ( $confirming_delivery[0]['payment_status'] == 'pending' && $_POST['payment_status'] == 'payment_done_now' ){
+            // echo 'payment done now';
+            //pop up msg is good
+            // exit;
+        
+
             // if pin is empty
             if(empty($_POST["confirmation_PIN"])){
                 $delivery=$deliveryModel->view_delivery_details($parameters[0]['id']); 
@@ -156,18 +161,6 @@ class DeliveryController extends Controller{
                         $rider = $riderMOdel->enqueue_rider(Application::$app->session->get('userObject')->emp_ID);
                     }
                 }
-                
-// ==== pop up implement ===============>>>
-                if ( $confirming_delivery[0]['payment_status'] == 'pending'){
-                    // echo 'payment done now';
-                    //pop up msg is good
-                    // exit;
-                } else {
-                    // echo 'payment done earlier';
-                    //pop up msg is good
-                    // exit;
-                }
-// ====================<<<<<<
 
                 $delivery=$deliveryModel->get_finished_deliveries(Application::$app->session->get('userObject')->emp_ID);
                 return $this->render('delivery/delivery-my-deliveries' ,[

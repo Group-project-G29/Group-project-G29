@@ -25,7 +25,8 @@ use app\core\DbModel;
                 'address'=>[self::RULE_REQUIRED],
                 'postal_code'=>[self::RULE_REQUIRED],
                 'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
-                'city'=>[self::RULE_REQUIRED]
+                'city'=>[self::RULE_REQUIRED],
+                'confirmation_PIN'=>[self::RULE_PIN_VALIDATION]
             ]; 
         }
         public function fileDestination(): array
@@ -81,7 +82,7 @@ use app\core\DbModel;
         }
 
         public function get_processing_delivery( $delivery_ID ) {
-            return $this->customFetchAll("SELECT * FROM delivery WHERE delivery_ID = $delivery_ID");
+            return $this->customFetchAll("SELECT * FROM delivery INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE delivery.delivery_ID = $delivery_ID");
         }
 
         public function update_completed_date_time( $delivery_ID ) {

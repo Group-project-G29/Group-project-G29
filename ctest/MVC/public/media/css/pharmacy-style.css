@@ -32,6 +32,7 @@
 .form-body button{
     width: 37.5vw;
 }
+
 .form-body table{
     border-collapse: separate;
     border-style: hidden;
@@ -39,9 +40,7 @@
 }
 
 .row-img-col {
-    
     width: 10v;
-
 }
 
 .row-img {
@@ -64,6 +63,9 @@
     text-align: center;
 }
 
+.new-order-add-item {
+    background-color: aqua;
+}
 
 /* ===============My detail==================== */
 

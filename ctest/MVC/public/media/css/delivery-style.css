@@ -5,7 +5,7 @@
 }
 
 .warning-comment {
-    color: red;
+    /* color: red; */
     font-size:x-large;
 }
 
@@ -55,4 +55,9 @@ input:checked + .slider {
 
 input:checked + .slider:before{
     transform: translateX(25px);
+}
+
+.err-msg{
+    color: red;
+    margin-top: 0;
 }

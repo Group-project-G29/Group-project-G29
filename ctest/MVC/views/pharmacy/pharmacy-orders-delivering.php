@@ -21,7 +21,7 @@
         <?php echo $component->searchbar($model,"name","search-bar--class1","Search by order ID, patient 1D","searh");?>
     </div>
     <?php 
-    // echo $component->button('new-order','','Add New Order','button--class-0  width-10','new-order');
+    echo $component->button('new-order','','Add New Order','button--class-0  width-10','new-order');
     ?>
 </div>
    
