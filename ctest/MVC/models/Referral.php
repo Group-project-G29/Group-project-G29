@@ -116,23 +116,21 @@ class Referral extends DbModel{
             <html>
                 <head>
                 <style>
-                    .show{
-    
-                      background-color:red;
-                      
-                        
+                                        
 
-                    }
                 </style>
                 </head>
                 <body>
+                <section>
+                    <h3><center>Medical Referral Letter</center></h3>
+                </section>
                     <section class='show'>
                         <div>Written to Doctor :".$stakeholdermain['doctor_name']."</div>
                         <div>Written to speciality:".$referral['speciality']."</div><br>
                         <div>Patient Name :".$stakeholdermain['patient_name']."</div>
                         <div>Patient Gender :".$stakeholdermain['gender']."</div><br>
                         <div>Issued Doctor :".$stakeholdersub['issued_doctor_name']."</div>"."
-                        <div>Issued date :".$referral['date']."</div>
+                        <div>Issued date :".$referral['date']."</div><br><br><br>
                         
                     </section>
                     <section>

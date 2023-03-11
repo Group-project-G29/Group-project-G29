@@ -70,7 +70,7 @@ use app\core\DbModel;
             return $this->customFetchAll("select count(*) from medicine_in_cart where cart_ID=".$cart)[0]['count(*)']+$this->customFetchAll("select count(*) from prescription where cart_ID=".$cart)[0]['count(*)'];
         }
         public function createCart($patientID){
-            return $this->customFetchAll("insert into cart (patient_ID) values('$patientID')");
+             $this->customFetchAll("insert into cart (patient_ID) values('$patientID')");
             return $this->saveByName(['patient_ID'=>'134'],'patient');
         }
         public function getCartItem($cartID){

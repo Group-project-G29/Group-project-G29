@@ -57,28 +57,64 @@ class Time{
         return $time;
     }
     // add two time in the format 10:45 +02:03   => 12:48
-    public function addTime($time_1,$time_2):array{
-        $time_1=explode(":",$time_1);
-        $time_2=explode(":",$time_2);
-        $day=false;
-        //fix hours
-        $hours_1=$this->convertToInt($time_1[0]);
-        $minutes_1=$this->convertToInt($time_1[1]);
-        $hours_2=$this->convertToInt($time_2[0]);
-        $minutes_2=$this->convertToInt($time_2[1]);
-        $minutes=0; 
-        $minutes+=($minutes_1+$minutes_2);
-        $carry=intdiv($minutes,60);
-        $minutes%=60;
-        $hours=$carry;
-        $hours+=($hours_1+$hours_2);
-        $tothours=$hours;
-        $carry=intdiv($hours,24);
-        $hours%=24;
-        if($tothours>24){
-            $day=true;
-        }
-        return ["hours"=>$hours,"minutes"=>$minutes,"day"=>$day];
+    public function addTime($time_1,$time_2){
+        // $time_1=explode(":",$time_1);
+        // $time_2=explode(":",$time_2);
+        // $day=false;
+        // //fix hours
+        // $hours_1=$this->convertToInt($time_1[0]);
+        // $minutes_1=$this->convertToInt($time_1[1]);
+        // $hours_2=$this->convertToInt($time_2[0]);
+        // $minutes_2=$this->convertToInt($time_2[1]);
+        // $minutes=0; 
+        // $minutes+=($minutes_1+$minutes_2);
+        // $carry=intdiv($minutes,60);
+        // $minutes%=60;
+        // $hours=$carry;
+        // $hours+=($hours_1+$hours_2);
+        // $tothours=$hours;
+        // $carry=intdiv($hours,24);
+        // $hours%=24;
+        // if($tothours>24){
+        //     $day=true;
+        // }
+        // return ["hours"=>$hours,"minutes"=>$minutes,"day"=>$day];
+        $date = $time_1;
+        $newtime = date('H:i:s', strtotime($date. ' +'.$time_2.' minutes'));
+        return $newtime;
+
+  
+
+
+    }
+    public function subTime($time_1,$time_2){
+        // $time_1=explode(":",$time_1);
+        // $time_2=explode(":",$time_2);
+        // $day=false;
+        // //fix hours
+        // $hours_1=$this->convertToInt($time_1[0]);
+        // $minutes_1=$this->convertToInt($time_1[1]);
+        // $hours_2=$this->convertToInt($time_2[0]);
+        // $minutes_2=$this->convertToInt($time_2[1]);
+        // $minutes=0; 
+        // $minutes+=($minutes_1+$minutes_2);
+        // $carry=intdiv($minutes,60);
+        // $minutes%=60;
+        // $hours=$carry;
+        // $hours+=($hours_1+$hours_2);
+        // $tothours=$hours;
+        // $carry=intdiv($hours,24);
+        // $hours%=24;
+        // if($tothours>24){
+        //     $day=true;
+        // }
+        // return ["hours"=>$hours,"minutes"=>$minutes,"day"=>$day];
+        $date = $time_1;
+        $newtime = date('H:i:s', strtotime($date. ' -'.$time_2.' minutes'));
+        return $newtime;
+
+  
+
 
     }
 

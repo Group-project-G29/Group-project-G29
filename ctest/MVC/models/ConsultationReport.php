@@ -88,7 +88,7 @@ class ConsultationReport extends DbModel{
                         <span>
                         
                             <h2 style='color:#38B6FF; font-size:32px;'>Anspaugh<font style='color:#1746A2;  font-size:32px;'>Care</font><br>
-                            <font style='color:#1746A2;  font-size:22px;' > Medical Laboratory</font></h2>
+                            <font style='color:#1746A2;  font-size:22px;' > Channeling Center</font></h2>
                         
 
                         
@@ -98,14 +98,14 @@ class ConsultationReport extends DbModel{
                     
                     <section  style='border:1px solid #38B6FF; padding:10px; border-radius:5px; '>
                         <div>Patient examination :".$reports['name']."</div>
-                        <div>Patient Gender :".$reports['gender']."</div><br>
+                        <div>Patient Gender :".$reports['gender']."</div>
                         <div>Patient Age :".$reports['age']."</div><br>
-
+                        
                         <div>Issued Doctor :".$report_doctor['name']."</div>"."
                         <div>Issued date :".$reports['uploaded_date']."</div>
                         
                     </section>
-                    <section>
+                    <section><br><br>
                     ".$addstr."
                     </section>
                 </body>

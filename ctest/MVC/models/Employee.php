@@ -94,10 +94,27 @@ class Employee extends DbModel{
          $Doctors=$this->customFetchAll("Select  name,nic from employee where role='doctor' and nic<>'".Application::$app->session->get('user')."'");
          $Doctor=['select'=>''];
          foreach($Doctors as $row){
-            $Doctor[$row['name']]=$row['nic'];
+            if($row['nic']!=Application::$app->session->get('userObject')->nic){
+                $Doctor[$row['name']]=$row['nic'];
+            }
         }
         return $Doctor;
         
+    }
+    public function checkNurseOverlap($nurse,$day,$channeling_start_time){
+        //get all the detail of nurse and channeling on the day
+        $nurse_channeling=$this->customFetchAll("SELECT * FROM nurse_channeling_allocataion as n left join channeling as c on n.channeling_ID=c.channeling_ID where n.emp_ID=$nurse and c.day='$day'");
+        //if nothing on that day no overlap
+        if(!$nurse_channeling){
+            return false;
+        }
+
+        //calculate whether $forall channeling times got  database check whether it is inside $time-$channeling_start_time+$time
+
+        
+    }
+    public function checkRoomOverlap($room,$day,$channeling_start_time){
+        //return a array with ['isoverlap'=>true,'allocated_doctor=>doctor]
     }
 
 

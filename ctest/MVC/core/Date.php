@@ -16,7 +16,9 @@ class Date{
         return $this->date;
     }
     
-
+    public function addDate($date1,$date2){
+        
+    }
     public function get($date,$type){
         $list=explode("-",$date);
   

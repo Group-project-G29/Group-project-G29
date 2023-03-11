@@ -48,30 +48,30 @@ class Calendar{
     } 
     
     public function addDaysToDate($date,$days){
-      //strip the date
-      $dateModel=new Date();
-      $day=$dateModel->get($date,'day');
-      $month=$dateModel->get($date,'month');
-      $year=$dateModel->get($date,'year');
-      //add days to date part
-      $day+=$days;
-      //check with this month total day 
-      $monthdays=($this->months)[$month];
-      //if clause return date in strin formate
-      if($day>$monthdays){
-        $day-=$monthdays;
-        $month+=1;
-      }
-      if($month>=13){
-        $month-=12;
-        $year+=1;
-      }
-      return  $dateModel->arrayToDate([$day,$month,$year]);
-
-
-
-
+      // //strip the date
+      // $dateModel=new Date();
+      // $day=$dateModel->get($date,'day');
+      // $month=$dateModel->get($date,'month');
+      // $year=$dateModel->get($date,'year');
+      // //add days to date part
+      // $day+=$days;
+      // //check with this month total day 
+      // $monthdays=($this->months)[$month];
+      // //if clause return date in strin formate
+      // if($day>$monthdays){
+      //   $day-=$monthdays;
+      //   $month+=1;
+      // }
+      // if($month>=13){
+      //   $month-=12;
+      //   $year+=1;
+      // }
+     $date=date_create($date);
+     date_add($date,date_interval_create_from_date_string($days." days"));
+     return date_format($date,"Y-m-d"); 
   }
+
+  
   //get number of days as output, parameters=>[1,'week'],[2,'month',1]
   public function getDayCount($array){
     $mul=1;
@@ -88,15 +88,60 @@ class Calendar{
     return $mul*$array[0];
 
   }
-  public function generateDays($startdate,$startday,$finday,$duration){
-      //get the start day
 
-      //get the last day
-
-      //get all the days:(date<last date)
-      
+  public function subDaysByDate($date,$days){
+    $date=date_create($date);
+    date_sub($date,date_interval_create_from_date_string($date." days"));
+    return date_format($date,"Y-m-d");
 
   }
+  public function monthDays($date,$number_of_months){
+      $dateModel=new Date(); 
+      $montharray=['1'=>31,'2'=>28,'2L'=>29,'3'=>31,'4'=>30,'5'=>'31','6'=>30,'7'=>31,'8'=>30,'9'=>31,'10'=>30,'11'=>31,'12'=>30];
+      $count=0;
+      $day=$dateModel->get($date,'day');
+      $month=$dateModel->get($date,'month');
+      $year=$dateModel->get($date,'year');
+      $month_days=0;
+      //add number of days in month using the array
+      while($count<$number_of_months){
+        $month_days+=$month_days["'".$month+$count."'"];
+        $count++;
+      }
+      return $month_days;
+  }
+
+  // public function generateDays($startdate,$startday,$finday,$duration,$hopduration){
+  //     $dateModel=new Date(); 
+  //     $duration_count=explode(' ',$duration)[0];
+  //     $duration_type=explode(' ',$duration)[1];
+  //     //get the start day
+  //     $result_date=$this->findDateByDay($startdate,date('l', strtotime($startdate)),$finday);
+  //     if($duration_type=='weeks'){
+  //       $duration_days=7*(0+$duration_count);
+  //     }
+  //     else if($duration_type=='months'){
+  //       $duration_days=$this->monthDays($startdate,$duration_count);
+  //     }
+  //     else if($duration_type=='year'){
+  //       $duration_days=365*$duration_count;
+  //     }
+  //     else{
+  //       $duration_days=$duration_count;
+  //     }
+  //     //get the last day
+  //     $last_date=$this->addDaysToDate($result_date,$duration_days);
+  //     $newdate=$result_date;
+  //     $dayarrays=[];
+  //     //get all the days:(date<last date)
+  //     while($dateModel->greaterthan($newdate,$last_date)){
+  //       $newdate=$dateModel->addDate($newdate,);
+  //       array_push($dayarrays,$dateModel->addDate());
+
+  //     }
+      
+
+  // }
 
     
 

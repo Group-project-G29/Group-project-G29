@@ -87,6 +87,11 @@ class Channeling extends DbModel{
        return $speciality;
        
    }
+   public function getDocChannelings(){
+        $doctor=Application::$app->session->get('userObject')->nic;
+        return $this->fetchAssocAll(['doctor'=>$doctor]);
+
+   }
     
 }   
 

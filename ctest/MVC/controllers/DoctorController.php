@@ -5,40 +5,54 @@ use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
 use app\models\ConsultationReport;
-use app\models\User;
-use app\core\DbModel;
 use app\core\Response;
 use app\models\Channeling;
 
 use app\models\Employee;
-use app\models\EmployeeLoginForm;
 use app\models\MedicalHistory;
 use app\models\OpenedChanneling;
 use app\models\Referral;
-use app\core\FileModel;
 use app\core\ReportModel;
 use app\models\Appointment;
-use app\models\LabTest;
 use app\models\LabTestRequest;
 use app\models\MedicalReport;
 use app\models\Patient;
+use app\models\PreChannelingTest;
 use app\models\SOAPReport;
-use ConsultationReport as GlobalConsultationReport;
 
 class DoctorController extends Controller{
 
     public function todayChannelings(Request $request,Response $response){
+        Application::$app->session->set('popshow',''); 
         $parameter=$request->getParameters();
         $Channeling=new Channeling();
+        $testModel= new PreChannelingTest();
         $OpenedChanneling=new OpenedChanneling();
         $Channelings=$OpenedChanneling->customFetchAll("select * from opened_channeling where channeling_ID in (select channeling_ID from channeling where doctor=".Application::$app->session->get('userObject')->nic.")");
+        $ChannelingsM=$Channeling->getDocChannelings();
+        $this->setLayout('doctor',['select'=>'All Channelings']);
+        if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='pre-channeling-test'){
+            if(isset($parameter[1]['cmd']) && $parameter[1]['cmd']=='add'){
+                $testID=$testModel->getIDbyName($parameter[2]['id']);
+                if($testID && !$testModel->isExist($parameter[3]['channeling'],$testID)){
+                    $testModel->allocateChannelingTest($testID,$parameter[3]['channeling']);
+                    Application::$app->session->set('popshow',$parameter[3]['channeling']);
+                }
+                return $this->render('doctor/all-channelings',[
+                'channeling_model'=>$Channeling,
+                'channelings'=>$ChannelingsM,
+                'tests'=>$testModel->getAllTests()
+                
+            ]);
+            }
+        }
         if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='all'){
-            echo "in";
-            $this->setLayout('doctor',['select'=>'All Channelings']);
             $Channelings=$OpenedChanneling->customFetchAll("select * from opened_channeling where channeling_ID in (select channeling_ID from channeling where doctor=".Application::$app->session->get('userObject')->nic.")");
             return $this->render('doctor/all-channelings',[
                 'channeling_model'=>$Channeling,
-                'opened_channeling'=>$Channelings
+                'channelings'=>$ChannelingsM,
+                'tests'=>$testModel->getAllTests(),
+                
             ]);
         }
         else{
@@ -64,8 +78,6 @@ class DoctorController extends Controller{
             $Channeling=$Channeling->findOne(["Channeling_ID"=>$OpenedChanneling->channeling_ID]);
             $Doctor=$Doctor->customFetchAll("Select * from employee left join  doctor on doctor.nic=employee.nic where doctor.nic=".$Channeling->doctor);
             $Nurses=$Employee->customFetchAll("Select * from employee right join nurse_channeling_allocataion on employee.emp_ID=nurse_channeling_allocataion.emp_ID  left join channeling on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID  where nurse_channeling_allocataion.channeling_ID=".$OpenedChanneling->channeling_ID);
-            
-     
         }
 
         return $this->render('doctor/channeling-start',[
@@ -99,6 +111,7 @@ class DoctorController extends Controller{
         $reportModel = new ConsultationReport();
         $appointmentMOdel=new Appointment();
         $labRequestModel=new LabTestRequest();
+        $prechannelingtest=new PreChannelingTest();
         $doctor = Application::$app->session->get('userObject')->nic;
 
         if(isset($parameters[2]['set']) && $parameters[2]['set']=='used'){
@@ -133,13 +146,18 @@ class DoctorController extends Controller{
             $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             $type=$appointmentMOdel->getappointmentType($patient,$id)[0]['type'];
+            $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
+            $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
             if($type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),
                     'appointment'=>$appointment_detail, 
                     'referrals'=>$referrals,
                     'reports'=>$reports,
-                    'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling'))
+                    'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling')),
+                    'pretestvalues'=>$testvalue,
+                    'weight'=>$weight,
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
                     
                 ]);
             }
@@ -149,7 +167,11 @@ class DoctorController extends Controller{
                     'appointment'=>$appointment_detail, 
                     'referrals'=>$referrals,
                     'reports'=>$reports,
-                    'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling'))
+                    'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling')),
+                    'pretestvalues'=>$testvalue,
+                    'weight'=>$weight,
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
+                    
                     
                 ]);
             }
@@ -179,13 +201,19 @@ class DoctorController extends Controller{
            
             $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
+            $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
+            $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
             if($type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),
                     'appointment'=>$appointment_detail,
                     'referrals'=>$referrals,
                     'reports'=>$reports,
-                    'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling'))
+                    'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling')),
+                    'pretestvalues'=>$testvalue,
+                    'weight'=>$weight,
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
+
                 
                 ]);
             }
@@ -195,7 +223,10 @@ class DoctorController extends Controller{
                     'appointment'=>$appointment_detail,
                     'referrals'=>$referrals,
                     'reports'=>$reports,
-                    'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling'))
+                    'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling')),
+                    'pretestvalues'=>$testvalue,
+                    'weight'=>$weight,
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
                 
                 ]);
             }
@@ -213,13 +244,18 @@ class DoctorController extends Controller{
             }
             $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
+            $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
+            $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
             if($appointment_type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),
                     'appointment'=>$appointment_detail,
                     'referrals'=>$referrals,
                     'reports'=>$reports,
-                    'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling'))
+                    'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
+                    'pretestvalues'=>$testvalue,
+                    'weight'=>$weight,
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
                 
                 ]);
             }
@@ -229,7 +265,10 @@ class DoctorController extends Controller{
                     'appointment'=>$appointment_detail,
                     'referrals'=>$referrals,
                     'reports'=>$reports,
-                    'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling'))
+                    'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
+                    'pretestvalues'=>$testvalue,
+                    'weight'=>$weight,
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
                 
                 ]);
             }
@@ -247,14 +286,18 @@ class DoctorController extends Controller{
             }
             $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
-            
+            $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
+            $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
             if($appointment_type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),
                     'appointment'=>$appointment_detail,
                     'referrals'=>$referrals,
                     'reports'=>$reports,
-                    'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling'))
+                    'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
+                    'pretestvalues'=>$testvalue,
+                    'weight'=>$weight,
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
                 
                 ]);
             }
@@ -264,7 +307,10 @@ class DoctorController extends Controller{
                     'appointment'=>$appointment_detail,
                     'referrals'=>$referrals,
                     'reports'=>$reports,
-                    'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling'))
+                    'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
+                    'pretestvalues'=>$testvalue,
+                    'weight'=>$weight,
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
                 
                 ]);
             }

@@ -11,6 +11,7 @@
         public array $options;
         public string $label;
         public string $name;
+        public string $id;
 
         public function __construct(string $name,string $label,string $class,array $options)
         {
@@ -19,11 +20,13 @@
             $this->options=$options;   
             $this->label = $label;
             $this->name=$name;
+            
         }
         public function __toString(){
             $str="";
             $array = [];
             $i=0;
+        
             foreach($this->options as $name=>$value){
                 $str .= "<div class='ed-se-item-".$this->name." hide ' id='".$value."'>".$name."</div>";
                 

@@ -4,6 +4,7 @@ error_reporting(E_ALL);
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+
 require_once 'dompdf/autoload.inc.php';
 use app\controllers\AdminController;
 use \app\core\Application;

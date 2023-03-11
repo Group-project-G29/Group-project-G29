@@ -131,6 +131,7 @@ class OpenedChanneling extends DbModel{
         $channeling_date=$this->fetchAssocAll(['opened_channeling'=>$id])[0]['channeling_date'];
         //check if today date<channeling_date"in"
         $today=date('Y-m-d');
+        
         if($dateModel->greaterthan($today,$channeling_date)){
             return true;
         }

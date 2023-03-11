@@ -51,7 +51,6 @@ class LabTestRequest extends DbModel{
     }
     public function createLabTestRequest($model){
         
-        var_dump($model);
         $model->patient_ID=Application::$app->session->get('cur_patient');
         $model->doctor=Application::$app->session->get('userObject')->nic;
         $model->status='pending';
