@@ -13,6 +13,8 @@ use app\models\Employee;
 use app\models\Medicine;
 use app\models\OpenedChanneling;
 use app\models\Patient;
+use app\models\PreChanneilngTestAloc;
+use app\models\PreChannelingTest;
 
 class NurseController extends Controller{
     
@@ -42,9 +44,14 @@ class NurseController extends Controller{
     public function todayClinics(){
         $this->setLayout("nurse",['select'=>'Today Channelings']);
         $OpenedChanneling=new OpenedChanneling();
-        
+        $userDetailModel=new Employee();
+        $user=$userDetailModel->customFetchAll("SELECT * FROM employee WHERE email=".'"'.Application::$app->session->get('user').'"');
+        $eID = $user[0]['emp_ID'];
+        // var_dump($eID);exit;
+
         $date = date("Y-m-d");
-        $openedChanneling=$OpenedChanneling->customFetchAll("SELECT * FROM `opened_channeling` INNER JOIN `channeling` ON opened_channeling.channeling_ID = channeling.channeling_ID INNER JOIN `employee` ON channeling.doctor = employee.nic WHERE channeling_date = '$date';");
+        $openedChanneling=$OpenedChanneling->customFetchAll("SELECT * FROM `opened_channeling` INNER JOIN `channeling` ON opened_channeling.channeling_ID = channeling.channeling_ID INNER JOIN `employee` ON channeling.doctor = employee.nic INNER JOIN `nurse_channeling_allocataion` ON channeling.channeling_ID = nurse_channeling_allocataion.channeling_ID WHERE channeling_date = '$date' AND nurse_channeling_allocataion.emp_ID = $eID;");
+        // var_dump($openedChanneling);exit;
         return $this->render('nurse/today-channelings',[
             "openedChanneling" => $openedChanneling
         ]);
@@ -156,32 +163,67 @@ class NurseController extends Controller{
 
         $parameters=$request->getParameters();
         $id = $parameters[0]['id'];
+        $num = $parameters[1]['num']??"";
+        $pre = $parameters[2]['p']??"";
+        $nex = $parameters[2]['n']??"";
+        $number = (int)$num;
 
-        // var_dump($id);exit;
+        // var_dump($parameters);exit;
         $Channeling=new Channeling();
         $OpenedChanneling=new OpenedChanneling();
         $Doctor=new Employee();
         $Patient=new Employee();
+        $Test=new PreChanneilngTestAloc();
+        $PreChannelingTestModel=new PreChannelingTest();
 
         
         $openedChanneling=$OpenedChanneling->customFetchAll("SELECT * FROM `opened_channeling` WHERE opened_channeling_ID=$id AND status != 'not open' AND status != 'end';");
         // var_dump($openedChanneling);exit;
         $cid=$openedChanneling[0]['channeling_ID'];
+        
         $channeling=$Channeling->customFetchAll("SELECT * FROM `channeling` INNER JOIN `employee` ON channeling.doctor = employee.nic WHERE channeling_ID=$cid;");
         $docNIC = $channeling[0]['doctor'];
         $doctor = $Doctor->customFetchAll("SELECT * FROM `employee` WHERE nic=$docNIC;");
 
-        $patient = $Patient->customFetchAll("SELECT * FROM `opened_channeling` INNER JOIN `appointment` ON opened_channeling.opened_channeling_ID = appointment.opened_channeling_ID INNER JOIN `patient` ON appointment.patient_ID = patient.patient_ID;");
+        $patient = $Patient->customFetchAll("SELECT * FROM `opened_channeling` INNER JOIN `appointment` ON opened_channeling.opened_channeling_ID = appointment.opened_channeling_ID INNER JOIN `patient` ON appointment.patient_ID = patient.patient_ID WHERE opened_channeling.opened_channeling_ID=$id;");
         // var_dump($patient);exit;
 
         // $nurse = $Nurse->customFetchAll("SELECT * FROM `nurse_channeling_allocataion` INNER JOIN `employee` ON nurse_channeling_allocataion.emp_ID = employee.emp_ID WHERE channeling_ID=$id;");
+        $reApp = $channeling[0]['total_patients'];
+        // var_dump($reApp);exit;
+        if($pre){
+            if(0<$number && $number<$reApp){
+                $newNumber = $number-1;
+            }
+            else{
+                $newNumber = 0;
+            }
+        }
+        else if($nex){
+            if(-1<$number && $number<$reApp-1){
+                $newNumber = $number+1;
+            }
+            else if($number == $reApp-1){
+                $newNumber = $number;
+            }
+        }
+        else{
+            $newNumber = 0;
+        }
 
+        $tests = $Test->customFetchAll("SELECT * FROM `pre_channeilng_test_aloc` INNER JOIN `pre_channeling_tests` ON pre_channeilng_test_aloc.test_ID = pre_channeling_tests.test_ID WHERE pre_channeilng_test_aloc.channeling_ID=$cid;");
+        // var_dump($tests);exit;
+        
 
         return $this->render('nurse/nurse-list-patient',[
             "channeling" => $channeling[0],
             "openedchanneling" => $openedChanneling[0],
             "doctor" => $doctor[0],
-            "patient" => $patient
+            "patient" => $patient,
+            "number" => $newNumber,
+            "id" => $id,
+            "tests" => $tests,
+            "prechannelingtestmodel" => $PreChannelingTestModel
         ]);
     }
 

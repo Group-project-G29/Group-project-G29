@@ -118,7 +118,7 @@ class AdminController extends Controller{
         
         //if reques is not a post or mod=get show all channeling page
         $channelings=$ChannelingModel->customFetchAll("Select * from channeling left join doctor on doctor.nic=channeling.doctor left join employee on employee.nic=doctor.nic");
-        var_dump($channelings);exit;
+        // var_dump($channelings);exit;
         return $this->render('administrator/view-channeling',[
                 'channelings'=>$channelings
         ]);
@@ -126,42 +126,42 @@ class AdminController extends Controller{
        
     }
 
-    // Channeling sessions view
-    public function channelingSessionsView(Request $request){
-        $this->setLayout("admin",['select'=>'Channelings Sessions']);
+    // // Channeling sessions view
+    // public function channelingSessionsView(Request $request){
+    //     $this->setLayout("admin",['select'=>'Channelings Sessions']);
         
-        $parameters=$request->getParameters();
-        $speciality=$parameters[0]['spec']??'';
-        // var_dump($parameters);exit;
-        // $day=$parameters[1]['day']??'';
-        // var_dump($day);exit;
+    //     $parameters=$request->getParameters();
+    //     $speciality=$parameters[0]['spec']??'';
+    //     // var_dump($parameters);exit;
+    //     // $day=$parameters[1]['day']??'';
+    //     // var_dump($day);exit;
         
-        $ChannelingModel=new Channeling();
+    //     $ChannelingModel=new Channeling();
         
-        $Channeling=$ChannelingModel->customFetchAll("SELECT * FROM `channeling` INNER JOIN `employee` ON channeling.doctor = employee.nic where channeling.speciality='$speciality' ORDER BY channeling.time; ");
+    //     $Channeling=$ChannelingModel->customFetchAll("SELECT * FROM `channeling` INNER JOIN `employee` ON channeling.doctor = employee.nic where channeling.speciality='$speciality' ORDER BY channeling.time; ");
 
-        if($speciality){ //var_dump($speciality);exit;
-            Application::$app->session->set('channelings',$Channeling);
-            return $this->render('administrator/admin-all-channeling-category-list',[
+    //     if($speciality){ //var_dump($speciality);exit;
+    //         Application::$app->session->set('channelings',$Channeling);
+    //         return $this->render('administrator/admin-all-channeling-category-list',[
                 
-                'channelings'=>$Channeling,
-                'speciality'=>$speciality
+    //             'channelings'=>$Channeling,
+    //             'speciality'=>$speciality
                
                
-            ]);
-        }
+    //         ]);
+    //     }
        
-        $ChannelingModel=new Channeling();
-        $specialities=$ChannelingModel->customFetchAll("Select distinct channeling.speciality from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID");
-        // var_dump($specialities);exit;
-        return $this->render('administrator/admin-all-channeling-categories',[
+    //     $ChannelingModel=new Channeling();
+    //     $specialities=$ChannelingModel->customFetchAll("Select distinct channeling.speciality from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID");
+    //     // var_dump($specialities);exit;
+    //     return $this->render('administrator/admin-all-channeling-categories',[
 
-            'specialities'=>$specialities, 
-            'app'=>$ChannelingModel
+    //         'specialities'=>$specialities, 
+    //         'app'=>$ChannelingModel
             
         
-        ]);
-    }
+    //     ]);
+    // }
 
 
     // admin employee account crud
@@ -324,15 +324,36 @@ class AdminController extends Controller{
 
 
 
-    public function handleNotifications(){
+    public function handleNotifications(Request $request,Response $response){
+        $parameters=$request->getParameters();
         $this->setLayout('admin',['select'=>"Notification"]);
         $notificationModel=new AdminNotification();
+        
+
+        // var_dump($parameters);exit;
+        // delete notification
+        if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
+            $notificationModel->deleteRecord(['noti_ID'=>$parameters[1]['id']]);
+            Application::$app->session->setFlash('success',"Account successfully deleted ");
+            $response->redirect('/ctest/admin-notification');
+            return true;
+        }
+
+        // update notification
+        if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
+            $id = (int)$parameters[1]['id'];
+            // var_dump($id);exit;
+            $notification=$notificationModel->customFetchAll("UPDATE admin_notification SET is_read = 0 WHERE noti_ID = $id;");
+            // var_dump($notification);exit;
+            $response->redirect('/ctest/admin-notification');
+            return true;
+        }
+
         $notifications=$notificationModel->customFetchAll("Select * from admin_notification order by created_date_time");
 
         return $this->render('administrator/view-notifications',[
             "notifications"=>$notifications,
             "model"=>$notificationModel,
         ]);
-
     }
 }

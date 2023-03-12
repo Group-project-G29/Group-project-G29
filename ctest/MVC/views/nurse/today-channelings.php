@@ -5,7 +5,7 @@ use app\core\component\Component;
 use app\core\component\Sidebar;
 
 $component = new Component();
-
+// var_dump($openedChanneling);
 ?>
 <?php if($openedChanneling){?>
 <div class="table-container">

@@ -43,12 +43,9 @@ $form=Form::begin('','post');
                         <input type="checkbox" class="limitCheckbox" name="limitCheckbox" id="limitCheckbox" onclick="checkMe()"/>
                     </td>
                 </tr>
-                <!-- <tr id="hideLine" style="display: none;" class="hideLine">
-                    <td>fhgfhljkx</td>
-                    <td>jghjkl</td>
-                </tr>  -->
                 
-                <?php echo $form->spanfield($channelingmodel,'total_patients','Limit Patient Count','field','text') ?>
+                <span id="popLine"></span>
+                <!-- <div><?php //echo $form->spanfield($channelingmodel,'total_patients','Limit Patient Count','field','text') ?></div> -->
             </table>
 
         </div>
@@ -167,14 +164,13 @@ $form=Form::begin('','post');
     // }
 
     const checkActive = document.getElementById("limitCheckbox");
-    const popLine = document.getElementById("text");
     checkActive.addEventListener("click", ()=>{
         if(checkActive.checked){
             console.log(popLine);
-            popLine.style.display="block";
+            document.getElementById("popLine").innerHTML = `<?php echo $form->spanfield($channelingmodel,'total_patients','','field','text') ?>`;
         }
         else{
-            popLine.style.display="none";
+            document.getElementById("popLine").innerHTML = ``;
         }
     });
 

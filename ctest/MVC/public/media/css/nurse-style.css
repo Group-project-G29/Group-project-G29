@@ -52,7 +52,7 @@
     border-style: hidden;
     border-spacing: 0px 1vh;
     margin-top: 0vh;
-    width: 80vw;
+    width: 84vw;
     border-color:transparent;
     z-index: 0;
     margin-top: 5vh;
@@ -63,7 +63,7 @@
     padding-block:2vh;
     padding-left: 2vw;
     border-bottom: 1px solid var(--clr-grey);
-   
+    min-width: 10vw;
    
 }
 
@@ -147,4 +147,52 @@
 }
 
 
+/* Patiyent Channeling LIST */
 
+.nimg .pimg{
+    width: 7vw;
+}
+
+.patient-change-div{
+    display: flex;
+    gap: 5vw;
+}
+
+.scheduled-info{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.patient-detals{
+    display: flex;
+    flex-direction: column;
+    padding-left: 20vw;
+    margin-top: 2vh;
+}
+
+.inputs-div{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    margin-top: 3vh;
+    gap: 2vh;
+}
+.input-row{
+    display: flex;
+}
+.input-row-col-1{
+    width: 8vw;
+}
+.input-row-col-3{
+    margin-left: 2vw;
+    width: 8vw;
+}
+.save-button{
+    margin-top: 5vh;
+    margin-left: 30vw;
+    width: 7vw;
+}
+.button--class-0{
+    min-width: 7vw;
+}
