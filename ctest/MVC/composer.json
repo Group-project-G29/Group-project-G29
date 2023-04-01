@@ -5,6 +5,13 @@
             "app\\": "./"
         }
     },
+    
+     "repositories": [
+          {
+            "type": "git",
+            "url": "https://github.com/notifylk/notify-php.git"
+          }
+        ],
     "authors": [
         {
             "name": "YNimantha",
@@ -12,6 +19,7 @@
         }
     ],
     "require": {
-        "dompdf/dompdf": "^0.6.2"
+        "dompdf/dompdf": "^0.6.2",
+         "notifylk/notify-php": "*@dev"
     }
 }

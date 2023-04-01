@@ -14,7 +14,7 @@
                 $day="";
                 $appointmentModel=new Appointment();
                 if($channeling->day=='Friday'){
-                if($channeling->type=="day" && $channeling->count=="1") $day=$channeling->starting_date ?? ''; else $day="All ".$channeling->day;
+                if($channeling->schedule_type=="weeks" && $channeling->schedule_for=="1") $day=$channeling->starting_date ?? ''; else $day="All ".$channeling->day;
                 echo "<tr class='table-row  row-height hover' id=".$value['opened_channeling_ID'].">
                         <td>".$channeling->speciality."-".$channeling->day."</td><td>".$day."</td><td>".$channeling->time."</td><td>".$appointmentModel->getTotoalPatient($value['opened_channeling_ID'])."</td><td>".$value['status']."</td>
                     </tr>";

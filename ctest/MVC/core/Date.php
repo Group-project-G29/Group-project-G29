@@ -1,8 +1,5 @@
 <?php
 namespace app\core;
-
-
-  
 class Date{
     public string $date;
     public string $day;
@@ -53,6 +50,7 @@ class Date{
     }
 
     public function arrayToDate($array){
+      if(isset($array[4]) && $array[4]=='-') return $array;
         $day=$array[0];
         $month=$array[1];
         if(strlen($array[0])==1){
@@ -100,7 +98,8 @@ class Date{
 }
  
 
- 
+  
+
    
    
 

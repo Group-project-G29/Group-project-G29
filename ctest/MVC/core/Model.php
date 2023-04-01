@@ -66,7 +66,7 @@ abstract class Model{
                 if(!is_string($ruleName)){
                     $ruleName=$rule[0];
                 }
-                if($ruleName===self::RULE_REQUIRED && (!$value||$value=="select"||$value==0)){
+                if($ruleName===self::RULE_REQUIRED && (!$value||$value=="select"||$value==0||$value=='')){
                     $this->addError($attribute,self::RULE_REQUIRED);
 
                 }
@@ -105,10 +105,12 @@ abstract class Model{
                 }
                 if($ruleName==self::RULE_DATE_VALIDATION ){
                     $dateModel=new Date();
-                    if( $value){
+                    
+                    if(!$value){
                         $this->addError($attribute,self::RULE_DATE_VALIDATION);
                     }
-                    if($dateModel->greaterthan($value,date("Y-m-d"))){
+                    
+                    else if($dateModel->greaterthan($value,date("Y-m-d"))){
                         $this->addError($attribute,self::RULE_DATE_VALIDATION);
                     }
                 }

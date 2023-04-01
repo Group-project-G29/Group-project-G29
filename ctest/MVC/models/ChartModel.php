@@ -43,7 +43,7 @@
                 var xValues =%s;
                 var yValues = %s;
 
-                new Chart("%s", {
+                new Chart("myChart%s", {
                 type: "line",
                 data: {
                     labels: %s,

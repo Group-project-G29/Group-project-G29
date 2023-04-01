@@ -146,11 +146,15 @@ class Time{
     
     public function isInRange($time,$span,$intime){
         $add_time=$this->addTime($time,$span);
+        $sub_time=$this->subTime($time,$span);
         if($add_time['day']){
             return false;
         }
         else{
-            return $this->greaterthan($intime,$this->arrayToTime($add_time));
+            if($this->greaterthan($intime,$this->arrayToTime($sub_time)) && !$this->greaterthan($intime,$this->arrayToTime($add_time))){
+                return true;
+            }
+            return false;
 
             
         }

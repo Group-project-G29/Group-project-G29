@@ -146,7 +146,7 @@ class Prescription extends DbModel{
         $this->customFetchAll("insert into prescription_medicine (med_ID,prescription_ID,med_amount,route,dispense_type,dispense_count,frequency) values('$med_ID','$prescription','$amount','$route',$dispense_type,$dispense_count,'$frequency') ");
         return $prescription;
     }
-
+    
     public function addToOrder($orderID,$cartID){
         $this->customFetchAll("update prescription set order_ID='$orderID' ,cart_ID=null where cart_ID='$cartID'");
         return true;

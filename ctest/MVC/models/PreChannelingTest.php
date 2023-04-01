@@ -12,6 +12,7 @@ use app\core\DbModel;
             $test=$this->getDistinctTests($patient);
             $array=[];
             foreach($test  as  $element){
+                if(isset($element['test_ID']) && $element['test_ID'])
                 $array[$element['name']]=$this->getTestChanneling($element['test_ID'],$patient);
             }
             return $array;
@@ -28,7 +29,6 @@ use app\core\DbModel;
         //get array with all past channeling test values and dates in the same array
         public function getTestChanneling($test,$patient){
             $result=$this->customFetchAll("SELECT  distinct * from pre_channeling_tests_values as tval left join pre_channeling_tests as test on test.test_ID=tval.test_ID left join pre_channeilng_test_aloc as aloc on aloc.test_ID=tval.test_ID left join opened_channeling as o on o.channeling_ID=aloc.channeling_ID left join appointment as a on a.opened_channeling_ID=o.opened_channeling_ID where aloc.test_ID=".$test." and a.patient_ID=".$patient);
-            var_dump('SELECT  distinct * from pre_channeling_tests_values as tval left join pre_channeling_tests as test on test.test_ID=tval.test_ID left join pre_channeilng_test_aloc as aloc on aloc.test_ID=tval.test_ID left join opened_channeling as o on o.channeling_ID=aloc.channeling_ID left join appointment as a on a.opened_channeling_ID=o.opened_channeling_ID where aloc.test_ID='.$test.' and a.patient_ID='.$patient);
             $values=[];
             $day=[];
             foreach($result as $el){

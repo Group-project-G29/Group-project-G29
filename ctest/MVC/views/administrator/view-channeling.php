@@ -21,8 +21,7 @@
     </tr>
     
         <?php foreach($channelings as $key=>$channeling): ?>
-        <tr class="table-row" id=<?="'".$channeling['doctor']."-".$channeling['speciality']."-".$channeling['day']."'" ?>>
-            
+        <tr class="table-row" id=<?="'".$channeling['name']."-".$channeling['speciality']."-".$channeling['day']."-".$channeling['channeling_ID']."'" ?>>
             <td><?=$channeling['speciality']?></td>
             <td><?=$channeling['name']?></td>  
             <td><?=$channeling['day']?></td>
@@ -83,5 +82,12 @@
             }
         }
         searchBar.addEventListener('input',checker);
+        const rows=document.querySelectorAll('.table-row');
+        rows.forEach((el)=>{
+            el.addEventListener('click',()=>{
+                comp=(""+el.id).split("-");
+                location.href='schedule-channeling?spec=opened_channeling&cmd=view&id='+comp[3];
+            })
+        })
     
 </script>

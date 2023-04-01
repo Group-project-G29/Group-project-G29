@@ -246,6 +246,8 @@ class DoctorController extends Controller{
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
             $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
+            $alltests=$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'));
+            var_dump($alltests);
             if($appointment_type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),
@@ -255,7 +257,7 @@ class DoctorController extends Controller{
                     'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
                     'pretestvalues'=>$testvalue,
                     'weight'=>$weight,
-                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
+                    'alltests'=>$alltests
                 
                 ]);
             }

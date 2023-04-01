@@ -129,15 +129,15 @@ Application::$app->session->set('popup','unset');
                 </table>
                 <section class="graph">
                     <div>
-                        <?=$form->select($labTestModel,'tests-ed','','field test_select',array_keys($alltests),) ?>
+                        <?=$form->editableselectversion2('tests_ed','','field test_select',array_keys($alltests)) ?>
                     </div>
                     <?php foreach($alltests as $val=>$test):?>
-                        <div id=<?='"'.'c'.$val.'"'?> class="hide">
-                            <canvas id=<?='"'.$val.'"'?> style="width:100%;max-width:700px"></canvas>
-        
+                        <div id='' class=<?='"'.'c'.join('_',explode(' ',$val)).' hide"'?>>
+                            
+                            <canvas id=<?='"myChart'.$val.'"'?> style="width:100%;max-width:700px"></canvas>
                             <?=$chart->lineChart($test['labels'],[],$test['data'],[],$val,'rgb(0,0,0)',$val);?>
                         </div>
-                    <?php endforeach;?>
+                        <?php endforeach;?>
             </div>
             </section>
             <?php  ?>
@@ -355,22 +355,7 @@ Application::$app->session->set('popup','unset');
         })
 
         //charts and graphs
-        const testSelect=document.querySelector('.test_select');
-        const edse=document.querySelectorAll(".ed-se-item-test-ed");
         
-        testSelect.addEventListener('change',()=>{
-            edse.forEach((el)=>{
-                elem=document.querySelector('.c'+el.value);
-                if(""+el.id==elem.value){
-                    visible(elem);
-                }
-                else{
-                    hide(elem);
-                }
-            })
-        })
-
-
 
 
     </script>

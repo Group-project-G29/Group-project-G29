@@ -7,10 +7,10 @@ use app\core\form\Form;
 ?>
 
 <section>
-    <?php $form->begin('','post'); ?>
+    <?php $form->begin('','post'); var_dump($medicines)?>
     <div class="prescription-field-container">
         <div class="cls-name">
-        <?=$form->editableselect('name','Medical Product*','',$medicines); ?>
+        <?=$form->editableselect('name','Medical Product*','',$medicines);  ?>
         </div>
          <div class="cls-frequency">   
         <?=$form->editableselect('frequency','Frequency*','',['frequency1'=>'frequency1']); ?>

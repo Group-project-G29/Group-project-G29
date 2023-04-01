@@ -3,15 +3,14 @@ namespace app\models;
 
 use app\core\DbModel;
 use app\core\Application;
+use app\core\Calendar;
 use app\core\Date;
 use app\core\UserModel;
 use app\core\Time;
 
 class OpenedChanneling extends DbModel{
     public string $channeling_ID='';
-    public int $remaining_free_appointments=0;
     public int $remaining_appointments=0;
-    public int $max_free_appointments=0;
     public ?string $channeling_date="";
     public string $status="";
    
@@ -19,15 +18,37 @@ class OpenedChanneling extends DbModel{
     public function saveData(){
         return parent::save();
     }
-    public function setter($channeling_ID,$rem_free_app,$rem_app,$max_app_free,$date,$status){
+    public function setter($channeling_ID,$rem_app,$date,$status){
         $this->channeling_ID=$channeling_ID;
-        $this->remaining_free_appointments=$rem_free_app;
         $this->remaining_appointments=$rem_app;
-        $this->max_free_appointments=$max_app_free;
         $this->channeling_date=$date;
         $this->status=$status;
         
 
+    }
+    //get all the upcoming channelings
+    public function getOpenedChannelings($id){
+        return $this->customFetchAll("Select * from opened_channeling where channeling_ID=$id and channeling_date>='".date('Y-m-d')."'");
+    }
+    //close a opened channeling session
+    public function closeChanneling($id){
+        $this->customFetchAll("update opened_channeling set status='closed' where opened_channeling_ID=".$id);
+    }
+    //cancel a opened channeling session
+    public function cancelChanneling($id){
+        $this->customFetchAll("update opened_channeling set status=cancel where opened_channeling_ID=".$id);
+    }
+    //check overlap
+    public function generateOpenedChannelings($start_date,$startday,$finday,$duration,$op,$hop='0 weeks'){
+        $calendarModel=new Calendar();
+        echo "<br>".$start_date.$startday.$finday.$duration.$hop;
+        $dates=$calendarModel->generateDays($start_date,$startday,$finday,$duration,$hop);
+        var_dump($dates);
+        foreach($dates as $date){
+            $op->channeling_date=$date;
+            $op->saveData();
+        }
+        return true;
     }
     public function getPatient($channeling,$current_patient,$type,$queuetype):array{
         $patient_queue=$this->customFetchAll("select * from  patient right join appointment on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID =".$channeling." and appointment.type='$queuetype' order by appointment.queue_no");
@@ -131,7 +152,6 @@ class OpenedChanneling extends DbModel{
         $channeling_date=$this->fetchAssocAll(['opened_channeling'=>$id])[0]['channeling_date'];
         //check if today date<channeling_date"in"
         $today=date('Y-m-d');
-        
         if($dateModel->greaterthan($today,$channeling_date)){
             return true;
         }
@@ -163,12 +183,12 @@ class OpenedChanneling extends DbModel{
         return 'opened_channeling_ID';
     }
     public function tableRecords(): array{
-        return ['opened_channeling'=>['remaining_free_appointments','remaining_appointments','channeling_date','status','channeling_ID']];
+        return ['opened_channeling'=>['remaining_appointments','channeling_date','status','channeling_ID']];
     }
 
     public function attributes(): array
     {
-        return ['remaining_free_appointments','remaining_appointments','channeling_date','status','channeling_ID'];
+        return ['remaining_appointments','channeling_date','status','channeling_ID'];
     }
 
    
