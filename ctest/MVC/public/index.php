@@ -115,7 +115,12 @@ $app->router->get('/ctest/pharmacy-finish-processing-order',[PharmacyController:
 $app->router->get('/ctest/pharmacy-cancle-processing-order',[PharmacyController::class,'cancleProcessingOrder']);
 $app->router->get('/ctest/pharmacy-orders-delivering',[PharmacyController::class,'viewDeliveringOrder']);
 $app->router->get('/ctest/pharmacy-track-order',[PharmacyController::class,'trackOrder']);
+
 $app->router->get('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
+$app->router->post('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
+$app->router->get('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
+$app->router->post('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
+
 $app->router->get('/ctest/pharmacy-view-report',[PharmacyController::class,'viewReports']);
 $app->router->get('/ctest/pharmacy-view-personal-details',[PharmacyController::class,'viewPersonalDetails']);
 

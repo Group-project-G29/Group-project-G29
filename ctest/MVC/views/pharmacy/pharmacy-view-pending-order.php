@@ -2,6 +2,8 @@
     use app\core\component\Component;
     $component=new Component();
     $total = 0;
+    // var_dump($orders);
+    // exit;
 ?>
 
 <div class="detail">

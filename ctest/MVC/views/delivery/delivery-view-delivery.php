@@ -23,7 +23,6 @@
 <br>
 
 
-<!-- pass the pin to url - $POST[pin] -->
 <?php
 $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID'],'post');?> 
 <section class="form-body" style="padding-bottom:100px">

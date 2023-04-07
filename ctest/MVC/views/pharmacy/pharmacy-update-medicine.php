@@ -1,5 +1,7 @@
 <?php
     /** @var $model \app\models\User */
+    // var_dump($model);
+    // exit;
 ?>
 
 

@@ -82,57 +82,30 @@ use app\core\form\Form;
 
     //change on select
     const clsname=document.querySelector(".cls-name");
-    const clsstrength=document.querySelector(".cls-strength");
+    
     const clsfrequency=document.querySelector(".cls-frequency");
     const clsdispense=document.querySelector(".cls-dispense");
     const clsroute=document.querySelector(".cls-route");
     const mainaddbtn=document.getElementById('add-button');
     const selectItems=document.querySelectorAll('.ed-se-item-name');
-    var allshow=[clsname,clsfrequency,clsstrength,clsroute,clsdispense];
-    var arrayshow={'device':[clsname,clsfrequency,clsdispense],'tablet':[clsname,clsfrequency,clsdispense,clsroute],'bottle':[clsname,clsstrength,clsfrequency,clsdispense]};
+    var allshow=[clsname,clsfrequency,clsroute,clsdispense];
+    var arrayshow={'device':[clsname,clsfrequency,clsdispense],'tablet':[clsname,clsfrequency,clsdispense,clsroute],'bottle':[clsname,clsfrequency,clsdispense]};
     selectItems.forEach((el)=>{
         el.addEventListener('click',()=>{
             comp=(""+el.id).split("_");
             allshow.forEach(elem=>{
-                if(arrayshow[comp[1]].includes(elem))
-                elem.classList.remove('hide');
-                
-                else 
-                elem.classList.add('hide');
+            
+                if(arrayshow[comp[1]].includes(elem)){
+                    elem.classList.remove('hide');
+
+                }
+
+                else {
+                    elem.classList.add('hide');
+
+                }
             
             })
         })
     })
-</script>
-<script src="./node_modules/chart.js/dist/chart.umd.js"></script>
-<script type="module">
-import Chart from './node_modules/chart.js/dist/chart.js/auto';
-
-(async function() {
-  const data = [
-    { year: 2010, count: 10 },
-    { year: 2011, count: 20 },
-    { year: 2012, count: 15 },
-    { year: 2013, count: 25 },
-    { year: 2014, count: 22 },
-    { year: 2015, count: 30 },
-    { year: 2016, count: 28 },
-  ];
-
-  new Chart(
-    document.getElementById('acquisitions'),
-    {
-      type: 'bar',
-      data: {
-        labels: data.map(row => row.year),
-        datasets: [
-          {
-            label: 'Acquisitions by year',
-            data: data.map(row => row.count)
-          }
-        ]
-      }
-    }
-  );
-})();
 </script>

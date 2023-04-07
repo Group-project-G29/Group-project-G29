@@ -101,11 +101,26 @@ use app\core\DbModel;
             return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'packed' ORDER BY created_date ASC");
         }
         
-        public function view_order_details( $order_ID ) {
+        public function view_online_order_details( $order_ID ) {
             return $this->customFetchAll("SELECT patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
             _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
             medicine_in_order.amount, medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price 
             FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID = $order_ID");
+        }
+
+        public function view_prescription_details( $order_ID ) {
+            return $this->customFetchAll(" SELECT 
+            patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
+            _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
+            prescription_medicine.amount, 
+            medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price 
+                        
+            FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID
+            INNER JOIN prescription ON _order.order_ID=prescription.order_ID 
+            INNER JOIN prescription_medicine ON prescription.prescription_ID=prescription_medicine.prescription_ID 
+            INNER JOIN medical_products ON prescription_medicine.med_ID=medical_products.med_ID
+            
+            WHERE _order.order_ID=$order_ID; ");
         }
 
         public function set_processing_status ( $order_ID, $status ) {
@@ -113,10 +128,24 @@ use app\core\DbModel;
         }
         
         public function get_postal_code( $order_ID ) {
-            return $this->customFetchAll("SELECT delivery.postal_code, _order.order_ID, delivery.delivery_ID FROM delivery INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.delivery_ID = $order_ID");
+            //error in sql
+            return $this->customFetchAll("SELECT delivery.postal_code, _order.order_ID, delivery.delivery_ID, _order.pickup_status FROM delivery INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.order_ID = $order_ID");
         }
 
-        
+        public function getOrderType( $order_ID ) {
+            $online_order = $this->customFetchAll(" SELECT * FROM medicine_in_order WHERE order_ID = $order_ID; ");
+            $e_prescription = $this->customFetchAll(" SELECT * FROM prescription WHERE order_ID = $order_ID AND type = 'ep'; ");
+            $soft_copy_prescription = $this->customFetchAll(" SELECT * FROM prescription WHERE order_ID = $order_ID AND type = 'sf'; ");
+
+            if ( sizeof($online_order)>0 ){
+                return 'Online Order';
+            } else if ( sizeof($e_prescription)>0 ){
+                return 'E-prescription';
+            } else if ( sizeof($soft_copy_prescription)>0 ){
+                return 'Softcopy-prescription';
+            }
+
+        }
 
     }
 

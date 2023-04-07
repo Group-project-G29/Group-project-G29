@@ -2,6 +2,7 @@
     use app\core\component\Component;
     $component=new Component();
 // var_dump($orders);
+// var_dump($order_types);
 // exit;
 
 ?>
@@ -31,6 +32,7 @@
 <table border="0">
     <tr>
         <th>Order ID</th>
+        <th>Order Type</th>
         <th>Name</th>
         <th>Contact</th>
         <th>Date</th>
@@ -41,6 +43,7 @@
         <?php foreach($orders as $key=>$order): ?>
             <tr class="table-row" id=<?=$order['order_ID']?> >
                 <td><?=$order['order_ID']?></td>
+                <td><?=$order_types[$key]?></td>
                 <td><?=$order['name']?></td> 
                 <td><?=$order['contact']?></td> 
                 <td><?=$order['created_date']?></td> 

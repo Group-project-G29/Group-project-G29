@@ -18,6 +18,7 @@ use app\models\Cart;
 use app\models\Delivery;
 use app\models\Medicine;
 use app\models\Order;
+use app\models\Prescription;
 use app\models\Referral;
 
 
@@ -254,20 +255,40 @@ class PatientAuthController extends Controller{
         }
         
     }
-
+    
     public function medicineOrder(Request $request,Response $response){
         $content_amount=12;
         $parameters=$request->getParameters();
         $this->setLayout('patient-pharmacy');
         $cartModel=new Cart();
         $medicineModel=new Medicine();
+        $prescriptionModel=new Prescription();
         $patient=Application::$app->session->get('userObject');
         $cart=$cartModel->getPatientCart($patient->patient_ID??'')[0]['cart_ID']??'';
         $cartItems=$cartModel->fetchAssocAllByName(['cart_ID'=>$cart],'medicine_cart');
         //show order detail page
+        if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='prescription'){
+            if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='add'){
+                if($request->isPost()){
+                    //post request to add new prescrtiption goes here
+                    $prescriptionModel->addPrescriptionSoftCopy();
+                }
+            }
+            if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='delete'){
+                $prescriptionModel->deleteRecord(['prescription_ID'=>$parameters[2]['id']]);
+            }
+            Application::$app->response->redirect("/ctest/patient-pharmacy?spec=main");
+            return true;
+        }
         if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='order-main'){
+            if(!Application::$app->session->get('user')){
+                Application::$app->session->setFlash('success',"Log into view your");
+                Application::$app->response->redirect("/ctest/");
+            }
             $order=new Order();
+            $lacked=$order->getLackedItems();
             return $this->render('patient/patient-track-order',[
+                'lacked'=>$lacked,
                 'order'=>$order->getPatientOrder()
             ]);
 
@@ -323,7 +344,12 @@ class PatientAuthController extends Controller{
                 $patient=Application::$app->session->get('userObject');
                 $cart=$cartModel->getPatientCart($patient->patient_ID)[0]['cart_ID'];
                 $cartModel->removeItem($parameters[2]['item'],$cart);
-                Application::$app->response->redirect("patient-pharmacy?cmd=search&value=$value&page=$page");
+                if($page){
+                    Application::$app->response->redirect("patient-pharmacy?spec=main");
+                }
+                else{
+                    Application::$app->response->redirect("patient-pharmacy?cmd=search&value=$value&page=$page");
+                }
             }
             return $this->render("patient/pharmacy-main-search-result",[
                 'medicines'=>$medicines,
@@ -344,6 +370,18 @@ class PatientAuthController extends Controller{
             $orderModel=new Order();
             $orderModel->loadData($request->getBody());            
             $deliveryModel->loadData($request->getBody());
+            if($orderModel->getPatientOrder()){
+                Application::$app->session->setFlash('error',"Please wait until next order get finished.");
+                $cartModel=new Cart();
+                $patient=Application::$app->session->get('userObject');
+                $cart=$cartModel->getPatientCart($patient->patient_ID??'')[0]['cart_ID']??'';
+                $cartItems=$cartModel->fetchAssocAllByName(['cart_ID'=>$cart],'medicine_cart');
+                return $this->render('patient/patient-medicine-order',[
+                    'cartItems'=>$cartItems,
+                    'delivery'=>$deliveryModel,
+                    'order'=>$orderModel
+                ]);
+            }
             //data validation
             if(!$orderModel->validate() || !$deliveryModel->validate()){
                 $cartModel=new Cart();
@@ -390,6 +428,9 @@ class PatientAuthController extends Controller{
             else if($parameter[1]['mod']??''=='view'){
                 $cartModel=new Cart();
                 if($cartModel->getItemCount()==0){
+                    if(Application::$app->session->get('page') || Application::$app->session->get('value')){
+                        Application::$app->response->redirect('/ctest/patient-pharmacy?spec=main');
+                    }
                     Application::$app->response->redirect("patient-pharmacy?cmd=search&value=".Application::$app->session->get('value')."&page=".Application::$app->session->get('page'));
                 }
                 $patient=Application::$app->session->get('userObject');
@@ -488,13 +529,37 @@ class PatientAuthController extends Controller{
         return $this->render("patient/patient-payment-page");
 
     }
-   
+   //move to doctor controller
+    public function handlePrescription(Request $request,Response $response){
+        $this->setLayout('doctor-striped');
+        $medicinesModel=new Medicine();
+        $medicines=$medicinesModel->getAllMedicine();
+        $prescriptionModel=new Prescription();
+        $prescription=$prescriptionModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
+        $presmeds=[];
+        $presdevice=[];
+        
+        if($prescription){
+            $presmeds=$prescriptionModel->getPrescriptionMedicine($prescription);
+            $presdevice=$prescriptionModel->getPrescriptionDevice($prescription);
+        }
+        
+        if($request->isPost()){
+           //take current prescritption or create new one add medicine to it
+           $prescription=$prescriptionModel->addPrescriptionMedicine(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling')); 
+            Application::$app->response->redirect("/ctest/doctor-prescription");
+        }
+        
+        return $this->render('doctor/write-prescription',[
+            'medicines'=>$medicines,
+            'prescription_medicine'=>$presmeds,
+            'prescription_device'=>$presdevice
 
-    public function contact_us() {
-        $this->setLayout('visitor');
-
-        return $this->render("patient/contact");
+        ]);
     }
+
+ 
+
 
    
 
