@@ -6,6 +6,7 @@ use app\core\Controller;
 use app\core\Request;
 use app\models\Delivery;
 use app\models\Patient;
+use app\models\PatientNotification;
 use app\models\Prescription;
 use app\models\User;
 use app\core\DbModel;
@@ -159,6 +160,52 @@ class PharmacyController extends Controller{
                                         //     'orders'=>$orders,
                                         //     'model'=>$orderModel,
                                         // ]);
+    }
+
+    public function notifyProcessingOrder($request){
+        $parameters=$request->getParameters();
+        var_dump($parameters);
+        echo "notification sent";
+
+        $orderModel = new Order();
+        $order = $orderModel->getOrderByID($parameters[0]['id']);
+
+        $notificationModel = new PatientNotification();
+        $existing_notifications = $notificationModel->getNotificationIDs($parameters[0]['id']);
+
+        if ($existing_notifications){
+            foreach ($existing_notifications as $key=>$existing_notification) {
+                $remove_notifications = $notificationModel->removeNotifications($existing_notification["noti_ID"]);
+            }
+        }
+
+        $create_notification = $notificationModel->createOrderNotification( $order[0]['order_ID'], $order[0]['patient_ID'] );
+        
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $order_type = $orderModel->getOrderType($parameters[0]['id']);
+
+        if ( $order_type == 'Online Order' ) {
+            $orders=$orderModel->view_online_order_details($parameters[0]['id']);
+            return $this->render('pharmacy/pharmacy-view-processing-order',[
+                'orders'=>$orders,
+                'model'=>$orderModel,
+            ]);
+
+        } else if ( $order_type == 'E-prescription' ) {
+            $orders=$orderModel->view_prescription_details($parameters[0]['id']);
+            return $this->render('pharmacy/pharmacy-view-processing-order',[
+                'orders'=>$orders,
+                'model'=>$orderModel,
+            ]);
+
+        } else if ( $order_type == 'Softcopy-prescription' ) {
+            $orders=$orderModel->view_prescription_details($parameters[0]['id']);
+            return $this->render('pharmacy/pharmacy-view-processing-order',[
+                'orders'=>$orders,
+                'model'=>$orderModel,
+            ]);
+        }
+
     }
 
     public function cancleProcessingOrder($request){

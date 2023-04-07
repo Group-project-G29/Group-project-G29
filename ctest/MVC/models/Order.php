@@ -102,9 +102,11 @@ use app\core\DbModel;
         }
         
         public function view_online_order_details( $order_ID ) {
-            return $this->customFetchAll("SELECT patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
+            return $this->customFetchAll("SELECT 
+            patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
             _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
-            medicine_in_order.amount, medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price 
+            medicine_in_order.amount AS order_amount, 
+            medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price, medical_products.amount AS available_amount 
             FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID = $order_ID");
         }
 
@@ -145,6 +147,10 @@ use app\core\DbModel;
                 return 'Softcopy-prescription';
             }
 
+        }
+
+        public function getOrderByID($orderID) {
+            return $this->customFetchAll("SELECT * FROM _order WHERE order_ID = $orderID");
         }
 
     }

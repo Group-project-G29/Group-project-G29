@@ -517,13 +517,25 @@ select {
 }
 
 .table-row {
-    
     background-color: var(--clr-white);
     border-radius: 50px;
     border:2px solid var(--clr-grey);
 }
 
+.table-row-faded {
+    background-color: gray;
+    border-radius: 50px;
+    border:2px solid var(--clr-grey);
+}
+
 .table-row img {
+    width:9vh;
+    height: 7vh;
+    display: flex;
+    align-items: center;
+}
+
+.table-row-faded img {
     width:9vh;
     height: 7vh;
     display: flex;
