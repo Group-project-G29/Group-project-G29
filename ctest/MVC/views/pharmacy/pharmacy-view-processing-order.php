@@ -3,7 +3,7 @@
     $component=new Component();
     $total = 0;
     $NA_count =0;
-    // var_dump($orders);
+    // var_dump($order_type);
     //     exit;
 
 ?>
@@ -55,6 +55,10 @@
 <div class='upper-container'>
     <?php echo $component->button('cancle-process','','Cancle Process','button--class-3  width-10','cancle-process');?>
 
+    <?php if( $order_type=='Softcopy-prescription' ): ?>
+    <?php echo $component->button('add-more-medicine','','Add More Medicine','button--class-0  width-10','add-more-medicine');?>
+    <?php endif; ?>
+
     <?php if( $NA_count>0 ): ?>
     <?php echo $component->button('notify-availability','','Send Notification','button--class-0  width-10','notify-availability');?>
     <?php endif; ?>
@@ -79,5 +83,10 @@
     const btn3=document.getElementById("notify-availability");
     btn3.addEventListener('click',function(){
         location.href="pharmacy-notify-processing-order?id="+<?=$order['order_ID']?>; //get
+    })
+
+    const btn4=document.getElementById("add-more-medicine");
+    btn4.addEventListener('click',function(){
+        location.href="pharmacy-add-medicine-processing-order?id="+<?=$order['order_ID']?>; //get
     })
 </script>

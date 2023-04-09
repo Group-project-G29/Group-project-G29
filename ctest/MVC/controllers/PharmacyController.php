@@ -19,6 +19,55 @@ use app\models\PharmacyAdvertisement;
 
 class PharmacyController extends Controller{
 
+ //==========================PREVIOUS ORDERS=====================================
+    public function viewPreviousOrder(){
+        $this->setLayout("pharmacy",['select'=>'Previous Orders']);
+        $orderModel=new Order();
+        $orders=$orderModel->get_previous_orders(); 
+        $order_types = array();
+        foreach ($orders as $key=>$order){
+            $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
+        }
+        return $this->render('pharmacy/pharmacy-orders-previous',[
+            'orders'=>$orders,
+            'model'=>$orderModel,
+            'order_types'=>$order_types
+        ]);
+    }
+
+    public function DetailsPreviousOrder($request){
+        $parameters=$request->getParameters();
+        $this->setLayout("pharmacy",['select'=>'Previous Orders']);
+        $orderModel=new Order();
+        
+        $order_type = $orderModel->getOrderType($parameters[0]['id']);
+
+        if ( $order_type == 'Online Order' ) {
+            $orders=$orderModel->view_previous_online_order_details($parameters[0]['id']);
+            return $this->render('pharmacy/pharmacy-view-previous-order',[
+                'orders'=>$orders,
+                'order_type'=>$order_type,
+                'model'=>$orderModel,
+            ]);
+
+        } else if ( $order_type == 'E-prescription' ) {
+            $orders=$orderModel->view_previous_prescription__order_details($parameters[0]['id']);
+            return $this->render('pharmacy/pharmacy-view-previous-order',[
+                'orders'=>$orders,
+                'order_type'=>$order_type,
+                'model'=>$orderModel,
+            ]);
+
+        } else if ( $order_type == 'Softcopy-prescription' ) {
+            $orders=$orderModel->view_previous_prescription__order_details($parameters[0]['id']);
+            return $this->render('pharmacy/pharmacy-view-previous-order',[
+                'orders'=>$orders,
+                'order_type'=>$order_type,
+                'model'=>$orderModel,
+            ]);
+        }
+    }
+
 //===========================PENDING ORDERS======================================
     public function viewPendingOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
@@ -46,6 +95,7 @@ class PharmacyController extends Controller{
             $orders=$orderModel->view_online_order_details($parameters[0]['id']);
             return $this->render('pharmacy/pharmacy-view-pending-order',[
                 'orders'=>$orders,
+                'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
 
@@ -53,6 +103,7 @@ class PharmacyController extends Controller{
             $orders=$orderModel->view_prescription_details($parameters[0]['id']);
             return $this->render('pharmacy/pharmacy-view-pending-order',[
                 'orders'=>$orders,
+                'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
 
@@ -61,6 +112,7 @@ class PharmacyController extends Controller{
             if ($orders){
                 return $this->render('pharmacy/pharmacy-view-pending-order',[
                     'orders'=>$orders,
+                    'order_type'=>$order_type,
                     'model'=>$orderModel,
                 ]);
             } else {
@@ -70,6 +122,7 @@ class PharmacyController extends Controller{
                 // exit;
                 return $this->render('pharmacy/pharmacy-view-pending-sf-order',[
                     'orders'=>$orders,
+                    'order_type'=>$order_type,
                     'model'=>$prescriptionModel,
                 ]);
             }
@@ -87,12 +140,14 @@ class PharmacyController extends Controller{
             $orders=$orderModel->view_online_order_details($parameters[0]['id']);
             return $this->render('pharmacy/pharmacy-view-processing-order',[
                 'orders'=>$orders,
+                'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
         } else if ( $order_type == 'E-prescription' ) {
             $orders=$orderModel->view_prescription_details($parameters[0]['id']);
             return $this->render('pharmacy/pharmacy-view-processing-order',[
                 'orders'=>$orders,
+                'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
 
@@ -135,6 +190,7 @@ class PharmacyController extends Controller{
             $orders=$orderModel->view_online_order_details($parameters[0]['id']);
             return $this->render('pharmacy/pharmacy-view-processing-order',[
                 'orders'=>$orders,
+                'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
 
@@ -142,6 +198,7 @@ class PharmacyController extends Controller{
             $orders=$orderModel->view_prescription_details($parameters[0]['id']);
             return $this->render('pharmacy/pharmacy-view-processing-order',[
                 'orders'=>$orders,
+                'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
 
@@ -149,6 +206,7 @@ class PharmacyController extends Controller{
             $orders=$orderModel->view_prescription_details($parameters[0]['id']);
             return $this->render('pharmacy/pharmacy-view-processing-order',[
                 'orders'=>$orders,
+                'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
         }
@@ -159,13 +217,46 @@ class PharmacyController extends Controller{
                                         // return $this->render('pharmacy/pharmacy-view-processing-order',[
                                         //     'orders'=>$orders,
                                         //     'model'=>$orderModel,
-                                        // ]);
+                                        // ])
+    }
+
+    public function addMedicineProcessingOrder($request){     //NOT
+        
+        $parameters=$request->getParameters();
+        // var_dump($parameters);
+        // exit;
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orderModel=new Order();
+        
+        // $order_type = $orderModel->getOrderType($parameters[0]['id']);
+
+        // if ( $order_type == 'Online Order' ) {
+        //     $orders=$orderModel->view_online_order_details($parameters[0]['id']);
+        //     return $this->render('pharmacy/pharmacy-view-processing-order',[
+        //         'orders'=>$orders,
+        //         'model'=>$orderModel,
+        //     ]);
+
+        // } else if ( $order_type == 'Softcopy-prescription' ) {
+            $orders=$orderModel->view_prescription_details($parameters[0]['id']);
+            // var_dump(($orders));
+            // EXIT;
+            $prescreption = new Prescription;
+            // $prescreption_medicine = $prescreption->add_med_rec($_POST["medicine"], $parameters[1]['presid'], $_POST["amount"]);
+            $curr_pres_orders = $prescreption->get_curr_orders($orders[0]['prescription_ID']);
+            return $this->render('pharmacy/pharmacy-view-pending-sf-order',[
+                'orders'=>$orders,   
+                'model'=>$prescreption,
+                'curr_pres_orders'=>$curr_pres_orders 
+            ]);
+        // }
+        
     }
 
     public function notifyProcessingOrder($request){
         $parameters=$request->getParameters();
-        var_dump($parameters);
-        echo "notification sent";
+        // var_dump($parameters);
+        // echo "notification sent";
 
         $orderModel = new Order();
         $order = $orderModel->getOrderByID($parameters[0]['id']);
@@ -180,14 +271,17 @@ class PharmacyController extends Controller{
         }
 
         $create_notification = $notificationModel->createOrderNotification( $order[0]['order_ID'], $order[0]['patient_ID'] );
-        
         $this->setLayout("pharmacy",['select'=>'Orders']);
-        $order_type = $orderModel->getOrderType($parameters[0]['id']);
 
+        $order_type = $orderModel->getOrderType($parameters[0]['id']);
+        
         if ( $order_type == 'Online Order' ) {
             $orders=$orderModel->view_online_order_details($parameters[0]['id']);
+            // var_dump($orders);
+            // exit;
             return $this->render('pharmacy/pharmacy-view-processing-order',[
                 'orders'=>$orders,
+                'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
 
@@ -195,6 +289,7 @@ class PharmacyController extends Controller{
             $orders=$orderModel->view_prescription_details($parameters[0]['id']);
             return $this->render('pharmacy/pharmacy-view-processing-order',[
                 'orders'=>$orders,
+                'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
 
@@ -202,6 +297,7 @@ class PharmacyController extends Controller{
             $orders=$orderModel->view_prescription_details($parameters[0]['id']);
             return $this->render('pharmacy/pharmacy-view-processing-order',[
                 'orders'=>$orders,
+                'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
         }
@@ -264,7 +360,7 @@ class PharmacyController extends Controller{
         }
             
         $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'packed');
-        $orders=$orderModel->get_delivering_orders();
+        $orders=$orderModel->get_packed_orders();
         return $this->render('pharmacy/pharmacy-orders-delivering',[
             'orders'=>$orders,
             'model'=>$orderModel
@@ -275,7 +371,7 @@ class PharmacyController extends Controller{
     public function viewDeliveringOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $orders=$orderModel->get_delivering_orders();
+        $orders=$orderModel->get_packed_orders();
 
         $order_types = array();
         foreach ($orders as $key=>$order){
@@ -353,9 +449,11 @@ class PharmacyController extends Controller{
         // var_dump($patient);
         // exit;
         return $this->render('pharmacy/pharmacy-view-pending-sf-order',[
-            'orders'=>$orders,
+            //pass medicine names strength [panadol-50mg=>panadol-tablet],
+
+            'orders'=>$orders,    //to get patient details and prescription photo
             'model'=>$prescreption,
-            'curr_pres_orders'=>$curr_pres_orders
+            'curr_pres_orders'=>$curr_pres_orders  // to get medicines of prescription
         ]);
     }
 

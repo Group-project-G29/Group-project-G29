@@ -20,18 +20,17 @@
     <h3>Pickup Status : <?=$orders[0]['pickup_status']?></h3>
 </div>
 
+<!-- =========================IF AVAILABLE================================ -->
+        <div class="table-container">
+            <img src="https://th.bing.com/th/id/OIP.JJIj5kC8a8c6vvYoxEBuUwHaH0?pid=ImgDet&rs=1" >
+            <!-- <img src="<?=$orders[0]["location"]?>" alt="Prescription here. This is an image from web."> -->
+            <!-- <?php echo($orders[0]["location"]) ?><br> -->
 
-
-<div class="table-container">
-
-    <img src="https://th.bing.com/th/id/OIP.JJIj5kC8a8c6vvYoxEBuUwHaH0?pid=ImgDet&rs=1" >
-    <!-- <img src="<?=$orders[0]["location"]?>" alt="Prescription here. This is an image from web."> -->
-    <!-- <?php echo($orders[0]["location"]) ?><br> -->
-
-    <?php
-        // echo '<img src="' . $orders[0]["location"] . '"alt="Prescription here. This is an image from web."/>';
-        ?>
-</div>
+            <?php
+                // echo '<img src="' . $orders[0]["location"] . '"alt="Prescription here. This is an image from web."/>';
+                ?>
+        </div>
+<!-- ===================================================================== -->
 
 
 <section class="form-body" style="padding-bottom:100px">
@@ -61,7 +60,7 @@
     $form=Form::begin('pharmacy-new-order-items?cmd=nr&presid='.$orders[0]["prescription_ID"],'post');
     ?> 
         <div class="new-order-add-item-col">
-            <?php echo $form->editableselect('medicine','Medicine Name','field', ['panadol'=>48, 'vitamin-C'=>50]) ?>
+            <?php echo $form->editableselect('medicine','Medicine Name','field', ['pandol'=>'panadol', 'vitamin-C'=>50]) ?>
         </div>
         <div class="new-order-add-item-col">
             <?php echo $form->editableselect('amount','Amount','field',[]) ?>
@@ -77,6 +76,57 @@
 </div>
 <?php Form::end() ?>   
     
+
+<!-- ================================popup================================= -->
+<div class="popup-container" id="popup">
+    <div class="modal-form">
+        
+            <h1 class="modal-title">Add Report Template</h1>
+        
+        <div class="form-body">
+        <?php $form = Form::begin('lab-add-new-test?cmd=tmp', 'post'); ?>
+        <?= $component->button('btn', 'submit', 'NEXT', 'button--class-5', 'btn-2'); ?>
+        <?php Form::end() ?>
+        <?= $component->button('btn', 'submit', 'next', 'button--class-5', 'btn-2'); ?>
+       
+        </div>
+        <?= $component->button('btn', 'submit', "&times", '', 'closebtn'); ?>
+
+    </div>
+
+</div>
+
+<script>
+    // elementsArray = document.querySelectorAll("#btn-2");
+    // console.log(elementsArray);
+    // elementsArray.forEach(function(elem) {
+    //     elem.addEventListener("click", function() {
+    //         location.href = 'lab-test-template'; //pass the variable value
+    //     });
+    // });
+
+    // var popup=document.getElementById("popup");
+    // var closebtn=document.getElementById("closebtn");
+    // var addtemplatebtn=document.getElementById("btn-1");
+    // var add=document.getElementById("btn-2");
+    // addtemplatebtn.onclick=function(){
+    //     popup.style.display="block";
+    // }
+    // closebtn.onclick=function(){
+    //     popup.style.display="none";
+    // } 
+    // add.onclick=function(x){
+    //     x.disable=true;
+    // }
+
+    // window.onclick=function(event){
+    //     if(event.target== popup){
+    //         popup.style.display="none";
+    //     }
+    // }
+</script>
+<!-- ================================popup================================= -->
+
 
 
 <script>
