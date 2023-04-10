@@ -109,34 +109,36 @@ class PharmacyController extends Controller{
 
         } else if ( $order_type == 'Softcopy-prescription' ) {
             $orders=$orderModel->view_prescription_details($parameters[0]['id']);
-            if ($orders){
-                return $this->render('pharmacy/pharmacy-view-pending-order',[
-                    'orders'=>$orders,
-                    'order_type'=>$order_type,
-                    'model'=>$orderModel,
-                ]);
-            } else {
+            // if ($orders){
+                // return $this->render('pharmacy/pharmacy-view-pending-order',[
+                //     'orders'=>$orders,
+                //     'order_type'=>$order_type,
+                //     'model'=>$orderModel,
+                // ]);
+            // } else {
                 $prescriptionModel = new Prescription;
                 $orders=$prescriptionModel->get_prescription_location($parameters[0]['id']);
                 // var_dump($orders);
                 // exit;
-                return $this->render('pharmacy/pharmacy-view-pending-sf-order',[
+                return $this->render('pharmacy/pharmacy-view-pending-order',[
                     'orders'=>$orders,
                     'order_type'=>$order_type,
                     'model'=>$prescriptionModel,
                 ]);
-            }
+            // }
         }
     }
 
     public function TakePendingOrder($request){
         $parameters=$request->getParameters();
+        // var_dump($parameters);
+        // exit;
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
         $order_type = $orderModel->getOrderType($parameters[0]['id']);
-
+        $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'processing');
+        
         if ( $order_type =='Online Order') {
-            $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'processing');
             $orders=$orderModel->view_online_order_details($parameters[0]['id']);
             return $this->render('pharmacy/pharmacy-view-processing-order',[
                 'orders'=>$orders,
@@ -150,15 +152,16 @@ class PharmacyController extends Controller{
                 'order_type'=>$order_type,
                 'model'=>$orderModel,
             ]);
-
+            
         } else if ( $order_type='Softcopy-prescription' ) {
-        //     $orders=$orderModel->view_prescription_details($parameters[0]['id']);
-        //     if ($orders) {
-
-        //     } else {
-
-        //     }
-            //may be no need to mention about sf here as it is a new create of order
+            $orders=$orderModel->view_prescription_details($parameters[0]['id']);
+            $prescriptionModel = new Prescription;
+            $orders=$prescriptionModel->get_prescription_location($parameters[0]['id']);
+            return $this->render('pharmacy/pharmacy-view-pending-sf-order',[
+                'orders'=>$orders,
+                'order_type'=>$order_type,
+                'model'=>$prescriptionModel,
+            ]);
         }
 
     }
@@ -203,11 +206,18 @@ class PharmacyController extends Controller{
             ]);
 
         } else if ( $order_type == 'Softcopy-prescription' ) {
-            $orders=$orderModel->view_prescription_details($parameters[0]['id']);
-            return $this->render('pharmacy/pharmacy-view-processing-order',[
+            $prescriptionModel = new Prescription;
+            $orders=$prescriptionModel->get_prescription_location($parameters[0]['id']);
+            $curr_pres_orders = $prescriptionModel->get_curr_orders($orders[0]['prescription_ID']);
+
+            // var_dump($orders);
+            // var_dump($curr_pres_orders);
+            // exit;
+            return $this->render('pharmacy/pharmacy-view-pending-sf-order',[
                 'orders'=>$orders,
                 'order_type'=>$order_type,
                 'model'=>$orderModel,
+                'curr_pres_orders'=>$curr_pres_orders 
             ]);
         }
                                         // $parameters=$request->getParameters();

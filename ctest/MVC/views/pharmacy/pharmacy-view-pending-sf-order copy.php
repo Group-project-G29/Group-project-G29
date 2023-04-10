@@ -4,9 +4,7 @@
     use \app\core\form\Form;
     $component=new Component();
     $total = 0;
-    $NA_count = 0;
     // var_dump($orders);
-    // var_dump($curr_pres_orders);
     // exit;
 ?>
 
@@ -22,18 +20,41 @@
     <h3>Pickup Status : <?=$orders[0]['pickup_status']?></h3>
 </div>
 
+<!-- =========================IF AVAILABLE================================ -->
+        <div class="table-container">
+            <img src="https://th.bing.com/th/id/OIP.JJIj5kC8a8c6vvYoxEBuUwHaH0?pid=ImgDet&rs=1" >
+            <!-- <img src="<?=$orders[0]["location"]?>" alt="Prescription here. This is an image from web."> -->
+            <!-- <?php echo($orders[0]["location"]) ?><br> -->
 
+            <?php
+                // echo '<img src="' . $orders[0]["location"] . '"alt="Prescription here. This is an image from web."/>';
+                ?>
+        </div>
+<!-- ===================================================================== -->
 
 
 <section class="form-body" style="padding-bottom:100px">
- 
+    
+<div class="main_title">
+    <h2 class="fs-150 fc-color--dark">Enter the Medicines</h2>
+</div>
+<?php if (isset($curr_pres_orders)): ?>
+    <div class="table-container">
+        <table border="0">
+            <?php foreach($curr_pres_orders as $key=>$curr_pres_order): ?>
+            <tr class="table-row">
+                <td><?=$curr_pres_order['med_ID']?></td>  
+                <td><?=$curr_pres_order['amount']?></td>  
+            </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+<?php endif; ?>
+
 <div class="form-body-fields">
     
 <!-- component and call when click the add button -->
 <div class="new-order-add-item"> 
-    <div class="main_title">
-        <h2 class="fs-150 fc-color--dark">Enter the Medicines</h2>
-    </div>
     <?php
     $component=new Component();
     $form=Form::begin('pharmacy-new-order-items?cmd=nr&presid='.$orders[0]["prescription_ID"],'post');
@@ -50,59 +71,14 @@
         </div>
     </div>
     
-    <!-- <div><?php echo $component->button("add-order","submit","Confirm Medicines","button--class-0","add-order")?></div> -->
+    <div><?php echo $component->button("add-order","submit","Confirm Medicines","button--class-0","add-order")?></div>
     
 </div>
 <?php Form::end() ?>   
-
-<?php if (isset($curr_pres_orders)): ?>
-    <div class="table-container">
-        <table border="0">
-            <?php foreach($curr_pres_orders as $key=>$curr_pres_order): ?>
-                <?php if( (int)$curr_pres_order['order_amount'] < (int)$curr_pres_order['available_amount'] ): ?>
-                    <tr class="table-row">
-                        <td><?=$curr_pres_order['med_ID']?></td>  
-                        <td><?=$curr_pres_order['order_amount']?></td>
-                        <?php $total = $total + $curr_pres_order['unit_price']*$curr_pres_order['order_amount'] ?>
-                    </tr>
-                <?php else: ?>
-                    <tr class="table-row-faded">
-                        <td><?=$curr_pres_order['med_ID']?></td>  
-                        <td><?=$curr_pres_order['order_amount']?></td>
-                        <?php $NA_count = $NA_count + 1 ?>
-                    </tr>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </table>
-    </div>
-<?php endif; ?>
-<h1>Total Price : <?=$total?></h1>
-
-<div class='upper-container'>
-    <?php echo $component->button('cancle-process','','Cancle Process','button--class-3  width-10','cancle-process');?>
-
-    <?php if( $NA_count>0 ): ?>
-    <?php echo $component->button('notify-availability','','Send Notification','button--class-0  width-10','notify-availability');?>
-    <?php endif; ?>
-
-    <?php echo $component->button('finish-process','','Finish Process','button--class-0  width-10','finish-process');?>
-</div>
-
-<!-- =========================IF AVAILABLE================================ -->
-<div class="table-container">
-            <img src="https://th.bing.com/th/id/OIP.JJIj5kC8a8c6vvYoxEBuUwHaH0?pid=ImgDet&rs=1" >
-            <!-- <img src="<?=$orders[0]["location"]?>" alt="Prescription here. This is an image from web."> -->
-            <!-- <?php echo($orders[0]["location"]) ?><br> -->
-
-            <?php
-                // echo '<img src="' . $orders[0]["location"] . '"alt="Prescription here. This is an image from web."/>';
-                ?>
-        </div>
-<!-- ===================================================================== -->
     
 
 <!-- ================================popup================================= -->
-<!-- <div class="popup-container" id="popup">
+<div class="popup-container" id="popup">
     <div class="modal-form">
         
             <h1 class="modal-title">Add Report Template</h1>
@@ -118,7 +94,7 @@
 
     </div>
 
-</div> -->
+</div>
 
 <script>
     // elementsArray = document.querySelectorAll("#btn-2");
@@ -165,20 +141,5 @@
     // btn1.addEventListener('click',function(){
     //     location.href="pharmacy-take-pending-order?id="+<?=$order['order_ID']?>; //get
     // })
-
-    const btn1=document.getElementById("cancle-process");
-    btn1.addEventListener('click',function(){
-        location.href="pharmacy-cancle-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
-    })
-
-    const btn2=document.getElementById("finish-process");
-    btn2.addEventListener('click',function(){
-        location.href="pharmacy-finish-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
-    })
-
-    const btn3=document.getElementById("notify-availability");
-    btn3.addEventListener('click',function(){
-        location.href="pharmacy-notify-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
-    })
     
 </script>
