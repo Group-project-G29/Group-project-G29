@@ -28,6 +28,12 @@ $form=Form::begin('','post');?>
     <?php echo $form->spanfield($model,'unit_price','Unit Price*','field','text') ?>
     <?php echo $form->spanfield($model,'amount','Amount','field ','text') ?>
     <?php echo $form->spanfield($model,'img','Medicine Picture','field','file') ?>
+    <label>
+        Restrict Status
+        <input type="checkbox" name="restrict_status" value="1">
+    </label>
+
+
     </table>
     <div><?php echo $component->button("add-medicine","submit","Add Medicine","button--class-0","update-medicine")?></div>
     

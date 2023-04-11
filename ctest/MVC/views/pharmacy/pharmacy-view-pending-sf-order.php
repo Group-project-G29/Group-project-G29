@@ -100,71 +100,7 @@
         </div>
 <!-- ===================================================================== -->
     
-
-<!-- ================================popup================================= -->
-<!-- <div class="popup-container" id="popup">
-    <div class="modal-form">
-        
-            <h1 class="modal-title">Add Report Template</h1>
-        
-        <div class="form-body">
-        <?php $form = Form::begin('lab-add-new-test?cmd=tmp', 'post'); ?>
-        <?= $component->button('btn', 'submit', 'NEXT', 'button--class-5', 'btn-2'); ?>
-        <?php Form::end() ?>
-        <?= $component->button('btn', 'submit', 'next', 'button--class-5', 'btn-2'); ?>
-       
-        </div>
-        <?= $component->button('btn', 'submit', "&times", '', 'closebtn'); ?>
-
-    </div>
-
-</div> -->
-
 <script>
-    // elementsArray = document.querySelectorAll("#btn-2");
-    // console.log(elementsArray);
-    // elementsArray.forEach(function(elem) {
-    //     elem.addEventListener("click", function() {
-    //         location.href = 'lab-test-template'; //pass the variable value
-    //     });
-    // });
-
-    // var popup=document.getElementById("popup");
-    // var closebtn=document.getElementById("closebtn");
-    // var addtemplatebtn=document.getElementById("btn-1");
-    // var add=document.getElementById("btn-2");
-    // addtemplatebtn.onclick=function(){
-    //     popup.style.display="block";
-    // }
-    // closebtn.onclick=function(){
-    //     popup.style.display="none";
-    // } 
-    // add.onclick=function(x){
-    //     x.disable=true;
-    // }
-
-    // window.onclick=function(event){
-    //     if(event.target== popup){
-    //         popup.style.display="none";
-    //     }
-    // }
-</script>
-<!-- ================================popup================================= -->
-
-
-
-<script>
-    // elementsArray1 = document.querySelectorAll("add-more");
-    // elementsArray1.forEach(function(elem) {
-    //     elem.addEventListener("click", function() {
-    //         location.href='delivery-view-delivery?id='+elem.id;
-    //     });
-    // });
-
-    // const btn1=document.getElementById("take-order");
-    // btn1.addEventListener('click',function(){
-    //     location.href="pharmacy-take-pending-order?id="+<?=$order['order_ID']?>; //get
-    // })
 
     const btn1=document.getElementById("cancle-process");
     btn1.addEventListener('click',function(){

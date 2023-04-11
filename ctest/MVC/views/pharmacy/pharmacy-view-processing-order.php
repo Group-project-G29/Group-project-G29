@@ -72,21 +72,21 @@
 
     const btn1=document.getElementById("cancle-process");
     btn1.addEventListener('click',function(){
-        location.href="pharmacy-cancle-processing-order?id="+<?=$order['order_ID']?>; //get
+        location.href="pharmacy-cancle-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
     })
 
     const btn2=document.getElementById("finish-process");
     btn2.addEventListener('click',function(){
-        location.href="pharmacy-finish-processing-order?id="+<?=$order['order_ID']?>; //get
+        location.href="pharmacy-finish-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
     })
 
     const btn3=document.getElementById("notify-availability");
     btn3.addEventListener('click',function(){
-        location.href="pharmacy-notify-processing-order?id="+<?=$order['order_ID']?>; //get
+        location.href="pharmacy-notify-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
     })
 
     const btn4=document.getElementById("add-more-medicine");
     btn4.addEventListener('click',function(){
-        location.href="pharmacy-add-medicine-processing-order?id="+<?=$order['order_ID']?>; //get
+        location.href="pharmacy-add-medicine-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
     })
 </script>

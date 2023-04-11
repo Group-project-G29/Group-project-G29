@@ -156,10 +156,14 @@ use app\core\DbModel;
         public function set_processing_status ( $order_ID, $status ) {
             return $this->customFetchAll("UPDATE _order SET processing_status = '$status' WHERE order_ID = $order_ID");
         }
+
+        public function pick_up_order ( $order_ID, $status ) {
+            return $this->customFetchAll("UPDATE _order SET processing_status = '$status', completed_date=CURRENT_DATE, completed_time=CURRENT_TIME WHERE order_ID = $order_ID");
+        }
         
         public function get_postal_code( $order_ID ) {
             //error in sql
-            return $this->customFetchAll("SELECT delivery.postal_code, _order.order_ID, delivery.delivery_ID, _order.pickup_status FROM delivery INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.order_ID = $order_ID");
+            return $this->customFetchAll("SELECT delivery.postal_code, _order.order_ID, delivery.delivery_ID, _order.pickup_status FROM delivery RIGHT JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.order_ID = $order_ID");
         }
 
         public function getOrderType( $order_ID ) {

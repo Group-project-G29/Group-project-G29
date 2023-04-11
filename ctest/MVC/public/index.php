@@ -119,6 +119,8 @@ $app->router->get('/ctest/pharmacy-cancle-processing-order',[PharmacyController:
 $app->router->get('/ctest/pharmacy-add-medicine-processing-order',[PharmacyController::class,'addMedicineProcessingOrder']);
 $app->router->get('/ctest/pharmacy-orders-delivering',[PharmacyController::class,'viewDeliveringOrder']);
 $app->router->get('/ctest/pharmacy-track-order',[PharmacyController::class,'trackOrder']);
+$app->router->get('/ctest/pharmacy-go-to-process-order',[PharmacyController::class,'processOrderAgain']);
+$app->router->get('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
 
 $app->router->get('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
 $app->router->post('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);

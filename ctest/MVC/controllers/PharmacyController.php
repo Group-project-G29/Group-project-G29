@@ -131,8 +131,6 @@ class PharmacyController extends Controller{
 
     public function TakePendingOrder($request){
         $parameters=$request->getParameters();
-        // var_dump($parameters);
-        // exit;
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
         $order_type = $orderModel->getOrderType($parameters[0]['id']);
@@ -340,33 +338,36 @@ class PharmacyController extends Controller{
 
     public function finishProcessingOrder($request){    //check if the order is pickup or delivery
         $parameters=$request->getParameters();
-        var_dump($parameters);
-        // exit;
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $riderMOdel = new Employee;
         $orderModel=new Order();
         
         //selected the available rider 
         $postal_code = $orderModel->get_postal_code($parameters[0]['id']);
-        var_dump($postal_code);
-        exit;
+        // var_dump($postal_code);
+        // exit;
 
-        if ( $postal_code )
-
-        $rider = $riderMOdel->select_suitable_rider($postal_code[0]["postal_code"], $postal_code[0]["order_ID"]);
-        $deliveryModel = new Delivery;
-        if($rider) {
-            $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider"]);
-        } else {
-            $rider = $riderMOdel->select_queue_rider();
-            if ($rider) {
-                $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider_ID"]);
-                //dequeue a delivery rider - check something went wrong-> deleted few records at once
-                $deleted_rider = $riderMOdel->dequeue_rider($rider[0]["delivery_rider_ID"]);
+        if ( $postal_code[0]["pickup_status"] == 'delivery' ) {
+            $rider = $riderMOdel->select_suitable_rider($postal_code[0]["postal_code"], $postal_code[0]["order_ID"]);
+            $deliveryModel = new Delivery;
+            if($rider) {
+                echo 'suitable rider selected';
+                $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider"]);
             } else {
-                //if there were no rider available in the queue
-                $updated_order=$deliveryModel->set_delivery_without_rider($parameters[0]['id']);
+                $rider = $riderMOdel->select_queue_rider();
+
+                if ($rider) {
+                    echo 'queue rider selected';
+                    $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider_ID"]);
+                    //dequeue a delivery rider - check something went wrong-> deleted few records at once
+                    $deleted_rider = $riderMOdel->dequeue_rider($rider[0]["delivery_rider_ID"]);
+                } else {
+                    //if there were no rider available in the queue
+                    echo 'null rider selected';
+                    $updated_order=$deliveryModel->set_delivery_without_rider($parameters[0]['id']);
+                }
             }
+            exit;
         }
             
         $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'packed');
@@ -377,12 +378,12 @@ class PharmacyController extends Controller{
         ]);
     }
     
-//==========================DELIVERING ORDERS=====================================
+    //==========================DELIVERING ORDERS=====================================
     public function viewDeliveringOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
         $orders=$orderModel->get_packed_orders();
-
+        
         $order_types = array();
         foreach ($orders as $key=>$order){
             $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
@@ -408,6 +409,61 @@ class PharmacyController extends Controller{
         return $this->render('pharmacy/pharmacy-track-order',[
             'orders'=>$orders,
             'model'=>$orderModel,
+        ]);
+    }
+
+    public function processOrderAgain(Request $request){
+        // echo "processOrderAgain";
+        // exit;
+        $parameters=$request->getParameters();
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orderModel=new Order();
+        $order_type = $orderModel->getOrderType($parameters[0]['id']);
+        $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'processing');
+        
+        if ( $order_type =='Online Order') {
+            $orders=$orderModel->view_online_order_details($parameters[0]['id']);
+            return $this->render('pharmacy/pharmacy-view-processing-order',[
+                'orders'=>$orders,
+                'order_type'=>$order_type,
+                'model'=>$orderModel,
+            ]);
+        } else if ( $order_type == 'E-prescription' ) {
+            $orders=$orderModel->view_prescription_details($parameters[0]['id']);
+            return $this->render('pharmacy/pharmacy-view-processing-order',[
+                'orders'=>$orders,
+                'order_type'=>$order_type,
+                'model'=>$orderModel,
+            ]);
+            
+        } else if ( $order_type='Softcopy-prescription' ) {
+            $orders=$orderModel->view_prescription_details($parameters[0]['id']);
+            $prescriptionModel = new Prescription;
+            $orders=$prescriptionModel->get_prescription_location($parameters[0]['id']);
+            return $this->render('pharmacy/pharmacy-view-pending-sf-order',[
+                'orders'=>$orders,
+                'order_type'=>$order_type,
+                'model'=>$prescriptionModel,
+            ]);
+        }
+    }
+
+    public function pickupOrder(Request $request){
+        // echo "pickupOrder";
+        // exit;
+        $parameters=$request->getParameters();
+        $this->setLayout("pharmacy",['select'=>'Previous Orders']);
+        $orderModel=new Order();
+        $updated_order=$orderModel->pick_up_order($parameters[0]['id'],'pickedup');
+        $orders=$orderModel->get_previous_orders(); 
+        $order_types = array();
+        foreach ($orders as $key=>$order){
+            $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
+        }
+        return $this->render('pharmacy/pharmacy-orders-previous',[
+            'orders'=>$orders,
+            'model'=>$orderModel,
+            'order_types'=>$order_types
         ]);
     }
 
@@ -496,7 +552,6 @@ class PharmacyController extends Controller{
         }
 
         if($request->isPost()){
-            // update medicine
             $medicineModel->loadData($request->getBody());
             $medicineModel->loadFiles($_FILES);
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){

@@ -20,6 +20,9 @@ class Form{
     public function select(Model $model,$name,$label,$class,$options,$id=""){
         return new Select($model,$name,$label,$class,$options,$id);
     }
+    // public function check(Model $model,$name,$label,$class,$options,$id=""){
+    //     return new Check($model,$name,$label,$class,$options,$id);
+    // }
     public function spanselect(Model $model,$name,$label,$class,$options,$id=""){
         return new SpanSelect($model,$name,$label,$class,$options,$id);
     }
