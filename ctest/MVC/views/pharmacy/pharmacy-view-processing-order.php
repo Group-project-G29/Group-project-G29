@@ -32,16 +32,16 @@
                 <td><?=$order['med_ID']?></td>
                 <td><?=$order['name']?></td> 
                 <td><?=$order['strength']?></td> 
-                <td><?=$order['unit_price']?></td> 
+                <td><?=$order['current_price']?></td> 
                 <td><?=$order['order_amount']?></td> 
-                <td><?=$order['unit_price']*$order['order_amount']?></td> 
-                <?php $total = $total + $order['unit_price']*$order['order_amount'] ?>
+                <td><?=$order['current_price']*$order['order_amount']?></td> 
+                <?php $total = $total + $order['current_price']*$order['order_amount'] ?>
             <?php else: ?>
                 <tr class="table-row-faded">
                 <td><?=$order['med_ID']?></td>
                 <td><?=$order['name']?></td> 
                 <td><?=$order['strength']?></td> 
-                <td><?=$order['unit_price']?></td> 
+                <td><?=$order['current_price']?></td> 
                 <td><?= "Out of Stock" ?></td> 
                 <td></td> 
                 <?php $NA_count = $NA_count + 1 ?>

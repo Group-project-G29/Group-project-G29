@@ -569,8 +569,8 @@ class PharmacyController extends Controller{
                     Application::$app->response->redirect('/ctest/pharmacy-view-medicine');
                     exit; 
                  } else {
-                    echo 'implement';
-                    exit;
+                    // echo 'implement';
+                    // exit;
                     $medicine=$medicineModel->get_medicine_details($parameters[1]['id']);
                     $medicineModel->updateData($medicine,$medicineModel->fileDestination());
                     Application::$app->session->set('medicine',$parameters[1]['id']);

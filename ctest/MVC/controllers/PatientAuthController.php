@@ -514,7 +514,8 @@ class PatientAuthController extends Controller{
                 $order=Application::$app->session->get('order');
                 $delivery=Application::$app->session->get('delivery');
                 //---------------remove items from the session--------------------
-                $delivery->createPIN();
+                // $delivery->createPIN();
+                // $delivery->createPIN();
                 $cartModel=new Cart();
                  //get the patient cart
                  $user=$cartModel->getPatientCart(Application::$app->session->get('user'));

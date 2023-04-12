@@ -109,7 +109,7 @@ use app\core\DbModel;
             return $this->customFetchAll("SELECT 
             patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
             _order.order_ID, _order.pickup_status, _order.completed_date, _order.processing_status, _order.completed_time, 
-            medicine_in_order.amount AS order_amount, 
+            medicine_in_order.amount AS order_amount, medicine_in_order.order_current_price AS current_price,
             medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price, medical_products.amount AS available_amount 
             FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID = $order_ID");
         }
@@ -118,7 +118,7 @@ use app\core\DbModel;
             return $this->customFetchAll(" SELECT 
             patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
             _order.order_ID, _order.pickup_status, _order.completed_date, _order.processing_status, _order.completed_time, 
-            prescription_medicine.amount, 
+            prescription_medicine.amount, prescription_medicine.prescription_current_price AS current_price,
             medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price 
                         
             FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID
@@ -133,7 +133,7 @@ use app\core\DbModel;
             return $this->customFetchAll("SELECT 
             patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
             _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
-            medicine_in_order.amount AS order_amount, 
+            medicine_in_order.amount AS order_amount, medicine_in_order.order_current_price AS current_price,
             medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price, medical_products.amount AS available_amount 
             FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID = $order_ID");
         }
@@ -144,7 +144,7 @@ use app\core\DbModel;
             _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
             prescription_medicine.amount AS order_amount, 
             medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price, medical_products.amount AS available_amount, 
-            prescription.prescription_ID       
+            prescription.prescription_ID, prescription_medicine.prescription_current_price AS current_price      
             FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID
             INNER JOIN prescription ON _order.order_ID=prescription.order_ID 
             INNER JOIN prescription_medicine ON prescription.prescription_ID=prescription_medicine.prescription_ID 

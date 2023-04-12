@@ -8,7 +8,7 @@ use app\core\DbModel;
         public string $contact="";
         public string $address="";
         public string $delivery_rider="";
-        public string $confirmation_PIN="";
+        public string $PIN="";
         public string $postal_code="";
         public string $name="";
         public string $city="";
@@ -26,7 +26,7 @@ use app\core\DbModel;
                 'postal_code'=>[self::RULE_REQUIRED],
                 'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
                 'city'=>[self::RULE_REQUIRED],
-                'confirmation_PIN'=>[self::RULE_PIN_VALIDATION]
+                'PIN'=>[self::RULE_PIN_VALIDATION]
             ]; 
         }
         public function fileDestination(): array
@@ -45,26 +45,26 @@ use app\core\DbModel;
         }
         
         public function tableRecords(): array{
-            return ['delivery'=>['contact','address','postal_code','name','city','comment','confirmation_PIN']];
+            return ['delivery'=>['contact','address','postal_code','name','city','comment','PIN']];
         }
 
         public function attributes(): array
         {
-            return ['contact','address','postal_code','name','city','comment','confirmation_PIN'];
+            return ['contact','address','postal_code','name','city','comment','PIN'];
         }
-        public function setAttributes($contact,$address,$delivery_rider,$confirmation_PIN,$postal_code,$name,$comment){
+        public function setAttributes($contact,$address,$delivery_rider,$PIN,$postal_code,$name,$comment){
             $this->contact=$contact;
             $this->address=$address;
             $this->delivery_rider=$delivery_rider;
-            $this->confirmation_PIN=$confirmation_PIN;
+            $this->PIN=$PIN;
             $this->postal_code=$postal_code;
-            $this->confirmation_PIN=$confirmation_PIN;
+            $this->PIN=$PIN;
             $this->name=$name;
             $this->comment=$comment;
         }
-        public function createconfirmation_PIN(){
+        public function createPIN(){
             
-            $this->confirmation_PIN= "".(rand(0,9)).(rand(0,9)).(rand(0,9)).(rand(0,9));
+            $this->PIN= "".(rand(0,9)).(rand(0,9)).(rand(0,9)).(rand(0,9));
         }
         
 // functions

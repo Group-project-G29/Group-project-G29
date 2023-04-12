@@ -58,17 +58,28 @@
 <?php if (isset($curr_pres_orders)): ?>
     <div class="table-container">
         <table border="0">
+            <tr>
+                <th>Medicine ID</th><th>Medicine Name</th><th>Medicine Strength</th><th>Price per unit</th><th>Amount</th><th>Total Price</th>
+            </tr>
             <?php foreach($curr_pres_orders as $key=>$curr_pres_order): ?>
                 <?php if( (int)$curr_pres_order['order_amount'] < (int)$curr_pres_order['available_amount'] ): ?>
                     <tr class="table-row">
-                        <td><?=$curr_pres_order['med_ID']?></td>  
-                        <td><?=$curr_pres_order['order_amount']?></td>
-                        <?php $total = $total + $curr_pres_order['unit_price']*$curr_pres_order['order_amount'] ?>
+                        <td><?=$curr_pres_order['med_ID']?></td>
+                        <td><?=$curr_pres_order['name']?></td> 
+                        <td><?=$curr_pres_order['strength']?></td> 
+                        <td><?=$curr_pres_order['current_price']?></td> 
+                        <td><?=$curr_pres_order['order_amount']?></td> 
+                        <td><?=$curr_pres_order['current_price']*$curr_pres_order['order_amount']?></td> 
+                        <?php $total = $total + $curr_pres_order['current_price']*$curr_pres_order['order_amount'] ?>
                     </tr>
                 <?php else: ?>
                     <tr class="table-row-faded">
-                        <td><?=$curr_pres_order['med_ID']?></td>  
-                        <td><?=$curr_pres_order['order_amount']?></td>
+                        <td><?=$curr_pres_order['med_ID']?></td>
+                        <td><?=$curr_pres_order['name']?></td> 
+                        <td><?=$curr_pres_order['strength']?></td> 
+                        <td><?=$curr_pres_order['current_price']?></td> 
+                        <td><?=$curr_pres_order['order_amount']?></td> 
+                        <td><?=$curr_pres_order['current_price']*$curr_pres_order['order_amount']?></td> 
                         <?php $NA_count = $NA_count + 1 ?>
                     </tr>
                 <?php endif; ?>

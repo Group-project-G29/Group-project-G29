@@ -78,8 +78,9 @@ use app\core\DbModel;
         }
         //transfer item in cart to order and remove item in the cart
         //if order is a pickup $pickup_status should be true
-        public function transferCartItem($cartID,$pickup_status,$deliveryModel=new Delivery()){
+        public function transferCartItem($cartID,$pickup_status,$deliveryModel){
             //create order
+            $deliveryModel=new Delivery();
             $orderModel=new Order();
             $medicineModel=new Medicine();
             $orderModel->pickup_status=$pickup_status;
@@ -103,7 +104,7 @@ use app\core\DbModel;
                 if(!$medicineModel->checkStock($item['med_ID'])) continue;
                 $orderModel->addItem($orderID,$item['med_ID'],$item['amount']);
                 //reduce medicine
-                $medicineModel->reduceMedicine($item['mde_ID'],$item['amount'],true);
+                // $medicineModel->reduceMedicine($item['med_ID'],$item['amount'],true);
             }
             //check whether there is prescription in the cart
             //transfer prescription
