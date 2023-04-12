@@ -31,7 +31,7 @@ $form=Form::begin('','post');?>
     <label>
         Restrict Status
         <input type="checkbox" name="restrict_status" value="1">
-    </label>
+    </label> 
 
 
     </table>

@@ -90,19 +90,19 @@ use app\core\DbModel;
         //functions for orders
 
         public function get_previous_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE completed_time IS NOT NULL ORDER BY created_date ASC");
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'pickedup' ORDER BY created_date ASC");
         }
 
         public function get_pending_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'pending' AND completed_time IS NULL ORDER BY created_date ASC");
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'pending' ORDER BY created_date ASC");
         }
         
         public function get_processing_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'processing' AND completed_time IS NULL ORDER BY created_date ASC");
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'processing' ORDER BY created_date ASC");
         }
         
         public function get_packed_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'packed' AND completed_time IS NULL ORDER BY created_date ASC");
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'packed' ORDER BY created_date ASC");
         }
         
         public function view_previous_online_order_details( $order_ID ) {
@@ -154,16 +154,16 @@ use app\core\DbModel;
         }
 
         public function set_processing_status ( $order_ID, $status ) {
-            return $this->customFetchAll("UPDATE _order SET processing_status = '$status' WHERE order_ID = $order_ID");
+            return $this->customFetchAll("UPDATE _order SET processing_status = '$status', completed_time=CURRENT_TIME, completed_date=CURRENT_DATE WHERE order_ID = $order_ID");
         }
 
         public function pick_up_order ( $order_ID, $status ) {
             return $this->customFetchAll("UPDATE _order SET processing_status = '$status', completed_date=CURRENT_DATE, completed_time=CURRENT_TIME WHERE order_ID = $order_ID");
         }
         
-        public function get_postal_code( $order_ID ) {
+        public function get_postal_code( $delivery_ID ) {
             //error in sql
-            return $this->customFetchAll("SELECT delivery.postal_code, _order.order_ID, delivery.delivery_ID, _order.pickup_status FROM delivery RIGHT JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.order_ID = $order_ID");
+            return $this->customFetchAll("SELECT delivery.postal_code, _order.order_ID, delivery.delivery_ID, _order.pickup_status FROM delivery INNER JOIN _order ON delivery.delivery_ID = delivery.delivery_ID WHERE delivery.delivery_ID = $delivery_ID");
         }
 
         public function getOrderType( $order_ID ) {

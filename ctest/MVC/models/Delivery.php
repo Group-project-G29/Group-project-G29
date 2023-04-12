@@ -70,7 +70,7 @@ use app\core\DbModel;
 // functions
 
         public function get_unfinished_deliveries( $emp_ID ) {
-            return $this->customFetchAll("SELECT * FROM delivery WHERE completed_date IS NULL AND delivery_rider = $emp_ID");
+            return $this->customFetchAll("SELECT * FROM delivery INNER JOIN _order ON delivery.delivery_ID=_order.delivery_ID WHERE delivery.completed_date IS NULL AND _order.processing_status='packed' AND delivery.delivery_rider = $emp_ID");
         }
 
         public function get_finished_deliveries( $emp_ID ) {
@@ -85,8 +85,12 @@ use app\core\DbModel;
             return $this->customFetchAll("SELECT * FROM delivery INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE delivery.delivery_ID = $delivery_ID");
         }
 
-        public function update_completed_date_time( $delivery_ID ) {
+        public function update_completed_date_time_delivery( $delivery_ID ) {
             return $this->customFetchAll("UPDATE delivery SET completed_date = CURRENT_TIMESTAMP, completed_time = CURRENT_TIMESTAMP  WHERE delivery_ID = $delivery_ID");
+        }
+
+        public function update_processing_status_order( $delivery_ID ) {
+            return $this->customFetchAll("UPDATE _order SET processing_status='pickedup' WHERE delivery_ID = $delivery_ID");
         }
 
         public function update_rider_ID( $delivery_ID, $delivery_rider ) {

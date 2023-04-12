@@ -60,6 +60,8 @@ class DeliveryController extends Controller{
         
         //selected the available rider 
         $postal_code = $orderModel->get_postal_code($parameters[0]['id']);
+        var_dump($postal_code);
+        exit;
         $rider = $userModel->select_suitable_rider($postal_code[0]["postal_code"], $postal_code[0]["order_ID"]);
         
         $deliveryModel = new Delivery;

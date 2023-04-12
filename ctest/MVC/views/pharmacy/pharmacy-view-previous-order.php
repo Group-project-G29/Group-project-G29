@@ -31,9 +31,9 @@
             <td><?=$order['name']?></td> 
             <td><?=$order['strength']?></td> 
             <td><?=$order['unit_price']?></td> 
-            <td><?=$order['amount']?></td> 
-            <td><?=$order['unit_price']*$order['amount']?></td> 
-            <?php $total = $total + $order['unit_price']*$order['amount'] ?>
+            <td><?=$order['order_amount']?></td> 
+            <td><?=$order['unit_price']*$order['order_amount']?></td> 
+            <?php $total = $total + $order['unit_price']*$order['order_amount'] ?>
             <?php endforeach; ?>
         </tr>
     </table>

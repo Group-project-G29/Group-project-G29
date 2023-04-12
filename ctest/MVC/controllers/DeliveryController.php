@@ -23,6 +23,8 @@ class DeliveryController extends Controller{
         $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
         $deliveryModel=new Delivery();
         $delivery=$deliveryModel->get_unfinished_deliveries(Application::$app->session->get('userObject')->emp_ID);
+        // var_dump($delivery);
+        // exit;
         return $this->render('delivery/delivery-my-deliveries' ,[
             'deliveries'=>$delivery,
             'model'=>$deliveryModel
@@ -60,7 +62,10 @@ class DeliveryController extends Controller{
         
         //selected the available rider 
         $postal_code = $orderModel->get_postal_code($parameters[0]['id']);
+        // var_dump($postal_code);
         $rider = $userModel->select_suitable_rider($postal_code[0]["postal_code"], $postal_code[0]["order_ID"]);
+        // var_dump($rider);
+        // exit;
         
         $deliveryModel = new Delivery;
         if($rider) {
@@ -135,7 +140,8 @@ class DeliveryController extends Controller{
             }
 
             if ( $confirming_delivery[0]['PIN'] === $_POST['confirmation_PIN'] ) {
-                $update_status = $deliveryModel->update_completed_date_time($parameters[0]['id']);
+                $update_delivery_status = $deliveryModel->update_completed_date_time_delivery($parameters[0]['id']);
+                $update_order_status = $deliveryModel->update_processing_status_order($parameters[0]['id']);
                 
                 // ==== pop up implement ===============>>>
                 if ( $confirming_delivery[0]['payment_status'] == 'pending'){

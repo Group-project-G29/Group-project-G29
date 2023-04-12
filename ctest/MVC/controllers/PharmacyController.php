@@ -472,12 +472,16 @@ class PharmacyController extends Controller{
         $parameters=$request->getParameters();
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
+        var_dump($orderModel);
         // echo "dfasd";
         // exit;
 
         if($request->isPost()){
-        // var_dump($_POST);
-        // exit;
+        var_dump($_POST);
+        $orderModel->loadData($request->getBody());
+        // $orderModel->loadFiles($_FILES);
+        var_dump($orderModel);
+        exit;
 
             //enter to _order table
             //get order id in last one where pid|contact
@@ -554,12 +558,25 @@ class PharmacyController extends Controller{
         if($request->isPost()){
             $medicineModel->loadData($request->getBody());
             $medicineModel->loadFiles($_FILES);
+            
+            //Update medicine
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
+                var_dump($_POST);
+                exit;
                 if($medicineModel->validate() && $medicineModel->updateRecord(['med_ID'=>$parameters[1]['id']])){
                     $response->redirect('/ctest/view-medicine'); 
                     Application::$app->session->setFlash('success',"Medicine successfully updated ");
                     Application::$app->response->redirect('/ctest/pharmacy-view-medicine');
                     exit; 
+                 } else {
+                    echo 'implement';
+                    exit;
+                    $medicine=$medicineModel->get_medicine_details($parameters[1]['id']);
+                    $medicineModel->updateData($medicine,$medicineModel->fileDestination());
+                    Application::$app->session->set('medicine',$parameters[1]['id']);
+                    return $this->render('pharmacy/pharmacy-update-medicine',[
+                        'model'=>$medicineModel,
+                    ]);
                  };
             } 
             
