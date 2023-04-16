@@ -3,6 +3,7 @@ namespace app\models;
 
 use app\core\DbModel;
 use app\core\Application;
+use app\core\Date;
 use app\core\UserModel;
 use app\models\Patient;
 
@@ -58,6 +59,9 @@ class Employee extends DbModel{
     {
         return ['img'=>"media/images/emp-profile-pictures/".$this->img];
     }
+    public function getDocName($id){
+        return $this->fetchAssocAll(['nic'=>$id])[0]['name'];
+    }
     public function tableName(): string
     {
         return 'employee';
@@ -101,6 +105,15 @@ class Employee extends DbModel{
         return $Doctor;
         
     }
+    public function isNurse($nurse,$channeling){
+        $result=$this->customFetchAll("select * from nurse_channeling_allocataion where channeling_ID=".$channeling." and emp_ID=".$nurse);
+        if($result){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     public function getAssignedNurses($channeling_ID){
         
     }
@@ -108,6 +121,65 @@ class Employee extends DbModel{
     }
 
 
+    //doctor summary data generation
+    public function getThisMonthPatients($doctor){
+        return $this->customFetchAll("select count(appointment.appointment_ID) from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID right join patient on appointment.patient_ID=patient.patient_ID where channeling.doctor=".$doctor." and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."') and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."')")[0]['count(appointment.appointment_ID)']; 
+    }
+    public function  getThisMonthChannelings($doctor){
+        return $this->customFetchAll("select * from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.doctor=".$doctor." and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."') and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."')")[0];
+    }
+    public function calcuateThisMonthIncome($doctor){
+        return $this->customFetchAll("select sum(past_channeling.total_income) from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join past_channeling on past_channeling.opened_channeling_ID=opened_channeling.opened_channeling_ID where channeling.doctor=".$doctor." and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."') and YEAR(opened_channeling.channeling_date)=YEAR('".Date('Y-m-d')."')")[0]['sum(past_channeling.total_income)'];
+    }
+    public function growthOfPatients($doctor){
+        $months=['dummy','January','February','March','April','May','June','July','August','September','Octomber','November','December'];
+        $dateModel=new Date();
+        $today=Date('Y-m-d');
+        $year=$dateModel->get($today,'year')-1;
+        $month=$dateModel->get($today,'month');
+        $day=$dateModel->get($today,'day');
+        $lowdate=$dateModel->arrayToDate([$day,$month,$year]);
+        $result=$this->customFetchAll("select MONTH(opened_channeling.channeling_date),sum(past_channeling.no_of_patient) from past_channeling  left join opened_channeling on opened_channeling.opened_channeling_ID=past_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID  where channeling.doctor='200003483345' and opened_channeling.channeling_date>='$lowdate' and opened_channeling.channeling_date<='$today' GROUP by MONTH(opened_channeling.channeling_date);");
+        $label=[];
+        $value=[];
+        foreach($result as $row){
+            array_push($label,$months[0+$row['MONTH(opened_channeling.channeling_date)']]);
+            array_push($value,$row['sum(past_channeling.no_of_patient)']);
+        }
+        return ['labels'=>$label,'values'=>$value];
+
+    }
+    public function growthOfIncome($doctor){
+        $dateModel=new Date();
+        $months=['dummy','January','February','March','April','May','June','July','August','September','Octomber','November','December'];
+        $today=Date('Y-m-d');
+        $year=$dateModel->get($today,'year')-1;
+        $month=$dateModel->get($today,'month');
+        $day=$dateModel->get($today,'day');
+        $lowdate=$dateModel->arrayToDate([$day,$month,$year]);
+        $result=$this->customFetchAll("select MONTH(opened_channeling.channeling_date),sum(past_channeling.total_income) from past_channeling  left join opened_channeling on opened_channeling.opened_channeling_ID=past_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID  where channeling.doctor='200003483345' and opened_channeling.channeling_date>='$lowdate' and opened_channeling.channeling_date<='$today' GROUP by MONTH(opened_channeling.channeling_date);");
+        $label=[];
+        $value=[];
+        foreach($result as $row){
+            array_push($label,$months[0+$row['MONTH(opened_channeling.channeling_date)']]);
+            array_push($value,$row['sum(past_channeling.total_income)']);
+        }
+        return ['labels'=>$label,'values'=>$value];
+    }
+    
+    public function removeNurse($channeling){
+        $this->customFetchAll("delete from nurse_channeling_allocataion where channeling_ID=".$channeling);
+    }
+    public function addNurse($post,$channeling){
+        $nurses=$_POST[$post];
+        foreach($nurses as $nurse){
+            $this->customFetchAll("insert into nurse_channeling_allocataion values(".$nurse.",".$channeling.")");
+        }
+    }
+    
+   
+    
+ 
     
 }   
 

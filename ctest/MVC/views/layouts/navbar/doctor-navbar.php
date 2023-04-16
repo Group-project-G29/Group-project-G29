@@ -32,7 +32,7 @@
                         <ul>
                             <div class="nav-box-item">
                                 <li>
-                                    <a href="/ctest/patient-all-appointment">Dashboard</a>
+                                    <a href="http://localhost/ctest/doctor">Dashboard</a>
                                 </li>
                             </div>
                             <div class="nav-box-item">

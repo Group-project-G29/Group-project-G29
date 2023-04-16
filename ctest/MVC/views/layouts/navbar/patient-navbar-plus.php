@@ -57,7 +57,9 @@
     </div>
     <div class="nav_row--bottom box-shadow">
         <ul>
-            <li>Register Now</li>
+            <?php if(!Application::$app->session->get('user')):?>
+                <li>Register Now</li>
+            <?php endif; ?>
             <li>Doctors</li>
             <li>Channelings</li>
             <li>Pharmacy</li>

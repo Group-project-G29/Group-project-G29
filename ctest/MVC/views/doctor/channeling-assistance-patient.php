@@ -6,9 +6,10 @@ use app\core\Application;
 use app\core\form\Form;
 use app\models\Appointment;
 use app\models\ChartModel;
+use app\models\Employee;
 use app\models\LabTest;
 use app\models\LabTestRequest;
-
+$employeeModel=new Employee();
 $appointment=$appointment[0]; 
 $referralModel=new Referral();
 $appointmentModel=new Appointment();
@@ -21,10 +22,8 @@ $popup=Application::$app->session->get('popup')??null;
 if( (isset($popup)) || $popup=='unset' ) $class='hide';
 Application::$app->session->set('popup','unset');
 ?>
-<div class=<?="'background--1 ".$class."'"?>>
-
-</div>
     <?php $component=new Component(); ?>
+    <div class='background--1 hide'> </div>
     <div class=<?='"labtest-popup'.' '."$class".'"'?> id=<?="'".$class."'"?>>
         <h3>Add labtest here</h3>
         <?php $form->begin('/ctest/doctor-labtest','post'); ?>
@@ -41,12 +40,22 @@ Application::$app->session->set('popup','unset');
         </div>
 
     </div>
+    <div class="labreport-popup hide" id="popup-report">
+        <div class="labreport-popup-wrapper">
+            <h3 class="fs-50">Add Lab reports here.</h3>
+            <?php $form2=Form::begin("upload-reports",'post');?>
+            <?php echo $form->editableselect('type','Report Type','field',['CBC'=>'CBC(Complete Blood Count)']) ?>
+            <input type='file' name='report[]' multiple/> 
+            <?=$component->button("Done","submit","Done","button--class-0",);?>
+            <?php $form2=Form::end();?>
+        </div>        
+    </div>
     <div class="assistance-container">
         <div class="assistance-subcontainer ">
             
             <div class="flex-0">
-                <?= $component->button('referal','','Referral','button--class-doc1 btn-1','referrals');?>
-                <?=  $component->button('consultaion','','Last consultation report ','button--class-doc1 btn-1',"last-consultation");?>
+                <?= $component->button('referral','','Referral','button--class-doc1 btn-1','referrals');?>
+                <?=  $component->button('consultaion','','Recent reports ','button--class-doc1 btn-1',"last-consultation");?>
             </div>
             <div class="variable-container--1">
                 <div class="wrapper--referrals">
@@ -55,31 +64,32 @@ Application::$app->session->set('popup','unset');
                             <tr>
                                 <th>Referral</th><th>Added Date</th><th></th><th></th>
                             </tr>
-                            <?php foreach($referrals as $referral): ?>
+                            <?php foreach($referrals['sent'] as $referral): ?>
+                    
                                 <tr>
-                                    <td><a href=<?="/ctest/doctor-report?spec=referral&mod=view&id=".$referral['ref_ID']?>><?=$referral['issued_doctor']."-".$referral['type']."-".$referral['ref_ID']?></a></td><td><?=$referral['date'] ?></td>
-                                    <?php if($referralModel->isIssued($referral['ref_ID'],Application::$app->session->get('userObject')->nic)): ?>
-                                        <td><?=$component->button('update','','Update','button--class-2-small ref-update',); ?></td>
-                                        <td><?=$component->button('delete','','Delete','button--class-3-small ref-delete',); ?></td>
-                                    <?php endif; ?>
+                                    <td><a href=<?="/ctest/doctor-report?spec=referral&mod=view&id=".$referral['ref_ID']?>><?=$referral['issued_doctor']?("Dr. ".$employeeModel->getDocName($referral['issued_doctor']))."'s":"Softcopy-".$referral['ref_ID']."' "."Referral"?></a></td><td><?=$referral['date'] ?></td>
+    
                                 </tr>
                             <?php endforeach; ?>
                         </table>
                     </div>
                     <div class="ass-button-set">
                             <?=$component->button('write referral','','Write Referral','button--class-0','write-ref');?>
+                           
                     </div>
+                    
                 </div>
+               
                 <div class="wrapper--last-consultation none">
                     <div class="variable-container">
                     <table>
                         <tr>
-                            <th>LastConsultation Report</th><th>created date</th>
+                            <th>Recent Report</th><th>created date</th>
                         </tr>
-                        <?php foreach($referrals as $referral): ?>
+                        <?php foreach($recent as $re): ?>
                             
                             <tr>
-                                <td><a href="#"><?=$referral['issued_doctor']."-".$referral['type']."-".$referral['ref_ID']?></a></td><td><?=$referral['date'] ?></td>
+                                <td><a href=<?="doctor-report?spec=".$re['type']."-report&mod=view&id=".$re['report_ID']?>><?=$re['label']?></a></td><td><?=$re['uploaded_date'] ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </table>
@@ -89,13 +99,28 @@ Application::$app->session->set('popup','unset');
         </div>
             
         <div class="asssistance-sub-container main-detail-container">
-            <div class="number-pad">
-                <div class="number-item--white">
-                    <?=$appointmentModel->getUsedPatient(Application::$app->session->get('channeling'))?>
-                    
+            <div class="main-nav">
+                <div class="number-pad">
+                    <div class="number-item--white">
+                        <?=$appointmentModel->getUsedPatient(Application::$app->session->get('channeling'))?>
+                        
+                    </div>
+                    <div class="number-item--blue">
+                        <?=$appointmentModel->getTotoalPatient(Application::$app->session->get('channeling'))?>
+                    </div>
                 </div>
-                <div class="number-item--blue">
-                    <?=$appointmentModel->getTotoalPatient(Application::$app->session->get('channeling'))?>
+                <div class="nav_container">
+                    <div class="nav-item">
+                        <input type="number" id="patient-input">
+                        <?=$component->button('btn','','Move','','move-btn'); ?>
+                       
+                    </div>
+                    <div class="nav-item" id="nav-finish">
+                        Finish Session
+                    </div>
+                    <div class="nav-item nav_last_seen" id=<?=Application::$app->session->get('channeling') ?>>
+                        Go To Last Seen Patient
+                    </div>
                 </div>
             </div>
             <div class="patient-navigator">
@@ -129,18 +154,18 @@ Application::$app->session->set('popup','unset');
                 </table>
                 <section class="graph">
                     <div>
-                        <?=$form->editableselectversion2('tests_ed','','field test_select',array_keys($alltests)) ?>
+                        <?=$form->editableselectversion2('tests_ed','','test_select',array_keys($alltests)) ?>
                     </div>
                     <?php foreach($alltests as $val=>$test):?>
-                        <div id='' class=<?='"'.'c'.join('_',explode(' ',$val)).' hide"'?>>
+                        
+                        <div id=<?='"'.'c'.join('_',explode(' ',$val)).'"'?> class=<?='"'.'c'.join('_',explode(' ',$val)).' hide gcontainer"'?>>
                             
                             <canvas id=<?='"myChart'.$val.'"'?> style="width:100%;max-width:700px"></canvas>
                             <?=$chart->lineChart($test['labels'],[],$test['data'],[],$val,'rgb(0,0,0)',$val);?>
                         </div>
                         <?php endforeach;?>
+                </section>
             </div>
-            </section>
-            <?php  ?>
        
         </div>
         <div class="assistance-subcontainer">
@@ -160,7 +185,7 @@ Application::$app->session->set('popup','unset');
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 <tr class="table-row">
-                                    <td><a href=<?="/ctest/doctor-report?spec=".$report['type']."&mod=view&id=".$report['report_ID']?>><?=$report['type']."-".$report['report_ID']."-".$report['name']?></a></td><td><?=$report['uploaded_date'] ?></td>
+                                    <td><a href=<?="doctor-report?spec=".$report['type']."&mod=view&id=".$report['report_ID']?>><?=$report['type']."-".$report['report_ID']."-".$report['name']?></a></td><td><?=$report['uploaded_date'] ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </table>
@@ -178,10 +203,9 @@ Application::$app->session->set('popup','unset');
                                 <tr>
                                     <th>Prescription</th><th>created date</th><th></th><th> </th>
                                 </tr>
-                                <?php foreach($reports as $report): ?>
-                                
+                                <?php foreach($prescription as $pres): ?>
                                 <tr>
-                                    <!-- <td><a href="#"><?=$report['issued_doctor']."-".$report['type']."-".$report['ref_ID']?></a></td><td><?=$report['date'] ?></td> -->
+                                    <td><a href=<?="doctor-prescription?spec=prescription&mod=view&id=".$pres['prescription_ID']?>><?=$pres['type']."-".$pres['prescription_ID']?></a></td><td><?=$pres['uploaded_date'] ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </table>
@@ -275,6 +299,19 @@ Application::$app->session->set('popup','unset');
                 location.href="channeling-assistance?cmd=previous&id="+id_component[1]+"&set=unused";
             }
         })
+        const  movebtn=document.getElementById('move-btn');
+        const painput=document.getElementById('patient-input');
+        movebtn.addEventListener('click',()=>{
+        
+            if(checkbox.checked){
+                location.href="channeling-assistance?cmd=move&id="+painput.value+"&set=used";
+                
+            }
+            else{
+                location.href="channeling-assistance?cmd=move&id="+painput.value+"&set=unused";
+                
+            }
+        })
 
         function hide(element,hideClass='none'){
             element.classList.add(hideClass);
@@ -351,11 +388,27 @@ Application::$app->session->set('popup','unset');
             elem.addEventListener('click',()=>{
                 location.href="/ctest/doctor-labtest?cmd=delete&id="+elem.id;
             })
-
+            
         })
-
-        //charts and graphs
         
-
+        const uprbtn=document.getElementById('upload-rep');
+        const popup=document.querySelector('.labreport-popup');
+        uprbtn.addEventListener('click',()=>{   
+            popup.classList.remove('hide');
+            bg.classList.remove('hide');
+        })
+        bg.addEventListener('click',()=>{
+            bg.classList.add('hide');
+            reqPopup.classList.add('hide');
+            popup.classList.add('hide');
+        })
+        const finbtn=document.getElementById('nav-finish');
+        const lasbtn=document.querySelector('.nav_last_seen');
+        lasbtn.addEventListener('click',()=>{
+            location.href="channeling-assistance?cmd=start&id="+lasbtn.id;
+        })
+        finbtn.addEventListener('click',()=>{
+            location.href="http://localhost/ctest/channeling-assistance?cmd=finish";
+        })
 
     </script>

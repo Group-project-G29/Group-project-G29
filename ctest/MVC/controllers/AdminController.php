@@ -25,8 +25,8 @@ class AdminController extends Controller{
         $Doctors=$Employee->customFetchAll("select name,nic from employee where role='doctor'");
         $Nurses=$Employee->customFetchAll("select * from employee where role='nurse'");
         $Rooms=$Employee->customFetchAll("select * from room");
-        $Doctor=[];
-        $Room=[];
+        $Doctor['Select']='';
+        $Room['Select']='';
         $parameters=$request->getParameters();
         $nurseAllocationModel=new NurseAllocation();
         $timeModel=new Time();
@@ -81,7 +81,6 @@ class AdminController extends Controller{
                     'doctors'=>$Doctor,
                     'nurses'=>$Nurses,
                     'rooms'=>$Room,
-                    'test'=>$ChannelingModel->errors
 
                 ]);
             }
@@ -396,5 +395,78 @@ class AdminController extends Controller{
             "notifications"=>$notifications,
             "model"=>$notificationModel,
         ]);
+    }
+    //update channeling session information
+    public function changeChanneling(Request $request,Response $response){
+        $this->setLayout('admin',['select'=>'Channelings Sessions']);
+        $parameters=$request->getParameters();
+        $channelingModel=new Channeling();
+        $employeeModel=new Employee();
+        $Employee=new Employee();
+        $channelingModel=new Channeling();
+        Application::$app->session->set('selected_hanneling',(isset($parameters[1]['id']))?$parameters[1]['id']:$parameters[2]['id']);
+        $Nurses=$Employee->customFetchAll("select * from employee where role='nurse'");
+        $Rooms=$Employee->customFetchAll("select * from room");
+         foreach($Rooms as $row){
+            $Room[$row['name']]=$row['name'];
+        }
+        if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='opened_channeling'){
+            if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='cancel'){
+                $channelingModel->cancelOpenedChanneling($parameters[2]['id']);
+            }
+            else if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='close'){
+                $channelingModel->closeOpenedChanneling($parameters[2]['id']);
+            }
+            else if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='open'){
+                $channelingModel->openOpenedChanneling($parameters[2]['id']);
+            }
+            
+            $response->redirect('update-channeling?cmd=view&id='.Application::$app->session->get('selected_channeling'));           
+            exit;
+        }
+        if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='channeling'){
+            if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='cancel'){
+                $channelingModel->cancelChanneling($parameters[2]['id']);
+            }            
+            $response->redirect('update-channeling?cmd=view&id='.Application::$app->session->get('selected_channeling'));           
+            exit;
+        }
+                
+        if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='view'){
+            Application::$app->session->set('selected_channeling',(isset($parameters[1]['id']))?$parameters[1]['id']:$parameters[2]['id']);
+            return $this->render('administrator/update-channeling',[
+                'model'=>$channelingModel->findOne(['channeling_ID'=>$parameters[1]['id']]),
+                'rooms'=>$Room,
+                'nurses'=>$Nurses,
+                'employeemodel'=>$employeeModel,
+                'id'=>Application::$app->session->get('selected_channeling'), 
+                'openedchannelings'=>$channelingModel->getOpenedChannelings($parameters[1]['id']),
+                'channelings'=>$channelingModel->fetchAssocAll(['channeling_ID'=>$parameters[1]['id']])[0]
+            ]);
+        }
+        
+            if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
+                $channelingModel=new Channeling();
+                $channelingModel->findOne(['channeling_ID'=>$parameters[1]['id']]);
+                if($request->isPost()){
+                    $channelingModel->loadData($request->getBody());
+                    if( $channelingModel->updateChannelingRecord(Application::$app->session->get('selected_channeling'))){    
+                        $employeeModel->removeNurse(Application::$app->session->get('selected_channeling'));
+                        $employeeModel->addNurse('emp_ID',Application::$app->session->get('selected_channeling'));
+                        //redirect on success
+                    }
+                    return $this->render('administrator/update-channeling',[
+                        'model'=>$channelingModel,
+                        'rooms'=>$Room,
+                        'nurses'=>$Nurses,
+                        'employeemodel'=>$employeeModel,
+                        'id'=>Application::$app->session->get('selected_channeling'),
+                        'openedchannelings'=>$channelingModel->getOpenedChannelings(Application::$app->session->get('selected_channeling')),
+                        'channelings'=>$channelingModel->fetchAssocAll(['channeling_ID'=>Application::$app->session->get('selected_channeling')])[0] 
+                    ]);
+                }
+            }
+        
+            
     }
 }

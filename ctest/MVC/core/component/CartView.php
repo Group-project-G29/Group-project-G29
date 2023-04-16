@@ -65,14 +65,30 @@ use app\models\Prescription;
 
                 .'</div></div>
                 </section> 
+                <script src="./media/js/main.js"></script>
             <script>
-                // const cart=document.querySelectorAll(".cart");
-                // cart.addEventListener("click",()=>{
-                //     location.href="#";
-                // });
+               const updateButtons=e(".update-buttons-cart","classall");
+                updateButtons.forEach((elem)=>{
+                    elem.addEventListener("click",()=>{
+                        let element=(""+elem.id).split("_")[1];
+                        let input_amount=e("amount2_"+element);
+                        let amount=input_amount.value;
+                        if(!amount){
+                            
+                        }
+                        else{
+                            location.href="patient-pharmacy?spec=medicine&cmd=add&item="+element+"&amount="+amount;
+                        }
+                    })
+                })
+                const paymentbtn=e("proceed-to-payment");
+                paymentbtn.addEventListener("click",()=>{
+                    location.href="patient-medicine-order?spec=order&mod=view";
+                })
             </script>
             ',$cartModel->getItemCount(),$this->count);     
             
         
     }
+    
 }

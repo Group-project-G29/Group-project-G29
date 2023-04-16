@@ -87,7 +87,7 @@ use app\core\DbModel;
 
         public function getPatientOrder(){
             $patientID=Application::$app->session->get('user');
-            return $this->customFetchAll("select * from delivery left join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'completed'")[0];
+            return $this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'completed'")[0];
         }
         public function getLackedItems(){
             $order=$this->getPatientOrder()['order_ID']??'';
@@ -98,7 +98,7 @@ use app\core\DbModel;
             if($order){
                 $items=$this->getOrderItem($order);
                 foreach($items as $item){
-                    if(!$medicineModel->checkStock($item['med_ID'])){
+                    if(!$medicineModel->checkStock($item['med_ID']) && ($item['processing_status']=='pending' || $item['processing_status']=='processing' ) ){
                         array_push($na_array,$medicineModel->getMedicineByID($item['med_ID']));
 
                     }
@@ -121,6 +121,9 @@ use app\core\DbModel;
             }
             return $na_array;
 
+        }
+        public function setOrderStatus($orderID,$status){
+            $this->customFetchAll("update _order set processing_status="."'".$status."'"." where order_ID=".$orderID);
         }
     }
 

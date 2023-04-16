@@ -28,7 +28,7 @@ use app\core\DbModel;
         }
         //get array with all past channeling test values and dates in the same array
         public function getTestChanneling($test,$patient){
-            $result=$this->customFetchAll("SELECT  distinct * from pre_channeling_tests_values as tval left join pre_channeling_tests as test on test.test_ID=tval.test_ID left join pre_channeilng_test_aloc as aloc on aloc.test_ID=tval.test_ID left join opened_channeling as o on o.channeling_ID=aloc.channeling_ID left join appointment as a on a.opened_channeling_ID=o.opened_channeling_ID where aloc.test_ID=".$test." and a.patient_ID=".$patient);
+            $result=$this->customFetchAll("select  * from pre_channeling_tests_values  where test_ID=".$test." and patient_ID=".$patient);
             $values=[];
             $day=[];
             foreach($result as $el){
@@ -39,7 +39,7 @@ use app\core\DbModel;
 
         }
         public function getAssistanceValue($patient,$openedchannelingID){
-            return $this->customFetchAll("select test.name,tval.value,test.metric from appointment as a left join opened_channeling as o on a.opened_channeling_ID=o.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID left join pre_channeilng_test_aloc as aloc on aloc.channeling_ID=c.channeling_ID  left join pre_channeling_tests_values as tval on tval.test_ID=aloc.test_ID left join pre_channeling_tests as test on test.test_ID=aloc.test_ID where a.opened_channeling_ID=".$openedchannelingID." and a.patient_ID=".$patient);
+            return $this->customFetchAll("select distinct test.name,tval.value,test.metric from appointment as a left join opened_channeling as o on a.opened_channeling_ID=o.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID left join pre_channeilng_test_aloc as aloc on aloc.channeling_ID=c.channeling_ID  left join pre_channeling_tests_values as tval on tval.test_ID=aloc.test_ID left join pre_channeling_tests as test on test.test_ID=aloc.test_ID where a.opened_channeling_ID=".$openedchannelingID." and tval.patient_ID=".$patient);
         }
         //get all the test realted to opened to channeling
         public function getPatientTestResults($patient,$testID){

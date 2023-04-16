@@ -25,7 +25,14 @@ class Channeling extends DbModel{
     public ?int $open_before=14;
     public ?string $session_duration='';
     
+    public function setter(){
+        $this->speciality=$_POST['speciality'];
+        $this->fee=$_POST['fee'];
+        $this->room=$_POST['room'];
+        $this->total_patients=$_POST['total_patient'];
+        $this->percentage=$_POST['precentage'];
 
+    }
     public function savedata(){
         return parent::save();
     }
@@ -133,7 +140,137 @@ class Channeling extends DbModel{
         return $this->fetchAssocAll(['doctor'=>$doctor]);
 
    }
-    
+   
+   public function checkNurseOverlap($nurses,$channeling){
+        $channelingModel=new Channeling();
+        $openedchannelingModel=new OpenedChanneling();
+        $timeModel=new Time();
+        $results=[];
+        //nurses is an array of nusrse employee ids
+        foreach($nurses as $nurse){
+            //get all the channeling nurse is allocated to
+            $newChanneling=$channelingModel->fetchAssocAll(['channeling_ID'=>$channeling]);
+            $channelings=$channelingModel->customFetchAll("select * from  nurse_channeling_allocataion left join channeling on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID where emp_ID=".$nurse);
+            foreach($channelings as $channeling){
+                $opened_channelings=$openedchannelingModel->fetchAssocAll(['channeling_ID'=>$channeling['channeling_ID']]);
+                foreach($opened_channelings as $openedchanneling){
+                    $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join nurse_channeling_allocataion on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID where nurse_channeling_allocataion.emp_ID=$nurse  and opened_channeling.channeling_date='".$openedchanneling['channeling_date']." and (opened_channeling.status='Opened' or opened_channeling.status='started' ) and channeling.channeling_ID<>".$newChanneling[0]['channeling_ID']);
+                    if($confilict_channelings){
+                        foreach($confilict_channelings as $conflict){
+                            $check_time=$newChanneling[0]['time'];
+                            $start_time=$conflict['time']; 
+                            $result=$timeModel->isInRange($start_time,substr($conflict['session_duration'],0,5),$check_time);
+                            if($result) array_push($results,$conflict);
+                        }
+                    }
+                }
+            }
+
+        }
+        if($results) return $results;
+        else return false;
+   }
+   public function checkRoomOverlap($room,$channeling){
+        $channelingModel=new Channeling();
+        $openedchannelingModel=new OpenedChanneling();
+        $timeModel=new Time();
+        $results=[];
+        //nurses is an array of nusrse employee ids
+        $newChanneling=$channelingModel->fetchAssocAll(['channeling_ID'=>$channeling]);
+        $channelings=$channelingModel->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where  room='".$room."'");
+            foreach($channelings as $channeling){
+                $opened_channelings=$openedchannelingModel->fetchAssocAll(['channeling_ID'=>$newChanneling[0]['channeling_ID']]);
+                foreach($opened_channelings as $openedchanneling){
+                    $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.room='$room' and  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and opened_channeling.channeling_date='".$openedchanneling['channeling_date']."' and channeling.channeling_ID<>".$newChanneling[0]['channeling_ID']);
+                    if($confilict_channelings){
+                        foreach($confilict_channelings as $conflict){
+                            $check_time=$newChanneling[0]['time'];
+                            $start_time=$conflict['time']; 
+                            $result=$timeModel->isInRange($start_time,substr($conflict['session_duration'],0,5),$check_time);
+                            if($result) array_push($results,$conflict);
+                        }
+                    }
+                }
+            }
+
+            if($results) return $results;
+            else return false;
+   }
+
+   
+
+   
+   
+
+   public function setChannelingClose($channeling){
+       //get information on channeling
+        $channeling=$this->fetchAssocAll(['channeling_ID'=>$channeling]);
+        $channelingModel=new Channeling();
+        $calendarModel=new Calendar();
+        //to send notification to patient
+        $patientNotificationModel=new PatientNotification();   
+        //get all the opened channeling between starting date and open before
+        $starting_date=$channeling['start_date'];
+        $end_date=$calendarModel->addDaysToDate($starting_date,$channeling['open_before']);
+        $opened_channelings=$this->customFetchAll("select * from opened_channeling left join channeling channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.channeling_date>=".$starting_date." and opened_channeling.channeling_date<=".$end_date);
+        //use foreach loop and set status
+        foreach($opened_channelings as $op){
+            $channelingModel->customFetchAll("update opened_channeling set status='close' where opened_channeling=".$op['opened_channeling']);    
+            $patientNotificationModel->channelingCancelNoti($op['opened_channeling_ID']);
+        }
+   }
+   public function setAllChannelingClose($channeling){
+        $this->customFetchAll("update opened_channeling set status='close' where channeling_ID=".$channeling);
+   }
+   public function cancelOpenedChanneling($openedChanneling){
+        $patientNotificationModel=new PatientNotification();
+        $channelingModel=new Channeling();
+        $appointmentModel=new Appointment();
+        $channelingModel->customFetchAll("update opened_channeling set status='cancelled' where opened_channeling_ID=".$openedChanneling);    
+        $patientNotificationModel->channelingCancelNoti($openedChanneling);
+        //delete all the appointment
+        $appointmentModel->deleteRecord(['opened_channeling_ID'=>$openedChanneling]);
+        
+   }
+    public function closeOpenedChanneling($openedChanneling){
+        $channelingModel=new Channeling();
+        $channelingModel->customFetchAll("update opened_channeling set status='closed' where opened_channeling_ID=".$openedChanneling);    
+        
+   }
+    public function openOpenedChanneling($openedChanneling){
+        $channelingModel=new Channeling();
+        $channelingModel->customFetchAll("update opened_channeling set status='Opened' where opened_channeling_ID=".$openedChanneling);    
+        
+   }
+
+   public function cancelChanneling($channeling){
+        $openedChanneling=new OpenedChanneling();
+        $channelings=$openedChanneling->fetchAssocAll(['channeling_ID'=>$channeling]);
+        foreach($channelings as $channeling){
+            $this->cancelChanneling($channeling['opened_channeling_ID']);    
+        }
+
+   }
+   //get opened channeling session when the channeling is given
+   public function getOpenedChannelings($channeling){
+        $channelingModel=new Channeling();
+        $channelings=$channelingModel->fetchAssocAll(['channeling_ID'=>$channeling])[0];
+        $calendarModel=new Calendar();
+        $end_date=$calendarModel->addDaysToDate(Date('Y-m-d'),$channelings['open_before']);
+        return $this->customFetchAll("select * from opened_channeling where channeling_date<='$end_date' and channeling_ID=$channeling and channeling_date>='".Date('Y-m-d')."'");
+        
+   }
+
+   public function updateChannelingRecord($channeling){
+        $speciality=$_POST['speciality'];
+        $fee=$_POST['fee'];
+        $room=$_POST['room'];
+        $total_patients=$_POST['total_patients'];
+        $percentage=$_POST['percentage'];
+        $this->customFetchAll("update channeling set speciality='$speciality',fee=$fee,room='$room',total_patients=$total_patients,percentage=$percentage where channeling_ID=".$channeling);
+        return true;
+   }
+
 }   
 
 

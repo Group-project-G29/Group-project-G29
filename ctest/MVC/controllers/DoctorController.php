@@ -16,8 +16,10 @@ use app\core\ReportModel;
 use app\models\Appointment;
 use app\models\LabTestRequest;
 use app\models\MedicalReport;
+use app\models\Medicine;
 use app\models\Patient;
 use app\models\PreChannelingTest;
+use app\models\Prescription;
 use app\models\SOAPReport;
 
 class DoctorController extends Controller{
@@ -31,7 +33,10 @@ class DoctorController extends Controller{
         $Channelings=$OpenedChanneling->customFetchAll("select * from opened_channeling where channeling_ID in (select channeling_ID from channeling where doctor=".Application::$app->session->get('userObject')->nic.")");
         $ChannelingsM=$Channeling->getDocChannelings();
         $this->setLayout('doctor',['select'=>'All Channelings']);
+
         if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='pre-channeling-test'){
+        
+            
             if(isset($parameter[1]['cmd']) && $parameter[1]['cmd']=='add'){
                 $testID=$testModel->getIDbyName($parameter[2]['id']);
                 if($testID && !$testModel->isExist($parameter[3]['channeling'],$testID)){
@@ -98,28 +103,55 @@ class DoctorController extends Controller{
         ]);
     }
 
-    // make a report model
+    // doctor live session assistance
     public function sessionAssistance(Request $request,Response $response){
         //keep url in the seesion 
-        Application::$app->session->set('churl',$request->getURL());
-        
-        $this->setLayout("doctor-striped");
+        //if session variable is no there redirect to last seen patient
+        var_dump(Application::$app->session->get('cur_patient') );
         $parameters=$request->getParameters();
+        // if(!Application::$app->session->get('cur_patient') && $parameters['cmd']!='start' && $parameters['cmd']!='finish'){
+        //     $response->redirect("channeling-assistance?cmd=start");
+        //     return false;
+        // }
+        $this->setLayout("doctor-striped");
         $OpenedChanneling=new OpenedChanneling();
+        $patientModel=new Patient();
         Application::$app->session->get('channeling');
         $referrralModel=new Referral();
         $reportModel = new ConsultationReport();
         $appointmentMOdel=new Appointment();
         $labRequestModel=new LabTestRequest();
         $prechannelingtest=new PreChannelingTest();
+        $medicalReport=new MedicalReport();
         $doctor = Application::$app->session->get('userObject')->nic;
-
+        $prescriptionModel=new Prescription();
+        //check if there is a patient no
+        $result=$patientModel->fetchAssocAll(['patient_ID'=>$parameters[1]['id']]);
+        if(!$result && $parameters[0]['cmd']!='finish' && $parameters[0]['cmd']!='start') {
+            $response->redirect(Application::$app->session->get('churl')); 
+            exit;
+        }
+        Application::$app->session->set('churl',$request->getURL());
+        if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='channeling-finish'){
+                $OpenedChanneling->finish(Application::$app->session->get('channeling'));
+        }
         if(isset($parameters[2]['set']) && $parameters[2]['set']=='used'){
-            $appointmentMOdel->updateStatus($appointmentMOdel->getAppointment($parameters[1]['id'],Application::$app->session->get('channeling')),'used');
+            if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='move'){
+                $appointmentMOdel->updateStatus($appointmentMOdel->getAppointment(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling')),'used');
+            }
+            else{
+                $appointmentMOdel->updateStatus($appointmentMOdel->getAppointment($parameters[1]['id'],Application::$app->session->get('channeling')),'used');
+            }
         }
         
         if(isset($parameters[2]['set']) && $parameters[2]['set']=='unused'){
-            $appointmentMOdel->updateStatus($appointmentMOdel->getAppointment($parameters[1]['id'],Application::$app->session->get('channeling')),'unused');
+           if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='move'){
+                $appointmentMOdel->updateStatus($appointmentMOdel->getAppointment(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling')),'unused');
+            
+            }
+            else{
+                $appointmentMOdel->updateStatus($appointmentMOdel->getAppointment($parameters[1]['id'],Application::$app->session->get('channeling')),'unused');
+            }
 
         }
         //check whether the appointment is used or not
@@ -132,7 +164,6 @@ class DoctorController extends Controller{
                 $patient=$OpenedChanneling->getLastPatient("labtest",$id);
             }
             //get patient in the session
-            Application::$app->session->set('cur_patient',$patient);
             
             $appointment_detail=$OpenedChanneling->customFetchAll("SELECT * from appointment left join patient on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID='$id' and patient.patient_ID='".$patient."'");
             //$appointment_detail=$OpenedChanneling->customFetchAll("SELECT * from appointment left join patient on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where appointment.queue_no in (SELECT min(queue_no) from appointment where opened_channeling_ID=".$id.")"." and opened_channeling.opened_channeling_ID=".$id);
@@ -141,9 +172,13 @@ class DoctorController extends Controller{
                     Application::$app->response->redirect('channeling-assistance?cmd=finish');
                     return false;
                 }
+            else{
+                Application::$app->session->set('cur_patient',$patient);
+
+            }
             
             Application::$app->session->set('channeling',$id);
-            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
+            $referrals = $referrralModel->getReferrals($patient,$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             $type=$appointmentMOdel->getappointmentType($patient,$id)[0]['type'];
             $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
@@ -158,6 +193,8 @@ class DoctorController extends Controller{
                     'pretestvalues'=>$testvalue,
                     'weight'=>$weight,
                     'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
+                    'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
                     
                 ]);
             }
@@ -170,7 +207,9 @@ class DoctorController extends Controller{
                     'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling')),
                     'pretestvalues'=>$testvalue,
                     'weight'=>$weight,
-                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
+                    'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
                     
                     
                 ]);
@@ -179,7 +218,6 @@ class DoctorController extends Controller{
         }
         if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='switch'){
             $id=$parameters[1]['id'];
-            Application::$app->session->set('cur_patient',$id);
             $channeling=Application::$app->session->get('channeling');
             $type=$appointmentMOdel->getAppointmentType($id,$channeling)[0]['type']??'';
             $patient="";
@@ -198,8 +236,13 @@ class DoctorController extends Controller{
                 Application::$app->response->redirect('channeling-assistance?cmd=finish');
                 return false;
             }
+            else{
+                Application::$app->session->set('cur_patient',$id);
+
+            }
            
             $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
+
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
             $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
@@ -212,7 +255,9 @@ class DoctorController extends Controller{
                     'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling')),
                     'pretestvalues'=>$testvalue,
                     'weight'=>$weight,
-                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
+                    'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
 
                 
                 ]);
@@ -226,7 +271,9 @@ class DoctorController extends Controller{
                     'status'=>$appointmentMOdel->getAppointmentStatus($patient,Application::$app->session->get('channeling')),
                     'pretestvalues'=>$testvalue,
                     'weight'=>$weight,
-                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
+                    'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
                 
                 ]);
             }
@@ -237,17 +284,18 @@ class DoctorController extends Controller{
             $channeling=Application::$app->session->get('channeling');
             $appointment_type=$appointmentMOdel->getAppointmentType($id,$channeling)[0]['type'];
             $appointment_detail[0]=$OpenedChanneling->getPatient($channeling,$id,'next',$appointment_type);
-            Application::$app->session->set('cur_patient',$appointment_detail[0]['patient_ID']);
             if(!$appointment_detail[0]){
                 Application::$app->response->redirect('channeling-assistance?cmd=finish');
                 return false;
+            }
+            else{
+                Application::$app->session->set('cur_patient',$appointment_detail[0]['patient_ID']);
             }
             $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
             $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
             $alltests=$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'));
-            var_dump($alltests);
             if($appointment_type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),
@@ -257,7 +305,9 @@ class DoctorController extends Controller{
                     'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
                     'pretestvalues'=>$testvalue,
                     'weight'=>$weight,
-                    'alltests'=>$alltests
+                    'alltests'=>$alltests,
+                    'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
                 
                 ]);
             }
@@ -270,7 +320,9 @@ class DoctorController extends Controller{
                     'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
                     'pretestvalues'=>$testvalue,
                     'weight'=>$weight,
-                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
+                    'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
                 
                 ]);
             }
@@ -281,10 +333,12 @@ class DoctorController extends Controller{
             $channeling=Application::$app->session->get('channeling');
             $appointment_type=$appointmentMOdel->getAppointmentType($id,$channeling)[0]['type'];
             $appointment_detail[0]=$OpenedChanneling->getPatient($channeling,$id,'previous',$appointment_type);
-            Application::$app->session->set('cur_patient',$appointment_detail[0]['patient_ID']);
             if(!$appointment_detail[0]){
                 Application::$app->response->redirect('channeling-assistance?cmd=finish');
                 return false;
+            }
+            else{
+                Application::$app->response->redirect('channeling-assistance?cmd=finish');
             }
             $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
@@ -299,7 +353,9 @@ class DoctorController extends Controller{
                     'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
                     'pretestvalues'=>$testvalue,
                     'weight'=>$weight,
-                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
+                    'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
                 
                 ]);
             }
@@ -312,11 +368,65 @@ class DoctorController extends Controller{
                     'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
                     'pretestvalues'=>$testvalue,
                     'weight'=>$weight,
-                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'))
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
+                    'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
                 
                 ]);
             }
         }
+        else if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='move'){
+            $id=$parameters[1]['id'];
+            $channeling=Application::$app->session->get('channeling');
+            $appointment_type=$appointmentMOdel->getAppointmentType($id,$channeling)[0]['type']??'';
+            $appointment_detail[0]=$OpenedChanneling->getAPatient($channeling,$id);
+            if($appointment_detail){
+                $response->redirect('channeling-assistance?cmd=start&id='.Application::$app->session->get('channeling'));
+                exit;
+            }
+            Application::$app->session->set('cur_patient',$parameters[1]['id']);
+            if(!$appointment_detail[0]){
+                
+                return false;
+            }
+            $referrals = $referrralModel->getReferrals($appointment_detail[0]['patient_ID'],$doctor);
+            $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
+            $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
+            $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
+            $alltests=$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'));
+            if($appointment_type=='consultation'){
+                return $this->render("doctor/channeling-assistance-patient",[
+                    'labrequests'=>$labRequestModel->getLabTestRequests(),
+                    'appointment'=>$appointment_detail,
+                    'referrals'=>$referrals,
+                    'reports'=>$reports,
+                    'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
+                    'pretestvalues'=>$testvalue,
+                    'weight'=>$weight,
+                    'alltests'=>$alltests,
+                    'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                
+                ]);
+            }
+            else{
+                return $this->render("doctor/channeling-assistance-patient-report",[
+                    'labrequests'=>$labRequestModel->getLabTestRequests(),
+                    'appointment'=>$appointment_detail,
+                    'referrals'=>$referrals,
+                    'reports'=>$reports,
+                    'status'=>$appointmentMOdel->getAppointmentStatus($appointment_detail[0]['patient_ID'],Application::$app->session->get('channeling')),
+                    'pretestvalues'=>$testvalue,
+                    'weight'=>$weight,
+                    'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
+                    'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                
+                ]);
+            }
+        }
+
+
         else if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='finish'){
             $openedChannelingModel=new OpenedChanneling();
             $appointments=$openedChannelingModel->getAllAppointments(Application::$app->session->get('channeling'));
@@ -347,15 +457,19 @@ class DoctorController extends Controller{
             exit;
         }
         if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='referral'){
-            if(isset($parameter[1]['cmd']) && $parameter[0]['cmd']=='delete'){
+            if(isset($parameter[1]['cmd']) && $parameter[1]['cmd']=='delete'){
                 $refModel->deleteRecord(['ref_ID'=>$parameter[2]['id']]);
+                $response->redirect('doctor-report?spec=referral');
+                exit;
             }
             if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
                 $referralModel=new Referral();
+                $referralModel->setseen($parameter[2]['id']);
                 $referrals=$referralModel->customFetchAll("Select * from referrel where ref_ID=".$parameter[2]['id']);
                 if($referrals[0]['type']=='softcopy'){
-                    $response->redirect('./media/patient/referrals/'.$referrals[0]['name']);
+                    $response->redirect('http://localhost/ctest/MVC/public/media/patient/referrals/'.$referrals[0]['name']);
 
+                    
                 }
                 else{
                     $referralModel->referralToPDF($referrals[0]['ref_ID']);
@@ -363,51 +477,97 @@ class DoctorController extends Controller{
                 //$referralModel->findOne(['ref_ID'=>$parameter[2]['id']]);
                 
             }
+            if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='update'){
+                $referrals = $refModel->getReferrals($patient,$userDoctor);
+                $doctors=$employeeModel->getDoctors();
+                $specialities=$channeling->getSpecialities();
+                if ($request->isPost()) {
+                
+                $refModel->issued_doctor=$userDoctor;
+                $refModel->patient=Application::$app->session->get('cur_patient');
+                $refModel->type='e-referral';
+                $refModel->loadData($request->getBody());
+                if ($refModel->validate() && $refModel->updateRecord(['ref_ID'=>$parameter[2]['id']])) {
+                    return $this->render('doctor/update-referral-report',[
+                        '_referral'=>$refModel->findOne(['ref_ID'=>$parameter[2]['id']]),
+                        'referrals'=>$referrals,
+                        'doctors'=>$doctors,
+                        'specialities'=>$specialities,
+                    ]);
+                }
+                //render on fall-through
+                }
+                $ref= $refModel->findOne(['ref_ID'=>$parameter[2]['id']]);
+                if(!$ref){
+                     $response->redirect('doctor-report?spec=referral');
+                     exit;
+                }
+                return $this->render('doctor/update-referral-report',[
+                    '_referral'=>$refModel->findOne(['ref_ID'=>$parameter[2]['id']]),
+                    'referrals'=>$referrals,
+                    'doctors'=>$doctors,
+                    'specialities'=>$specialities,
+                ]);
+            }
+            
             if ($request->isPost()) {
                 $url=$request->getURL();
                 $refModel->issued_doctor=$userDoctor;
                 $refModel->patient=Application::$app->session->get('cur_patient');
                 $refModel->type='e-referral';
                 $refModel->loadData($request->getBody());
+                $doctors=$employeeModel->getDoctors();
+                $specialities=$channeling->getSpecialities();
                 if ($refModel->validate() && $refModel->addReferral()) {
-                    Application::$app->response->redirect(Application::$app->session->get('churl'));
-                    exit;
+                    $doctors=$employeeModel->getDoctors();
+                    $specialities=$channeling->getSpecialities();
+                    $referrals = $refModel->getReferrals($patient,$userDoctor);
+                    return $this->render('doctor/write-referral-report', [
+                        'model' => $refModel,
+                        'doctors'=>$doctors,
+                        'specialities'=>$specialities,
+                        'referrals'=>$referrals
+                    ]);   
+                
                 }
-                //render on fall-through
             }
             $doctors=$employeeModel->getDoctors();
             $specialities=$channeling->getSpecialities();
+            $referrals = $refModel->getReferrals($patient,$userDoctor);
             return $this->render('doctor/write-referral-report', [
                 'model' => $refModel,
                 'doctors'=>$doctors,
-                'specialities'=>$specialities
+                'specialities'=>$specialities,
+                'referrals'=>$referrals
             ]);
         }
-        if(isset($parameter[0]['spec']) && $parameter[0]['spec']=="medical-history-report"){
+        if(isset($parameter[0]['spec']) && $parameter[0]['spec']=="medical-history"||$parameter[0]['spec']=="medical-history-report"){
             if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
-                $soapModel=new SOAPReport();
-                $report=$soapModel->customFetchAll("Select * from soap_report left join medical_report on soap_report.report_ID=medical_report.report_ID where medical_report.report_ID=".$parameter[2]['id']);
+                $historyModel=new MedicalHistory();
+                $report=$soapModel->customFetchAll("Select * from Medical_history left join medical_report on Medical_history.report_ID=medical_report.report_ID where medical_report.report_ID=".$parameter[2]['id']);
                 if($report[0]['type']=='softcopy'){
                     $response->redirect('./media/patient//'.$report[0]['name']);
 
                 }
                 else{
-                    $soapModel->SOAPreportToPDF($report[0]['report_ID']);
+                    $historyModel->HistoryreportToPDF($report[0]['report_ID']);
                 }
                 //$referralModel->findOne(['ref_ID'=>$parameter[2]['id']]);
                 
             }
             if($request->isPost()){
                 $medHistoryModel->loadData($request->getBody());
-                $medHistoryModel->setReport('medical-history','Medical-history-'.date('Y:m:d'),$patient,$userDoctor,'e-report');
-                if($medHistoryModel->validate() && $medHistoryModel->addReport()){
+                $medicalReportModel->loadData($request->getBody());
+                $medicalReportModel->setReport('medical-history','Medical-history-'.date('Y:m:d'),$patient,$userDoctor,'e-report');
+                if($medHistoryModel->validate() && $medHistoryModel->addReport($medicalReportModel)){
                     //redirect
                     Application::$app->response->redirect(Application::$app->session->get('churl'));
                     exit;
                 }
             }
             return $this->render('doctor/write-history-report',[
-                'model'=>$medHistoryModel
+                'model'=>$medHistoryModel,
+                'todayreport'=>$medicalReportModel->getAllReportsDoctor()
             ]);
         }
 
@@ -415,14 +575,12 @@ class DoctorController extends Controller{
             if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
                 $report=$consultationModel->customFetchAll("Select * from consultation_report left join medical_report on consultation_report.report_ID=medical_report.report_ID where medical_report.report_ID=".$parameter[2]['id']);
                 if($report[0]['type']=='softcopy'){
-                    $response->redirect('./media/patient//'.$report[0]['name']);
+                    $response->redirect('localhost/ctest/MVC/public/media/patient/medicalreports/'.$report[0]['name']);
 
                 }
                 else{
                     $consultationModel->ConsultationreportToPDF($report[0]['report_ID']);
-                }
-                //$referralModel->findOne(['ref_ID'=>$parameter[2]['id']]);
-                
+                } 
             }
             if ($request->isPost()){
                 $medicalReportModel->loadData($request->getBody());
@@ -437,17 +595,18 @@ class DoctorController extends Controller{
                 }
                 //render on fall-through
             }
-                return $this->render('doctor/write-consultation-report', [
-                    'model' => $consultationModel
-                ]);
+            return $this->render('doctor/write-consultation-report', [
+                'model' => $consultationModel,
+                'todayreport'=>$medicalReportModel->getAllReportsDoctor()
+            ]);
 
         }
-        if (isset($parameter[0]['spec']) && $parameter[0]['spec'] == "soap-report") {
+        if (isset($parameter[0]['spec']) && $parameter[0]['spec'] == "soap-report" ||$parameter[0]['spec'] == "soap") {
             if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
                 $soapModel=new SOAPReport();
                 $report=$soapModel->customFetchAll("Select * from soap_report left join medical_report on soap_report.report_ID=medical_report.report_ID where medical_report.report_ID=".$parameter[2]['id']);
                 if($report[0]['type']=='softcopy'){
-                    $response->redirect('./media/patient//'.$report[0]['name']);
+                    $response->redirect('localhost/ctest/MVC/public/media/patient/medicalreports/'.$report[0]['name']);
 
                 }
                 else{
@@ -458,7 +617,7 @@ class DoctorController extends Controller{
             }
             if ($request->isPost()) {
                 $soapModel->loadData($request->getBody());
-                $medicalReportModel->setReport('consultation','SOAP-report-'.date('Y:m:d'),$patient,$userDoctor,'e-report');
+                $medicalReportModel->setReport('soap','SOAP-report-'.date('Y:m:d'),$patient,$userDoctor,'e-report');
                 if ($soapModel->validate() && $soapModel->addReport($medicalReportModel)) {
                     //redirect
                     Application::$app->response->redirect(Application::$app->session->get('churl'));
@@ -467,10 +626,40 @@ class DoctorController extends Controller{
                 //render on fall-through
             }
                 return $this->render('doctor/write-soap-report', [
-                    'model' => $soapModel
+                    'model' => $soapModel,
+                    'todayreport'=>$medicalReportModel->getAllReportsDoctor()
                 ]);
 
         }
+        else if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
+               $medicalModel=new MedicalReport();
+               $medicalReport=$medicalModel->fetchAssocAll(['report_ID'=>$parameter[2]['id']]);
+               $response->redirect('/ctest/MVC/public/media/patient/medicalreports/'.$medicalReport[0]['label']);        
+        }
+        if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='update'){
+            if($request->isPost()){
+                $medicalModel->updateReport($request,$response);
+            }
+            if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='consultation-report'){
+                return $this->render('doctor/update-consultation-report',[
+                    'model'=>$medicalModel->findOne(['report_ID'=>$parameter[2]['id']])
+                ]);
+            }
+            if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='medical-history-report'){
+                return $this->render('doctor/update-history-report',[
+                    'model'=>$medicalModel->findOne(['report_ID'=>$parameter[2]['id']])
+                ]);
+            }
+            if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='soap-report'){
+                return $this->render('doctor/update-soap-report',[
+                    'model'=>$medicalModel->findOne(['report_ID'=>$parameter[2]['id']])
+                ]);
+            }
+
+        }
+        
+        
+    
         
     }
 
@@ -497,14 +686,89 @@ class DoctorController extends Controller{
         }
 
     }
+    public function handleLabReports(Request $request,Response $response){
+        $MedicalReport=new MedicalReport();
+        if($request->isPost()){
+            $MedicalReport->addLabReportSoftCopy($request);
+            //$response->redirect(Application::$app->session->get('churl'));
+        }
+    }
 
-  
-    
 
-    
+//move to doctor controller
+    public function handlePrescription(Request $request,Response $response){
+        $this->setLayout('doctor-striped');
+        $medicinesModel=new Medicine();
+        $medicines=$medicinesModel->getAllMedicine();
+        $prescriptionModel=new Prescription();
+        $prescription=$prescriptionModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
+        $presmeds=[];
+        $presdevice=[]; 
+        $parameters=$request->getParameters();
+        //show the prescription
 
-   
+        if(isset($parameters[1]['mod']) && $parameters[1]['mod']=='view'){
+                $report=$prescriptionModel->fetchAssocAll(['prescription_ID'=>$parameters[2]['id']]);
+                // if($report[0]['type']=='softcopy'){
+                //     $response->redirect('./media/patient//'.$report[0]['name']);
 
+                // }
+                //else{
+                    $prescriptionModel->prescriptionToPDF($report[0]['prescription_ID']);
+                    exit;
+                //}
+                
+        }
+        if($prescription){
+            $presmeds=$prescriptionModel->getPrescriptionMedicine($prescription);
+            $presdevice=$prescriptionModel->getPrescriptionDevice($prescription);
+        }
+        
+        if($request->isPost()){
+           //take current prescritption or create new one add medicine to it
+           $prescription=$prescriptionModel->addPrescriptionMedicine(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling')); 
+            Application::$app->response->redirect("/ctest/doctor-prescription");
+        }
+        
+        return $this->render('doctor/write-prescription',[
+            'medicines'=>$medicines,
+            'prescription_medicine'=>$presmeds,
+            'prescription_device'=>$presdevice
 
+        ]);
+    }
+    public function summaryReports(){
+        $employeeModel=new Employee();
+        $this->setLayout('doctor',['select'=>'Report']);
+        return $this->render('doctor/reports',[
+            'patients'=>$employeeModel->getThisMonthPatients(Application::$app->session->get('userObject')->nic),
+            'channelingsCount'=>sizeof($employeeModel->growthOfPatients(Application::$app->session->get('userObject')->nic)),
+            'income'=>$employeeModel->calcuateThisMonthIncome(Application::$app->session->get('userObject')->nic),
+            'patientchart'=>$employeeModel->growthOfPatients(Application::$app->session->get('userObject')->nic),
+            'incomechart'=>$employeeModel->growthOfIncome(Application::$app->session->get('userObject')->nic),
 
+        ]);
+
+        
+    }
+    public function myDetail(Request $request,Response $response){
+        $this->setLayout('doctor',['select'=>'My Detail']);
+        $parameters=$request->getParameters();
+        $model=new Employee();
+        $result=$model->customFetchAll("select * from employee left join doctor on doctor.nic=employee.nic where doctor.nic=".Application::$app->session->get('userObject')->nic)[0];
+        if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='view'){
+            return $this->render('doctor/mydetail',[
+                'me'=>$result
+            ]);
+        }
+        if($request->isPost()){
+            $model->loadData($request->getBody());
+            if($model->validate() && $model->updateRecord($parameters[1]['id'])){
+                return $this->render('doctor/mydetail-update',[
+                    'me'=>$model
+                ]);
+            }
+            
+        }
+    }
 }

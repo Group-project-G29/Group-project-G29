@@ -71,7 +71,6 @@ use app\core\DbModel;
         }
         public function createCart($patientID){
              $this->customFetchAll("insert into cart (patient_ID) values('$patientID')");
-            return $this->saveByName(['patient_ID'=>'134'],'patient');
         }
         public function getCartItem($cartID){
             return $this->fetchAssocAllByName(['cart_ID'=>$cartID],'medicine_in_cart');

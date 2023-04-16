@@ -23,7 +23,7 @@ use app\models\Medicine;
                 <?php echo $form->field($delivery,'address','Recipient Address*','field','text') ?>
                 <?php echo $form->spanselect($delivery,'city','City*','field',['select'=>'','Ciyathra'=>'Ciyathra','Howitz'=>'Howitz'],'')?>
                 <?php echo $form->spanselect($delivery,'postal_code','Postal Code*','field',['select'=>'','20290-D'=>'20290','40034-K'=>'40034'],'')?>
-                <?php echo $form->textarea($delivery,'comment','comment','Any Delivery Instruction',5,20); ?>
+                <?php echo $form->textarea($delivery,'comment','comment','Any Delivery Instruction',5,20,''); ?>
             </div>
             <div class="button-container"><input class="button--class-1" style="margin-bottom:3vh;" type="submit" value="Complete Order"></div>
         </div>

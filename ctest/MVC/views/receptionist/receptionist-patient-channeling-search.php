@@ -1,6 +1,5 @@
 
 <div class="patient-detail">
-
     <h3>Patient Name : <?=$patient[0]['name']?></h3>
     <h3>NIC :<?=$patient[0]['nic'] ?></h3>
     <h3>Age :<?$patient[0]['age']?></h3>
@@ -78,7 +77,7 @@
     
         function checker(){
         
-        var re=new RegExp("^"+searchBar.value)
+        var re=new RegExp("^"+(searchBar.value).toLowerCase())
         patients.forEach((el)=>{
             comp=(el.id).split("&");
           ;
@@ -86,7 +85,7 @@
                 el.classList.add("none")
                 header.classList.add("none");
             }
-            else if(re.test(comp[0]) || re.test(comp[1])){
+            else if(re.test(comp[0].toLowerCase()) || re.test(comp[1].toLowerCase())){
                 el.classList.remove("none");
                 header.classList.remove("none");
             }

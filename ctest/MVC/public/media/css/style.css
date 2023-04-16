@@ -857,7 +857,7 @@ padding-left:5vh;
     position: fixed;
     width: 100vw;
     height: 100vh;
-    z-index: 9;
+    z-index: 40;
 }
 
 .detail-container {

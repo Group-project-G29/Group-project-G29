@@ -25,9 +25,9 @@ use app\core\form\Form;
             
             </div>
             <div class="doctor-channeling-tile" id=<?="'".$channeling['channeling_ID']."'" ?>>
-                <div>
+                <div class=<?="'"."grid".rand(1,4)."'"?>>
                     <h1><?=$channeling['day']?></h1>
-                    <div>
+                    <div class="img-setting-btn">
                         <img class="setting-img" id=<?=$channeling['channeling_ID'] ?> src="./media/images/channeling assistance/gear.png"?>
                     </div>
                 </div> 
@@ -61,6 +61,7 @@ use app\core\form\Form;
         poparray.forEach((el)=>{
             el.addEventListener('click',()=>{
                 idval=""+el.id; 
+                bg.classList.remove('hide');
                 elem=document.querySelector(".popup_"+idval);
                 if(elem.classList.contains('hide') )
                 {
@@ -73,11 +74,19 @@ use app\core\form\Form;
 
         })
         btns=document.querySelectorAll(".add-btn");
+        pops=document.querySelectorAll(".pops");
         btns.forEach((el)=>{
             el.addEventListener('click',()=>{
                 input=document.getElementById("input-test_"+el.id);
                 location.href="doctor?spec=pre-channeling-test&cmd=add&id="+input.value+"&channeling="+el.id;
             })
         })
+        bg.addEventListener('click',()=>{
+            bg.classList.add('hide');
+            pops.forEach((el)=>{
+                    el.classList.add('hide');
+             })
+        })
+         
 
 </script>

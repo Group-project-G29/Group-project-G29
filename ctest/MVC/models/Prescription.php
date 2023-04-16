@@ -54,9 +54,11 @@ class Prescription extends DbModel{
         return  $this->fetchAssocAll(['order_ID'=>$orderID]);
     }
 
-    public function getPrescriptionByPatient(){
-
+    public function getPrescriptionByPatient($pair=[]){
         $patient=Application::$app->session->get('user');
+        if($pair){
+            return $this->customFetchAll("select * from prescription where patient=".$pair[0]." and doctor=".$pair[1]." order by uploaded_date");
+        }
         return $this->customFetchAll("select * from prescription where patient=".$patient." order by uploaded_date");
     }
 
@@ -132,7 +134,6 @@ class Prescription extends DbModel{
             $dispense_count=$dispense[0]??0;
             if($dispense_count=='')$dispense_count=null;
             $amount=explode(' ',$_POST['amount'])[0];
-            $route=$_POST['route'];
             $frequency=$_POST['frequency'];
         }
         else{
@@ -140,16 +141,19 @@ class Prescription extends DbModel{
         }
         $med_ID=$medicineModel->getMedicineID($name,$strength);
         if($this->alreadyIn($prescription,$med_ID)){
-            $this->customFetchAll("update prescription_medicine set med_amount=$amount, route='$route',dispense_type=$dispense_type,dispense_count='$dispense_count',frequency='$frequency' where med_ID=$med_ID and prescription_ID=$prescription");
+            $this->customFetchAll("update prescription_medicine set med_amount=$amount,dispense_type=$dispense_type,dispense_count='$dispense_count',frequency='$frequency' where med_ID=$med_ID and prescription_ID=$prescription");
             return $prescription;   
         }
-        $this->customFetchAll("insert into prescription_medicine (med_ID,prescription_ID,med_amount,route,dispense_type,dispense_count,frequency) values('$med_ID','$prescription','$amount','$route',$dispense_type,$dispense_count,'$frequency') ");
+        $this->customFetchAll("insert into prescription_medicine (med_ID,prescription_ID,med_amount,dispense_type,dispense_count,frequency) values('$med_ID','$prescription','$amount',$dispense_type,$dispense_count,'$frequency') ");
         return $prescription;
     }
     
     public function addToOrder($orderID,$cartID){
         $this->customFetchAll("update prescription set order_ID='$orderID' ,cart_ID=null where cart_ID='$cartID'");
         return true;
+    }
+    public function getPatientPrescription($patient){
+        return array_reverse($this->fetchAssocAll(['patient'=>$patient]));
     }
     //get medicine without devices
     public function getPrescriptionMedicine($prescriptionID){
@@ -159,29 +163,31 @@ class Prescription extends DbModel{
         return $this->customFetchAll("select * from prescription_medicine left join medical_products on medical_products.med_ID=prescription_medicine.med_ID where category='device' and prescription_medicine.prescription_ID=".$prescriptionID);
     }
 
-    public function referralToPDF($refID){
+    public function prescriptionToPDF($presID){
         $pdfModel=new PDF();
-
-        $stakeholdermain=$this->customFetchAll("select patient.name as patient_name,patient.gender ,patient.age,employee.name as doctor_name  from referrel left join patient on patient.patient_ID=referrel.patient right join doctor on doctor.nic=referrel.doctor left join employee on employee.nic=doctor.nic where ref_ID=$refID")[0];
-        $stakeholdersub=$this->customFetchAll("select employee.name as issued_doctor_name  from referrel right join doctor on doctor.nic=referrel.issued_doctor left join employee on employee.nic=doctor.nic where ref_ID=$refID")[0];
-        $referral=$this->fetchAssocAll(['ref_ID'=>$refID])[0];
-        $addstr='';
-        if($referral['history'] && $referral['history']!=''){
-            $addstr.="<div>Patient Medical History</div>
-                    <div>".$referral['history']."</div>";
-
+        $meds=$this->getPrescriptionMedicine($presID);
+        $devices=$this->getPrescriptionDevice($presID);
+        $header=$this->customFetchAll("select employee.name as doctor,prescription.uploaded_date,patient.name,prescription.last_processed_timestamp from prescription left join patient on prescription.patient=patient.patient_ID left join employee on employee.nic=prescription.doctor  where prescription_ID=".$presID)[0];
+        $medrows='<tr><th>Medicine</th><th>Frequency</th><th>Amount per Dose</th><th>Dispense</th><th>Route</th></tr>';
+        $devrows='<tr><th>Device</th><th>Amount</th></tr>';
+        $head="<h3>Medical Devices</h3>";
+        if($meds){
+            foreach($meds as $med){
+                $medrows.="<tr><td>".$med['name']."-".$med['strength']."</td><td>".$med['frequency']."</td><td>".$med['dispense_count']." ".$med['dispense_type']."</td></tr>";
+            }
         }
-        if(isset($referral['assessment']) && $referral['assessment']!=''){
-            $addstr.="<div>Medical Assessment</div>
-            <div>".$referral['assessment']."</div>";
+        else{
+            $medrows='';
         }
-        if(isset($referral['reason']) && $referral['reason']!=''){
-            $addstr.="<div>Reason for referral</div>
-            <div>".$referral['reason']."</div>";
+        if($devices){
+            
+            foreach($devices as $dev){
+                $devrows.="<tr><td>".$devices['name']."</td><td>".$devices['amount']."</td></tr>";
+            }
         }
-        if(isset($referral['note']) && $referral['note']!=''){
-            $addstr.="<div>Note</div>
-            <div>".$referral['note']."</div>";
+        else{
+            $head='';
+            $devrows='';
         }
         $str="
             <html>
@@ -198,21 +204,34 @@ class Prescription extends DbModel{
                 </head>
                 <body>
                     <section class='show'>
-                        <div>Written to Doctor :".$stakeholdermain['doctor_name']."</div>
-                        <div>Written to speciality:".$referral['speciality']."</div><br>
-                        <div>Patient Name :".$stakeholdermain['patient_name']."</div>
-                        <div>Patient Gender :".$stakeholdermain['gender']."</div><br>
-                        <div>Issued Doctor :".$stakeholdersub['issued_doctor_name']."</div>"."
-                        <div>Issued date :".$referral['date']."</div>
+                        <div>
+                            Issued Doctor :".$header['doctor']."
+                            Issued Day :".$header['uploaded_date']."
+                        
+                        </div>
+                        <div>
+                            Patient :".$header['name']."
+                        </div>
+
                         
                     </section>
                     <section>
-                        ".$addstr."
+                        <table border='0'>
+                        
+                        ".$medrows."
+                        </table>
+                        ".$head."
+                        <table border='0'>
+                        "
+                        
+                        .$devrows."
+                        </table>
                     </section>
                 </body>
             <html>
         ";
-        $pdfModel->createPDF($str,'referral-'.$referral['date']);
+       
+        $pdfModel->createPDF($str,'Prescription-'.$header['uploaded_date']);
 
 
     }

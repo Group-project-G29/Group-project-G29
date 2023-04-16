@@ -15,7 +15,7 @@ $form=Form::begin('','post');
             <table>
                 <center><h2>Set Doctor</h2></center>
                 <?php echo $form->spanselect($channelingmodel,'doctor','Doctor','field',$doctors)?>
-                <?php echo $form->spanselect($channelingmodel,'speciality','Speciality','field',['Dental'=>'Dental','Cardiology'=>'Cardiology','Radiology'=>'Radiology','Gastrology'=>'Gastrology'])?>
+                <?php echo $form->spanselect($channelingmodel,'speciality','Speciality','field',['Select'=>'','Dental'=>'Dental','Cardiology'=>'Cardiology','Radiology'=>'Radiology','Gastrology'=>'Gastrology'])?>
             </table>
             
             <table>
@@ -36,20 +36,20 @@ $form=Form::begin('','post');
             <table>    
                 <center><h2 style="margin-top: 5vh;">Set Date Time</h2></center>
                 
-                <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursay','Friday'=>'Friday','Saturday'=>'Saturday'])?>
+                <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Select'=>'','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursay','Friday'=>'Friday','Saturday'=>'Saturday'])?>
                 <?php echo $form->spanfield($channelingmodel,'time','Starting Time*','field','time') ?>
                 
                 <?php echo $form->spanfield($channelingmodel,'session_duration','Session Duration*','field','time') ?>
                 <?php echo $form->spanfield($channelingmodel,'start_date','Starting Date*','field','date') ?>
 
                 <?php echo $form->spanfield($channelingmodel,'schedule_for','Schedule For*','field','text') ?>
-                <?php echo $form->spanselect($channelingmodel,'schedule_type','Schedule Type','field',['Week'=>'weeks','Month'=>'months','Year'=>'years'])?>
+                <?php echo $form->spanselect($channelingmodel,'schedule_type','Schedule Type','field',['Select'=>'','Week'=>'weeks','Month'=>'months','Year'=>'years'])?>
                 
 
                 <?php echo $form->spanfield($channelingmodel,'open_before','Open before','field','text') ?>
 
                 <?php echo $form->spanfield($channelingmodel,'frequency','Frequency*','field','text') ?>
-                <?php echo $form->spanselect($channelingmodel,'frequency_type','Frequency Type','field',['Week'=>'weeks','Month'=>'months'])?>
+                <?php echo $form->spanselect($channelingmodel,'frequency_type','Frequency Type','field',['Select'=>'','Week'=>'weeks','Month'=>'months'])?>
 
             </table>    
             
@@ -87,9 +87,7 @@ $form=Form::begin('','post');
                             </div>
                         </div>
                     <?php endforeach;?>
-                
-                </div>
-                
+                </div>    
             </div>
 
             <div class="nurse-assign-body-button">
@@ -114,13 +112,13 @@ $form=Form::begin('','post');
     const nurseList=document.querySelector(".nurse-list");
     const searchBar=document.getElementById('search-nurse');
     const nurses=document.querySelectorAll(".class");
-    console.log(chechbox);
     chechbox.forEach(function(elem) {
         elem.addEventListener("change", function() {
         if(elem.checked)nurseContainer.appendChild(elem.parentNode);
         else {
             
-            //nurseList.appendChild(elem.parentNode);
+            nurseList.appendChild(elem.parentNode);
+            elem.parentNode.classList.add('none');
             
         }
             
@@ -172,7 +170,6 @@ $form=Form::begin('','post');
     const checkActive = document.getElementById("limitCheckbox");
     checkActive.addEventListener("click", ()=>{
         if(checkActive.checked){
-            console.log(popLine);
             document.getElementById("popLine").innerHTML = `<?php echo $form->spanfield($channelingmodel,'total_patients','','field','text') ?>`;
         }
         else{

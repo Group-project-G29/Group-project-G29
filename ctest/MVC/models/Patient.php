@@ -31,7 +31,7 @@ class Patient extends DbModel{
         
     }
     public function register_non_session(){
-        $this->password=password_hash($this->password,PASSWORD_DEFAULT);
+        $this->password=password_hash($this->nic,PASSWORD_DEFAULT);
         $last_id=parent::save();
        
         return true; 
@@ -50,6 +50,7 @@ class Patient extends DbModel{
             'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
             'email'=>[self::RULE_EMAIL],
             'address'=>[],       
+            'gender'=>[self::RULE_REQUIRED],
           //  'relation'=>[self::RULE_REQUIRED],
             'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)]]
                
@@ -74,6 +75,16 @@ class Patient extends DbModel{
         return $patient;
 
     }
+    public function isDoctor($patient,$doctor){
+        if(!$patient) return false;
+        else{
+            $result=$this->customFetchAll("select * from appointment left join opened_channeling on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where appointment.patient_ID=".$patient." and channeling.doctor='".$doctor."'");
+        } 
+        if($result) return true;
+        else return false;   
+    }
+    
+
     public function fileDestination(): array
     {
         return [];

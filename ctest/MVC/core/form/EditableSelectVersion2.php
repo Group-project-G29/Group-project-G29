@@ -43,8 +43,8 @@
                 return str.split(" ").join("_");
             }
             function doitall(){
-                const edseo=document.querySelectorAll(".ed-se-item-tests_ed");
-                const testinput=document.getElementById("input-tests_ed");
+                let edseo=document.querySelectorAll(".ed-se-item-tests_ed");
+                let testinput=document.getElementById("input-tests_ed");
                 let ch=""; 
                 testinput.addEventListener("input",()=>{
                     edseo.forEach((el)=>{
@@ -57,12 +57,12 @@
                     })
                     edseo.forEach((el)=>{
                         elem=document.querySelector(prepare(".c"+testinput.value));
-                        console.log(elem);
+                        
                         if(elem){
                             if(""+el.id==""+prepare(testinput.value)){
                                 visible(elem,"hide");
                                 
-                                console.log(elem)
+                            
                             }
                         
                         }
@@ -71,6 +71,7 @@
                 })
 
             }
+            doitall();
                 // take the field element
                 //onchange if empty hide all items
                  items%s=document.querySelectorAll(".ed-se-item-%s");
@@ -101,7 +102,23 @@
                     let %scarry="";
                     items%s.forEach(element=>{ 
                         element.addEventListener("click",()=>{
-                            doitall();
+                            let edseo=document.querySelectorAll(".ed-se-item-tests_ed");
+                            let testinput=document.getElementById("input-tests_ed");
+                            let ch=""; 
+                            edseo.forEach((el)=>{
+                                elem=document.querySelector(prepare(".c"+el.id));
+                                if(elem){
+                            
+                                    hide(elem,"hide");
+                            
+                                }
+                            })
+                           
+                            elem=document.querySelector(prepare(".c"+element.id));
+                            visible(elem,"hide");
+                                        
+                                    
+                           
                             comp%s=(""+element.id).split("_");
                             text_input%s.value=comp%s[0];
                             if(comp%s.length==2) %scarry=comp%s[1];

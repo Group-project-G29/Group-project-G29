@@ -3,19 +3,23 @@
 
 use app\core\component\Component;
 use app\core\Application;
+use app\core\Calendar;
 use app\models\Appointment;
+$component=new Component();
+use app\models\OpenedChanneling;
+use app\models\Patient;
 
-    $component=new Component();
-    use app\models\OpenedChanneling;
-        $openedChanneling=new OpenedChanneling();
-        $appointmentModel=new Appointment();
-       
+    $openedChanneling=new OpenedChanneling();
+    $appointmentModel=new Appointment();
+    $calendarModel=new Calendar();
+    $patientModel=new Patient();
    
        
     
 ?>
 <div class="appointment-container ">
         <?php foreach($channelings as $key=>$value): ?>
+            <?php if($value['channeling_date']>Date('Y-m-d') && $calendarModel->addDaysToDate(Date('Y-m-d'),$value['open_before'])>=$value['channeling_date']): ?>
             <div class="item">
                 <div class="item--left">
                     <div>
@@ -47,7 +51,7 @@ use app\models\Appointment;
                     </div>
                 </div>
             </div>
-            
+            <?php endif; ?>
         <?php endforeach; ?>
 
 </div>

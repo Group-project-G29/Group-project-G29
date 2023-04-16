@@ -14,7 +14,7 @@ class Appointment extends DbModel{
     public int $queue_no=0;
     public string $payment_status='';
     public ?string $type="";
-    public ?string $status="";
+    public ?string $status="unused";
   
 
   
@@ -41,7 +41,9 @@ class Appointment extends DbModel{
         $this->payment_status=$ap[3];
         $this->type=$ap[4];
         $this->status='new';
-        return parent::save();
+        $result=parent::save();
+        Application::$app->session->set('Appointment',$result[0]['last_insert_id()']);
+        return $result;
 
     }
 
@@ -59,7 +61,7 @@ class Appointment extends DbModel{
         $calendarModel=new Calendar();
         $channeling_date=$this->fetchAssocAllByName(['opened_channeling_ID'=>$opened_channeling],'opened_channeling')[0]['channeling_date'];
         //check all  the past channeling dates of the doctor where patient joined
-        $last_appointment_date=$this->customFetchAll("select max(channeling_date) from past_channeling_patient where doctor=$doctor and patient_ID=$patient")[0]['max(channeling_date)']??'';
+        $last_appointment_date=$this->customFetchAll("select max(o.channeling_date)  from appointment as a right join  past_channeling as p on a.opened_channeling_ID=p.opened_channeling_ID left join opened_channeling as o on o.opened_channeling_ID=p.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID where c.doctor=$doctor and patient_ID=$patient")[0]['max(channeling_date)']??'';
         $l=$last_appointment_date;
         if($last_appointment_date=='') return false;
         //add two weeks
@@ -74,8 +76,13 @@ class Appointment extends DbModel{
         }
 
     }
-
-    
+    //check whether the appointment is valid
+    public function isInPass($appointment){
+        $result=$this->customFetchAll("Select * from opened_channeling left join appointment on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID where  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and appointment.status='unused' and appointment.appointment_ID=".$appointment);
+        if($result) return true;
+        else return false;
+    } 
+   
     public function getAppointmentType($patientID,$channelingID){
         return $this->customFetchAll("select type from appointment where patient_ID=$patientID and opened_channeling_ID=$channelingID ");
     }

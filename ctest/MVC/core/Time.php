@@ -58,6 +58,7 @@ class Time{
     }
     // add two time in the format 10:45 +02:03   => 12:48
     public function addTime($time_1,$time_2){
+        $time_2=$this->getTime($time_2,'hours')*60+$this->getTime($time_2,'minutes');;
         // $time_1=explode(":",$time_1);
         // $time_2=explode(":",$time_2);
         // $day=false;
@@ -88,6 +89,7 @@ class Time{
 
     }
     public function subTime($time_1,$time_2){
+        $time_2=$this->getTime($time_2,'hours')*60+$this->getTime($time_2,'minutes');;
         // $time_1=explode(":",$time_1);
         // $time_2=explode(":",$time_2);
         // $day=false;
@@ -147,17 +149,15 @@ class Time{
     public function isInRange($time,$span,$intime){
         $add_time=$this->addTime($time,$span);
         $sub_time=$this->subTime($time,$span);
-        if($add_time['day']){
-            return false;
-        }
-        else{
-            if($this->greaterthan($intime,$this->arrayToTime($sub_time)) && !$this->greaterthan($intime,$this->arrayToTime($add_time))){
-                return true;
-            }
-            return false;
+        var_dump($sub_time);
 
+        if($this->greaterthan($sub_time,$intime) && $this->greaterthan($intime,$add_time)){
+                return true;
             
-        }
+                
+                
+            }
+        return false;
 
 
     }

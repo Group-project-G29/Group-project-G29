@@ -73,7 +73,7 @@ class Calendar{
 
   public function subDaysByDate($date,$days){
     $date=date_create($date);
-    date_sub($date,date_interval_create_from_date_string($date." days"));
+    date_sub($date,date_interval_create_from_date_string($days." days"));
     return date_format($date,"Y-m-d");
 
   }

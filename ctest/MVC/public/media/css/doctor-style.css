@@ -56,6 +56,15 @@
     gap:0vw;
 
 }
+.nav_container{
+    opacity: 0;
+}
+.main-nav{
+    
+}
+.main-nav:hover>.nav_container{
+    opacity: 1;
+}
 
 .scheduled-info{
     display: flex;
@@ -377,7 +386,7 @@
 
 .labtest-popup{
     position: fixed;
-    z-index: 50;
+    z-index: 99;
     top:30vh;
     left: 35vw;
     width:40vw;
@@ -387,8 +396,153 @@
     background-color: var(--clr-white);
 }
 /* referral styles */
-.show{
-    
-    color:red;
+.labreport-popup{
+    position: fixed;
+    z-index: 99;
+    top:30vh;
+    left: 35vw;
+    width:40vw;
+    height: 50vh;
+    border-radius: 20px;
+    padding: 2vw;
+    background-color: var(--clr-white);
+}
 
+/* today channelings */
+.today_channeling_tiles,.doctor-channeling-tile{
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--clr-white);
+    width:18vw;
+    height:27vh;
+    border-radius: 10px;
+    padding-inline:3vw;
+    padding-block: 2vh;
+    box-shadow: 0px 0px 20px 1px #e7e7e7
+}
+.doctor-channeling-tile{
+    width:18vw;
+    height:33vh;
+}
+.grid1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:15vw;
+    height:27vh;
+    background-image:url('images/grid1.jpg');
+    background-size: cover;
+    border:1px solid #e7e6e6;
+    border-radius: 5px;
+}
+.grid2{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:15vw;
+    height:27vh;
+    background-image:url('images/grid2.jpg');
+    background-size: cover;
+    border:1px solid #e7e6e6;
+    border-radius: 5px;
+}
+.grid3{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:15vw;
+    height:27vh;
+    background-image:url('images/grid3.jpg');
+    background-size: cover;
+    border:1px solid #e7e6e6;
+    border-radius: 5px;
+}
+.grid4{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:15vw;
+    height:27vh;
+    background-image:url('images/grid4.jpg');
+    background-size: cover;
+    border:1px solid #e7e6e6;
+    border-radius: 5px;
+}
+
+.doctor-channeling{
+    display: flex;
+    flex-wrap: wrap;
+    gap:10vh;
+    align-items: center;
+}
+.today-tile-time{
+    font-size:48;
+}
+.today-tile-content{
+    align-items: right;
+}
+.img-setting-btn{
+    position: relative;
+    left:1vw;
+    top: -7vh;
+    
+}
+.img-setting-btn>img{
+    width: 1.7vw;
+    height: 3vh;
+}
+.doctor-channeling-day{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.doctor-channeling-day h1{
+    font-size: 3em;
+}
+
+.pops{
+    position: fixed;
+    top:40vh;
+    left:45vw;
+    z-index:99;
+    background-color: var(--clr-white);
+    border-radius:5px;
+
+}
+.upper-boxes{
+    background-color: var(--clr-white);
+    width:18vw;
+    height:10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius:20px;
+    box-shadow: 0px 0px 20px 1px #e7e7e7
+}
+.upper-info-container{
+    display: flex;
+    justify-content: center;
+    gap:3vw;
+
+}
+.upper-info-container h3{
+    font-size: 32;
+}
+
+.lower-info-container{
+    display: flex;
+    justify-content: center;
+    display: 5vw;
+    flex-direction: column;
+    
+}
+.lower-box{
+    height:40vh;
+    width: 80vw;
+}
+#myChart-income,#myChart-patient{
+    height:40vh;
+    width: 80vw;
 }

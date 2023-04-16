@@ -70,25 +70,7 @@ use app\models\Medicine;
             }
         })
     })
-    const updateButtons=e('.update-buttons','classall');
-    
-    updateButtons.forEach((elem)=>{
-        elem.addEventListener('click',()=>{
-            let element=(""+elem.id).split("_")[1];
-            let input_amount=e("amount2_"+element);
-            let amount=input_amount.value;
-            if(!amount){
-
-            }
-            else{
-                location.href="patient-pharmacy?spec=medicine&cmd=add&item="+element+"&amount="+amount;
-            }
-        })
-    })
-    const paymentbtn=e('proceed-to-payment');
-    paymentbtn.addEventListener('click',()=>{
-        location.href="patient-medicine-order?spec=order&mod=view";
-    })
+   
     // const cart=e('.cart','class');
     // const cartBody=e('.');
 </script>

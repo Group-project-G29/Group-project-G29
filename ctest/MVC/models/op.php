@@ -92,7 +92,7 @@ class Channeling extends DbModel{
    }
    public function getDocChannelings(){
         $doctor=Application::$app->session->get('userObject')->nic;
-        return $this->fetchAssocAll(['doctor'=>$doctor]);
+        return $this->customFetchAll("select * from channeling where doctor=$doctor");
 
    }
     

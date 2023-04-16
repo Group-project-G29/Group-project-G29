@@ -129,10 +129,6 @@ function showSlides(){
     trackOrderBtn.addEventListener('click',()=>{
         location.href="patient-pharmacy?spec=order-main";
     })
-      const paymentbtn=e('proceed-to-payment');
-    paymentbtn.addEventListener('click',()=>{
-        location.href="patient-medicine-order?spec=order&mod=view";
-    })
     const uploadPres=e('upload-prescription');
     const popUp=e('.prescription-popup','class');
     uploadPres.addEventListener('click',()=>{

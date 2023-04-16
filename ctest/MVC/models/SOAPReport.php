@@ -18,6 +18,7 @@ class SOAPReport extends DbModel{
    
     public function addReport($report_model){
           if($this->subjective!='' || $this->objective || $this->assessment || $this->plan ||$this->additional_note  ){
+            $report_model->fixName();
             $id=$report_model->save();
             $this->report_ID=$id[0]['last_insert_id()'];
             return parent::save();

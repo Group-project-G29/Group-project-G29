@@ -63,6 +63,36 @@
 
                 </script>',$xvalues,$yvalues,$canvasname,$xlabels,$label,$color,$xvalues );
         }
+
+        public function barchart($xlabels,$ylabels,$xvalues,$yvalues,$label,$color,$canvasname,$text){
+            $xlabels=$this->makeArrayStr($xlabels);
+            $ylabels=$this->makeArrayStr($ylabels);
+            $xvalues=$this->makeArrayNum($xvalues);
+            $yvalues=$this->makeArrayNum($yvalues); 
+            return sprintf('
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+                <script>
+                var xValues =%s;
+                var yValues = %s;
+                new Chart("myChart%s", {
+                type: "bar",
+                data: {
+                    labels: %s,
+                    datasets: [{
+                    backgroundColor:"%s",
+                    data: %s
+                    }]
+                },
+                options: {
+                    title: {
+                    display: true,
+                    text:"%s"
+                    }
+                }
+            });
+
+                </script>',$xvalues,$yvalues,$canvasname,$xlabels,$color,$xvalues,$text );   
+            }
     }
 
 

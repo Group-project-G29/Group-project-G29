@@ -14,6 +14,7 @@ class ConsultationReport extends DbModel{
     
     public function addReport($report_model){
         if($this->consultation!='' || $this->examination || $this->recommendation  ){
+            $report_model->fixName();
             $id=$report_model->save();
             $this->report_ID=$id[0]['last_insert_id()'];
             return parent::save();
