@@ -2,7 +2,8 @@
     use app\core\component\Component;
     $component=new Component();
 // var_dump($orders);
-// var_dump($order_types);
+// var_dump($popup);
+// // var_dump($order_types);
 // exit;
 
 ?>
@@ -86,6 +87,29 @@
 </div>
 
 
+<!-- ========================POPUP====================== -->
+    <div class="popup" id="popup">
+            <h2>Successful !!</h2>
+            <p> Notification has been sent.. </p>
+            <button type="button" onclick="closePopup()" id="ok">OK</button>
+    </div>
+<!-- =================================================== -->
+
+
+
+<!-- <?php if(isset($popup)): ?> 
+    <?php if($popup == 'notify-na-medicine'): ?> -->
+        
+    <!-- <div class="popup open-popup" id="popup">
+            <h2>Successful !!</h2>
+            <p> Notification has been sent.. </p>
+            <button type="button" onclick="closePopup()" id="ok">OK</button>
+    </div> -->
+    <!-- <?php endif; ?>
+<?php endif; ?> -->
+
+
+
 <!-- ==================== -->
 <script>
     elementsArray1 = document.querySelectorAll(".table-row");
@@ -135,4 +159,18 @@
     btn4.addEventListener('click',function(){
         location.href="pharmacy-new-order"; //get
     })
+
+// ========================POPUP======================
+    <?php if(isset($popup)): ?>
+        <?php if($popup == 'notify-na-medicine'): ?>
+            openPopup();
+        <?php endif; ?>
+    <?php endif; ?>
+    function openPopup(){
+        popup.classList.add("open-popup");
+    }
+    function closePopup(){
+        popup.classList.remove("open-popup");
+    }
+    
 </script>

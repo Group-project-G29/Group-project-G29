@@ -307,10 +307,13 @@ class PharmacyController extends Controller{
             $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
         }
         return $this->render('pharmacy/pharmacy-orders-pending',[
+            'popup' => 'notify-na-medicine',
             'orders'=>$orders,
             'model'=>$orderModel,
             'order_types'=>$order_types
         ]);
+        // header("/ctest/pharmacy-orders-pending");
+        // $this->viewPendingOrder();
     }
 
     public function cancleProcessingOrder($request){

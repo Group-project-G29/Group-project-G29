@@ -121,6 +121,8 @@
     align-content: center;
 }
 
+
+/* ================Popup==================== */
 .popup {
     width: 400px;
     background: rgb(97, 164, 241);
@@ -133,7 +135,7 @@
     padding: 0 30px 30px;
     visibility: hidden;
     transition: transform 0.4s, top 0.4s;
-    /* color: ; */
+    transition: 0.3s;
 }
 
 .open-popup {
