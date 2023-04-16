@@ -32,14 +32,25 @@
     <?php if($orders): ?>
         
         <?php foreach($orders as $key=>$order): ?>
-            <tr class="table-row" id=<?=$order['order_ID']?> >
-                <td><?=$order['order_ID']?></td>
-                <td><?=$order_types[$key]?></td>
-                <td><?=$order['name']?></td> 
-                <td><?=$order['contact']?></td> 
-                <td><?=$order['completed_date']?></td> 
-                <td><?=$order['completed_time']?></td> 
-            </tr>
+            <?php if($order['processing_status']=='pickedup'): ?>  
+                    <tr class="table-row" id=<?=$order['order_ID']?> >
+                        <td><?=$order['order_ID']?></td>
+                        <td><?=$order_types[$key]?></td>
+                        <td><?=$order['name']?></td> 
+                        <td><?=$order['contact']?></td> 
+                        <td><?=$order['created_date']?></td> 
+                        <td><?=$order['created_time']?></td> 
+                    </tr>
+            <?php elseif($order['processing_status']=='deleted'): ?> 
+                    <tr class="table-row_red" id=<?=$order['order_ID']?> >
+                        <td><?=$order['order_ID']?></td>
+                        <td><?=$order_types[$key]?></td>
+                        <td><?=$order['name']?></td> 
+                        <td><?=$order['contact']?></td> 
+                        <td><?=$order['created_date']?></td> 
+                        <td><?=$order['created_time']?></td> 
+                    </tr>  
+            <?php endif; ?>
         <?php endforeach; ?>
     </table>
 

@@ -109,6 +109,8 @@ $app->router->get('/ctest/pharmacy-view-previous-order',[PharmacyController::cla
 $app->router->get('/ctest/pharmacy-orders-pending',[PharmacyController::class,'viewPendingOrder']);
 $app->router->get('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'DetailsPendingOrder']);
 $app->router->get('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
+$app->router->get('/ctest/pharmacy-delete-rejected',[PharmacyController::class,'deleteRejectedOrder']);
+// $app->router->post('/ctest/pharmacy-pharmacy-delete-rejected',[PharmacyController::class,'deleteRejectedOrder']);
 // $app->router->post('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'TakePendingOrder']);
 // $app->router->post('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
 $app->router->get('/ctest/pharmacy-orders-processing',[PharmacyController::class,'viewProcessingOrder']);
@@ -121,6 +123,7 @@ $app->router->get('/ctest/pharmacy-orders-delivering',[PharmacyController::class
 $app->router->get('/ctest/pharmacy-track-order',[PharmacyController::class,'trackOrder']);
 $app->router->get('/ctest/pharmacy-go-to-process-order',[PharmacyController::class,'processOrderAgain']);
 $app->router->get('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
+$app->router->post('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
 
 $app->router->get('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
 $app->router->post('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);

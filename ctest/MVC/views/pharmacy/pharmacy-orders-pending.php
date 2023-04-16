@@ -41,14 +41,44 @@
     <?php if($orders): ?>
         
         <?php foreach($orders as $key=>$order): ?>
-            <tr class="table-row" id=<?=$order['order_ID']?> >
-                <td><?=$order['order_ID']?></td>
-                <td><?=$order_types[$key]?></td>
-                <td><?=$order['name']?></td> 
-                <td><?=$order['contact']?></td> 
-                <td><?=$order['created_date']?></td> 
-                <td><?=$order['created_time']?></td> 
-            </tr>
+            <?php if($order['processing_status']=='pending'):?>
+                    <tr class="table-row" id=<?=$order['order_ID']?> >
+                        <td><?=$order['order_ID']?></td>
+                        <td><?=$order_types[$key]?></td>
+                        <td><?=$order['name']?></td> 
+                        <td><?=$order['contact']?></td> 
+                        <td><?=$order['created_date']?></td> 
+                        <td><?=$order['created_time']?></td> 
+                    </tr>
+            <?php elseif($order['processing_status']=='waiting'): ?> 
+                        <tr class="table-row_gray" id=<?=$order['order_ID']?> >
+                        <td><?=$order['order_ID']?></td>
+                        <td><?=$order_types[$key]?></td>
+                        <td><?=$order['name']?></td> 
+                        <td><?=$order['contact']?></td> 
+                        <td><?=$order['created_date']?></td> 
+                        <td><a class='delete-order' id=<?=$order['order_ID']?>>Delete Order</a></td>
+                    </tr>
+            <?php elseif($order['processing_status']=='accepted'): ?>  
+                    <tr class="table-row_green" id=<?=$order['order_ID']?> >
+                        <td><?=$order['order_ID']?></td>
+                        <td><?=$order_types[$key]?></td>
+                        <td><?=$order['name']?></td> 
+                        <td><?=$order['contact']?></td> 
+                        <td><?=$order['created_date']?></td> 
+                        <td><?=$order['created_time']?></td> 
+                    </tr>
+            <?php elseif($order['processing_status']=='rejected'): ?> 
+                    <tr class="table-row_red" id=<?=$order['order_ID']?> >
+                        <td><?=$order['order_ID']?></td>
+                        <td><?=$order_types[$key]?></td>
+                        <td><?=$order['name']?></td> 
+                        <td><?=$order['contact']?></td> 
+                        <td><?=$order['created_date']?></td> 
+                        <!-- <td><?=$order['created_time']?></td> -->
+                        <td><a class='delete-order' id=<?=$order['order_ID']?>>Delete Order</a></td>
+                    </tr>  
+            <?php endif; ?>    
         <?php endforeach; ?>
     </table>
 
@@ -58,10 +88,31 @@
 
 <!-- ==================== -->
 <script>
-    elementsArray = document.querySelectorAll(".table-row");
-    elementsArray.forEach(function(elem) {
+    elementsArray1 = document.querySelectorAll(".table-row");
+    elementsArray1.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href='pharmacy-view-pending-order?id='+elem.id; 
+        });
+    });
+
+    elementsArray2 = document.querySelectorAll(".table-row_green");
+    elementsArray2.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href='pharmacy-view-pending-order?id='+elem.id; 
+        });
+    });
+
+    elementsArray3 = document.querySelectorAll(".table-row_gray");
+    elementsArray3.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href='pharmacy-view-pending-order?id='+elem.id; 
+        });
+    });
+
+    elementsArray4 = document.querySelectorAll(".delete-order");
+    elementsArray4.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href='pharmacy-delete-rejected?id='+elem.id;
         });
     });
 

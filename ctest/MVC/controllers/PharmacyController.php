@@ -163,6 +163,24 @@ class PharmacyController extends Controller{
         }
 
     }
+
+    public function deleteRejectedOrder(Request $request){
+        $parameters=$request->getParameters();
+        $orderModel=new Order();
+        $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'deleted');
+
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orders=$orderModel->get_pending_orders(); 
+        $order_types = array();
+        foreach ($orders as $key=>$order){
+            $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
+        }
+        return $this->render('pharmacy/pharmacy-orders-pending',[
+            'orders'=>$orders,
+            'model'=>$orderModel,
+            'order_types'=>$order_types
+        ]);
+    }
     
 //=========================PROCESSING ORDERS====================================
     public function viewProcessingOrder(){
@@ -279,37 +297,20 @@ class PharmacyController extends Controller{
         }
 
         $create_notification = $notificationModel->createOrderNotification( $order[0]['order_ID'], $order[0]['patient_ID'] );
+        $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'waiting');
+
         $this->setLayout("pharmacy",['select'=>'Orders']);
-
-        $order_type = $orderModel->getOrderType($parameters[0]['id']);
-        
-        if ( $order_type == 'Online Order' ) {
-            $orders=$orderModel->view_online_order_details($parameters[0]['id']);
-            // var_dump($orders);
-            // exit;
-            return $this->render('pharmacy/pharmacy-view-processing-order',[
-                'orders'=>$orders,
-                'order_type'=>$order_type,
-                'model'=>$orderModel,
-            ]);
-
-        } else if ( $order_type == 'E-prescription' ) {
-            $orders=$orderModel->view_prescription_details($parameters[0]['id']);
-            return $this->render('pharmacy/pharmacy-view-processing-order',[
-                'orders'=>$orders,
-                'order_type'=>$order_type,
-                'model'=>$orderModel,
-            ]);
-
-        } else if ( $order_type == 'Softcopy-prescription' ) {
-            $orders=$orderModel->view_prescription_details($parameters[0]['id']);
-            return $this->render('pharmacy/pharmacy-view-processing-order',[
-                'orders'=>$orders,
-                'order_type'=>$order_type,
-                'model'=>$orderModel,
-            ]);
+        $orderModel=new Order();
+        $orders=$orderModel->get_pending_orders(); 
+        $order_types = array();
+        foreach ($orders as $key=>$order){
+            $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
         }
-
+        return $this->render('pharmacy/pharmacy-orders-pending',[
+            'orders'=>$orders,
+            'model'=>$orderModel,
+            'order_types'=>$order_types
+        ]);
     }
 
     public function cancleProcessingOrder($request){
@@ -449,12 +450,12 @@ class PharmacyController extends Controller{
     }
 
     public function pickupOrder(Request $request){
-        // echo "pickupOrder";
-        // exit;
         $parameters=$request->getParameters();
-        $this->setLayout("pharmacy",['select'=>'Previous Orders']);
         $orderModel=new Order();
-        $updated_order=$orderModel->pick_up_order($parameters[0]['id'],'pickedup');
+        $order_type = $orderModel->getOrderType($parameters[0]['id']);
+        $curr_order=$orderModel->getOrderByID($parameters[0]['id']);
+        $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'pickedup');
+        $this->setLayout("pharmacy",['select'=>'Previous Orders']);
         $orders=$orderModel->get_previous_orders(); 
         $order_types = array();
         foreach ($orders as $key=>$order){
@@ -561,8 +562,17 @@ class PharmacyController extends Controller{
             
             //Update medicine
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
-                var_dump($_POST);
-                exit;
+                $current_med = $medicineModel->get_medicine_details($parameters[1]['id']);
+                
+                if(!isset($_POST['img'])){
+                    $medicineModel->img = $current_med[0]['img'];
+                }
+                $medicineModel->name = $current_med[0]['name'];
+                $medicineModel->brand = $current_med[0]['brand'];
+                $medicineModel->strength = $current_med[0]['strength'];
+                $medicineModel->category = $current_med[0]['category'];
+                $medicineModel->unit = $current_med[0]['unit'];
+
                 if($medicineModel->validate() && $medicineModel->updateRecord(['med_ID'=>$parameters[1]['id']])){
                     $response->redirect('/ctest/view-medicine'); 
                     Application::$app->session->setFlash('success',"Medicine successfully updated ");
@@ -619,15 +629,17 @@ class PharmacyController extends Controller{
         $parameters=$request->getParameters();
         $this->setLayout('pharmacy',['select'=>'Advertisement']);
         $advertisementModel=new PharmacyAdvertisement();
-
+        
         //Delete operation
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
+            $current_add = $advertisementModel->get_selected_advertisement_details($parameters[1]['id']);
+            $advertisementModel->deleteImage($current_add[0]['img']);       //unlink image - delete from folder
             $advertisementModel->deleteRecord(['ad_ID'=>$parameters[1]['id']]);
             Application::$app->session->setFlash('success',"Advertisement successfully deleted ");
             $response->redirect('/ctest/pharmacy-view-advertisement');
             return true;
         }
-
+        
         //Go to update page of a advertisement
         if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
             $advertisement=$advertisementModel->get_selected_advertisement_details($parameters[1]['id']);
@@ -637,22 +649,26 @@ class PharmacyController extends Controller{
                 'model'=>$advertisementModel,
             ]);
         }
-
+        
         if($request->isPost()){
             // update advertisement
-
+            
             $advertisementModel->loadData($request->getBody());
             $advertisementModel->loadFiles($_FILES);
+
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
-                    
-                
+                $current_add = $advertisementModel->get_selected_advertisement_details($parameters[1]['id']);
+                if(!isset($_POST['img'])){
+                    $advertisementModel->img = $current_add[0]['img'];
+                    // $advertisementModel->change_image($current_add[0]["img"]);
+                }
                 if($advertisementModel->validate() && $advertisementModel->updateRecord(['ad_ID'=>$parameters[1]['id']])){
+                    $advertisementModel->deleteImage($current_add[0]['img']);   //delete previous photo when update done successfully
                     $response->redirect('/ctest/pharmacy-view-advertisement'); 
                     Application::$app->session->setFlash('success',"Advertisement successfully updated ");
                     Application::$app->response->redirect('/ctest/pharmacy-view-advertisement');
                     exit; 
                  };
-                
             } 
 
             // add new advertisement
@@ -719,12 +735,12 @@ class PharmacyController extends Controller{
     //Update My Details
     public function editPersonalDetails(Request $request,Response $response){   //implement
         $parameters=$request->getParameters();
-
+        
         $this->setLayout('pharmacy',['select'=>'My Detail']);
         $employeeModel=new Employee();
-
+        
         if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
-            $employee=$employeeModel->customFetchAll("Select * from employee where emp_ID=".$parameters[1]['id']);
+            $employee=$employeeModel->get_employee_details($parameters[1]['id']);
             $employeeModel->updateData($employee,$employeeModel->fileDestination());
             Application::$app->session->set('employee',$parameters[1]['id']);
             return $this->render('pharmacy/pharmacy-update-personal-details',[
@@ -737,27 +753,33 @@ class PharmacyController extends Controller{
             // update personal details
             $employeeModel->loadData($request->getBody());
             $employeeModel->loadFiles($_FILES);
-            // var_dump($employeeModel);
-            // exit;
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
-                var_dump(Application::$app->session->get('userObject')->emp_ID);
-                var_dump($_POST);
-                // exit;
+                $curr_employee = $employeeModel->get_employee_details($parameters[1]['id']);
+                if(!isset($_POST['img'])){
+                    $employeeModel->img = $curr_employee[0]['img'];
+                }
+                if($_POST['gender'] === 'select'){
+                    $employeeModel->gender = $curr_employee[0]['gender'];
+                }
+                $employeeModel->emp_ID = $curr_employee[0]['emp_ID'];
+                $employeeModel->role = $curr_employee[0]['role'];
+                $employeeModel->password = $curr_employee[0]['password'];
+                $employeeModel->cpassword = $curr_employee[0]['password'];
 
-                
-                $employee = $employeeModel->change_details( $_POST['name'], $_POST['contact'], $_POST['address'],  Application::$app->session->get('user') );
-                // var_dump($parameters);
-                // exit;
+                //NIC duplication in validate
+                //Remove existing nic and try, If not validated restore NIC.
+                // $nic_remove = $employeeModel->customFetchAll("UPDATE employee SET nic=NULL WHERE emp_ID=$curr_employee[0]['emp_ID']");
+                if($employeeModel->validate() && $employeeModel->updateRecord(['emp_ID'=>$parameters[1]['id']])){
+                    $response->redirect('/ctest/pharmacy-view-advertisement'); 
+                    Application::$app->session->setFlash('success',"User Profile Updated Successfully.");
+                    Application::$app->response->redirect('/ctest/pharmacy-view-personal-details');
+                    exit; 
+                };
+
+                // var_dump($curr_employee);
                 // var_dump($_POST);
-                // exit;
-                // if($employeeModel->updateRecord(['emp_ID'=>$parameters[1]['id']])){
-                //     // echo 'def';
-                //     // exit;
-                //     $response->redirect('/ctest/pharmacy-view-personal-details'); 
-                //     Application::$app->session->setFlash('success',"Account successfully updated ");
-                //     Application::$app->response->redirect('/ctest/pharmacy-view-personal-details');
-                //     exit; 
-                //  };
+                var_dump($employeeModel);
+                exit;
             } 
             
             // if($employeeModel->validate() && $employeeModel->register()){

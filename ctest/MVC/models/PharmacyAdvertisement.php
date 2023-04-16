@@ -11,6 +11,10 @@ class PharmacyAdvertisement extends DbModel {
     public string $remark='';
     public string $type='Pharmacy';
     public string $img='';
+
+    public function change_image($imgName){
+        $this->img = $imgName;
+    }
     
     public function addAdvertisement(){
         return parent::save();
@@ -26,6 +30,11 @@ class PharmacyAdvertisement extends DbModel {
 
     public function fileDestination(): array {
         return ['img'=>"media/images/advertisements/pharmacy/".$this->img];
+    }
+
+    public function deleteImage($imgName){
+        $path = "media/images/advertisements//pharmacy/".$imgName;
+        unlink($path);
     }
 
     public function tableName(): string {

@@ -65,23 +65,46 @@
 
     <?php echo $component->button('finish-process','','Finish Process','button--class-0  width-10','finish-process');?>
 </div>
+<div class="popup" id="popup">
+        <h2>Successful !!</h2>
+        <p> Notification has been sent.. </p>
+        <button type="button" onclick="closePopup()" id="ok">OK</button>
+</div>
+
 
 
 <!-- ==================== -->
 <script>
 
+    
     const btn1=document.getElementById("cancle-process");
     btn1.addEventListener('click',function(){
         location.href="pharmacy-cancle-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
     })
-
+    
     const btn2=document.getElementById("finish-process");
     btn2.addEventListener('click',function(){
         location.href="pharmacy-finish-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
     })
-
+    
     const btn3=document.getElementById("notify-availability");
+    // btn3.onclick=openPopup();
     btn3.addEventListener('click',function(){
+        openPopup();
+        // location.href="pharmacy-notify-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
+    })
+    let popup =document.getElementById("popup");
+    function openPopup(){
+        popup.classList.add("open-popup");
+    }
+    function closePopup(){
+        popup.classList.remove("open-popup");
+    }
+
+    const btn5=document.getElementById("ok");
+    // btn3.onclick=openPopup();
+    btn5.addEventListener('click',function(){
+        // openPopup();
         location.href="pharmacy-notify-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
     })
 
@@ -89,4 +112,6 @@
     btn4.addEventListener('click',function(){
         location.href="pharmacy-add-medicine-processing-order?id="+<?=$orders[0]['order_ID']?>; //get
     })
+
+
 </script>

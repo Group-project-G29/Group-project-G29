@@ -90,11 +90,11 @@ use app\core\DbModel;
         //functions for orders
 
         public function get_previous_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'pickedup' ORDER BY created_date ASC");
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status IN ('pickedup','deleted') ORDER BY created_date ASC");
         }
 
         public function get_pending_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'pending' ORDER BY created_date ASC");
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status IN ('pending','waiting','rejected','accepted') ORDER BY created_date ASC");
         }
         
         public function get_processing_orders() {
@@ -132,7 +132,7 @@ use app\core\DbModel;
         public function view_online_order_details( $order_ID ) {
             return $this->customFetchAll("SELECT 
             patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
-            _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
+            _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, _order.payment_status,
             medicine_in_order.amount AS order_amount, medicine_in_order.order_current_price AS current_price,
             medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price, medical_products.amount AS available_amount 
             FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID = $order_ID");
@@ -141,7 +141,7 @@ use app\core\DbModel;
         public function view_prescription_details( $order_ID ) {
             return $this->customFetchAll(" SELECT 
             patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
-            _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, 
+            _order.order_ID, _order.pickup_status, _order.created_date, _order.processing_status, _order.created_time, _order.payment_status,
             prescription_medicine.amount AS order_amount, 
             medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price, medical_products.amount AS available_amount, 
             prescription.prescription_ID, prescription_medicine.prescription_current_price AS current_price      
@@ -157,9 +157,9 @@ use app\core\DbModel;
             return $this->customFetchAll("UPDATE _order SET processing_status = '$status', completed_time=CURRENT_TIME, completed_date=CURRENT_DATE WHERE order_ID = $order_ID");
         }
 
-        public function pick_up_order ( $order_ID, $status ) {
-            return $this->customFetchAll("UPDATE _order SET processing_status = '$status', completed_date=CURRENT_DATE, completed_time=CURRENT_TIME WHERE order_ID = $order_ID");
-        }
+        // public function pick_up_order ( $order_ID, $status ) {
+        //     return $this->customFetchAll("UPDATE _order SET processing_status = '$status', completed_date=CURRENT_DATE, completed_time=CURRENT_TIME WHERE order_ID = $order_ID");
+        // }
         
         public function get_postal_code( $delivery_ID ) {
             //error in sql
