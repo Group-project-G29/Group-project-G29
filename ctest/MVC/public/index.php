@@ -3,7 +3,8 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__.'/../vendor/autoload.php';
-
+// require_once 'C:\xampp\htdocs\ctest\MVC\public\dompdf\autoload.inc.php';
+// require_once '.dompdf\autoload.inc.php';
 use app\controllers\AdminController;
 use \app\core\Application;
 use \app\controllers\SiteController;
@@ -145,13 +146,19 @@ $app->router->get('/ctest/receptionist-all-channeling-type',[ReceptionistControl
 
 $app->router->get('/ctest/receptionist-all-channelings',[ReceptionistController::class,'allChannelings']);
 $app->router->get('/ctest/receptionist-channeling-more',[ReceptionistController::class,'channelingMore']);
+$app->router->get('/ctest/receptionist-todays-channeling-more',[ReceptionistController::class,'todayschannelingMore']);
 
 $app->router->get('/ctest/receptionist-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);
 $app->router->post('/ctest/receptionist-channeling-session-detail',[ReceptionistController::class,'sessionDetail']);
+
+$app->router->get('/ctest/receptionist-todays-channeling-session-detail',[ReceptionistController::class,'todaysessionDetail']);
+$app->router->post('/ctest/receptionist-todays-channeling-session-detail',[ReceptionistController::class,'todaysessionDetail']);
 $app->router->get('/ctest/receptionist-channeling-session-patient-detail',[ReceptionistController::class,'patientDetail']);
 $app->router->post('/ctest/receptionist-channeling-session-patient-detail',[ReceptionistController::class,'patientDetail']);
 $app->router->get('/ctest/receptionist-channeling-session-patient-detail-more',[ReceptionistController::class,'patientMoreDetail']);
 $app->router->post('/ctest/receptionist-channeling-session-patient-detail-more',[ReceptionistController::class,'patientMoreDetail']);
+$app->router->get('/ctest/receptionist-channeling-todays-session-patient-detail-more',[ReceptionistController::class,'todayspatientMoreDetail']);
+$app->router->post('/ctest/receptionist-channeling-todays-session-patient-detail-more',[ReceptionistController::class,'todayspatientMoreDetail']);
 $app->router->get('/ctest/receptionist-channeling-set-appointment',[ReceptionistController::class,'setAppointment']);
 $app->router->get('/ctest/receptionist-channeling-payment',[ReceptionistController::class,'handlePayment']);
 $app->router->get('/ctest/receptionist-today-channelings',[ReceptionistController::class,'todayChannelings']);
@@ -189,15 +196,23 @@ $app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']
 $app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);
 $app->router->get('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
 $app->router->post('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
-
+$app->router->get('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
+$app->router->post('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
 $app->router->get('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
 $app->router->post('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
 $app->router->get('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
 $app->router->post('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
 $app->router->get('/ctest/lab-test-template',[LabController::class,'createTemplate']);
 $app->router->post('/ctest/lab-test-template',[LabController::class,'createTemplate']);
-$app->router->get('/ctest/lab-test-template-main',[LabController::class,'TemplateMain']);
-$app->router->post('/ctest/lab-test-template-main',[LabController::class,'TemplateMain']);
+$app->router->get('/ctest/lab-template-content-edit',[LabController::class,'createTemplate']);
+$app->router->post('/ctest/lab-template-content-edit',[LabController::class,'createTemplate']);
+
+$app->router->get('/ctest/lab-view-advertisement',[LabController::class,'viewAdvertisement']);
+$app->router->post('/ctest/lab-view-advertisement',[LabController::class,'viewAdvertisement']);
+$app->router->post('/ctest/lab-update-advertisement',[LabController::class,'handleAdvertisement']);
+$app->router->get('/ctest/lab-update-advertisement',[LabController::class,'handleAdvertisement']);
+$app->router->post('/ctest/lab-handle-advertisement',[LabController::class,'handleAdvertisement']);
+$app->router->get('/ctest/lab-handle-advertisement',[LabController::class,'handleAdvertisement']);
 
 
 $app->run();

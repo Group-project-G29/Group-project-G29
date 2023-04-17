@@ -21,6 +21,7 @@ class Channeling extends DbModel{
     public  $count=0;
     public string $type='';
     public  $percentage=0;
+    public $patient_ID='';
     
 
     public function savedata(){
@@ -42,7 +43,8 @@ class Channeling extends DbModel{
             'start_date'=>[self::RULE_REQUIRED,self::RULE_DATE_VALIDATION],
             'count'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
             'type'=>[self::RULE_REQUIRED],
-            'percentage'=>[self::RULE_REQUIRED,self::RULE_NUMBERS]
+            'percentage'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
+            'patient_ID'=>[]
 
         ];
     }

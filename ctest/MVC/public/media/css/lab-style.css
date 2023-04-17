@@ -1,3 +1,43 @@
+:root {
+    /* colors */
+    --clr-dark: #1746A2;
+    --clr-light: #38B6FF;
+    --clr-white: white;
+    --clr-hover: #EEF1FF;
+    --clr-grey: rgb(180, 180, 180);
+    --clr-font-color: #2c4666;
+    --clr-bg-grey: #F8F8F8;
+    --clr-error: red;
+    --clr-flashmsg-bg: #DAFBE1;
+    --clr-flashmsg-brdr: #A1E5B2;
+    --clr-button-green: #39d700;
+    --clr-card-blue: #AEE2FF;
+    --clr-borders: rgb(218, 218, 218);
+
+    /* font-size */
+    --fs-200: 1.9rem;
+    --fs-100: 1.1rem;
+    --fs-50: 0.9rem;
+
+
+    /*font-family*/
+    --ff-primary: sora;
+    --ff-sans-cond: sans-serif;
+    --ff-sans-normal: sans-serif;
+
+    /*input type*/
+    --border-input-type-class1: 1px solid var(--clr-grey);
+
+    /*all button setting*/
+
+    --button-border: 0px solid var(--clr-light);
+    --button-border-radius: 5px;
+
+
+    /*box shadow*/
+    --box-shadow-primary: 0px 5px 10px 1px rgba(0, 0, 0, 0.25);
+    --box-shadow-secondary: 0px 2px 2px 1px rgba(0, 0, 0, 0.25);
+}
 .button--class-5{
     font-size: 0.9em;
     color: var(--clr-white);
@@ -75,4 +115,21 @@
     padding: 5vw;
     position: relative;
 }
+/* title list select option */
+#title_list{
+    
+    background-color:var(--clr-card-blue);
+    margin-left: 17vw;
+}
+/* edit button */
+#edit{
+    margin-bottom: 2vw;
 
+}
+
+/* button style */
+.btn-1{
+    background-color: red;
+    border: red;
+    color : white;
+}

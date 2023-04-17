@@ -9,9 +9,11 @@ class Template extends DbModel{
    
     public string $title='';
     public ?string $subtitle=null;
-    public string $created_date='';
+    
   
     
+    public ?string $name=null;
+
    
     public function addTemplate(){
        return parent::savenofiles(); 
@@ -23,7 +25,7 @@ class Template extends DbModel{
         return [
            
             'title'=>[self::RULE_REQUIRED],
-            'subtitle'=>[],
+            'subtitle'=>[self::RULE_REQUIRED],
             'created_date'=>[],
             
         ];
@@ -41,13 +43,19 @@ class Template extends DbModel{
         return 'template_ID';
     }
     public function tableRecords(): array{
-        return ['lab_report_template'=> [ 'title', 'subtitle', 'created_date']];
+        return ['lab_report_template'=> [ 'title', 'subtitle' ]];
     }
 
     public function attributes(): array
     {
-        return  [ 'title', 'subtitle', 'created_date'];
+        return  [ 'title', 'subtitle'];
     }
+//create fuction to get the last position of the content
+
+// if content isn't have start with 1
+// else +1
+
+
 
     
 }   

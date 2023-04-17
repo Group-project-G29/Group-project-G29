@@ -254,6 +254,7 @@ class PharmacyController extends Controller{
                    'model'=>$medicineModel
                ]);
             }
+
         }
 
         return $this->render('pharmacy/pharmacy-add-medicine',[

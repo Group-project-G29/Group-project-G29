@@ -30,9 +30,10 @@
                 $params=array_map(fn($attr)=>":$attr",$attributes);
                 $statement=self::prepare("Insert into $tablename (".implode(',',$attributes).") VALUES (".implode(',',$params).")");
                 foreach ($attributes as $attribute){
-                     $statement->bindValue(":$attribute",$this->{$attribute});
-                     echo $this->{$attribute} ;
+                    $statement->bindValue(":$attribute",$this->{$attribute});
+                    echo $this->{$attribute} ;
                 }
+                // var_dump($statement);
                 $statement->execute();
             }
             return $this->customFetchAll("select last_insert_id()");

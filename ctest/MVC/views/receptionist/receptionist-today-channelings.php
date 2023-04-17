@@ -48,7 +48,7 @@ $component = new Component();
   elementsArray = document.querySelectorAll(".table-row");
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {
-      location.href = 'receptionist-channeling-more?id='+elem.id;  //pass the variable value
+      location.href = 'receptionist-channeling-todas-more?id='+elem.id;  //pass the variable value
     });
   });
 

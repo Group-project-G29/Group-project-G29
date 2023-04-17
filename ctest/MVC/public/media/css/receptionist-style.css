@@ -62,3 +62,10 @@
 .exbutton{
     width:10vw;
 }
+
+.table-row-data-1{
+    background-color:white;
+    /* padding-left:5vh; */
+    text-align: center; 
+    width :15vw
+}
