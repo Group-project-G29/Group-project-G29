@@ -11,7 +11,7 @@ use app\core\Application;
 use app\core\component\Component;
 
 $component=new Component();
-$form=Form::begin('/ctest/update-advertisement?cmd=update&id='.Application::$app->session->get('advertisement'),'post');?> 
+$form=Form::begin('/ctest/admin-update-advertisement?cmd=update&id='.Application::$app->session->get('advertisement'),'post');?> 
 <section class="ad-update-main">
     <section class="form-body-adds" style="padding-bottom:100px">
         <div class="main_title">

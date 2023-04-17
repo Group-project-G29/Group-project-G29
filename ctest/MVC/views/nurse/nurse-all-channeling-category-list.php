@@ -45,8 +45,7 @@ $component = new Component();
               
               <!-- <td><?= $clinic['speciality'] ?></td> -->
               <td><?= $clinic['day']." - ".$clinic['time'] ?></td>
-              <td><?= $clinic['room'] ?></td>
-              <td><a href="./all-channeling-more?id=<?=$clinic['channeling_ID']?>">More</a></td><td></td>
+              <td><?= $clinic['room'] ?></td><td></td>
             </tr>
           <?php } ?>
         <?php endforeach; ?>

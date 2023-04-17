@@ -10,9 +10,26 @@ class PreChanneilngTestsValue extends DbModel{
     public string $value="";
     public $test_ID=[];
 
-    public function savedata(){
-        return parent::save();
+    //set channeling test values
+    public function addChannelingTestValues($values,$ids,$appointment_ID,){
+        foreach($ids as $key=>$id):
+            $test_ID = $id['test_ID'];
+            $value = $values[$test_ID];
+            $this->customFetchAll("INSERT INTO pre_channeling_tests_values (value,test_ID,appointment_ID) VALUES('$value','$test_ID','$appointment_ID')");
+        endforeach;
+        return 1;
     }
+
+    //update channeling test values
+    public function updateChannelingTestValues($values,$ids,$appointment_ID,){
+        foreach($ids as $key=>$id):
+            $test_ID = $id['test_ID'];
+            $value = $values[$test_ID];
+            $this->customFetchAll("UPDATE pre_channeling_tests_values SET value = $value WHERE appointment_ID=$appointment_ID AND test_ID=$test_ID;");
+        endforeach;
+        return 1;
+    }
+
     //set validation rule
     public function rules(): array
     {

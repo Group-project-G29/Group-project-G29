@@ -9,7 +9,7 @@
 <div class='upper-container'>
     <div class="search-bar-container">
         <?php echo $component->searchbar($model,"title","search-bar--class1","Search by Doctor ID","searh");?>
-        <?php echo $component->button('new-notification','','Add New notification','button--class-0  width-20','new-notification');?>
+        <?php // echo $component->button('new-notification','','Add New notification','button--class-0  width-20','new-notification');?>
     </div>
 </div>
 

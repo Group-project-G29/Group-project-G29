@@ -7,7 +7,7 @@ $component=new Component();
 $pid = $patient[$number]['patient_ID']??'';
 $cid = $patient[$number]['channeling_ID']??'';
 $apoid = $patient[$number]['appointment_ID']??'';
-// var_dump($tests);
+var_dump($tests);
 // var_dump($number);
 ?> 
 
@@ -61,35 +61,7 @@ $apoid = $patient[$number]['appointment_ID']??'';
             <?php endforeach; ?>    
                 
         </div>
-
-        <center><div onclick="edit(<?=$id?>,<?=$number?>,<?=$pid?>)" class="save-button"><?php echo $component->button("edit-data","submit","Edit","button--class-0","edit-data")?></div></center>
-
-    <?php } else if($tests){ ?>
-        <?php $form=Form::begin('nurse-patient-test-value-save','post'); ?>
-
-            <input type="hidden" id="id" name="id" value="<?= $id ?>">
-            <input type="hidden" id="number" name="number" value="<?= $number ?>">
-            <input type="hidden" id="pid" name="pid" value="<?= $pid ?>">
-            <input type="hidden" id="cid" name="cid" value="<?= $cid ?>">
-            <input type="hidden" id="apoid" name="apoid" value="<?= $apoid ?>">
-
-            <div class="inputs-div">
-                    
-                <?php foreach($tests as $key=>$test): ?>
-
-                    <div class="input-row">
-                        <div class="input-row-col-1"><?=$test['name']?></div>
-                        <input class="form-deatail_input" type="number" step=0.01 id="<?=$test['test_ID']?>" name="<?=$test['test_ID']?>" require>
-                        <div class="input-row-col-3"><?=$test['metric']?></div>
-                    </div>
-                
-                <?php endforeach; ?>    
-                    
-            </div>
-
-            <center><div class="save-button"><?php echo $component->button("add-data","submit","Save","button--class-0","add-data")?></div></center>
-
-        <?php Form::end() ?>  
+        
     <?php } ?>
 
 <?php } else{
@@ -99,23 +71,18 @@ $apoid = $patient[$number]['appointment_ID']??'';
 
 <script>
     function next(id, num1){
-        location.href='nurse-list-patient?id='+id+'&num='+num1+'&n=1';
+        location.href='nurse-list-patient?id='+id+'&num='+num1+'&n=1&view=1';
     }
 
     function previous(id, num1){
-        location.href='nurse-list-patient?id='+id+'&num='+num1+'&p=1';
-    }
-
-    function edit(id, num1, pid){
-
-        location.href='nurse-patient-test-value-edit?id='+id+'&num='+num1+'&n=1&pid='+pid;
+        location.href='nurse-list-patient?id='+id+'&num='+num1+'&p=1&view=1';
     }
 
     function move(id){
         const num = document.getElementById("move-number").value
         const num1 = num-2;
         console.log(num1);
-        location.href='nurse-list-patient?id='+id+'&num='+num1+'&n=1';
+        location.href='nurse-list-patient?id='+id+'&num='+num1+'&n=1&view=1';
 
     }
     

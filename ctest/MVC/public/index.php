@@ -58,7 +58,7 @@ $app->router->get('/ctest/employee-logout',[EmployeeAuthController::class,'logou
 
 // -----------------------nurse routers-------------------------------------
 // $app->router->get('/ctest/nurse',[SiteController::class, 'doctor']);
-$app->router->get('/ctest/nurse',[NurseController::class, 'channelingCategoriesView']);
+$app->router->get('/ctest/nurse',[NurseController::class, 'todayClinics']);
 $app->router->get('/ctest/my-detail',[NurseController::class, 'viewUserDetails']);
 $app->router->get('/ctest/all-channelings',[NurseController::class, 'channelingCategoriesView']);
 $app->router->get('/ctest/all-channeling-more',[NurseController::class, 'viewAllClinicsMore']);
@@ -67,7 +67,11 @@ $app->router->get('/ctest/all-channeling-session',[NurseController::class,'viewC
 $app->router->post('/ctest/all-channeling-session',[NurseController::class,'viewChanneling']);
 $app->router->get('/ctest/nurse-list-patient',[NurseController::class,'viewSessionPatients']);
 $app->router->post('/ctest/nurse-list-patient',[NurseController::class,'viewSessionPatients']);
-$app->router->get('/ctest/nurse-patient',[NurseController::class,'viewPatient']);
+$app->router->get('/ctest/nurse-channeling-allocation',[NurseController::class,'viewChannelingAllocation']);
+$app->router->post('/ctest/nurse-patient-test-value-save',[NurseController::class,'addTestValue']);
+$app->router->get('/ctest/nurse-patient-test-value-save',[NurseController::class,'addTestValue']);
+$app->router->post('/ctest/nurse-patient-test-value-edit',[NurseController::class,'editTestValueUpdate']);
+$app->router->get('/ctest/nurse-patient-test-value-edit',[NurseController::class,'editTestValueView']);
 
 
 

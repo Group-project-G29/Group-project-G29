@@ -79,7 +79,8 @@ $component = new Component();
             elementsArray = document.querySelectorAll(".table-row");
             elementsArray.forEach(function(elem) {
                 elem.addEventListener("click", function() {
-                    location.href='all-channeling-session?channeling='+elem.id;
+                    // location.href='all-channeling-session?channeling='+elem.id;
+                    location.href="nurse-list-patient?id="+elem.id+"&view=1";
                 });
             });
         </script>
