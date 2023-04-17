@@ -6,6 +6,7 @@ use app\core\Application;
 use app\core\Calendar;
 use app\core\Date;
 use app\core\UserModel;
+use JetBrains\PhpStorm\Internal\ReturnTypeContract;
 
 class Appointment extends DbModel{
     public string $opened_channeling_ID='';
@@ -48,9 +49,9 @@ class Appointment extends DbModel{
         $this->customFetchAll("delete from channeling where channeling_ID=459");
     }
 
-    public function completeAppointment($id){
-        $this->customFetchAll("update appointment set status='completed' where appointment_ID=$id");
-    }
+    // public function completeAppointment($id){
+    //     $this->customFetchAll("update appointment set status='completed' where appointment_ID=$id");
+    // }
 
     
     public function labReportEligibility($patient,$doctor,$opened_channeling){
@@ -78,6 +79,21 @@ class Appointment extends DbModel{
     public function getAppointmentType($patientID,$channelingID){
         return $this->customFetchAll("select type from appointment where patient_ID=$patientID and opened_channeling_ID=$channelingID ");
     }
+
+    public function getAppointment($patient,$opened_channeling_ID){
+        return $this->fetchAssocAll(['patient_ID'=>$patient,'opened_channeling_ID'=>$opened_channeling_ID])[0]['appointment_ID'];
+    }
+    public function getAppointmentStatus($patient,$opened_channeling_ID){
+        return $this->fetchAssocAll(['patient_ID'=>$patient,'opened_channeling_ID'=>$opened_channeling_ID])[0]['status'];
+
+    }
+    
+    //check whether appointment is a used
+    public function isUsed($id){
+        $type=$this->customFetchAll("Select status from appoitment where appointment_ID=$id")[0]['status']??'';
+        if($type=='used') return true;
+        else return false;
+    }
     public function fileDestination(): array{
         return [];
     }
@@ -97,7 +113,18 @@ class Appointment extends DbModel{
     {
         return ['opened_channeling_ID','patient_ID','queue_no','payment_status','type'];
     }
-    
+     public function getTotoalPatient($channelingID){
+        //take count in the database on appointment
+        return $this->customFetchAll("select count(*) from appointment where opened_channeling_ID=".$channelingID)[0]['count(*)'];
+    }
+    public function getUsedPatient($channelingID){
+        //take count in the database on appointment where status is not used
+        return $this->customFetchAll("select count(*) from appointment where opened_channeling_ID=".$channelingID." and status='used'")[0]['count(*)'];
+
+    }
+    public function updateStatus($id,$status){
+        $this->customFetchAll("update appointment set status='$status' where appointment_ID=".$id);
+    }
     
 }   
 

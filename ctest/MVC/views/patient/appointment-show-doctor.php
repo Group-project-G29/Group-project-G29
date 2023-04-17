@@ -8,23 +8,24 @@
         $component=new Component();
         
         echo $component->searchbar('','search','search-bar--class2','Search by name,specilaity','searchbar');
+        echo $component->filtersortby('','',['Cardiologist'=>'cardiologist','Gastrologist'=>'gastrologist'],['Doctor Name Ascending'=>'doctor-name-asc']);
     ?>
 </div>
 <section class="doctor-container">
     <?php foreach($doctors as $doctor): ?>
-        <div class="doctor-item">
-                <div class="doctor-item-identity" >
+        <div class="doctor-item" id=<?="'".$doctor['name']."-".$doctor['career_speciality']."'" ?>>
+                    <img src=<?="./media/images/emp-profile-pictures/".$doctor['img']?>>
                     <div class="doctor-item-identity--one">
-                        <img src=<?="./media/images/emp-profile-pictures/".$doctor['img']?>>
                         <div class="name-speciality">
                             <h3><?=$doctor['name']?></h3>
                             <h3><?=$doctor['career_speciality']?></h3>
+                            <h4><?=$doctor['description']?></h4>
                         </div>
-                        <a href=<?="doctor-patient-appointment?spec=appointment&id=".$doctor['emp_ID']?>>Go to appointments</a>
+                        <div class="illusion-button">
+                             <a href=<?="doctor-patient-appointment?spec=appointment&id=".$doctor['emp_ID']?>>Go to appointments</a>
+                         </div>
                     </div>
-                    <h4><?=$doctor['description']?></h4>
 
-                </div>
             
         </div>
     
@@ -32,3 +33,35 @@
 
 
 </section>
+<script>
+        const patients=document.querySelectorAll('.doctor-item');
+        const searchBar=document.getElementById('searchbar');
+       
+    
+        function checker(){
+        
+        var re=new RegExp("^"+searchBar.value)
+        patients.forEach((el)=>{
+            comp=""+el.id;
+            console.log(el.id);
+            comp=comp.split("-");
+          ;
+            if(searchBar.value.length==0){
+                // el.classList.add("none")
+            }
+            else if(re.test(comp[0]) || re.test(comp[1])){
+                el.classList.remove("none");
+            }
+            else{
+                el.classList.add("none");
+               
+            }
+            })
+            if(searchBar.value.length==0){
+                patients.forEach((el)=>{
+                    el.classList.remove("none");
+                }) 
+            }
+        }
+        searchBar.addEventListener('input',checker);
+</script>

@@ -14,6 +14,9 @@ abstract class Model{
     public const RULE_PASSWORD_VALIDATION="regexx";
     public const RULE_DATE_VALIDATION="date";
     public const RULE_NUMBERS='num';
+    public const RULE_PIN_VALIDATION="pin_confirm";
+
+    public const RULE_INCOMPLETE_PAYMENT="asa";
 
 
     public function loadData($data){
@@ -112,8 +115,13 @@ abstract class Model{
                     $this->addError($attribute,self::RULE_NUMBERS);
                 }
 
+                if($ruleName==self::RULE_PIN_VALIDATION ){
 
+                }
 
+                // if($ruleName==self::RULE_INCOMPLETE_PAYMENT ){
+
+                // }
 
             }
         }
@@ -134,7 +142,7 @@ abstract class Model{
     public function errorMessages(){
         return [
             self::RULE_REQUIRED=>"This field is required",
-            self:: RULE_EMAIL=>"This must be a valid email address",
+            self::RULE_EMAIL=>"This must be a valid email address",
             self::RULE_MIN=>"Min length of this field must be {min}",
             self::RULE_MAX=>"Max length of this field must be {max}",
             self::RULE_MATCH=>"Passwords should match",
@@ -148,7 +156,9 @@ abstract class Model{
                                             at least one special character
                                             ",
             self::RULE_DATE_VALIDATION=>"Passsed date is chosen",
-            self::RULE_NUMBERS=>"This field should be numeric type"
+            self::RULE_NUMBERS=>"This field should be numeric type",
+            self::RULE_PIN_VALIDATION=>"Incorrect Pin",
+            // self::RULE_INCOMPLETE_PAYMENT=>"Payment not done"
         ];
     }
     public function hasError($attribute){

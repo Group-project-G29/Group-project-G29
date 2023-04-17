@@ -39,21 +39,38 @@ class Employee extends DbModel{
         Application::$app->logout();
         return true;
     }
+
     public function rules(): array
     {
-        return [
-            'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
-            'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee'],[self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
-            'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
-            'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
-            'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
-            'address'=>[],       
-            'role'=>[self::RULE_REQUIRED],
-            'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
-               
-
-        ];
+        if($this->role==='admin'){
+            return [
+                'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
+                'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee'],
+                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
+                'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
+                'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
+                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
+                'address'=>[],       
+                'role'=>[self::RULE_REQUIRED],
+                'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
+            ];
+        } else {
+            return [
+                'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
+                'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],
+                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
+                'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
+                'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
+                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
+                'address'=>[],       
+                'role'=>[self::RULE_REQUIRED],
+                'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
+            ];
+        }
     }
+
+
+
     public function fileDestination(): array
     {
         return ['img'=>"media/images/emp-profile-pictures/".$this->img];
@@ -73,8 +90,10 @@ class Employee extends DbModel{
 
     public function attributes(): array
     {
-        return ['name','nic','age','contact','email','address','gender','role','img','password','career_speciality','description'];
+        if($this->role=='doctor') return ['name','nic','age','contact','email','address','gender','role','img','password','career_speciality','description'];
+        return ['name','nic','age','contact','email','address','gender','role','img','password'];
     }
+    
     public function getAccounts($role=''):array{
         if($role==''){
             return $this->customFetchAll("SELECT * FROM employee where role<>'admin' order by role ");
@@ -90,16 +109,52 @@ class Employee extends DbModel{
     }
 
     public function getDoctors(){
-         $Doctors=$this->customFetchAll("Select  name,nic from employee where role='doctor' and nic<>'".Application::$app->session->get('user')."'");
+         $Doctors=$this->customFetchAll("Select name,nic from employee where role='doctor' and nic<>'".Application::$app->session->get('user')."'");
          $Doctor=['select'=>''];
          foreach($Doctors as $row){
             $Doctor[$row['name']]=$row['nic'];
         }
         return $Doctor;
-        
     }
 
+    public function get_employee_details($emp_ID) {
+        return $this->customFetchAll("SELECT * FROM employee WHERE emp_ID=$emp_ID");
+    }
+
+    public function select_suitable_rider( $postal_code, $order_ID ) {
+        //error in query -> no elements in array
+        return $this->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE delivery_rider.availability='AV' AND _order.order_ID != $order_ID AND delivery.postal_code BETWEEN $postal_code-10 AND $postal_code+10");
+    }
+
+    public function select_queue_rider() {
+        return $this->customFetchAll("SELECT * FROM delivery_riders_queue");
+    }
+
+    public function dequeue_rider( $rider_ID ) {
+        return $this->customFetchAll("DELETE FROM delivery_riders_queue WHERE delivery_rider_ID = $rider_ID");
+    }
+
+    public function enqueue_rider( $rider_ID ) {
+        return $this->customFetchAll("INSERT INTO delivery_riders_queue (delivery_rider_ID) VALUES ($rider_ID);");
+    }
     
+    public function make_rider_offline( $delivery_rider_ID ) {
+        return $this->customFetchAll("UPDATE delivery_rider SET availability = 'NA' WHERE emp_ID = $delivery_rider_ID;");
+    }
+
+    public function make_rider_online( $delivery_rider_ID ) {
+        return $this->customFetchAll("UPDATE delivery_rider SET availability = 'AV' WHERE emp_ID = $delivery_rider_ID;");
+    }
+
+    //update personal info - not working
+    // public function change_details ( $user_ID, $new_name, $new_contact, $new_address ) {
+    //     return $this->customFetchAll("UPDATE employee SET name = '$new_name', contact = '$new_contact', address = '$new_address' WHERE emp_ID = $user_ID");
+    // }
+
+    public function get_rider_availability( $delivery_rider ) {
+        return $this->customFetchAll("SELECT availability FROM delivery_rider WHERE emp_ID = $delivery_rider");
+    }
+
 }   
 
 
