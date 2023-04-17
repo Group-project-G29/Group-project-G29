@@ -15,19 +15,19 @@ include "../views/layouts/navbar/pharmacy-navbar.php";
             <?php echo $sidebar;  ?>
         </div>
 
-        <div class="layout-div-col">
-            <div class="sub-container" id="container-col">
-                <div>
-                    <?php if(Application::$app->session->getFlash('success')):?>
-                    <div class="flash-message">
-                        <?php echo Application::$app->session->getFlash('success');?>
-                    </div>
-                    <?php endif;?>
+        <!-- <div class="layout-div-col" > -->
+        <div class="sub-container layout-div-col" id="container-col">
+            <div>
+                <?php if(Application::$app->session->getFlash('success')):?>
+                <div class="flash-message">
+                    <?php echo Application::$app->session->getFlash('success');?>
                 </div>
-            
-                {{content}}
+                <?php endif;?>
             </div>
+        
+            {{content}}
         </div>
+        <!-- </div> -->
 
     </div>
 

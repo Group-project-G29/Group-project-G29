@@ -47,9 +47,9 @@
 }
 
 .upper-container{
-    margin-left: 10vw;
+    margin-left: 15%;
     margin-top: 5vh;
-    width: 60vw;
+    width: 85%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -108,11 +108,11 @@
     /* width: 300px; */
 }
 
-.new-order-add-item-col {
+/* .new-order-add-item-col { */
     /* display: flex; 
     flex-direction: row;
     width: 100px; */
-}
+/* } */
 
 /* ===============My detail==================== */
 

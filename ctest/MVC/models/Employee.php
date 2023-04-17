@@ -42,19 +42,35 @@ class Employee extends DbModel{
 
     public function rules(): array
     {
-        return [
-            'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
-            'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee'],[self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
-            'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
-            'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
-            'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
-            'address'=>[],       
-            'role'=>[self::RULE_REQUIRED],
-            'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
-               
-
-        ];
+        if($this->role==='admin'){
+            return [
+                'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
+                'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee'],
+                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
+                'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
+                'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
+                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
+                'address'=>[],       
+                'role'=>[self::RULE_REQUIRED],
+                'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
+            ];
+        } else {
+            return [
+                'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
+                'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],
+                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
+                'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
+                'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
+                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
+                'address'=>[],       
+                'role'=>[self::RULE_REQUIRED],
+                'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
+            ];
+        }
     }
+
+
+
     public function fileDestination(): array
     {
         return ['img'=>"media/images/emp-profile-pictures/".$this->img];
@@ -74,7 +90,8 @@ class Employee extends DbModel{
 
     public function attributes(): array
     {
-        return ['name','nic','age','contact','email','address','gender','role','img','password','career_speciality','description'];
+        if($this->role=='doctor') return ['name','nic','age','contact','email','address','gender','role','img','password','career_speciality','description'];
+        return ['name','nic','age','contact','email','address','gender','role','img','password'];
     }
     
     public function getAccounts($role=''):array{
