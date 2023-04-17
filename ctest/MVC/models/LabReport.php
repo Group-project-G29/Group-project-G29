@@ -83,6 +83,9 @@ use app\core\PDF;
         public function getTitle($report_ID){
             return $this->customFetchAll("select lab_report_template.title from lab_report left join lab_report_template on lab_report.template_ID=lab_report_template.template_ID where lab_report.report_ID=".$report_ID)[0]['title'];
         }
+        public function getCreatedDate($report_ID){
+            return $this->customFetchAll("select upload_date from lab_report  where lab_report.report_ID=".$report_ID)[0]['upload_date'];
+        }
         public function labreporttoPDF($reportID){
             $valuerows=$this->getReport($reportID);
             $addstr='<tr><td>Parameter</td><td>Test Value</td><td>Reference Range</td></tr>';

@@ -95,7 +95,7 @@ class Employee extends DbModel{
     }
 
     public function getDoctors(){
-         $Doctors=$this->customFetchAll("Select  name,nic from employee where role='doctor' and nic<>'".Application::$app->session->get('user')."'");
+         $Doctors=$this->customFetchAll("Select  name,nic from employee where role='doctor' and employee_status='active' and nic<>'".Application::$app->session->get('user')."'");
          $Doctor=['select'=>''];
          foreach($Doctors as $row){
             if($row['nic']!=Application::$app->session->get('userObject')->nic){

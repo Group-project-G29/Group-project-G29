@@ -7,23 +7,27 @@
     $component=new Component();
     $employeeModel=new Employee();
 ?>
-<section class="flex">
-    <div>
-         <div class="wrapper--referrals">
-                    <div class="variable-container">
+
+   <div class="referral-container">
+         <div class="wrapper--referrals-showit">
+                    <div class="variable-container-mu">
                         <table>
                             <tr>
                                 <th>Referral</th><th>Added Date</th><th></th><th></th>
                             </tr>
+                            <?php $count=0; ?>
                             <?php if($referrals['written']): ?>
                                 <?php foreach($referrals['written'] as $referral): ?>
-                        
+                                    <?php $count=$count+1; ?>
                                     <tr>
                                         <td><a href=<?="/ctest/doctor-report?spec=referral&mod=view&id=".$referral['ref_ID']?>><?=$referral['doctor']?"Referral to Dr. ".$employeeModel->getDocName($referral['doctor']):"Referral to speciality ".$referral['speciality']?></a></td><td><?=$referral['date'] ?></td>
+                                        <?php if($referral['date']==Date('Y-m-d')):   ?>
                                             <td><?=$component->button('update','','Update','button--class-2-small ref-update',$referral['ref_ID']); ?></td>
                                             <td><?=$component->button('delete','','Delete','button--class-3-small ref-delete',$referral['ref_ID']); ?></td>
-                                    </tr>
+                                        <?php endif; ?>
+                                        </tr>
                                 <?php endforeach; ?>
+                                <?php if($count==0): ?><script>(document.querySelector('.wrapper--referrals')).classList.add('hide');</script><?php endif; ?>
                             <?php else: ?>
                                 <h3>No Referrals</h3>
                             <?php endif; ?>
@@ -31,7 +35,7 @@
                     </div>
         </div>
     </div>
-    <div>
+    <div class="write-referral-form">
         <div>
             <div>
                 <?php $form->begin('','post')  ?>
@@ -72,25 +76,25 @@
             </div>
         </div>
         <div>
-            <?= $form->textarea($_referral,'history','history','Patient Medical History',10,130,$_referral->history,'');?>
+            <?= $form->textarea($_referral,'history','history','Patient Medical History',10,100,$_referral->history,'');?>
             
         </div>
         <div>
-            <?= $form->textarea($_referral,'reason','reason','Reason for Referral',10,130,$_referral->reason,'');?>
+            <?= $form->textarea($_referral,'reason','reason','Reason for Referral',10,100,$_referral->reason,'');?>
             
         </div>
         <div>
-            <?= $form->textarea($_referral,'assessment','assessment','Medical Assessment',10,130,$_referral->assessment,'');?>
+            <?= $form->textarea($_referral,'assessment','assessment','Medical Assessment',10,100,$_referral->assessment,'');?>
 
         </div>    
         <div>
-            <?= $form->textarea($_referral,'note','note','Note',10,130,$_referral->note,'');?>
+            <?= $form->textarea($_referral,'note','note','Note',10,100,$_referral->note,'');?>
             
         </div>
 
 
     </div>
-</section>
+
 <?php $form->end(); ?>
 <script src="./media/js/main.js"></script>
 <script>

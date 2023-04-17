@@ -327,7 +327,7 @@ class ReceptionistController extends Controller
         $parameters = $request->getParameters();
 
         $this->setLayout("receptionist", ['select' => 'Today Channelings']);
-        $channelings = $channelingModel->customFetchAll("SELECT * from employee  inner join channeling on employee.nic = channeling.doctor inner join doctor  on channeling.doctor=doctor.nic left join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID  ");
+        $channelings = $channelingModel->customFetchAll("SELECT * from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join employee on employee.nic=channeling.doctor where opened_channeling.channeling_date='".date('Y-m-d')."'");
 
         return $this->render('receptionist/receptionist-today-channelings', [
             'channelings' => $channelings

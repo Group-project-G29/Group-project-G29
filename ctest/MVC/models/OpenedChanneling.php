@@ -44,9 +44,7 @@ class OpenedChanneling extends DbModel{
     //check overlap
     public function generateOpenedChannelings($start_date,$startday,$finday,$duration,$op,$hop='0 weeks'){
         $calendarModel=new Calendar();
-        echo "<br>".$start_date.$startday.$finday.$duration.$hop;
         $dates=$calendarModel->generateDays($start_date,$startday,$finday,$duration,$hop);
-        var_dump($dates);
         foreach($dates as $date){
             $op->channeling_date=$date;
             $op->saveData();

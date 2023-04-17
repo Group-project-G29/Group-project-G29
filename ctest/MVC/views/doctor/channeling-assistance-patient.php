@@ -7,9 +7,11 @@ use app\core\form\Form;
 use app\models\Appointment;
 use app\models\ChartModel;
 use app\models\Employee;
+use app\models\LabReport;
 use app\models\LabTest;
 use app\models\LabTestRequest;
 $employeeModel=new Employee();
+$labreportModel=new LabReport();
 $appointment=$appointment[0]; 
 $referralModel=new Referral();
 $appointmentModel=new Appointment();
@@ -25,17 +27,26 @@ Application::$app->session->set('popup','unset');
     <?php $component=new Component(); ?>
     <div class='background--1 hide'> </div>
     <div class=<?='"labtest-popup'.' '."$class".'"'?> id=<?="'".$class."'"?>>
-        <h3>Add labtest here</h3>
+        <h3>Add lab test here</h3>
         <?php $form->begin('/ctest/doctor-labtest','post'); ?>
-        <?=  $form->editableselect('name','Test Name*','',$labTestModel->getAllTests()); ?>
-        <?= $form->textarea(new LabTestRequest,'note','note','Note',3,5,'');?>
-        <?= $component->button('btn','submit','Request','',''); ?>
+        <div class="labtest-request-con1">
+            <div>
+                <?=  $form->editableselect('name','Test Name*','',$labTestModel->getAllTests()); ?>
+                <?= $form->textarea(new LabTestRequest,'note','note','Note',3,28,'');?>
+            </div>
+            <div>
+                <?= $component->button('btn','submit','Request','',''); ?>
+            </div>
+        </div>
         <?php $form->end(); ?>
         <div class="scrollable-labtest-container">
             <?php $labrequests=$labrequestModel->getLabTestRequests();?>
+            <h3>Lab test requests </h3>
             <?php foreach($labrequests as $labrequest): ?>
-                <h3><?=$labrequest['name']."  date :".$labrequest['requested_date_time']?></h3>
-                <?=$component->button('btn','','Cancel','rqst-rmv',$labrequest['request_ID']); ?>
+                <div class="flex">
+                    <h4><?=$labrequest['name']."  date :".$labrequest['requested_date_time']?></h4>
+                    <?=$component->button('btn','','Cancel','rqst-rmv',$labrequest['request_ID']); ?>
+                </div>
             <?php endforeach; ?>
         </div>
 
@@ -98,7 +109,7 @@ Application::$app->session->set('popup','unset');
             </div>
         </div>
             
-        <div class="asssistance-sub-container main-detail-container">
+        <div class="main-detail-container">
             <div class="main-nav">
                 <div class="number-pad">
                     <div class="number-item--white">
@@ -223,10 +234,10 @@ Application::$app->session->set('popup','unset');
                                 <tr>
                                     <th>Lab Test Report</th><th>created date</th><th></th>
                                 </tr>
-                                <?php foreach($reports as $report): ?>
+                                <?php foreach($labreports as $value=>$labreport): ?>
                                 
                                 <tr>
-                                    <!-- <td><a href="#"><?=$report['issued_doctor']."-".$report['type']."-".$report['ref_ID']?></a></td><td><?=$report['date'] ?></td> -->
+                                    <td><a href=<?="handle-labreports?spec=lab-report&cmd=view&id=".$value?>><?=$labreportModel->getTitle($value)."-".$value?></a></td><td><?=$labreportModel->getCreatedDate($value) ?></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </table>

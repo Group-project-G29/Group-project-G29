@@ -7,10 +7,10 @@
     $component=new Component();
     $employeeModel=new Employee();
 ?>
-<section class="flex">
-    <div>
-         <div class="wrapper--referrals">
-                    <div class="variable-container">
+
+    <div class="referral-container">
+         <div class="wrapper--referrals-showit">
+                    <div class="variable-container-mu">
                         <table>
                             <tr>
                                 <th>Referral</th><th>Added Date</th><th></th><th></th>
@@ -35,7 +35,7 @@
                     </div>
         </div>
     </div>
-    <div>
+    <div class="write-referral-form">
         <div>
             <div>
                 <?php $form->begin('','post')  ?>
@@ -61,25 +61,25 @@
             </div>
         </div>
         <div>
-            <?= $form->textarea($model,'history','history','Patient Medical History',10,130,'','');?>
+            <?= $form->textarea($model,'history','history','Patient Medical History',10,100,'','');?>
             
         </div>
         <div>
-            <?= $form->textarea($model,'reason','reason','Reason for Referral',10,130,'','');?>
+            <?= $form->textarea($model,'reason','reason','Reason for Referral',10,100,'','');?>
             
         </div>
         <div>
-            <?= $form->textarea($model,'assessment','assessment','Medical Assessment',10,130,'','');?>
+            <?= $form->textarea($model,'assessment','assessment','Medical Assessment',10,100,'','');?>
 
         </div>    
         <div>
-            <?= $form->textarea($model,'note','note','Note',10,130,'','');?>
+            <?= $form->textarea($model,'note','note','Note',10,100,'','');?>
             
         </div>
 
 
     </div>
-</section>
+
 <?php $form->end(); ?>
 <script src="./media/js/main.js"></script>
 <script>

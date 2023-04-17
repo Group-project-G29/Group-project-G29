@@ -57,9 +57,13 @@
 
 }
 .nav_container{
+    position:fixed;
     opacity: 0;
 }
 .main-nav{
+    display: flex;
+    flex-direction: column;
+
     
 }
 .main-nav:hover>.nav_container{
@@ -133,7 +137,7 @@
 }
 
 .assistance-container{
-    margin-top: 4vh;
+    margin-top: 2vh;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -152,13 +156,10 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    min-width:5vw;
     
  }
-/* .wrapper--referrals{
-    display: flex;
-    justify-content: space-between;
-    gap:3vw;
-} */
+
 .assistance-subcontainer{
     padding-block:3vh;
     padding-inline: 5vw;
@@ -167,7 +168,7 @@
     flex-direction: column;
     gap:2vh;
     width:30vw;
-    min-height:70vh;
+    max-height:70vh;
     padding-top:3vh;
     align-items: left;
     border-radius: 10px;
@@ -177,7 +178,8 @@
     margin-top:-4vh;
     display: flex;
     flex-direction: column;
-    gap:1vh;
+    gap:0.5vh;
+    width:100vw;
 }
 
 .result-container{
@@ -187,8 +189,8 @@
     display: flex;
     flex-direction: column;
     gap:2vh;
-    width:30vw;
-    min-height:70vh;
+    width:35vw;
+    min-height:50vh;
     padding-top:3vh;
     align-items: left;
     border-radius: 10px;
@@ -204,6 +206,17 @@
     justify-content: start;
     border-radius: 10px;
     
+}
+.variable-container-mu{
+    overflow-y: scroll;
+    height: 70vh;
+    width:25vw;
+    border:1px solid #e7e6e6;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    justify-content: start;
+    border-radius: 10px;
+
 }
 .variable-container table{
     border-collapse: separate;
@@ -470,7 +483,9 @@
     border:1px solid #e7e6e6;
     border-radius: 5px;
 }
-
+.font-32{
+    font-size:48;
+}
 .doctor-channeling{
     display: flex;
     flex-wrap: wrap;
@@ -545,4 +560,49 @@
 #myChart-income,#myChart-patient{
     height:40vh;
     width: 80vw;
+}
+
+/* write referral */
+.write-referral-container{
+    display: flex;
+    position: fixed;
+    
+    gap:10vw;
+    margin-left:-15vw;
+}
+.doc-all-channeling{
+    display: flex;
+    justify-content: left;
+    gap:5vw;
+    
+}
+
+.referral-container,.document-container{
+    position: fixed;
+    left:5vw;
+}
+
+.write-referral-form,.document-container-form{
+    position: relative;
+    overflow-x: auto;
+    left:15vw;
+   
+}
+
+.write-referral-form textarea,.document-container-form textarea{
+    border:1px solid rgb(233, 233, 233);
+    border-radius: 10px;
+}
+.labtest-request-con1{
+    display: flex;
+    align-items: center;
+    gap:5vw;
+}
+
+.labtest-request-con1 textarea,.labtest-request-con1 [type='text']{
+    border:1px solid #cfcfcf;
+    border-radius: 5px;
+}
+.scrollable-labtest-container{
+    overflow-y: scroll;
 }

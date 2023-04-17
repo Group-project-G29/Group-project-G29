@@ -69,6 +69,7 @@ class AdminController extends Controller{
         if($request->isPost()){
             //load all data in $_POST into the model
             $ChannelingModel->loadData($request->getBody());
+            $nurseAllocationModel->loadData($request->getBody());
             //find if the new channeling session get overlapped with channeling session already scheduled
             
             $result=$ChannelingModel->checkOverlap();
@@ -85,12 +86,11 @@ class AdminController extends Controller{
                 ]);
             }
             
-            if($ChannelingModel->validate() ){
+            if( $ChannelingModel->validate() ){
                 //save channeling in database
                 $return_id=$ChannelingModel->savedata();
                 if($return_id){
                     $success=true; //success variable is used to identify if a channeling session is successfully created
-                    $nurseAllocationModel->loadData($request->getBody());
                     $tempnurseAllocationModel=$nurseAllocationModel;
                     $success=false;
                     //each nurse is saved in database one by one
@@ -103,12 +103,12 @@ class AdminController extends Controller{
                            
                         }
                     }
-                    //new opened channeling sessin is created if a channeling is succesfully created
+                    //new opened channeling session is created if a channeling is succesfully created
                     if($success){
                         $openedChannelingModel=new OpenedChanneling();
                         $calendarModel=new Calendar();
-                        //generate the first opened channling session 
                         if($ChannelingModel->total_patients==0){
+                            //if channeling session is not limited total_patients is -1
                             $openedChannelingModel->setter($return_id[0]['last_insert_id()'],-1,'',"Opened"); 
                         }
                         else{

@@ -14,6 +14,7 @@ use app\models\OpenedChanneling;
 use app\models\Referral;
 use app\core\ReportModel;
 use app\models\Appointment;
+use app\models\LabReport;
 use app\models\LabTestRequest;
 use app\models\MedicalReport;
 use app\models\Medicine;
@@ -125,6 +126,8 @@ class DoctorController extends Controller{
         $medicalReport=new MedicalReport();
         $doctor = Application::$app->session->get('userObject')->nic;
         $prescriptionModel=new Prescription();
+        $labreportModel=new LabReport();
+        $labreports=$labreportModel->getAllLabReports(Application::$app->session->get('cur_patient'));
         //check if there is a patient no
         $result=$patientModel->fetchAssocAll(['patient_ID'=>$parameters[1]['id']]);
         if(!$result && $parameters[0]['cmd']!='finish' && $parameters[0]['cmd']!='start') {
@@ -194,7 +197,8 @@ class DoctorController extends Controller{
                     'weight'=>$weight,
                     'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
                     'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
-                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor]),
+                    'labreports'=>$labreports
                     
                 ]);
             }
@@ -209,8 +213,8 @@ class DoctorController extends Controller{
                     'weight'=>$weight,
                     'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
                     'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
-                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
-                    
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor]),
+                    'labreports'=>$labreports
                     
                 ]);
             }
@@ -257,7 +261,8 @@ class DoctorController extends Controller{
                     'weight'=>$weight,
                     'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
                     'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
-                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor]),
+                    'labreports'=>$labreports
 
                 
                 ]);
@@ -273,7 +278,8 @@ class DoctorController extends Controller{
                     'weight'=>$weight,
                     'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
                     'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
-                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor]),
+                    'labreports'=>$labreports
                 
                 ]);
             }
@@ -307,7 +313,8 @@ class DoctorController extends Controller{
                     'weight'=>$weight,
                     'alltests'=>$alltests,
                     'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
-                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor]),
+                    'labreports'=>$labreports
                 
                 ]);
             }
@@ -322,7 +329,8 @@ class DoctorController extends Controller{
                     'weight'=>$weight,
                     'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
                     'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
-                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor]),
+                    'labreports'=>$labreports
                 
                 ]);
             }
@@ -355,7 +363,8 @@ class DoctorController extends Controller{
                     'weight'=>$weight,
                     'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
                     'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
-                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor]),
+                    'labreports'=>$labreports
                 
                 ]);
             }
@@ -370,7 +379,8 @@ class DoctorController extends Controller{
                     'weight'=>$weight,
                     'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
                     'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
-                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor]),
+                    'labreports'=>$labreports
                 
                 ]);
             }
@@ -405,7 +415,8 @@ class DoctorController extends Controller{
                     'weight'=>$weight,
                     'alltests'=>$alltests,
                     'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
-                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor]),
+                    'labreports'=>$labreports
                 
                 ]);
             }
@@ -420,7 +431,8 @@ class DoctorController extends Controller{
                     'weight'=>$weight,
                     'alltests'=>$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient')),
                     'recent'=>$medicalReport->getRecentReports(Application::$app->session->get('cur_patient'),$doctor),
-                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor])
+                    'prescription'=>$prescriptionModel->getPrescriptionByPatient([Application::$app->session->get('cur_patient'),$doctor]),
+                    'labreports'=>$labreports
                 
                 ]);
             }

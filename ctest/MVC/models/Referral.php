@@ -20,6 +20,7 @@ class Referral extends DbModel{
     public ?int $appointment_ID=0;
      
     public function stringchecker($str){
+        if(!$str) return false;
         $cap_alphabet = range('A', 'Z');
         $sim_alphabet=range('a','z');
         foreach($cap_alphabet as $c){

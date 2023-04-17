@@ -28,7 +28,7 @@
 
         <?php   foreach($channelings as $key=>$channeling): ?>
          
-        <tr class="table-row none" id=<?=$channeling['name']."&".$channeling['speciality']?>>
+        <tr class="table-row none" id=<?="'".$channeling['name']."&".$channeling['speciality']."'"?>>
             
             <td><?=$channeling['name']?></td>
             <td><?=$channeling['speciality']?></td>  

@@ -6,10 +6,9 @@ use app\core\form\Form;
 <?php $form = new Form();?>
 <?php $component=new Component(); ?>
 
-<section>
-    <div>
+    <div class="document-container">
          <div class="wrapper--referrals">
-                    <div class="variable-container">
+                    <div class="variable-container-mu">
                         <table>
                             <tr>
                                 <th>Medical Report</th><th>Added Date</th><th></th><th></th>
@@ -32,7 +31,7 @@ use app\core\form\Form;
     </div>
 
     <?php  $form->begin('','post')?>
-    <div>
+    <div class="document-container-form">
         <div>
             <div>
                 <?= $form->select($model,'report_ID','','',['SOAP Report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report','Refferal'=>'referral'],'select-main') ?>
@@ -42,29 +41,28 @@ use app\core\form\Form;
             </div>
         </div>
         <div>
-            <?= $form->textarea($model,'subjective','subjective','Subjective',10,130,'');?>
+            <?= $form->textarea($model,'subjective','subjective','Subjective',10,100,'');?>
             
         </div>
         <div>
-            <?= $form->textarea($model,'objective','objective','Objective',10,130,'');?>
+            <?= $form->textarea($model,'objective','objective','Objective',10,100,'');?>
             
         </div>    
         <div>
-            <?= $form->textarea($model,'assessment','assessment','Assessment',10,130,'');?>
+            <?= $form->textarea($model,'assessment','assessment','Assessment',10,100,'');?>
             
         </div>
         <div>
-            <?= $form->textarea($model,'plan','plan','Plan',10,130,'');?>
+            <?= $form->textarea($model,'plan','plan','Plan',10,100,'');?>
             
         </div>
         <div>
-            <?= $form->textarea($model,'additional_note','additional_note','Additional Note',10,130,'');?>
+            <?= $form->textarea($model,'additional_note','additional_note','Additional Note',10,100,'');?>
             
         </div>
 
 
     </div>
-</section>
 <?php $form->end(); ?>
 <script src="./media/js/main.js"></script>
 <script>

@@ -17,7 +17,7 @@ use app\models\Channeling;
   <table border="0">
 
     <?php foreach ($channelings as $key => $channeling) : ?>
-    <?php if($channeling['channeling_date']==date('Y-m-d') && $channeling['status']=='Opened'): ?>
+    <?php if($channeling['channeling_date']==date('Y-m-d') ): ?>
           <div class="today-channeling-tile" id=<?="'".$channeling['name']."'" ?>>
                 <div class=<?="'"."grid".rand(1,4)."'"?>>
                     <div class="today-tile-time">
@@ -29,6 +29,7 @@ use app\models\Channeling;
                     <h4>Speciality :<?=$channeling['speciality']?></h4>
                     <h4>Room :<?=$channeling['room']?></h4>
                     <h4>Fee :LKR <?=$channeling['fee']?></h4>
+                    <h4>Channeling Status :<?=$channeling['status']?></h4>
                 </div>
             </div>
 
