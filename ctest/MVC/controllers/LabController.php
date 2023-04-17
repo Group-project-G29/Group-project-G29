@@ -125,4 +125,25 @@ class LabController extends Controller
             // 'user' => $user[0]
         ]);
     }
+    public function handleTemplate(Request $request,Response $response){
+        //create template object
+
+        //object->title
+
+        //$id=object->save()[0]['last_insert_id()];
+
+        //insert id in session (Application::$app->session->set())
+
+    
+
+    }
+    //create object for template content
+    public function handleTemplateContent(){
+        //creaTe new content object
+        //define attributes as   public ?string metric=null in content object;
+        //load data object
+        //object->save();
+        
+
+    }
 }

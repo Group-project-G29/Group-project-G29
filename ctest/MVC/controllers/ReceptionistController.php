@@ -41,6 +41,9 @@ class ReceptionistController extends Controller
         } else if ($request->isPost()) {
             // update patient
             $patientModel->loadData($request->getBody());
+            //to pass validation of password
+            $patientModel->password="DummyPassword1!";
+            $patientModel->cpassword=$patientModel->password;
             $patientModel->loadFiles($_FILES);
             if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'update') {
 
@@ -100,7 +103,7 @@ class ReceptionistController extends Controller
             $channelings = $ChannelingModel->customFetchAll("Select * from appointment  left join opened_channeling on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on  doctor.nic=channeling.doctor left join employee on employee.nic=doctor.nic where appointment.appointment_ID=" . $parameters[1]['id']);
             if ($request->isPost()) {
                 $ReferralModel->loadFiles($_FILES);
-                $ReferralModel->setter($channelings[0]['nic'], Application::$app->session->get('patient'), $channelings[0]['speciality'], '', 'soft-copy', $channelings[0]['name']);
+                $ReferralModel->setter($channelings[0]['nic'], Application::$app->session->get('patient'), $channelings[0]['speciality'], '', 'soft-copy', $channelings[0]['name'],$parameters[1]['id']);
                 $ReferralModel->addReferral();
                 Application::$app->session->setFlash('success', "Appointment Successfuly Created");
                 Application::$app->response->redirect('/ctest/receptionist-patient-information?mod=view&id=' . Application::$app->session->get('patient'));
@@ -324,7 +327,7 @@ class ReceptionistController extends Controller
         $parameters = $request->getParameters();
 
         $this->setLayout("receptionist", ['select' => 'Today Channelings']);
-        $channelings = $channelingModel->customFetchAll("SELECT * from employee  inner join channeling on employee.nic = channeling.doctor inner join doctor  on channeling.doctor=doctor.nic left join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID  ");
+        $channelings = $channelingModel->customFetchAll("SELECT * from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join employee on employee.nic=channeling.doctor where opened_channeling.channeling_date='".date('Y-m-d')."'");
 
         return $this->render('receptionist/receptionist-today-channelings', [
             'channelings' => $channelings

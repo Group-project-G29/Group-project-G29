@@ -22,12 +22,11 @@ $form=Form::begin('','post');?>
         <?php echo $form->spanfield($model,'name','Name*','field','text') ?>
         <?php echo $form->spanfield($model,'nic','NIC*','field','text') ?>
         <?php echo $form->spanfield($model,'age','Age*','field','text') ?>
-        <?php echo $form->spanselect($model,'gender','field',['select'=>'select','male'=>'male','female'=>'female'],'gender')?>
+        <?php echo $form->spanselect($model,'gender','Gender*','field',['select'=>'select','male'=>'male','female'=>'female'],'gender')?>
         <?php echo $form->spanfield($model,'contact','Contact*','field','text') ?>
         <?php echo $form->spanfield($model,'email','Email*','field','text') ?>
         <?php echo $form->spanfield($model,'address','Address','field ','text') ?>
-        <?php echo $form->spanfield($model,'password','Password*','field','password') ?>
-        <?php echo $form->spanfield($model,'cpassword','Retype Password*','field','password') ?>
+        
         
         </table>
         <?= $component->button('btn','','Add New Patient','button--class-0') ?>

@@ -1,10 +1,9 @@
 <?php
+  use app\core\component\Component;
+use app\models\Channeling;
 
-use app\core\component\Component;
-
-$component = new Component();
-// var_dump($channelings);
-// exit;
+  $component = new Component();
+  $testModel=new Channeling();
 ?>
 
 <div class='upper-container'>
@@ -17,6 +16,7 @@ $component = new Component();
 <div class="table-container">
   <table border="0">
 
+<<<<<<< HEAD
     <tr class="row-height header-underline">
       <th>Doctor</th>
       <th>Channeling</th>
@@ -36,6 +36,25 @@ $component = new Component();
         <td><?= $channeling['fee'] ?> </td>
 
       </tr>
+=======
+    <?php foreach ($channelings as $key => $channeling) : ?>
+    <?php if($channeling['channeling_date']==date('Y-m-d') ): ?>
+          <div class="today-channeling-tile" id=<?="'".$channeling['name']."'" ?>>
+                <div class=<?="'"."grid".rand(1,4)."'"?>>
+                    <div class="today-tile-time">
+                        <h1><?="Dr.".$channeling['name']?></h1>
+                    </div>
+                </div> 
+                    <div>
+                    <h4><?="Time :".$channeling['time']." ".(($channeling['time']>='12.00')?'PM':'AM')?></h4>
+                    <h4>Speciality :<?=$channeling['speciality']?></h4>
+                    <h4>Room :<?=$channeling['room']?></h4>
+                    <h4>Fee :LKR <?=$channeling['fee']?></h4>
+                    <h4>Channeling Status :<?=$channeling['status']?></h4>
+                </div>
+            </div>
+
+>>>>>>> 20002051
       <?php endif; ?>
     <?php endforeach; ?>
 

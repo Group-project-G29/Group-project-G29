@@ -42,7 +42,16 @@ class LabTest extends DbModel{
     {
         return  ['name','fee'];
     }
-
+    public function getAllTests(){
+        $array=$this->customFetchAll("select * from lab_tests");
+        $return_result=[];
+        foreach($array as $el){
+            $return_result[$el['name']]=$el['name'];
+            
+        }
+        return $return_result;
+    }
+    
     
 }   
 

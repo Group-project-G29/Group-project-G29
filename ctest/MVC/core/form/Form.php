@@ -26,8 +26,17 @@ class Form{
     public function spanfield(Model $model,$attribute,$label,$class,$type,$id=""){
         return new SpanField($model,$attribute,$label,$class,$type,$id);
     }
-    public function textarea(Model $model,$attribute,$name,$label,$row,$col,$id=""){
-        return new TextArea($model, $attribute, $name, $label, $row, $col, $id);
+    public function textarea(Model $model,$attribute,$name,$label,$row,$col,$value,$id=""){
+        return new TextArea($model, $attribute, $name, $label, $row, $col, $value,$id);
+    }
+    public function editableselect($name,$label,$class,$options){
+        return new EditableSelect($name,$label,$class,$options);
+    }
+    public function dispenseselect($name,$label,$class){
+        return new DispenseSelect($name,$label,$class);
+    }
+    public function editableselectversion2($name,$label,$class,$options){
+        return new EditableSelectVersion2($name,$label,$class,$options);
     }
    
 

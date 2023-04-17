@@ -23,8 +23,22 @@
             return $this->customFetchAll("select last_insert_id()");
            
         }
+        public function savenofiles(){
+         
+            $tablerecords=$this->tableRecords();
+            foreach($tablerecords as $tablename=>$attributes){
+                $params=array_map(fn($attr)=>":$attr",$attributes);
+                $statement=self::prepare("Insert into $tablename (".implode(',',$attributes).") VALUES (".implode(',',$params).")");
+                foreach ($attributes as $attribute){
+                     $statement->bindValue(":$attribute",$this->{$attribute});
+                     echo $this->{$attribute} ;
+                }
+                $statement->execute();
+            }
+            return $this->customFetchAll("select last_insert_id()");
+           
+        }
         public function saveByName($values){
-            $this->fileStore();
             foreach($values as $tablename=>$attributes){
                 var_dump($attributes);
                 $tablerecords=array_keys($attributes);

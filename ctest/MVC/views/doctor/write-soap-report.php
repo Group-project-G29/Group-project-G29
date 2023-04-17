@@ -6,38 +6,63 @@ use app\core\form\Form;
 <?php $form = new Form();?>
 <?php $component=new Component(); ?>
 
-<div>
-    <div>
-        <div>
-            <?= $form->select($model,'reports','','',['SOAP Report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report','Refferal'=>'referral'],'select-main') ?>
+    <div class="document-container">
+         <div class="wrapper--referrals">
+                    <div class="variable-container-mu">
+                        <table>
+                            <tr>
+                                <th>Medical Report</th><th>Added Date</th><th></th><th></th>
+                            </tr>
+                            <?php $count=0; ?>
+                                <?php foreach($todayreport as $report): ?>
+                                    <?php $count=$count+1; ?>
+                                    <tr>
+                                        <td><a href=<?="/ctest/doctor-report?spec=referral&mod=view&id=".$report['report_ID']?>><?=$report['type']."-".$report['report_ID']?></a></td><td><?=$report['uploaded_date'] ?></td>
+                                        <?php if($report['uploaded_date']==Date('Y-m-d')):   ?>
+                                            <td><?=$component->button('update','','Update','button--class-2-small ref-update',$report['report_ID']); ?></td>
+                                            <td><?=$component->button('delete','','Delete','button--class-3-small ref-delete',$report['report_ID']); ?></td>
+                                        <?php endif; ?>
+                                        </tr>
+                                <?php endforeach; ?>
+                                <?php if($count==0): ?><script>(document.querySelector('.wrapper--referrals')).classList.add('hide');</script><?php endif; ?>
+                        </table>
+                    </div>
         </div>
-        <div>
-            <?= $component->button('','submit','Add Report','button--class-0'); ?>
-        </div>
-    </div>
-    <div>
-        <?= $form->textarea($model,'subjective','subjective','Subjective',10,130,'');?>
-        
-    </div>
-    <div>
-        <?= $form->textarea($model,'objective','objective','Objective',10,130,'');?>
-        
-    </div>    
-    <div>
-        <?= $form->textarea($model,'assessment','assessment','Assessment',10,130,'');?>
-        
-    </div>
-    <div>
-        <?= $form->textarea($model,'plan','plan','Plan',10,130,'');?>
-        
-    </div>
-    <div>
-        <?= $form->textarea($model,'additional_note','additional_note','Additional Note',10,130,'');?>
-        
     </div>
 
+    <?php  $form->begin('','post')?>
+    <div class="document-container-form">
+        <div>
+            <div>
+                <?= $form->select($model,'report_ID','','',['SOAP Report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report','Refferal'=>'referral'],'select-main') ?>
+            </div>
+            <div>
+                <?= $component->button('','submit','Add Report','button--class-0'); ?>
+            </div>
+        </div>
+        <div>
+            <?= $form->textarea($model,'subjective','subjective','Subjective',10,100,'');?>
+            
+        </div>
+        <div>
+            <?= $form->textarea($model,'objective','objective','Objective',10,100,'');?>
+            
+        </div>    
+        <div>
+            <?= $form->textarea($model,'assessment','assessment','Assessment',10,100,'');?>
+            
+        </div>
+        <div>
+            <?= $form->textarea($model,'plan','plan','Plan',10,100,'');?>
+            
+        </div>
+        <div>
+            <?= $form->textarea($model,'additional_note','additional_note','Additional Note',10,100,'');?>
+            
+        </div>
 
-</div>
+
+    </div>
 <?php $form->end(); ?>
 <script src="./media/js/main.js"></script>
 <script>

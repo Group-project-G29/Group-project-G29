@@ -15,11 +15,17 @@ use app\models\Patient;
 use app\models\PatientLoginForm;
 use app\models\Appointment;
 use app\models\Cart;
+use app\models\ConsultationReport;
 use app\models\Delivery;
+use app\models\LabReport;
+use app\models\MedicalHistory;
+use app\models\MedicalReport;
 use app\models\Medicine;
 use app\models\Order;
+use app\models\Prescription;
 use app\models\Referral;
-
+use app\models\SOAPReport;
+use ReflectionFiber;
 
 class PatientAuthController extends Controller{
     public function login(Request $request,Response $response){
@@ -140,8 +146,8 @@ class PatientAuthController extends Controller{
             $ReferralModel->loadData($request);
             $ReferralModel->loadFiles($_FILES);
             $appointment_detail=$appointment->customFetchAll("select * from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on doctor.nic=channeling.doctor where appointment_ID=".$parameter[1]['id'])[0];
-            $ReferralModel->setter($appointment_detail['doctor'],$appointment_detail['patient_ID'],$appointment_detail['speciality'],"","softcopy","");
-            if($ReferralModel->addReferral()){
+            $ReferralModel->setter($appointment_detail['doctor'],$appointment_detail['patient_ID'],$appointment_detail['speciality'],"","softcopy","",$appointment_detail['appointment_ID']);
+            if($ReferralModel->addreferral(Application::$app->session->get('Appointment'))){
                 Application::$app->session->setFlash('success',"Appointment successfully created");
                 Application::$app->response->redirect("/ctest/patient-all-appointment");
             }
@@ -152,6 +158,7 @@ class PatientAuthController extends Controller{
 
 
     public function handleAppointments(Request $request,Response $response){
+       
         $OpenedChannelingModel=new OpenedChanneling();
         $this->setLayout('visitor');
         $patient=Application::$app->session->get('user')??'';
@@ -223,10 +230,30 @@ class PatientAuthController extends Controller{
                 $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
-            
-            
-
         }
+        if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='referral'){
+            $this->setLayout('patient',['select'=>'Appointments']);
+            if(isset($parameters[1]['mod']) && $parameters[1]['mod']=='update'){
+                $ReferralModel=new Referral();
+                $ChannelingModel=new Channeling();
+                $ReferrlaModel=new Referral();
+                $AppointmentModel=new Appointment();
+                
+                $appointment=$AppointmentModel->findOne(['Appointment_ID'=>$parameters[2]['id']]);
+                //Update query
+                $Channelings=$AppointmentModel->customFetchAll("Select * from appointment left join opened_channeling on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join employee on employee.nic=channeling.doctor left join doctor on doctor.nic=employee.nic where appointment.patient_ID=".Application::$app->session->get('user'));
+
+                return $this->render('patient/patient-all-appointments-add-refs',[
+                    'channelings'=>$Channelings,
+                    'model'=>$ReferralModel,
+                    'appointment'=>$appointment,
+                    'referrals'=>$ReferralModel->fetchAssocAll(['appointment_ID'=>$parameters[2]['id']])
+
+                ]);
+               
+            }
+        }
+
     }
 
     public function doctorAppointment(Request $request,Response $response){
@@ -254,20 +281,45 @@ class PatientAuthController extends Controller{
         }
         
     }
-
+    
     public function medicineOrder(Request $request,Response $response){
         $content_amount=12;
         $parameters=$request->getParameters();
         $this->setLayout('patient-pharmacy');
         $cartModel=new Cart();
         $medicineModel=new Medicine();
+        $prescriptionModel=new Prescription();
         $patient=Application::$app->session->get('userObject');
         $cart=$cartModel->getPatientCart($patient->patient_ID??'')[0]['cart_ID']??'';
         $cartItems=$cartModel->fetchAssocAllByName(['cart_ID'=>$cart],'medicine_cart');
         //show order detail page
+        if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='prescription'){
+            if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='add'){
+                if(!Application::$app->session->get('user')){
+                    Application::$app->session->setFlash('success',"Log into add Prescriptions");
+                    Application::$app->response->redirect("/ctest/");
+                    exit;
+                }
+                if($request->isPost()){
+                    //post request to add new prescrtiption goes here
+                    $prescriptionModel->addPrescriptionSoftCopy();
+                }
+            }
+            if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='delete'){
+                $prescriptionModel->deleteRecord(['prescription_ID'=>$parameters[2]['id']]);
+            }
+            Application::$app->response->redirect("/ctest/patient-pharmacy?spec=main");
+            return true;
+    }
         if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='order-main'){
+            if(!Application::$app->session->get('user')){
+                Application::$app->session->setFlash('success',"Log into view your Order");
+                Application::$app->response->redirect("/ctest/");
+            }
             $order=new Order();
+            $lacked=$order->getLackedItems();
             return $this->render('patient/patient-track-order',[
+                'lacked'=>$lacked,
                 'order'=>$order->getPatientOrder()
             ]);
 
@@ -317,13 +369,24 @@ class PatientAuthController extends Controller{
                         $cartModel->addItem($parameters[2]['item'],$cart,$parameters[3]['amount']);
                     }
                 }
+                if($page)
                 Application::$app->response->redirect("patient-pharmacy?cmd=search&value=$value&page=$page");
+                else     
+                Application::$app->response->redirect("patient-pharmacy?spec=main");
             }
             if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='delete'){
                 $patient=Application::$app->session->get('userObject');
                 $cart=$cartModel->getPatientCart($patient->patient_ID)[0]['cart_ID'];
                 $cartModel->removeItem($parameters[2]['item'],$cart);
-                Application::$app->response->redirect("patient-pharmacy?cmd=search&value=$value&page=$page");
+                if($page){
+                    Application::$app->response->redirect("patient-pharmacy?spec=main");
+                }
+                else{
+                    Application::$app->response->redirect("patient-pharmacy?cmd=search&value=$value&page=$page");
+                }
+            }
+            if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='update'){
+
             }
             return $this->render("patient/pharmacy-main-search-result",[
                 'medicines'=>$medicines,
@@ -344,8 +407,21 @@ class PatientAuthController extends Controller{
             $orderModel=new Order();
             $orderModel->loadData($request->getBody());            
             $deliveryModel->loadData($request->getBody());
+            if($orderModel->getPatientOrder()){
+                Application::$app->session->setFlash('error',"Please wait until next order get finished.");
+                $cartModel=new Cart();
+                $patient=Application::$app->session->get('userObject');
+                $cart=$cartModel->getPatientCart($patient->patient_ID??'')[0]['cart_ID']??'';
+                $cartItems=$cartModel->fetchAssocAllByName(['cart_ID'=>$cart],'medicine_cart');
+                return $this->render('patient/patient-medicine-order',[
+                    'cartItems'=>$cartItems,
+                    'delivery'=>$deliveryModel,
+                    'order'=>$orderModel
+                ]);
+            }
             //data validation
-            if(!$orderModel->validate() || !$deliveryModel->validate()){
+        
+            if(!$orderModel->validate() || ($orderModel->pickup_status=='delivery' && !$deliveryModel->validate())){
                 $cartModel=new Cart();
                 $patient=Application::$app->session->get('userObject');
                 $orderModel=new Order();
@@ -359,7 +435,26 @@ class PatientAuthController extends Controller{
             }
 
         }
-        if($parameter[0]['spec']??''=='order'){
+        if($parameter[1]['mod']??''=='view'){
+                $cartModel=new Cart();
+                if($cartModel->getItemCount()==0){
+                    if(Application::$app->session->get('page') || Application::$app->session->get('value')){
+                        Application::$app->response->redirect('/ctest/patient-pharmacy?spec=main');
+                    }
+                    Application::$app->response->redirect("patient-pharmacy?cmd=search&value=".Application::$app->session->get('value')."&page=".Application::$app->session->get('page'));
+                }
+                $patient=Application::$app->session->get('userObject');
+                $deliveryModel=new Delivery();
+                $orderModel=new Order();
+                $cart=$cartModel->getPatientCart($patient->patient_ID??'')[0]['cart_ID']??'';
+                $cartItems=$cartModel->fetchAssocAllByName(['cart_ID'=>$cart],'medicine_cart');
+                return $this->render('patient/patient-medicine-order',[
+                    'cartItems'=>$cartItems,
+                    'delivery'=>$deliveryModel,
+                    'order'=>$orderModel
+                ]);
+            }
+            if($parameter[0]['spec']??''=='order'){
             //if order is a pickup order
             if($orderModel->pickup_status=='pickup'){
                 if($parameter[1]['cmd']??''=='complete'){
@@ -387,58 +482,68 @@ class PatientAuthController extends Controller{
                     }
                 }
             }
-            else if($parameter[1]['mod']??''=='view'){
-                $cartModel=new Cart();
-                if($cartModel->getItemCount()==0){
-                    Application::$app->response->redirect("patient-pharmacy?cmd=search&value=".Application::$app->session->get('value')."&page=".Application::$app->session->get('page'));
-                }
-                $patient=Application::$app->session->get('userObject');
-                $deliveryModel=new Delivery();
-                $orderModel=new Order();
-                $cart=$cartModel->getPatientCart($patient->patient_ID??'')[0]['cart_ID']??'';
-                $cartItems=$cartModel->fetchAssocAllByName(['cart_ID'=>$cart],'medicine_cart');
-                return $this->render('patient/patient-medicine-order',[
-                    'cartItems'=>$cartItems,
-                    'delivery'=>$deliveryModel,
-                    'order'=>$orderModel
-                ]);
-            }
         }
     }
 
 
     public function patientDashboard(Request $request,Response $response){
         $parameters=$request->getParameters();
+        $orderModel=new Order();
         if(isSet($parameters[0]['spec']) && $parameters[0]['spec']=="orders"){
             
             $this->setLayout('patient',['select'=>'My Orders']);
             $orderModel=new Order();
-            if($parameters[1]['mod']??''=='view'){
-                
-                return $this->render('patient/dashboard-show-order',[
-                    'items'=>$orderModel->getOrderItem($parameters[2]['id']),
-                    'orderdetails'=>$orderModel->customFetchAll("select * from _order left join delivery on _order.delivery_ID=delivery.delivery_ID where _order.order_ID=".$parameters[2]['id'])
-                ]);
+            if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='reject'){
+                $orderModel->setOrderStatus($parameters[2]['id'],'rejected');
+                $response->redirect("patient-dashboard?spec=orders");
+                return true;
             }
-            $orders=$orderModel->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user')]);
-            return $this->render('patient/dashboard-order',[
-                'orders'=>$orders,
-                
+            else if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='accept'){
+                $orderModel->setOrderStatus($parameters[2]['id'],'accepted');
+                $response->redirect("patient-dashboard?spec=orders");
+                return true;
+            }
+            if(!Application::$app->session->get('user')){
+                Application::$app->session->setFlash('success',"Log into view your");
+                Application::$app->response->redirect("/ctest/");
+            }
+            $order=new Order();
+            $lacked=$order->getLackedItems();
+            return $this->render('patient/patient-track-order',[
+                'lacked'=>$lacked,
+                'order'=>$order->getPatientOrder()
             ]);
-            
-            
-            
-        }
-        if(isSet($parameters[0]['spec']) &&  $parameters[0]['spec']??''=='documentation'){
-            // if(isSet($parameters[1]['id']) && $parameters[1]['id']=='referrals')
-            // $documents=
+            // $orders=$orderModel->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user')]);
             // return $this->render('patient/dashboard-order',[
-            //     'documents'=>$documents,
+            //     'orders'=>$orders,
                 
             // ]);
+            
+            
+            
+            
+        }
+        if(isSet($parameters[0]['spec']) &&  $parameters[0]['spec']=='documentation'){
+            //get all the documents and referrals
+            $medicalReportModel=new MedicalReport();
+            $referralModel=new Referral();
+            $prescriptionModel=new Prescription();
+            $labreportModel=new LabReport();
+            $reports=$medicalReportModel->getReportsByPatient();
+            $referrals=$referralModel->getReferralsByPatient(Application::$app->session->get('user'));
+            $labreports=$labreportModel->getPatientReport(Application::$app->session->get('user'));
+            $prescriptions=$prescriptionModel->getPatientPrescription(Application::$app->session->get('user'));
+            $this->setLayout('patient',['select'=>'My Documentation']);
+            return $this->render('patient/patient-my-documentation',[
+                'reports'=>$reports,
+                'referrals'=>$referrals,
+                'labreports'=>array_reverse($labreports),
+                'prescriptions'=>$prescriptions
+                
+            ]);
         
         }
-        if(isSet($parameters[0]['spec']) && $parameters[0]['spec']??''=='appointments'){
+        if(isSet($parameters[0]['spec']) && $parameters[0]['spec']=='appointments'){
             $this->setLayout('patient',['select'=>'Appointments']);
             $AppointmentModel=new Appointment();
             $Channelings=$AppointmentModel->customFetchAll("Select * from appointment left join opened_channeling on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join employee on employee.nic=channeling.doctor left join doctor on doctor.nic=employee.nic where appointment.patient_ID=".Application::$app->session->get('user'));
@@ -451,10 +556,14 @@ class PatientAuthController extends Controller{
             $this->setLayout('patient',['select'=>'Appointments']);
                     
         }
-        if (isSet($parameters[0]['spec']) &&  $parameters[0]['spec']=='payments'){
-
-        }
+       
         if(isSet($parameters[0]['spec']) &&  $parameters[0]['spec']=='medical-analysis'){
+            $this->setLayout('patient',['select'=>"Medical Analysis"]);
+            $testModel=new LabReport();
+            $values=$testModel->getAllParameterValue(Application::$app->session->get('user'));
+            return $this->render('patient/medical-analysis',[
+                'mainArray'=>$values
+            ]);
 
         }
         if(isSet($parameters[0]['spec']) &&  $parameters[0]['spec']=='my-detail'){
@@ -488,6 +597,154 @@ class PatientAuthController extends Controller{
         return $this->render("patient/patient-payment-page");
 
     }
+    public function handleDocuments(Request $request,Response $response){
+        $parameter=$request->getParameters();
+        $historyModel=new MedicalHistory();
+        $medicalReportModel=new MedicalReport();
+        $prescriptionModel=new Prescription();
+        $soapModel=new SOAPReport();
+        $consultationModel=new ConsultationReport();
+        if(isset($parameter[0]['spec']) && $parameter[0]['spec']=="medical-history"||$parameter[0]['spec']=="medical-history-report"){
+            if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
+                $historyModel=new MedicalHistory();
+                $report=$soapModel->customFetchAll("Select * from Medical_history left join medical_report on Medical_history.report_ID=medical_report.report_ID where medical_report.report_ID=".$parameter[2]['id']);
+                if($report[0]['type']=='softcopy'){
+                    $response->redirect('./media/patient//'.$report[0]['name']);
+
+                }
+                else{
+                    $historyModel->HistoryreportToPDF($report[0]['report_ID']);
+                }
+                //$referralModel->findOne(['ref_ID'=>$parameter[2]['id']]);
+                
+            }
+            return true;
+        }
+        else if (isset($parameter[0]['spec']) && ($parameter[0]['spec'] == "prescription") ){
+            if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
+                $report=$prescriptionModel->customFetchAll("Select * from prescription where prescription_ID=".$parameter[2]['id']);
+                if($report[0]['type']=='softcopy'){
+                    $response->redirect('localhost/ctest/MVC/public/media/patient/prescriptions/'.$report[0]['name']);
+                }
+                else{
+                    $prescriptionModel->prescriptionToPDF($report[0]['prescription_ID']);
+                } 
+            }
+            return true;
+        }
+        else if (isset($parameter[0]['spec']) && ($parameter[0]['spec'] == "consultation-report"||$parameter[0]['spec'] == "consultation") ){
+            if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
+                $report=$consultationModel->customFetchAll("Select * from consultation_report left join medical_report on consultation_report.report_ID=medical_report.report_ID where medical_report.report_ID=".$parameter[2]['id']);
+                if($report[0]['type']=='softcopy'){
+                    $response->redirect('localhost/ctest/MVC/public/media/patient/medicalreports/'.$report[0]['name']);
+
+                }
+                else{
+                    $consultationModel->ConsultationreportToPDF($report[0]['report_ID']);
+                } 
+            }
+            return true;
+        }
+        else if (isset($parameter[0]['spec']) && $parameter[0]['spec'] == "soap-report" ||$parameter[0]['spec'] == "soap") {
+            if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
+                $soapModel=new SOAPReport();
+                $report=$soapModel->customFetchAll("Select * from soap_report left join medical_report on soap_report.report_ID=medical_report.report_ID where medical_report.report_ID=".$parameter[2]['id']);
+                if($report[0]['type']=='softcopy'){
+                    $response->redirect('localhost/ctest/MVC/public/media/patient/medicalreports/'.$report[0]['name']);
+                    
+                }
+                else{
+                    $soapModel->SOAPreportToPDF($report[0]['report_ID']);
+                }
+                //$referralModel->findOne(['ref_ID'=>$parameter[2]['id']]);
+            }
+            return true;
+        }
+        else if (isset($parameter[0]['spec']) && $parameter[0]['spec'] == "referral"){
+            $referralModel=new Referral();
+            if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
+                    $referralModel->setseen($parameter[2]['id']);
+                    $referrals=$referralModel->customFetchAll("Select * from referrel where ref_ID=".$parameter[2]['id']);
+                    if($referrals[0]['type']=='softcopy'){
+                        $response->redirect('http://localhost/ctest/MVC/public/media/patient/referrals/'.$referrals[0]['name']);   
+                    }
+                    else{
+                        $referralModel->referralToPDF($referrals[0]['ref_ID']);
+                    }
+                    //$referralModel->findOne(['ref_ID'=>$parameter[2]['id']]);
+                    
+            }
+            if(isset($parameter[1]['cmd']) && $parameter[1]['cmd']=='delete'){
+                $referralModel->deleteRecord(['ref_ID'=>$parameter[2]['id']]);
+                $response->redirect('http://localhost/ctest/patient-appointment?spec=referral&mod=update&id='.$parameter[2]['id']);
+                return true;
+            }
+        }
+        else if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='view'){
+               $medicalModel=new MedicalReport();
+               $medicalReport=$medicalModel->fetchAssocAll(['report_ID'=>$parameter[2]['id']]);
+               $response->redirect('/ctest/MVC/public/media/patient/medicalreports/'.$medicalReport[0]['label']);        
+        }
+    }
+    //get 
+    public function handelLabReports(Request $request,Response $response){
+        $labreportModel=new LabReport();
+        $parameters=$request->getParameters();
+        if(isset($parameters[0]['spec']) && $parameters[0]['spec']='lab-report'){
+            if(isset($parameters[1]['cmd']) &&  $parameters[1]['cmd']=='view'){
+                $report=$labreportModel->fetchAssocAll(['report_ID'=>$parameters[2]['id']])[0];
+                if($report['type']=='softcopy'){
+                    $response->redirect('http://localhost/ctest/MVC/public/media/patient/labreports/'.$report['location']);   
+                }
+                else{
+                    $labreportModel->labreporttoPDF($parameters[2]['id']);
+                }
+            }
+        }
+        return true;
+    }
+
+    public function accountHandle(Request $request,Response $response){
+        $parameters=$request->getParameters();
+        $this->setLayout('patient',['select'=>'My Detail']);
+        $patientModel=new Patient();
+        if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='view'){
+            $patient=$patientModel->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user')]);
+            array_pop($patient[0]);
+            return $this->render('patient/patient-my-detail',[
+                'patient'=>$patient[0]
+            ]);
+        }
+        if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
+            if($request->isPost()){
+                $patient=$patientModel->findOne(['patient_ID'=>Application::$app->session->get('user')]);
+                $patientModel->loadData($request->getBody());
+                $patientModel->password=$patient->password;
+                $patientModel->cpassword=$patient->password;
+                if($patientModel->validate()){
+                    $patientModel->updaterecord(['patient_ID'=>Application::$app->session->get('user')]);
+                    $response->redirect('patient-my-detail?cmd=view');
+                }
+                else{
+
+                    return $this->render('patient/update-patient-my-detail',[
+                        'patient'=>$patientModel
+                    ]);
+                }
+            }
+            $patient=$patientModel->findOne(['patient_ID'=>Application::$app->session->get('user')]);
+            $patient->password='';
+            return $this->render('patient/update-patient-my-detail',[
+                'patient'=>$patient
+            ]);
+        }
+        
+    }
+    
+
+ 
+
+
    
 
 

@@ -18,7 +18,7 @@ $appointmentModel=new Appointment();
     </div>
     <div class="scheduled-info fs-100">
         <span>Room :<?=$channeling->room?></span>
-        <span>Starts In:<?=$channeling->time?></span>
+        <span>Starts At:<?=($channeling->time>='12:00')?$channeling->time.' PM':$channeling->time.' AM'?></span>
 
     </div>
     <div>

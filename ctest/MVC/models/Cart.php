@@ -67,11 +67,10 @@ use app\core\DbModel;
         }
         public function getItemCount(){
             $cart=$this->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID'];
-            return $this->customFetchAll("select count(*) from medicine_in_cart where cart_ID=".$cart)[0]['count(*)'];
+            return $this->customFetchAll("select count(*) from medicine_in_cart where cart_ID=".$cart)[0]['count(*)']+$this->customFetchAll("select count(*) from prescription where cart_ID=".$cart)[0]['count(*)'];
         }
         public function createCart($patientID){
-            return $this->customFetchAll("insert into cart (patient_ID) values('$patientID')");
-            return $this->saveByName(['patient_ID'=>'134'],'patient');
+             $this->customFetchAll("insert into cart (patient_ID) values('$patientID')");
         }
         public function getCartItem($cartID){
             return $this->fetchAssocAllByName(['cart_ID'=>$cartID],'medicine_in_cart');
@@ -81,7 +80,9 @@ use app\core\DbModel;
         public function transferCartItem($cartID,$pickup_status,$deliveryModel=new Delivery()){
             //create order
             $orderModel=new Order();
+            $unavailableItems=[];
             $medicineModel=new Medicine();
+            $prescriptionModel=new Prescription();
             $orderModel->pickup_status=$pickup_status;
             $orderModel->patient_ID=Application::$app->session->get('user');
             $orderModel->cart_ID=$cartID;
@@ -100,15 +101,29 @@ use app\core\DbModel;
             // ---------------create a function to check whether cart has old items 
             //transfer item in to order
             foreach($cartItems as $item ){
-                if(!$medicineModel->checkStock($item['med_ID'])) continue;
+                if(!$medicineModel->checkStock($item['med_ID'])){ 
+                    array_push($unavailableItems,$medicineModel->getMedicineByID($item['med_ID']));
+                    continue;
+                }
                 $orderModel->addItem($orderID,$item['med_ID'],$item['amount']);
                 //reduce medicine
-                $medicineModel->reduceMedicine($item['mde_ID'],$item['amount'],true);
+                $medicineModel->reduceMedicine($item['med_ID'],$item['amount'],true);
+            }
+            if($unavailableItems){
+                $str='';
+                foreach($unavailableItems as $item){
+                    $str.=$item;
+                    $str.=",<br> ";
+                }
+                Application::$app->session->setFlash('error',"Sorry, Medical Products named <br>".$str."<br> are out of stock. Remove this item from the stock to proceed.");
             }
             //check whether there is prescription in the cart
             //transfer prescription
+            $prescriptionModel->addToOrder($orderID,$cartID);
             //delete all item in cart
             $this->deleteRecordByName(['cart_ID'=>$cartID],'medicine_in_cart');
+            //if all items are available return true
+            return true;
         }
         
     }

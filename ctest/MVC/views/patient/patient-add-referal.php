@@ -10,7 +10,7 @@
 <div class="bg">
 
 </div>
- <div class="referral-popup" id="popup-main">
+<div class="referral-popup" id="popup-main">
     <div class="referral-popup-wrapper">
         <h3>Your Queue No :<?=$appointment->queue_no?></h3>
         <div class="flex">

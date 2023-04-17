@@ -4,6 +4,8 @@ error_reporting(E_ALL);
 
 require_once __DIR__.'/../vendor/autoload.php';
 
+
+require_once 'dompdf/autoload.inc.php';
 use app\controllers\AdminController;
 use \app\core\Application;
 use \app\controllers\SiteController;
@@ -17,14 +19,12 @@ use app\controllers\ReceptionistController;
 use app\controllers\Advertisement;
 use app\controllers\DeliveryController;
 use app\controllers\NurseController;
-
+use Dompdf\Dompdf;
 // Initialize application
 $app =new Application(dirname(__DIR__));
 
-
 // Routers
 //patient
-
 
 $app->router->get('/ctest/patient-registration',[PatientAuthController::class,'register']);
 $app->router->post('/ctest/patient-registration',[PatientAuthController::class,'register']);
@@ -40,6 +40,7 @@ $app->router->get('/ctest/handle-appointment',[PatientAuthController::class,'han
 $app->router->get('/ctest/logout',[PatientAuthController::class,'logout']);
 $app->router->get('/ctest/doctor-patient-appointment', [PatientAuthController::class, 'doctorAppointment']);
 $app->router->get('/ctest/patient-pharmacy',[PatientAuthController::class,'medicineOrder']);
+$app->router->post('/ctest/patient-pharmacy',[PatientAuthController::class,'medicineOrder']);
 $app->router->get('/ctest/patient-medicine-order',[PatientAuthController::class,'orderMedicine']);
 $app->router->post('/ctest/patient-medicine-order',[PatientAuthController::class,'orderMedicine']);
 $app->router->get('/ctest/patient-dashboard',[PatientAuthController::class,'patientDashboard']);
@@ -48,6 +49,10 @@ $app->router->post('/ctest/patient-payment',[PatientAuthController::class,'patie
 $app->router->post('/ctest/doctor',[SiteController::class, 'doctor']);
 $app->router->get('/ctest/register', [PatientAuthController::class, 'register']);
 $app->router->post('/ctest/register', [PatientAuthController::class, 'register']);
+$app->router->get('/ctest/handle-documentation', [PatientAuthController::class, 'handleDocuments']);
+$app->router->get('/ctest/handle-labreports', [PatientAuthController::class, 'handelLabReports']);
+$app->router->get('/ctest/patient-my-detail', [PatientAuthController::class,'accountHandle']);
+$app->router->post('/ctest/patient-my-detail', [PatientAuthController::class,'accountHandle']);
 
 //--------------------employee routers--------------------------------------
 $app->router->get('/ctest/login',[EmployeeAuthController::class, 'login']);
@@ -81,6 +86,11 @@ $app->router->post('/ctest/doctor-report',[DoctorController::class,'handleReport
 $app->router->get('/ctest/doctor-prescription',[DoctorController::class,'handlePrescription']);
 $app->router->post('/ctest/doctor-prescription',[DoctorController::class,'handlePrescription']);
 $app->router->get('/ctest/recent-patients',[DoctorController::class,'viewPatient']);
+$app->router->get('/ctest/doctor-labtest',[DoctorController::class,'labTestRequestHandle']);
+$app->router->post('/ctest/doctor-labtest',[DoctorController::class,'labTestRequestHandle']);
+$app->router->get('/ctest/summary-reports',[DoctorController::class,'summaryReports']);
+$app->router->post('/ctest/upload-reports',[DoctorController::class,'handleLabReports']);
+$app->router->get('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
 
 //-------------------pharmacy routers-----------------------------------------
 $app->router->post('/ctest/handle-medicine',[PharmacyController::class,'handleMedicine']);
@@ -165,6 +175,9 @@ $app->router->post('/ctest/admin-update-advertisement', [AdminController::class,
 $app->router->get('/ctest/schedule-channeling',[AdminController::class,'schedulingChanneling']);
 $app->router->post('/ctest/schedule-channeling',[AdminController::class,'schedulingChanneling']);
 $app->router->get('/ctest/admin-notification',[AdminController::class,'handleNotifications']);
+$app->router->get('/ctest/update-channeling',[AdminController::class,'changeChanneling']);
+$app->router->post('/ctest/update-channeling',[AdminController::class,'changeChanneling']);
+
 //-------------------administrator routers--------------------------------------
 $app->router->get('/ctest/admin',[AdminController::class,'registerAccounts']);
 $app->router->post('/ctest/admin',[AdminController::class,'registerAccounts']);
