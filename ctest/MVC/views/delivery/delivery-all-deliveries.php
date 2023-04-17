@@ -37,7 +37,7 @@
                 if($delivery['comment']){
                     echo $delivery['comment'];
                 } else {
-                    echo "None";
+                    echo "-";
                 }
             ?>
         </td>   

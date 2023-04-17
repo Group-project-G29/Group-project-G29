@@ -8,11 +8,9 @@ include "../views/layouts/navbar/doctor-navbar.php";
 ?>
 
     <div class="main-container">
-<<<<<<< HEAD
+
          <?php $sidebar=new Sidebar(['Today Channelings'=>'doctor','All Channelings'=>'doctor?spec=all','Report'=>'summary-reports','My Detail'=>'doctor-my-detail?cmd=view'],$select);?>
-=======
-         <?php $sidebar=new Sidebar(['Today Channelings'=>'doctor','All Channelings'=>'doctor?spec=all','Patients'=>'recent-patients','Report'=>'#','My Detail'=>'#'],$select);?>
->>>>>>> 20000758
+
          <?php echo $sidebar;  ?>
         
         

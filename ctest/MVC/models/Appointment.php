@@ -6,7 +6,6 @@ use app\core\Application;
 use app\core\Calendar;
 use app\core\Date;
 
-
 class Appointment extends DbModel{
     public string $opened_channeling_ID='';
     public string $patient_ID='';

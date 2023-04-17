@@ -68,14 +68,25 @@ class PatientNotification extends DbModel{
         return 'noti_ID';
     }
     public function tableRecords(): array{
-        return ['patient_notification'=>['type','patient_ID','text','is_read','order_ID']];
+        return ['patient_notification'=>['noti_ID','type','patient_ID','text','is_read','order_ID']];
     }
 
     public function attributes(): array
     {
-        return ['type','patient_ID','text','is_read','order_ID'];
+        return ['noti_ID','type','patient_ID','text','is_read','order_ID'];
     }
 
+    public function createOrderNotification( $orderID, $patientID ) {
+        return $this->customFetchAll("INSERT INTO patient_notification (created_date_time, type, text, patient_ID, order_ID, is_read) VALUES (CURRENT_TIMESTAMP, 'order', 'Notify NA Medical products', $patientID, $orderID, 0);");
+    }
+
+    public function getNotificationIDs( $orderID ) {
+        return $this->customFetchAll("SELECT noti_ID FROM patient_notification WHERE order_ID = $orderID AND is_read=0");
+    }
+
+    public function removeNotifications ( $notificationID ) {
+        return $this->customFetchAll("DELETE FROM patient_notification WHERE noti_ID = $notificationID");
+    }
     
 }   
 

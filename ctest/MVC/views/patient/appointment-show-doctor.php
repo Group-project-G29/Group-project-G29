@@ -16,11 +16,15 @@ use app\models\OpenedChanneling;
 </div>
 <section class="doctor-container">
     <?php foreach($doctors as $doctor): ?>
+<<<<<<< HEAD
         <?php if($patientModel->isDoctor(Application::$app->session->get('user'),$doctor['nic'])):?>
         <div class="doctor-item" id=<?="'".$doctor['name']."-".$doctor['career_speciality']."'" ?>>
         <?php else:?>
         <div class="doctor-item none" id=<?="'".$doctor['name']."-".$doctor['career_speciality']."'" ?>>
         <?php endif;?>
+=======
+        <div class="doctor-item" id=<?="'".$doctor['name']."-".$doctor['career_speciality']."'" ?>>
+>>>>>>> 20000804
                     <img src=<?="./media/images/emp-profile-pictures/".$doctor['img']?>>
                     <div class="doctor-item-identity--one">
                         <div class="name-speciality">

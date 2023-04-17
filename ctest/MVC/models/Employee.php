@@ -40,21 +40,38 @@ class Employee extends DbModel{
         Application::$app->logout();
         return true;
     }
+
     public function rules(): array
     {
-        return [
-            'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
-            'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee'],[self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
-            'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
-            'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
-            'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
-            'address'=>[],       
-            'role'=>[self::RULE_REQUIRED],
-            'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
-               
-
-        ];
+        if($this->role==='admin'){
+            return [
+                'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
+                'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee'],
+                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
+                'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
+                'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
+                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
+                'address'=>[],       
+                'role'=>[self::RULE_REQUIRED],
+                'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
+            ];
+        } else {
+            return [
+                'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
+                'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],
+                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
+                'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
+                'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
+                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
+                'address'=>[],       
+                'role'=>[self::RULE_REQUIRED],
+                'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
+            ];
+        }
     }
+
+
+
     public function fileDestination(): array
     {
         return ['img'=>"media/images/emp-profile-pictures/".$this->img];
@@ -77,7 +94,8 @@ class Employee extends DbModel{
 
     public function attributes(): array
     {
-        return ['name','nic','age','contact','email','address','gender','role','img','password','career_speciality','description'];
+        if($this->role=='doctor') return ['name','nic','age','contact','email','address','gender','role','img','password','career_speciality','description'];
+        return ['name','nic','age','contact','email','address','gender','role','img','password'];
     }
     
     public function getAccounts($role=''):array{
@@ -103,7 +121,6 @@ class Employee extends DbModel{
             }
         }
         return $Doctor;
-        
     }
     public function isNurse($nurse,$channeling){
         $result=$this->customFetchAll("select * from nurse_channeling_allocataion where channeling_ID=".$channeling." and emp_ID=".$nurse);
@@ -181,6 +198,23 @@ class Employee extends DbModel{
     
  
     
+    public function make_rider_offline( $delivery_rider_ID ) {
+        return $this->customFetchAll("UPDATE delivery_rider SET availability = 'NA' WHERE emp_ID = $delivery_rider_ID;");
+    }
+
+    public function make_rider_online( $delivery_rider_ID ) {
+        return $this->customFetchAll("UPDATE delivery_rider SET availability = 'AV' WHERE emp_ID = $delivery_rider_ID;");
+    }
+
+    //update personal info - not working
+    // public function change_details ( $user_ID, $new_name, $new_contact, $new_address ) {
+    //     return $this->customFetchAll("UPDATE employee SET name = '$new_name', contact = '$new_contact', address = '$new_address' WHERE emp_ID = $user_ID");
+    // }
+
+    public function get_rider_availability( $delivery_rider ) {
+        return $this->customFetchAll("SELECT availability FROM delivery_rider WHERE emp_ID = $delivery_rider");
+    }
+
 }   
 
 

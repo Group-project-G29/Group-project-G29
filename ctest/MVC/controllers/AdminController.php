@@ -287,7 +287,6 @@ class AdminController extends Controller{
         }
         
     }
-
     
     //view advertisement
     public function viewAdvertisement(){

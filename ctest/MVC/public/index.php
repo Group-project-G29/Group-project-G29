@@ -26,6 +26,10 @@ $app =new Application(dirname(__DIR__));
 // Routers
 //patient
 
+$app->router->get('/ctest/contact-us',[PatientAuthController::class,'contact_us']);
+
+
+
 $app->router->get('/ctest/patient-registration',[PatientAuthController::class,'register']);
 $app->router->post('/ctest/patient-registration',[PatientAuthController::class,'register']);
 $app->router->get('/ctest/',[PatientAuthController::class,'login']);
@@ -115,26 +119,54 @@ $app->router->get('/ctest/pharmacy-update-advertisement',[PharmacyController::cl
 $app->router->post('/ctest/pharmacy-handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
 $app->router->get('/ctest/pharmacy-handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
 
+$app->router->get('/ctest/pharmacy-orders-previous',[PharmacyController::class,'viewPreviousOrder']);
+$app->router->get('/ctest/pharmacy-view-previous-order',[PharmacyController::class,'DetailsPreviousOrder']);
 $app->router->get('/ctest/pharmacy-orders-pending',[PharmacyController::class,'viewPendingOrder']);
 $app->router->get('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'DetailsPendingOrder']);
 $app->router->get('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
+$app->router->get('/ctest/pharmacy-delete-rejected',[PharmacyController::class,'deleteRejectedOrder']);
+// $app->router->post('/ctest/pharmacy-pharmacy-delete-rejected',[PharmacyController::class,'deleteRejectedOrder']);
 // $app->router->post('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'TakePendingOrder']);
 // $app->router->post('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
 $app->router->get('/ctest/pharmacy-orders-processing',[PharmacyController::class,'viewProcessingOrder']);
 $app->router->get('/ctest/pharmacy-view-processing-order',[PharmacyController::class,'DetailsProcessingOrder']);
+$app->router->get('/ctest/pharmacy-notify-processing-order',[PharmacyController::class,'notifyProcessingOrder']);
 $app->router->get('/ctest/pharmacy-finish-processing-order',[PharmacyController::class,'finishProcessingOrder']);
-$app->router->get('/ctest/pharmacy-cancle-processing-order',[PharmacyController::class,'cancleProcessOrder']);
-
+$app->router->get('/ctest/pharmacy-cancle-processing-order',[PharmacyController::class,'cancleProcessingOrder']);
+$app->router->get('/ctest/pharmacy-add-medicine-processing-order',[PharmacyController::class,'addMedicineProcessingOrder']);
 $app->router->get('/ctest/pharmacy-orders-delivering',[PharmacyController::class,'viewDeliveringOrder']);
 $app->router->get('/ctest/pharmacy-track-order',[PharmacyController::class,'trackOrder']);
+$app->router->get('/ctest/pharmacy-go-to-process-order',[PharmacyController::class,'processOrderAgain']);
+$app->router->get('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
+$app->router->post('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
+
 $app->router->get('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
+$app->router->post('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
+$app->router->get('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
+$app->router->post('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
+
 $app->router->get('/ctest/pharmacy-view-report',[PharmacyController::class,'viewReports']);
+$app->router->get('/ctest/pharmacy-view-personal-details',[PharmacyController::class,'viewPersonalDetails']);
+
+
+// ------------------delivery rider routers----------------------------------------
 $app->router->get('/ctest/delivery-view-personal-details',[DeliveryController::class,'viewPersonalDetails']);
+$app->router->post('/ctest/delivery-view-personal-details',[DeliveryController::class,'viewPersonalDetails']);
 $app->router->get('/ctest/delivery-my-deliveries',[DeliveryController::class,'viewMyDeliveries']);
 $app->router->get('/ctest/delivery-all-deliveries',[DeliveryController::class,'viewAllDeliveries']);
 $app->router->get('/ctest/delivery-view-delivery',[DeliveryController::class,'viewDeliveryDetails']);
+// $app->router->post('/ctest/delivery-view-delivery',[DeliveryController::class,'completeDelivery']);
 $app->router->get('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
-$app->router->get('/ctest/pharmacy-view-personal-details',[PharmacyController::class,'viewPersonalDetails']);
+$app->router->post('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
+$app->router->get('/ctest/delivery-pass-delivery',[DeliveryController::class,'passDelivery']);
+
+// active status
+$app->router->get('/ctest/delivery-online',[DeliveryController::class,'makeOnline']);
+$app->router->get('/ctest/delivery-offline',[DeliveryController::class,'makeOffline']);
+
+
+
+
 // ------------------laboratorist routers----------------------------------------
 $app->router->get('/ctest/test',[LabController::class,'viewTest']);
 

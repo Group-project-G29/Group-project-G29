@@ -28,30 +28,29 @@
         </div>
         <div class="nav_row--top_user flex ">
         <?php if(Application::$app->session->get('user')) :?>
-                <div class="bell-container">
-                    <img  src="./media/images/patient/notification bell.png">
-                </div>
-                
-                   
-                    <div class="nav-box">
-                        <h3><?php echo Application::$app->session->get('userObject')->name?></h3>
-                        <ul>
-                            <div class="nav-box-item">
-                                <li>
-                                    <a href="/ctest/patient-all-appointment">Dashboard</a>
-                                </li>
-                            </div>
-                            <div class="nav-box-item">
-                                <li>
-                                    <a href="/ctest/logout">Log Out</a>
-                                </li>
-                            </div>
-                        </ul>
-                </div>
-               
-                <?php else:?>
-                        <?php echo $component->button('sign in','','Sign In','button--class-1','sign in') ?>
-                <?php endif ?>
+            <div class="bell-container">
+                <img  src="./media/images/patient/notification bell.png">
+            </div>
+            
+            <div class="nav-box">
+                <h3><?php echo Application::$app->session->get('userObject')->name?></h3>
+                <ul>
+                    <div class="nav-box-item">
+                        <li>
+                            <a href="/ctest/patient-all-appointment">Dashboard</a>
+                        </li>
+                    </div>
+                    <div class="nav-box-item">
+                        <li>
+                            <a href="/ctest/logout">Log Out</a>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+            
+        <?php else:?>
+                <?php echo $component->button('sign in','','Sign In','button--class-1','sign in') ?>
+        <?php endif ?>
             
         </div>
     </div>

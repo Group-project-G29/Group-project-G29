@@ -77,8 +77,9 @@ use app\core\DbModel;
         }
         //transfer item in cart to order and remove item in the cart
         //if order is a pickup $pickup_status should be true
-        public function transferCartItem($cartID,$pickup_status,$deliveryModel=new Delivery()){
+        public function transferCartItem($cartID,$pickup_status,$deliveryModel){
             //create order
+            $deliveryModel=new Delivery();
             $orderModel=new Order();
             $unavailableItems=[];
             $medicineModel=new Medicine();

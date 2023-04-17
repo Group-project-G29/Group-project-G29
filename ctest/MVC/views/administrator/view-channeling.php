@@ -21,8 +21,11 @@
     </tr>
         <?php foreach($channelings as $key=>$channeling): ?>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <tr class="table-row" id=<?="'".$channeling['name']."-".$channeling['speciality']."-".$channeling['day']."-".$channeling['channeling_ID']."'" ?>>
 =======
+=======
+>>>>>>> 20000804
         <tr class="table-row" id=<?="'".$channeling['doctor']."-".$channeling['speciality']."-".$channeling['day']."'" ?>>
             
 >>>>>>> 20000758
@@ -93,5 +96,5 @@
                 location.href='update-channeling?cmd=view&id='+comp[3];
             })
         })
-    
+
 </script>

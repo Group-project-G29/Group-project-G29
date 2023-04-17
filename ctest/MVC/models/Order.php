@@ -82,7 +82,50 @@ use app\core\DbModel;
 
         public function getOrderItem($orderID){
             //create view here
-            return $this->customFetchAll("select * from medicine_in_order left join _order on _order.order_ID=medicine_in_order.order_ID right join medical_products on medical_products.med_ID=medicine_in_order.med_ID where medicine_in_order.order_ID=$orderID");
+            return $this->customFetchAll("SELECT * FROM medicine_in_order LEFT JOIN _order ON _order.order_ID=medicine_in_order.order_ID RIGHT JOIN medical_products ON medical_products.med_ID=medicine_in_order.med_ID WHERE medicine_in_order.order_ID=$orderID");
+        }
+
+     
+        //functions for orders
+
+        public function get_previous_orders() {
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status IN ('pickedup','deleted') ORDER BY created_date ASC");
+        }
+
+        public function get_pending_orders() {
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status IN ('pending','waiting','rejected','accepted') ORDER BY created_date ASC");
+        }
+        
+        public function get_processing_orders() {
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'processing' ORDER BY created_date ASC");
+        }
+        
+        public function get_packed_orders() {
+            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'packed' ORDER BY created_date ASC");
+        }
+        
+        public function view_previous_online_order_details( $order_ID ) {
+            return $this->customFetchAll("SELECT 
+            patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
+            _order.order_ID, _order.pickup_status, _order.completed_date, _order.processing_status, _order.completed_time, 
+            medicine_in_order.amount AS order_amount, medicine_in_order.order_current_price AS current_price,
+            medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price, medical_products.amount AS available_amount 
+            FROM medical_products INNER JOIN medicine_in_order ON medicine_in_order.med_ID=medical_products.med_ID INNER JOIN _order ON _order.order_ID=medicine_in_order.order_ID INNER JOIN patient ON _order.patient_ID=patient.patient_ID WHERE medicine_in_order.order_ID = $order_ID");
+        }
+
+        public function view_previous_prescription__order_details( $order_ID ) {
+            return $this->customFetchAll(" SELECT 
+            patient.patient_ID, patient.name AS p_name, patient.age, patient.contact, patient.gender, patient.address, 
+            _order.order_ID, _order.pickup_status, _order.completed_date, _order.processing_status, _order.completed_time, 
+            prescription_medicine.amount, prescription_medicine.prescription_current_price AS current_price,
+            medical_products.med_ID, medical_products.name, medical_products.brand, medical_products.strength, medical_products.unit_price 
+                        
+            FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID
+            INNER JOIN prescription ON _order.order_ID=prescription.order_ID 
+            INNER JOIN prescription_medicine ON prescription.prescription_ID=prescription_medicine.prescription_ID 
+            INNER JOIN medical_products ON prescription_medicine.med_ID=medical_products.med_ID
+            
+            WHERE _order.order_ID=$order_ID; ");
         }
 
         public function getPatientOrder(){

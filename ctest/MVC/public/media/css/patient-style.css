@@ -571,6 +571,8 @@
 
 
 
+
+
 .doctor-container{
     display: flex;
     margin-left: 20vw;
@@ -627,6 +629,11 @@
 
 }
 
+#contact-map {
+    width: 40%;
+    /* padding: 0% 10% 0% 10%; */
+    /* background-color: #38B6FF; */
+}
 
 .highlight-status{
     background-color: #38B6FF;
