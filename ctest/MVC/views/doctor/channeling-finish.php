@@ -45,9 +45,6 @@ $appointmentModel=new Appointment();
       </div>
  </section>
 
-<<<<<<< HEAD
- <?= $component->button('finish','','finish channeling session','button--class-2'); ?>
-=======
 
  <?= $component->button('finish','','finish channeling session','button--class-2','finish'); ?>
 <script>
@@ -56,4 +53,3 @@ $appointmentModel=new Appointment();
       location.href="channeling-assistance?spec=pre-channeling-test&cmd=channeling-finish";
    })       
 </script> 
->>>>>>> 20002051

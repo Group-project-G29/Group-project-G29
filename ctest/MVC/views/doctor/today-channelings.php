@@ -8,14 +8,6 @@
             foreach($opened_channeling as $key=>$value){
                 $channeling=$channeling_model->findOne(['channeling_ID'=>$value['channeling_ID']]);
                 $day="";
-<<<<<<< HEAD
-             
-                if($channeling->day=='Friday'){
-                if($channeling->type=="day" && $channeling->count=="1") $day=$channeling->starting_date ?? ''; else $day="All ".$channeling->day;
-                echo "<tr class='table-row  row-height hover' id=".$value['opened_channeling_ID'].">
-                        <td>".$channeling->speciality."-".$channeling->day."</td><td>".$day."</td><td>".$channeling->time."</td><td>".$value['remaining_appointments']."</td><td>".$value['status']."</td>
-                    </tr>";
-=======
                 $appointmentModel=new Appointment();
                 if(($value['channeling_date']==Date('Y-m-d') && ($value['status']=='Opened' || $value['status']=='started')) || $value['opened_channeling_ID']==41){
                 echo "<div class='today_channeling_tiles' id=".$value['opened_channeling_ID'].">
@@ -27,7 +19,6 @@
                         
                        
                     </div>";
->>>>>>> 20002051
                 }
             }
         

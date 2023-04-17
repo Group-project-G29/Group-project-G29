@@ -16,27 +16,6 @@ use app\models\Channeling;
 <div class="table-container">
   <table border="0">
 
-<<<<<<< HEAD
-    <tr class="row-height header-underline">
-      <th>Doctor</th>
-      <th>Channeling</th>
-      <th>Time</th>
-      <th>Room</th>
-      <th>Fee</th>
-
-    </tr>
-
-    <?php foreach ($channelings as $key => $channeling) : ?>
-    <?php if($channeling['channeling_date']==date('Y-m-d')): ?>
-      <tr class='table-row  row-height hover' id=<?=$channeling['emp_ID']?>>
-        <td><?= $channeling['name'] ?></td>
-        <td><?= $channeling['speciality'] ?> </td>
-        <td><?= $channeling['time'] ?> </td>
-        <td><?= $channeling['room'] ?> </td>
-        <td><?= $channeling['fee'] ?> </td>
-
-      </tr>
-=======
     <?php foreach ($channelings as $key => $channeling) : ?>
     <?php if($channeling['channeling_date']==date('Y-m-d') ): ?>
           <div class="today-channeling-tile" id=<?="'".$channeling['name']."'" ?>>
@@ -54,7 +33,6 @@ use app\models\Channeling;
                 </div>
             </div>
 
->>>>>>> 20002051
       <?php endif; ?>
     <?php endforeach; ?>
 

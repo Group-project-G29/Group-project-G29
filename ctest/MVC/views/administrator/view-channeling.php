@@ -20,12 +20,7 @@
         <th>Channeling</th><th>Doctor</th><th>Day</th><th>Time</th>
     </tr>
         <?php foreach($channelings as $key=>$channeling): ?>
-<<<<<<< HEAD
-        <tr class="table-row" id=<?="'".$channeling['doctor']."-".$channeling['speciality']."-".$channeling['day']."'" ?>>
-            
-=======
         <tr class="table-row" id=<?="'".$channeling['name']."-".$channeling['speciality']."-".$channeling['day']."-".$channeling['channeling_ID']."'" ?>>
->>>>>>> 20002051
             <td><?=$channeling['speciality']?></td>
             <td><?=$channeling['name']?></td>  
             <td><?=$channeling['day']?></td>

@@ -92,11 +92,7 @@ use app\models\Employee;
     
         function checker(){
         
-<<<<<<< HEAD
-        var re=new RegExp("^"+searchBar.value)
-=======
         var re=new RegExp(("^"+searchBar.value).toLowerCase())
->>>>>>> 20002051
         patients.forEach((el)=>{
             comp=""+el.id;
             console.log(el.id);
@@ -105,11 +101,7 @@ use app\models\Employee;
             if(searchBar.value.length==0){
                 // el.classList.add("none")
             }
-<<<<<<< HEAD
-            else if(re.test(comp[0]) || re.test(comp[1]) || re.test(comp[2])){
-=======
             else if(re.test(comp[0].toLowerCase()) || re.test(comp[1].toLowerCase()) || re.test(comp[2].toLowerCase())){
->>>>>>> 20002051
                 el.classList.remove("none");
             }
             else{

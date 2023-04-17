@@ -16,7 +16,6 @@ $component = new Component();
 </div>
 <div class="main-card ">
   <?php foreach ($channelingmore as $key => $channeling) : ?>
-<<<<<<< HEAD
 
       <div class="card-0" id=<?= $channeling['career_speciality'] ?>>
          
@@ -37,8 +36,6 @@ $component = new Component();
 
 
   <table border="0">
-=======
->>>>>>> 20002051
 
       <div class="card-0" id=<?= $channeling['career_speciality'] ?>>
          
@@ -49,7 +46,6 @@ $component = new Component();
 
        
 
-<<<<<<< HEAD
     <?php foreach ($channelings as $key => $channeling) : ?>
       
       
@@ -59,20 +55,12 @@ $component = new Component();
       </tr>
     <?php endforeach; ?>
 
-=======
-      </div>
-    
-  <?php endforeach; ?>
->>>>>>> 20002051
 
 </div>
 
 
-<<<<<<< HEAD
   </table>
 </div> -->
-=======
->>>>>>> 20002051
 <script>
   elementsArray = document.querySelectorAll(".card-0");
   elementsArray.forEach(function(elem) {

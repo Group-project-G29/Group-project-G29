@@ -106,22 +106,14 @@
 
     function checker() {
 
-<<<<<<< HEAD
-        var re = new RegExp("^" + searchBar.value)
-=======
         var re = new RegExp("[a-zA-Z]*" + (searchBar.value).toLowerCase()+"[a-zA-Z]*")
->>>>>>> 20002051
 
         patients.forEach((el) => {
             comp = (el.id).split("&");
             if (searchBar.value.length == 0) {
                 el.classList.add("none")
                 header.classList.add("none");
-<<<<<<< HEAD
-            } else if (re.test(el.id) || re.test(comp[1])) {
-=======
             } else if (re.test((el.id).toLowerCase()) || re.test(comp[1].toLowerCase())) {
->>>>>>> 20002051
                 el.classList.remove("none");
                 header.classList.remove("none");
             } else {
