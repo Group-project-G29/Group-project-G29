@@ -81,8 +81,6 @@
             }
         }
         searchBar.addEventListener('input',checker);
-<<<<<<< HEAD
-=======
         const rows=document.querySelectorAll('.table-row');
         rows.forEach((el)=>{
             el.addEventListener('click',()=>{
@@ -90,6 +88,5 @@
                 location.href='update-channeling?cmd=view&id='+comp[3];
             })
         })
->>>>>>> 20002051
     
 </script>
