@@ -5,7 +5,7 @@ use app\core\component\Component;
 use app\core\component\Sidebar;
 
 $component = new Component();
-
+// var_dump($openedChanneling);
 ?>
 <?php if($openedChanneling){?>
 <div class="table-container">
@@ -15,9 +15,9 @@ $component = new Component();
       <tr>
         <th>Channeling</th>
         <th>Room</th>
-        <th>Remaining Appointments</th>
         <th>Time</th>
         <th>Status</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -27,12 +27,12 @@ $component = new Component();
       
       <tr class="table-row row-height hover" id="<?= $channeling['opened_channeling_ID'] ?>">
 
-        <td><?=$channeling['speciality']?><br>Dr. <?=$channeling['name'] ?></td>
+        <td><?=$channeling['speciality']." - "?>  Dr. <?=$channeling['name'] ?></td>
         <!-- <td></td><td></td> -->
         <td><?= $channeling['room'] ?></td>
-        <td><?= $channeling['remaining_appointments'] ?></td>
         <td><?= $channeling['time'] ?></td>
         <td><?= $channeling['status'] ?></td>
+        <td></td>
         
       </tr>
       

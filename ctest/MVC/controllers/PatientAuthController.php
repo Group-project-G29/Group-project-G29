@@ -752,4 +752,8 @@ class PatientAuthController extends Controller{
    
 
 
+
+   
+
+
 }

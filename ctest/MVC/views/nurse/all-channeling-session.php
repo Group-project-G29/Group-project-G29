@@ -19,7 +19,7 @@
     <div class="number-content">
         <h2>Patients</h2>
         <div class="number-pad">
-            <div class="number-item--white fs-200"><?=$openedchanneling->remaining_appointments?></div>
+            <div class="number-item--white fs-200"><?php //$openedchanneling->remaining_appointments?>0</div>
             <div class="number-item--blue fs-200"><?=$channeling->total_patients?></div>
         </div>
     </div>

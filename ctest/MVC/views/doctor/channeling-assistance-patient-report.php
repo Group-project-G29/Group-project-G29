@@ -138,7 +138,11 @@ $appointmentModel=new Appointment();
                         <div>
                             <table>
                                 <tr>
+<<<<<<< HEAD
                                     <th>Prescription</th><th>created date</th>
+=======
+                                    <th>Prescription</th><th>created date</th><th><?=$component->button('write Prescription','','Write Prescription','button-class--lightblue','write-pres');?></th><th> <?=$component->button('Upload Prescription','','Write Prescription','button-class--lightblue','upload-pres');?></th>
+>>>>>>> 20000758
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 
@@ -150,9 +154,12 @@ $appointmentModel=new Appointment();
                         </div>
                         
                     </div>
+<<<<<<< HEAD
                     <div class="ass-button-set">    
                         <?=$component->button('write Prescription','','Write Prescription','button-class--lightblue','write-pres');?>
                     </div>
+=======
+>>>>>>> 20000758
                 </div>
                 <div class="wrapper--lab-tests none">
                     <div class="variable-container-item flex">

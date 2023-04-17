@@ -310,7 +310,7 @@ class AdminController extends Controller{
         //Delete operation
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
             $delRow= $advertisementModel->customFetchAll("Select * from advertisement where ad_ID = ".$parameters[1]['id']);
-            $advertisementModel->deleteImage(['ad_ID'=>$delRow[0]['img']]);
+            $advertisementModel->deleteImage($delRow[0]['img'], $delRow[0]['type']);
             $advertisementModel->deleteRecord(['ad_ID'=>$parameters[1]['id']]);
             Application::$app->session->setFlash('success',"Advertisement successfully deleted ");
             $response->redirect('/ctest/main-adds');
@@ -328,12 +328,19 @@ class AdminController extends Controller{
         }
 
         if($request->isPost()){
-            // update advertisement
             $advertisementModel->loadData($request->getBody());
             $advertisementModel->loadFiles($_FILES);
+            $ad_ID=(int)$parameters[1]['id'];
+
+            // update advertisement
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
-                  
-                if($advertisementModel->validate() && $advertisementModel->updateRecord(['ad_ID'=>$parameters[1]['id']])){
+                // var_dump($parameters);exit;
+                if(!isset($_POST['img'])){
+                    $imgName = $advertisementModel->customFetchAll("SELECT img FROM advertisement WHERE ad_ID=$ad_ID;");
+                    $advertisementModel->img = $imgName[0]['img'];
+                    // var_dump($advertisementModel);exit;
+                }
+                if($advertisementModel->validate() && $advertisementModel->updateRecord(['ad_ID'=>$ad_ID])){
                     $response->redirect('/ctest/main-adds'); 
                     Application::$app->session->setFlash('success',"Advertisement successfully updated ");
                     Application::$app->response->redirect('/ctest/main-adds');

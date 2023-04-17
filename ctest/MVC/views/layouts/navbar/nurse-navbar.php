@@ -35,7 +35,7 @@
                         <ul>
                             <div class="nav-box-item">
                                 <li>
-                                    <a href="/ctest/all-channelings">Dashboard</a>
+                                    <a href="/ctest/nurse">Dashboard</a>
                                 </li>
                             </div>
                             <div class="nav-box-item">

@@ -51,26 +51,26 @@ $component = new Component();
     <table border="0">
         <thead>
             <tr>
-                <th>Day</th>
+                <th>Session</th>
                 <th>Date</th>
                 <th>Remaining Appointments</th>
-                <th>Remaining Free Appointments</th>
+                <!-- <th>Remaining Free Appointments</th> -->
                 <th>Status</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <?php $day = 1; ?>
+            <?php $session = 1; ?>
         <?php foreach($openedchanneling as $key=>$clinic): ?>
 
             <tr class="table-row row-height hover" id="<?= $clinic['opened_channeling_ID'] ?>">
-                <td><?php echo("Day - ".$day); ?></td>
+                <td><?php echo("Session - ".$session); ?></td>
                 <td><?= $clinic['channeling_date'] ?></td>
                 <td><?= $clinic['remaining_appointments'] ?></td>
-                <td><?= $clinic['remaining_free_appointments'] ?></td>
+                <!-- <td><?= $clinic['remaining_free_appointments'] ?></td> -->
                 <td><?= $clinic['status'] ?></td>
 
-                <?php $day = $day + 1; ?>
+                <?php $session = $session + 1; ?>
             </tr>
             
         <?php endforeach; ?>
@@ -79,7 +79,8 @@ $component = new Component();
             elementsArray = document.querySelectorAll(".table-row");
             elementsArray.forEach(function(elem) {
                 elem.addEventListener("click", function() {
-                    location.href='all-channeling-session?channeling='+elem.id;
+                    // location.href='all-channeling-session?channeling='+elem.id;
+                    location.href="nurse-list-patient?id="+elem.id+"&view=1";
                 });
             });
         </script>

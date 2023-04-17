@@ -177,6 +177,10 @@ class OpenedChanneling extends DbModel{
         //check if the patient are full
     }
 
+    public function channelingsForDate($date, $eID){
+        return $this->customFetchAll("SELECT * FROM `opened_channeling` INNER JOIN `channeling` ON opened_channeling.channeling_ID = channeling.channeling_ID INNER JOIN `employee` ON channeling.doctor = employee.nic INNER JOIN `nurse_channeling_allocataion` ON channeling.channeling_ID = nurse_channeling_allocataion.channeling_ID WHERE channeling_date = '$date' AND nurse_channeling_allocataion.emp_ID = $eID;");
+    }
+
     public function fileDestination(): array
     {
         return [];
