@@ -41,13 +41,5 @@ class Form{
     public function editableselectversion2($name,$label,$class,$options){
         return new EditableSelectVersion2($name,$label,$class,$options);
     }
-    public function editableselect($name,$label,$class,$options){
-        return new EditableSelect($name,$label,$class,$options);
-    }
-    public function dispenseselect($name,$label,$class){
-        return new DispenseSelect($name,$label,$class);
-    }
-   
-
-}
+ }
 ?>
