@@ -176,6 +176,7 @@ class PharmacyController extends Controller{
             $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
         }
         return $this->render('pharmacy/pharmacy-orders-pending',[
+            'popup' => 'deleted_order',
             'orders'=>$orders,
             'model'=>$orderModel,
             'order_types'=>$order_types
