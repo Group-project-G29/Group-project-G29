@@ -17,11 +17,19 @@ $apoid = $patient[$number]['appointment_ID']??'';
         <div class="main-detail-title">
             <h1><?=$channeling['speciality']." - Dr. ".$doctor['name']?></h1>
         </div>
-    </div>
-    <div class="scheduled-info fs-100">
-        <span>Age :<?=$patient[0]['age']?></span>
-        <span>Gender :<?php if($patient[0]['gender'] == 'F'){echo "Female";}else{echo "Male";}?></span>
-        <span>Contact No :<?=$patient[0]['contact'] ?></span>
+        <div class="patient-change-div">
+            <img class="pimg" style="width: 7vw;" src="./media/images/icons/previous.svg" alt="previous icon" onclick="previous(<?=$id?>,<?=$number?>)">
+            
+            <div class="number-content">
+                <h2>Patient Number</h2>
+                <div class="number-pad">
+                    <div class="number-item--blue fs-200"><?=$number+1?></div>
+                </div>
+                <div class="move-number-div">
+                    <input type="number" id="move-number" name="move-number">
+                    <button onclick="move(<?=$id?>)">Move</button>
+                </div>
+            </div>
 
             <img class="nimg" style="width: 7vw;" src="./media/images/icons/next.svg" alt="next icon" onclick="next(<?=$id?>,<?=$number?>)">
         
