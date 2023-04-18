@@ -34,7 +34,7 @@ $form=Form::begin('','post');?>
      <script>
     
         const select=document.querySelector("#picker");
-        const speciality=document.querySelector("#speciality");
+        const speciality=document.querySelector("#career_speciality");
         const  description=document.querySelector('#description');
         function hide(element,hideClass='hide',visibleClass='field'){
             element.classList.remove(visibleClass);

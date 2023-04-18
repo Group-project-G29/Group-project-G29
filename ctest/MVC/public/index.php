@@ -214,6 +214,8 @@ $app->router->post('/ctest/schedule-channeling',[AdminController::class,'schedul
 $app->router->get('/ctest/admin-notification',[AdminController::class,'handleNotifications']);
 $app->router->get('/ctest/update-channeling',[AdminController::class,'changeChanneling']);
 $app->router->post('/ctest/update-channeling',[AdminController::class,'changeChanneling']);
+$app->router->get('/ctest/test1',[AdminController::class,'test']);
+
 
 //-------------------administrator routers--------------------------------------
 $app->router->get('/ctest/admin',[AdminController::class,'registerAccounts']);

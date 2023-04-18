@@ -32,7 +32,7 @@
                     $str .= "<option value='$option' selected>" .ucfirst($option) . "</option>";
                 }
             }
-            $str='<div class="%s" id=%s>
+            $str='<div class="%s" id="%s">
                     <div class="field-upper_text">
                         <label for="%s">%s</label>
                         <h3 class="fs-50  fc-color--error">%s</h3>

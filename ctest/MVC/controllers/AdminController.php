@@ -22,8 +22,8 @@ class AdminController extends Controller{
         $this->setLayout('admin',['select'=>"Channelings Sessions"]);
         $ChannelingModel=new Channeling();
         $Employee=new Employee();
-        $Doctors=$Employee->customFetchAll("select name,nic from employee where role='doctor'");
-        $Nurses=$Employee->customFetchAll("select * from employee where role='nurse'");
+        $Doctors=$Employee->customFetchAll("select name,nic from employee where employee_status='active' and role='doctor'");
+        $Nurses=$Employee->customFetchAll("select * from employee where  role='nurse'");
         $Rooms=$Employee->customFetchAll("select * from room");
         $Doctor['Select']='';
         $Room['Select']='';
@@ -71,10 +71,8 @@ class AdminController extends Controller{
             $ChannelingModel->loadData($request->getBody());
             $nurseAllocationModel->loadData($request->getBody());
             //find if the new channeling session get overlapped with channeling session already scheduled
-            
             $result=$ChannelingModel->checkOverlap();
-            //if validation falis inside checkOverlap
-            if(isset($result[0]) && $result[0]=='validation'){
+            if((isset($result[0]) && $result[0]=='validation')){
                 $this->setLayout('admin',['select'=>"Schedule Channelings"]);
                 return $this->render('administrator/schedule-channeling',[
                     'employeemodel'=>$Employee,
@@ -82,11 +80,30 @@ class AdminController extends Controller{
                     'doctors'=>$Doctor,
                     'nurses'=>$Nurses,
                     'rooms'=>$Room,
+                    
 
                 ]);
-            }
+            } 
             
+           
             if( $ChannelingModel->validate() ){
+                $nurseOverlap=$ChannelingModel->checkNurseOverlap($nurseAllocationModel->emp_ID,$ChannelingModel);
+                $roomOverlap=$ChannelingModel->checkRoomOverlap($ChannelingModel->room,$ChannelingModel);
+                //if validation falis inside checkOverlap
+                if((isset($result[0]) && $result[0]=='validation') || $nurseOverlap || $roomOverlap){
+                    $this->setLayout('admin',['select'=>"Schedule Channelings"]);
+                    return $this->render('administrator/schedule-channeling',[
+                        'employeemodel'=>$Employee,
+                        'channelingmodel'=>$ChannelingModel,
+                        'doctors'=>$Doctor,
+                        'nurses'=>$Nurses,
+                        'rooms'=>$Room,
+                        'roomOverlaps'=>$roomOverlap,
+                        'nurseOverlaps'=>$nurseOverlap
+    
+                    ]);
+                }
+                
                 //save channeling in database
                 $return_id=$ChannelingModel->savedata();
                 if($return_id){
@@ -240,13 +257,19 @@ class AdminController extends Controller{
         //update an account
          else if($request->isPost()){
 
-           
+           $registerModel->findOne(['emp_ID'=>$parameters[1]['id']]);
+           $doctorModel=new Employee;
+           if($registerModel->role=='doctor'){
+                $result=$doctorModel->fetchAssocAllByName(['nic'=>$registerModel->nic],'doctor');
+                $registerModel->description=$result[0]['description'];
+                $registerModel->career_speciality=$result[0]['career_spciality'];
+           }
             $registerModel->loadData($request->getBody());
             $registerModel->loadFiles($_FILES);
+            $registerModel->cpassword=$registerModel->password;
             if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
                     
-                
-                if( $registerModel->updateRecord(['emp_ID'=>$parameters[1]['id']])){
+                if($registerModel->validate()  && $registerModel->updateAccounts($parameters[1]['id'])){
                     $response->redirect('/ctest/admin'); 
                     Application::$app->session->setFlash('success',"Account successfully updated ");
                     Application::$app->response->redirect('/ctest/admin');
@@ -256,7 +279,7 @@ class AdminController extends Controller{
             } 
             
         
-            return $this->render('administrator/employee-registration',[
+            return $this->render('administrator/admin-update-account',[
                 'model'=>$registerModel,
                 'select'=>"Manage Users"
             ]);
@@ -455,7 +478,22 @@ class AdminController extends Controller{
                 $channelingModel=new Channeling();
                 $channelingModel->findOne(['channeling_ID'=>$parameters[1]['id']]);
                 if($request->isPost()){
+                    $roomOverlaps=$channelingModel->checkRoomOverlap($channelingModel->room,$channelingModel);
+                    $nurseOverlaps=$channelingModel->checkNurseOverlap($_POST['emp_ID'],$channelingModel);
                     $channelingModel->loadData($request->getBody());
+                    if($nurseOverlaps || $roomOverlaps){
+                        return $this->render('administrator/update-channeling',[
+                        'model'=>$channelingModel,
+                        'rooms'=>$Room,
+                        'nurses'=>$Nurses,
+                        'employeemodel'=>$employeeModel,
+                        'id'=>Application::$app->session->get('selected_channeling'),
+                        'openedchannelings'=>$channelingModel->getOpenedChannelings(Application::$app->session->get('selected_channeling')),
+                        'channelings'=>$channelingModel->fetchAssocAll(['channeling_ID'=>Application::$app->session->get('selected_channeling')])[0], 
+                        'roomOverlaps'=>$roomOverlaps,
+                        'nurseOverlaps'=>$nurseOverlaps
+                        ]);    
+                    }
                     if( $channelingModel->updateChannelingRecord(Application::$app->session->get('selected_channeling'))){    
                         $employeeModel->removeNurse(Application::$app->session->get('selected_channeling'));
                         $employeeModel->addNurse('emp_ID',Application::$app->session->get('selected_channeling'));
@@ -474,5 +512,8 @@ class AdminController extends Controller{
             }
         
             
+    }
+    public function test(){
+        return $this->render('administrator/test');
     }
 }

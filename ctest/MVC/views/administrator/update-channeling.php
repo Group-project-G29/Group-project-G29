@@ -16,6 +16,12 @@ $employeemodel=new Employee();
             <div>
                     <?=$form->spanfield($model,'speciality','Speciality','field','text',''); ?>
                     <?=$form->spanfield($model,'fee','Fee','field','number',''); ?>
+                    <?php if(isset($roomOverlaps)):?>
+                        <img src="media/images/common/delete.png" class="delete-btn" id="room">
+                        <div>
+                            <?php var_dump($roomOverlaps); ?>
+                        </div>
+                    <?php endif;?>
                     <?=$form->select($model,'room','Room','field',$rooms,'')?>
                     <?=$form->spanfield($model,'total_patients','Total Patients','field','text',''); ?>
                     <?=$form->spanfield($model,'percentage',"Doctor's Income Percentage",'field','text',''); ?>
@@ -24,6 +30,14 @@ $employeemodel=new Employee();
                 <div class="nurse-assign-body">
                         <div>
                             <h3>Assigned Nurses</h3>
+                            <?php if(isset($nurseOverlaps)):?>
+                                <div class="overlaps">
+                                <img src="media/images/common/delete.png" class="delete-btn" id="nurse">
+                                <div>
+                                    <?php var_dump($nurseOverlaps); ?>
+                                </div>
+                                </div>
+                            <?php endif;?>
                             <div class="nurse-container"></div>
                             <center><?php  echo $component->searchbar($employeemodel,'nurse','search-bar--class2','Search by nurse name',"search-nurse");?></center>
                         </div>

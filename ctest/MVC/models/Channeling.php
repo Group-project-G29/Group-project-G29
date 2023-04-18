@@ -152,10 +152,10 @@ class Channeling extends DbModel{
             $channelings=$channelingModel->customFetchAll("select * from  nurse_channeling_allocataion left join channeling on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID where emp_ID=".$nurse);
             foreach($channelings as $channeling){
                 foreach($dates as $date){
-                    $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join nurse_channeling_allocataion on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID where nurse_channeling_allocataion.emp_ID=$nurse  and opened_channeling.channeling_date='".$date." and (opened_channeling.status='Opened' or opened_channeling.status='started' ) and channeling.channeling_ID=".$channeling['channeling_ID']);
+                    $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join nurse_channeling_allocataion on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID where nurse_channeling_allocataion.emp_ID=$nurse  and opened_channeling.channeling_date='".$date."' and (opened_channeling.status='Opened' or opened_channeling.status='started' ) and channeling.channeling_ID=".$channeling['channeling_ID']);
                     if($confilict_channelings){
                         foreach($confilict_channelings as $conflict){
-                            $check_time=$channeling->time;
+                            $check_time=$channelingModel->time;
                             $start_time=$conflict['time']; 
                             $result=$timeModel->isInRange($start_time,substr($conflict['session_duration'],0,5),$check_time);
                             if($result) array_push($results,$conflict);
@@ -179,7 +179,7 @@ class Channeling extends DbModel{
                     $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.room='$room' and  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and opened_channeling.channeling_date='".$date."' and channeling.channeling_ID=".$channeling['channeling_ID']);
                     if($confilict_channelings){
                         foreach($confilict_channelings as $conflict){
-                            $check_time=$channeling->time;
+                            $check_time=$channelingModel->time;
                             $start_time=$conflict['time']; 
                             $result=$timeModel->isInRange($start_time,substr($conflict['session_duration'],0,5),$check_time);
                             if($result) array_push($results,$conflict);

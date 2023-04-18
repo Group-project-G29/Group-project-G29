@@ -104,7 +104,6 @@ class Calendar{
       $duration_type=explode(' ',$duration)[1];
       $hop_count=explode(' ',$hopduration)[0];
       $hop_type=explode(' ',$hopduration)[1];
-      echo $hop_type;
       //get the start day
       $result_date=$dateModel->arrayToDate($this->findDateByDay($startdate,$startday,$finday));
       $duration_days=0;
@@ -130,10 +129,9 @@ class Calendar{
     
       //get the last day
     
-      $last_date=$this->addDaysToDate($result_date,$duration_days);
+      $last_date=$this->addDaysToDate($startdate,$duration_days);
     
      $newdate=$result_date;
-     echo $hop_days;
      
      
       $dayarrays=[$result_date];

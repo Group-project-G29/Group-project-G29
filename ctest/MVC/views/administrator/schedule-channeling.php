@@ -36,7 +36,7 @@ $form=Form::begin('','post');
             <table>    
                 <center><h2 style="margin-top: 5vh;">Set Date Time</h2></center>
                 
-                <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Select'=>'','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursay','Friday'=>'Friday','Saturday'=>'Saturday'])?>
+                <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Select'=>'','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursay','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday'])?>
                 <?php echo $form->spanfield($channelingmodel,'time','Starting Time*','field','time') ?>
                 
                 <?php echo $form->spanfield($channelingmodel,'session_duration','Session Duration*','field','time') ?>
@@ -65,7 +65,15 @@ $form=Form::begin('','post');
 
             <table>
                 <center><h2 style="margin-top: 5vh;">Set Rooms and Nurses</h2></center> 
-                <?php echo $form->spanselect($channelingmodel,'room','Room','field',$rooms)?>
+                <div class="flex">
+                    <?php echo $form->spanselect($channelingmodel,'room','Room','field',$rooms)?>
+                    <?php if(isset($roomOverlaps)):?>
+                        <img src="media/images/common/delete.png" class="delete-btn" id="room">
+                        <div>
+                            <?php var_dump($roomOverlaps); ?>
+                        </div>
+                    <?php endif;?>
+                </div>
             </table>
             
         
@@ -73,7 +81,17 @@ $form=Form::begin('','post');
 
             <div class="nurse-assign-body">
                 <div>
-                    <h3>Assign Nurses</h3>
+                    <div class="flex ">
+                        <h3>Assign Nurses</h3>
+                        <?php if(isset($nurseOverlaps)):?>
+                            <div class="overlaps">
+                            <img src="media/images/common/delete.png" class="delete-btn" id="nurse">
+                            <div>
+                                <?php var_dump($nurseOverlaps); ?>
+                            </div>
+                        </div>
+                        <?php endif;?>
+                    </div>
                     <div class="nurse-container"></div>
                     <center><?php  echo $component->searchbar($employeemodel,'nurse','search-bar--class2','Search by nurse name',"search-nurse");?></center>
                 </div>
@@ -112,6 +130,7 @@ $form=Form::begin('','post');
     const nurseList=document.querySelector(".nurse-list");
     const searchBar=document.getElementById('search-nurse');
     const nurses=document.querySelectorAll(".class");
+
     chechbox.forEach(function(elem) {
         elem.addEventListener("change", function() {
         if(elem.checked)nurseContainer.appendChild(elem.parentNode);
