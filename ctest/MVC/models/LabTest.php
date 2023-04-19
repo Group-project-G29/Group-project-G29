@@ -43,6 +43,10 @@ class LabTest extends DbModel{
         return  ['name','fee'];
     }
 
+    public function get_lab_tests() {
+        return $this->customFetchAll("SELECT * FROM lab_tests");
+    }
+
     
 }   
 

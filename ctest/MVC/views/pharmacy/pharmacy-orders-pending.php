@@ -156,7 +156,7 @@
     // elementsArray4 = document.querySelectorAll(".delete-order");
     // elementsArray4.forEach(function(elem) {
     //     elem.addEventListener("click", function() {
-    //         // location.href='pharmacy-delete-rejected?id='+elem.id;
+    //         location.href='pharmacy-delete-rejected?id='+elem.id;
     //         openPopup_confirmation(elem.id);
     //     });
     // });
