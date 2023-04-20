@@ -878,10 +878,7 @@ select{
 
   }
 
-  .header-container {
-      padding-top: 20vh;
-      text-align: center;
-  }
+ 
 
 
 .header-container{
@@ -891,16 +888,16 @@ select{
 .semi-header-container{
     background-color: white;
     /* border:20vh 20vh 20vh 20vh; */
-    padding-top: 4vh;
+    /* padding-top: 4vh;
     padding-bottom: 4vh;
     width: 50%;
     position:relative;
     left: 25vw;
     border: 3px;
-    border-radius: 15px;
+    border-radius: 15px; */
 
 
-}
+ } 
 .semi-footer-container{
     background-color: white;
     /* border:20vh 20vh 20vh 20vh; */
@@ -1524,6 +1521,7 @@ padding-left:5vh;
   .card-header-1 {
       text-align: center;
       padding: 2vh;
+
   }
 
   .main-card {
@@ -1536,7 +1534,7 @@ padding-left:5vh;
       height: 35%;
       margin-left: 13vh;
       transform: translateX(-10%);
-      background-color: var(--clr-card-blue);
+      background-color: var(--clr-font-color);
       border-radius: 50%;
       margin-top: 2vh;
       /* position: absolute; */

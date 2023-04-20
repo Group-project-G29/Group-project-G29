@@ -206,7 +206,10 @@ $app->router->get('/ctest/lab-test-template',[LabController::class,'createTempla
 $app->router->post('/ctest/lab-test-template',[LabController::class,'createTemplate']);
 $app->router->get('/ctest/lab-template-content-edit',[LabController::class,'createTemplate']);
 $app->router->post('/ctest/lab-template-content-edit',[LabController::class,'createTemplate']);
-
+$app->router->get('/ctest/lab-view-all-template-more',[LabController::class,'viewTemplateMore']);
+$app->router->post('/ctest/lab-view-all-template-more',[LabController::class,'viewTemplateMore']);
+$app->router->get('/ctest/lab-view-all-template',[LabController::class,'viewTemplate']);
+$app->router->post('/ctest/lab-view-all-template',[LabController::class,'viewTemplate']);
 $app->router->get('/ctest/lab-view-advertisement',[LabController::class,'viewAdvertisement']);
 $app->router->post('/ctest/lab-view-advertisement',[LabController::class,'viewAdvertisement']);
 $app->router->post('/ctest/lab-update-advertisement',[LabController::class,'handleAdvertisement']);

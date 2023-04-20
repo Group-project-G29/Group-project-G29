@@ -8,12 +8,12 @@ use app\models\Employee;
 $component = new Component();
  
 ?>
-<div class="header-container">
-<div class="header-name"><h2>Dr.<?=$channelingmore[0]['name']?></h2></div>
+<div class="header-container" style="padding-top:0px">
+<div class="header-name" ><h2>Dr.<?=$channelingmore[0]['name']?></h2></div>
 <div class="semi-header-name"><h3><?=$channelingmore[0]['speciality']?> Channeling</h3></div>
 </div>
 <div class="table-container">
-  <table border="0">
+  <table border="0" style="margin-left:0px">
 
     <tr class="row-height header-underline">
       <th>Channeling Type</th>

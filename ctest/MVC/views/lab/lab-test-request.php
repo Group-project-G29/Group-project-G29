@@ -26,10 +26,10 @@ $component = new Component();
       </div>
       <!-- <a href="lab-write-test-result.php"> -->
       <div >
-      <?php echo $component->button('edit-details', '', 'Write Test Result', 'button--class-0  width-10', $test['request_ID']); ?>
+      <?php echo $component->button('edit-details', '', 'Write Test Result', 'button--class-7  width-10', $test['request_ID']); ?>
       </div></a>
       <div >
-      <?php echo $component->button('upload', '','Upload', 'button--class-00  width-10', $test['request_ID']); ?>
+      <?php echo $component->button('upload', '','Upload', 'button--class-8 ', $test['request_ID']); ?>
       </div>
 
 
@@ -48,7 +48,7 @@ $component = new Component();
     });
   });
 
-  elementsArray = document.querySelectorAll(".button--class-0");
+  elementsArray = document.querySelectorAll(".button--class-7");
   console.log(elementsArray);
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {
@@ -56,7 +56,7 @@ $component = new Component();
     });
   });
 
-  elementsArray = document.querySelectorAll(".button--class-00");
+  elementsArray = document.querySelectorAll(".button--class-8");
   console.log(elementsArray);
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {

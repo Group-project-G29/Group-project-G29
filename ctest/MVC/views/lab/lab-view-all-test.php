@@ -21,19 +21,19 @@ $component = new Component();
     <div class="card">
 
       <div class="card-header-1 " style="padding-top: 8.5vh;padding-bottom:10vh">
-        <h5><b>Name :</b><?= $test['name'] ?> </h5>
-        <h5><b>Test Fee :</b><?= $test['test_fee'] ?> </h5>
-        <h5><b>Hospital Fee :</b><?= $test['hospital_fee'] ?> </h5>
+        <h4><b>Name :</b><?= $test['name'] ?> </h4>
+        <h4><b>Test Fee :</b><?= $test['test_fee'] ?> </h4>
+        <h4><b>Hospital Fee :</b><?= $test['hospital_fee'] ?> </h4>
         
 
 
       </div>
 
       <div style="align-content:center">
-        <?php echo $component->button('edit-details', '', 'Edit Details', 'button--class-1 ', $test['name']) ?>
+        <?php echo $component->button('edit-details', '', 'Edit Details', 'button--class-7 ', $test['name']) ?>
       </div>
-      <div style="align-content:center">
-        <?php echo $component->button('edit-details', '', 'Delete', 'button--class-00 ', $test['name']) ?>
+      <div style="align-content:center ">
+        <?php echo $component->button('edit-details', '', 'Delete', 'button--class-9', $test['name']) ?>
       </div>
 
 
@@ -52,7 +52,7 @@ $component = new Component();
     });
   });
 
-  elementsArray = document.querySelectorAll(".button--class-1");
+  elementsArray = document.querySelectorAll(".button--class-7");
   console.log(elementsArray);
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {
@@ -68,7 +68,7 @@ $component = new Component();
     });
   });
 
-  elementsArray = document.querySelectorAll(".button--class-00");
+  elementsArray = document.querySelectorAll(".button--class-8");
   console.log(elementsArray);
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {

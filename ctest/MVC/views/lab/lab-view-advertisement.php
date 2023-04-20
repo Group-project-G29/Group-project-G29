@@ -4,7 +4,7 @@
 
 ?>
 <div class='upper-container'>
-    <div class="search-bar-container">
+    <div class="search-bar-container" style="padding-left: 20vw;">
         <?php echo $component->searchbar($model,"title","search-bar--class1","Search by advertisement title","searh");?>
     </div>
     <?php echo $component->button('new-advertisement','','Add New Advertisement','button--class-0  width-10','new-advertisement');?>

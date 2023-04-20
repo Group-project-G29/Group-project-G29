@@ -63,5 +63,17 @@ class LabTest extends DbModel{
         return [$this->customFetchAll("UPDATE lab_tests SET  hospital_fee =$hospital_fee, test_fee =$test_fee, template_ID =$template_ID WHERE name ='$prev_name'"),$this->customFetchAll("UPDATE `lab_tests` SET `name` ='$name'  WHERE `lab_tests`.`name` = '$prev_name';")];
     }
 
+    public function update_temp_ID_on_test($test_name, $temp_ID){
+        return $this->customFetchAll("UPDATE lab_tests SET template_ID=$temp_ID where name='$test_name'");
+    }
+
+    public function get_prev_temp_ID(){
+        return $this->customFetchAll("SELECT * from lab_report_template group by title ORDER BY template_ID DESC");
+    }
+
+    // public function get_last_test_name(){
+
+    // }
+
     
 }

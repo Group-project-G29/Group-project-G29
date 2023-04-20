@@ -6,7 +6,7 @@
 //      var_dump($channelingSession);
 // exit;
 ?>
-<div class="header-container">
+<div class="header-container"style="padding-top:0px">
 <div class="header-name"><h2>Dr.<?=$channelingSession['name']?></h2></div>
 <div class="semi-header-name"><h3><?=$channelingSession['day']?> Channeling</h3></div>
 </div>
@@ -45,7 +45,7 @@
     
     </div>
     <div class="table-container">
-    <table border="0">
+    <table border="0" style="margin-left:0px">
 
         <tr class="row-height header-underline">
         <th>Patient ID</th>

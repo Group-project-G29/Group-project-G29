@@ -5,10 +5,10 @@ use app\models\Employee;
 
 $component = new Component();
 ?>
-<div class="header-container">
-    <h2>Patient Detail</h2>
-
-    <div class="semi-header-container">
+<div class="header-container"style="padding-top:5vh">
+    
+<div class="semi-header-container">
+        <h2>Patient Detail</h2>
         <h5>Patient ID = <?= $PatientDetail['patient_ID'] ?></h5>
         <h5>Name = <?= $PatientDetail['name'] ?></h5>
         <h5>NIC = <?= $PatientDetail['nic'] ?></h5>
@@ -27,7 +27,7 @@ $component = new Component();
     </div>
 </div>
 <div class="table-container">
-    <table border="0">
+    <table border="0" style="margin-left:0px">
 
         <tr class="row-height header-underline">
             <th>Clinic</th>

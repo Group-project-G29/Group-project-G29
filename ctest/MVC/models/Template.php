@@ -54,6 +54,12 @@ class Template extends DbModel{
 
 // if content isn't have start with 1
 // else +1
+public function get_last_temp_ID(){
+    return $this->customFetchAll("SELECT template_ID from lab_report_template order by template_ID DESC");
+}
+// public function get_prev_temp_ID(){
+//     return $this->customFetchAll("SELECT * from lab_report_template group by title ORDER BY template_ID DESC");
+// }
 
 
 
