@@ -33,7 +33,7 @@
             <img src="./media/images/logo-1.png">
         </div>
         <div class="nav_row--top_user flex">
-            <a href="/ctest/admin-notification"><div class="noti-icon"><img src="./media/images/icons/bell-regular.svg" alt="Notification Icon"> </div></a>
+            <a href="/ctest/admin-notification"><div class="noti-icon"><img src="./media/images/patient/notification bell.png" alt="Notification Icon"> </div></a>
             <?php if($count) { ?>
                 <div class="msg-count"><?=$count?></div>
             <?php } else { ?>

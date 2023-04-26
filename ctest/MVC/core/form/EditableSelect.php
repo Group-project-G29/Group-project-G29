@@ -28,7 +28,6 @@
             $i=0;
         
             foreach($this->options as $name=>$value){
-<<<<<<< HEAD
                 $str .= "<div class='ed-se-item-".$this->name." hide edse' id='".$value."'>".$name."</div>";
                 
             }
@@ -36,15 +35,6 @@
             $str='<div class="edsecon">
                 <label>%s  </label><input type="text" name="%s" id="input-%s" class="sl-%s in">
                 <div class="ed-se-item-container-%s %s edse-container">
-=======
-                $str .= "<div class='ed-se-item-".$this->name." hide ' id='".$value."'>".$name."</div>";
-                
-            }
-
-            $str='<div>
-                <label>%s</label><input type="text" name="%s" id="input-%s" class="sl-%s in">
-                <div class="ed-se-item-container-%s %s">
->>>>>>> 20000758
                     '.$str.'
                 </div>
             </div>
