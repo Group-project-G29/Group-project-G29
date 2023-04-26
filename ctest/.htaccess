@@ -1,5 +1,0 @@
-<IfModule mod_rewrite.c>
-        RewriteEngine on
-        RewriteRule ^$ MVC/ [L]
-        RewriteRule (.*) MVC/$1 [L]
-</IfModule>
