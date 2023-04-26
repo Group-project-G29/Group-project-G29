@@ -6,7 +6,7 @@ use app\core\form\Form;
 use app\models\Employee;
 
 $form=new Form();
-$form->begin('update-channeling?cmd=update&id='.Application::$app->session->get('selected_channelingh'),'post');
+$form->begin('update-channeling?cmd=update&id='.Application::$app->session->get('selected_channeling'),'post');
 $component=new Component();
 $employeemodel=new Employee();
 ?>
@@ -14,29 +14,48 @@ $employeemodel=new Employee();
     <section class="upper-update">
         <div>
             <div>
+                <table>
                     <?=$form->spanfield($model,'speciality','Speciality','field','text',''); ?>
                     <?=$form->spanfield($model,'fee','Fee','field','number',''); ?>
-                    <?php if(isset($roomOverlaps)):?>
-                        <img src="media/images/common/delete.png" class="delete-btn" id="room">
-                        <div>
-                            <?php var_dump($roomOverlaps); ?>
+                     <?php if(isset($roomOverlaps)):?> 
+                        <div class="nurse-error-container">
+                            <div>
+                                <img src="media/images/common/delete.png" class="delete-btn" id="room">
+                            </div>
+                            <div class="error-texts">
+                                <?php echo "Room is assigned to channeling ".$roomOverlaps[0]['channeling_ID']." at ".$roomOverlaps[0]['time'].(($roomOverlaps[count($roomOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
+                                <?php if(isset($roomOverlaps[count($roomOverlaps)-1]) and $roomOverlaps[count($roomOverlaps)-1]['channeling_ID']!=$roomOverlaps[0]['channeling_ID']): ?>
+                                    <?="<br>Room is assigned to channeling ".$roomOverlaps[count($roomOverlaps)-1]['channeling_ID']." at ".$roomOverlaps[count($roomOverlaps)-1]['time'].(($roomOverlaps[count($roomOverlaps)-1]['time']>'12.00')?'PM':'AM' )?> 
+                                
+                                    <?php endif;?>
+                        
+                            </div>
                         </div>
-                    <?php endif;?>
-                    <?=$form->select($model,'room','Room','field',$rooms,'')?>
+                    <?php endif; ?>
+                    <?=$form->spanselect($model,'room','Room','field',$rooms,'')?>
                     <?=$form->spanfield($model,'total_patients','Total Patients','field','text',''); ?>
                     <?=$form->spanfield($model,'percentage',"Doctor's Income Percentage",'field','text',''); ?>
+                    </table>
             </div>
             <div>
                 <div class="nurse-assign-body">
                         <div>
                             <h3>Assigned Nurses</h3>
                             <?php if(isset($nurseOverlaps)):?>
-                                <div class="overlaps">
-                                <img src="media/images/common/delete.png" class="delete-btn" id="nurse">
+                                      <div class="nurse-error-container">
                                 <div>
-                                    <?php var_dump($nurseOverlaps); ?>
+                                    <img src="media/images/common/delete.png" class="delete-btn" id="room">
                                 </div>
+                                <div class="error-texts">
+                                    <?//php// var_dump($nurseOverlaps)?>
+                                    <?php echo "Nurse ".$nurseOverlaps[0]['name']." is assigned to channeling ".$nurseOverlaps[0]['channeling_ID']." at ".$nurseOverlaps[0]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
+                                    <?php if(isset($nurseOverlaps[count($nurseOverlaps)-1]) and $nurseOverlaps[count($nurseOverlaps)-1]['emp_ID']!=$nurseOverlaps[0]['emp_ID']): ?>
+                                        <?="<br>Nurse".$nurseOverlaps[count($nurseOverlaps)-1]."is assigned to channeling ".$nurseOverlaps[count($nurseOverlaps)-1]['channeling_ID']." at ".$nurseOverlaps[count($nurseOverlaps)-1]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
+                                    
+                                        <?php endif;?>
+                            
                                 </div>
+                            </div>
                             <?php endif;?>
                             <div class="nurse-container"></div>
                             <center><?php  echo $component->searchbar($employeemodel,'nurse','search-bar--class2','Search by nurse name',"search-nurse");?></center>
@@ -63,7 +82,8 @@ $employeemodel=new Employee();
         <div>
             <?=$component->button('submit','submit','Submit','',''); ?>
         </div>
-        <?php $form->end() ?>
+        <?php $form->end(); ?>
+        <?php $form->end(); ?>
     </section>
     <section class="lower-update">
         <?php foreach($openedchannelings as $op): ?>
@@ -91,11 +111,13 @@ $employeemodel=new Employee();
     openbtn.forEach((elem)=>{
         elem.addEventListener('click',()=>{
             location.href="update-channeling?spec=opened_channeling&cmd=open&id="+elem.id;
+            
         });
     });
     closebtn.forEach((elem)=>{
         elem.addEventListener('click',()=>{
             location.href="update-channeling?spec=opened_channeling&cmd=close&id="+elem.id;
+            console.log("update-channeling?spec=opened_channeling&cmd=close&id="+elem.id);
         });
     });
     cancelbtn.forEach((elem)=>{

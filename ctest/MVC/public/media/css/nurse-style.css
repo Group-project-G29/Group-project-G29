@@ -52,11 +52,7 @@
     border-style: hidden;
     border-spacing: 0px 1vh;
     margin-top: 0vh;
-<<<<<<< HEAD
     width: 84vw;
-=======
-    width: 80vw;
->>>>>>> 20000804
     border-color:transparent;
     z-index: 0;
     margin-top: 5vh;
@@ -67,11 +63,7 @@
     padding-block:2vh;
     padding-left: 2vw;
     border-bottom: 1px solid var(--clr-grey);
-<<<<<<< HEAD
     min-width: 10vw;
-=======
-   
->>>>>>> 20000804
    
 }
 
@@ -155,7 +147,6 @@
 }
 
 
-<<<<<<< HEAD
 /* Patiyent Channeling LIST */
 
 .nimg .pimg{
@@ -371,6 +362,3 @@
 
     }
 }
-=======
-
->>>>>>> 20000804

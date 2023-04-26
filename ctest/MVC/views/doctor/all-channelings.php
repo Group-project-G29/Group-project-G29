@@ -3,9 +3,12 @@
 use app\core\Application;
 use app\core\component\Component;
 use app\core\form\Form;
+use app\models\PreChanneilngTestsValue;
+use app\models\PreChannelingTest;
 
     $form=new Form();
     $component=new Component();
+    $preModel=new PreChanneilngTestsValue();
     
 ?>
 
@@ -20,9 +23,14 @@ use app\core\form\Form;
             <?php else: ?>
                 <div class=<?="'"."popup-channeling-setting popup_".$channeling['channeling_ID']." hide pops'"?>>
             <?php endif; ?>
-                <?=$form->editableselect("test_".$channeling['channeling_ID'],"Select Pre-channeling Test",'tinput_'.$channeling['channeling_ID'],$tests); ?>
+                <?=$form->editableselect("test_".$channeling['channeling_ID'],"Select Pre-channeling Test",'tinput_'.$channeling['channeling_ID'],['weight'=>'weight','height'=>'height','blood pressure'=>'blood pressure']); ?>
                 <?= $component->button('btn','','Add','add-btn',$channeling['channeling_ID'] ); ?>
-            
+                <div>
+                    <?php $tests=$preModel->getTestsByOp($channeling['channeling_ID']); ?>
+                    <?php foreach($tests as $test):?>
+                        <?php echo '<br>'.$test['name']; ?>
+                    <?php endforeach;?>
+                </div>
             </div>
             <div class="doctor-channeling-tile" id=<?="'".$channeling['channeling_ID']."'" ?>>
                 <div class=<?="'"."grid".rand(1,4)."'"?>>

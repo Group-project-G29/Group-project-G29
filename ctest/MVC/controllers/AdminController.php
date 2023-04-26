@@ -72,6 +72,7 @@ class AdminController extends Controller{
             $nurseAllocationModel->loadData($request->getBody());
             //find if the new channeling session get overlapped with channeling session already scheduled
             $result=$ChannelingModel->checkOverlap();
+        
             if((isset($result[0]) && $result[0]=='validation')){
                 $this->setLayout('admin',['select'=>"Schedule Channelings"]);
                 return $this->render('administrator/schedule-channeling',[
@@ -227,6 +228,8 @@ class AdminController extends Controller{
         $openedChannelingModel=new OpenedChanneling();
         $registerModel=new Employee();
         $this->setLayout('admin',['select'=>"Manage Users"]);
+       
+
         //create new employee acccount
         if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='add'){
             if($request->isPost()){
@@ -255,21 +258,17 @@ class AdminController extends Controller{
         }
        
         //update an account
-         else if($request->isPost()){
+         if($request->isPost()){
+            $register=$registerModel->findOne(['emp_ID'=>$parameters[1]['id']]);
+        
+            $register->loadData($request->getBody());
+            $register->loadFiles($_FILES);
 
-           $registerModel->findOne(['emp_ID'=>$parameters[1]['id']]);
-           $doctorModel=new Employee;
-           if($registerModel->role=='doctor'){
-                $result=$doctorModel->fetchAssocAllByName(['nic'=>$registerModel->nic],'doctor');
-                $registerModel->description=$result[0]['description'];
-                $registerModel->career_speciality=$result[0]['career_spciality'];
-           }
-            $registerModel->loadData($request->getBody());
-            $registerModel->loadFiles($_FILES);
-            $registerModel->cpassword=$registerModel->password;
             if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
-                    
-                if($registerModel->validate()  && $registerModel->updateAccounts($parameters[1]['id'])){
+               
+                
+                  
+                if($register->validate()  && $registerModel->updateAccounts($parameters[1]['id'])){
                     $response->redirect('/ctest/admin'); 
                     Application::$app->session->setFlash('success',"Account successfully updated ");
                     Application::$app->response->redirect('/ctest/admin');
@@ -284,23 +283,23 @@ class AdminController extends Controller{
                 'select'=>"Manage Users"
             ]);
         }
-
-        //show update form
-        else if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
-            $employee=$registerModel->customFetchAll("Select * from employee where emp_ID=".$parameters[1]['id']);//take account to be updated from database
-            $registerModel->updateData($employee,$registerModel->fileDestination()); //load data in to the model
-            if($employee['role']=='doctor'){
-                $employee=$registerModel->customFetchAll("Select * from doctor where emp_ID=".$parameters[1]['id']); //if a ccount is doctor update speciality and carrier detail into the model
-                $registerModel->updateData($employee,$registerModel->fileDestination());
-            }
-            Application::$app->session->set('employee',$parameters[1]['id']);
+           //show update form
+        $register=$registerModel->findOne(['emp_ID'=>$parameters[1]['id']]);
+        if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
+            // $registerModel->loadData($request->getBody()); //load data into model
+            // $registerModel->loadFiles($_FILES);
+            // if($registerModel->validate()){
+            //     //$registerModel->updateRecordv2(['emp_ID'=>$registerModel->emp_ID],['name'=>$registerModel->name,'nic'=>$registerModel->nic,'age'=>$registerModel->age,'contact'=>$registerModel->contact,'email'=>$registerModel->email,'address'=>$registerModel->address,'img'=>$registerModel->img,'gender'=>$registerModel->gender]);   
+                
+            // } 
             //show update page
             return $this->render('administrator/admin-update-account',[
-                'model'=>$registerModel,
+                'model'=>$register,
             ]);
             
         }
 
+      
         //defualt show all accounts
         else{
             $accounts=$openedChannelingModel->customFetchAll("select * from employee where role not like 'admin'");
@@ -433,7 +432,7 @@ class AdminController extends Controller{
         $employeeModel=new Employee();
         $Employee=new Employee();
         $channelingModel=new Channeling();
-        Application::$app->session->set('selected_hanneling',(isset($parameters[1]['id']))?$parameters[1]['id']:$parameters[2]['id']);
+        Application::$app->session->set('selected_channeling',(isset($parameters[1]['id']))?$parameters[1]['id']:$parameters[2]['id']);
         $Nurses=$Employee->customFetchAll("select * from employee where role='nurse'");
         $Rooms=$Employee->customFetchAll("select * from room");
          foreach($Rooms as $row){
@@ -476,10 +475,10 @@ class AdminController extends Controller{
         
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
                 $channelingModel=new Channeling();
-                $channelingModel->findOne(['channeling_ID'=>$parameters[1]['id']]);
+                $channeling=$channelingModel->findOne(['channeling_ID'=>$parameters[1]['id']]);
                 if($request->isPost()){
-                    $roomOverlaps=$channelingModel->checkRoomOverlap($channelingModel->room,$channelingModel);
-                    $nurseOverlaps=$channelingModel->checkNurseOverlap($_POST['emp_ID'],$channelingModel);
+                    $roomOverlaps=$channelingModel->checkRoomOverlap($channelingModel->room,$channeling);
+                    $nurseOverlaps=$channelingModel->checkNurseOverlap($_POST['emp_ID'],$channeling);
                     $channelingModel->loadData($request->getBody());
                     if($nurseOverlaps || $roomOverlaps){
                         return $this->render('administrator/update-channeling',[

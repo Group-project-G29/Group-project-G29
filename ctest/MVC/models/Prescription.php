@@ -148,6 +148,21 @@ class Prescription extends DbModel{
         return $prescription;
     }
     
+    public function isInCart($pres){
+        $cart=new Cart();
+        $patient=Application::$app->session->get('user');
+        $cart=$cart->getPatientCart($patient)[0]['cart_ID'];
+        $result= $this->fetchAssocAllByName(['prescription_ID'=>$pres,'cart_ID'=>$cart],'prescription');
+        if($result){
+            return true;
+        }
+        else
+        return false;
+
+    }
+    public function removeFromCart($prescription){
+        $this->customFetchAll("update prescription set cart_ID=null  where prescription_ID=".$prescription);
+    }
     public function addToOrder($orderID,$cartID){
         $this->customFetchAll("update prescription set order_ID='$orderID' ,cart_ID=null where cart_ID='$cartID'");
         return true;
@@ -161,6 +176,78 @@ class Prescription extends DbModel{
     }
     public function getPrescriptionDevice($prescriptionID){
         return $this->customFetchAll("select * from prescription_medicine left join medical_products on medical_products.med_ID=prescription_medicine.med_ID where category='device' and prescription_medicine.prescription_ID=".$prescriptionID);
+    }
+
+    public function getLackedInPrescription($presID){
+        $medicineModel=new Medicine();
+        $array=[];
+        $medicines=$this->fetchAssocAllByName(['prescription_ID'=>$presID],'prescription_medicine');
+        foreach($medicines as $medicine){
+            if(!$medicineModel->checkStock($medicine['med_ID'])){
+                array_push($array,$medicineModel->getMedicineByID($medicine['med_ID']));
+            }
+        }
+    }
+
+    public function getPrice($presID){
+        $medicineModel=new Medicine();
+        $total=0;
+        $prescription=$this->fetchAssocAll(['prescription_ID'=>$presID]);
+        if($prescription[0]['type']!='E-prescription'){
+            return '';
+        }
+        $medicines=$this->fetchAssocAllByName(['prescription_ID'=>$presID],'prescription_medicine');
+        foreach($medicines as $medicine){
+            $frequency=$medicine['frequency'];
+            $type=$medicine['dispense_type'];
+            $freq=1;
+            $days=1;
+            switch($frequency){
+                case 'frequency1':
+                    $freq=1;
+                    break;
+                case 'Daily':
+                    $freq=1;
+                    break;
+                case 'BID':
+                    $freq=2;
+                    break;
+                case 'TID':
+                    $freq=3;
+                    break;
+                case 'QID':
+                    $freq=4;
+                    break;
+                case 'QHS':
+                    $freq=1;
+                    break;
+            }
+            switch($type){
+                case 'days':
+                    $days=1;
+                    $qwk=1;
+                    break;
+                case 'week':
+                    $days=7;
+                    $qwk=$medicine['dispense_count'];
+                    break;
+                case 'months':
+                    $days=30;
+                    $qwk=4*$medicine['dispense_count'];
+                    break;
+            }
+            $detmed=$medicineModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0];
+            if($type=='QWK'){
+                $total=$total+($medicine['med_amount']*$detmed['unit_price']*$qwk);
+            }
+            else{
+                $total=$total+($medicine['med_amount']*$detmed['unit_price']*$days*$freq);
+
+            }
+        }
+        return $total;
+        
+
     }
 
     public function prescriptionToPDF($presID){

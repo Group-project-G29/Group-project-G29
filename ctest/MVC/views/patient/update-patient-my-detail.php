@@ -5,9 +5,9 @@ use app\core\form\Form;
 $component=new Component();
 $form=new Form();
 ?>
-<section>
+<section class="patient-update">
     <?php if($patient->type!='pediatric'):?>
-        <div>
+        <div >
             <?php $form->begin('','post') ?>
             <table border='0'>
                 <?=$form->spanfield($patient,'name','Name :','field','text','');?>
@@ -19,7 +19,7 @@ $form=new Form();
                 <?=$form->spanfield($patient,'address','Address :','field','text','');?>
             </table>
         </div>
-        <?=$component->button('btn','submit','Update','btn-classs--0','btn');?>
+        <?=$component->button('btn','submit','Update','button--class-0','btn');?>
         <?php $form->end() ?>
         <?php else:?>
     <?php endif;?>

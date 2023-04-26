@@ -6,6 +6,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 
 require_once 'dompdf/autoload.inc.php';
+require_once 'notify-php-master/autoload.php';
 use app\controllers\AdminController;
 use \app\core\Application;
 use \app\controllers\SiteController;
@@ -32,8 +33,12 @@ $app->router->get('/ctest/contact-us',[PatientAuthController::class,'contact_us'
 
 $app->router->get('/ctest/patient-registration',[PatientAuthController::class,'register']);
 $app->router->post('/ctest/patient-registration',[PatientAuthController::class,'register']);
+$app->router->get('/ctest/pediatric-registration',[PatientAuthController::class,'registerPediatric']);
+$app->router->post('/ctest/pediatric-registration',[PatientAuthController::class,'registerPediatric']);
 $app->router->get('/ctest/',[PatientAuthController::class,'login']);
 $app->router->post('/ctest/',[PatientAuthController::class,'login']);
+$app->router->get('/ctest/pediatric',[PatientAuthController::class,'pedlogin']);
+$app->router->post('/ctest/pediatric',[PatientAuthController::class,'pedlogin']);
 $app->router->get('/ctest/patient-main',[PatientAuthController::class,'mainPage']);
 $app->router->get('/ctest/patient-appointment',[PatientAuthController::class,'handleAppointments']);
 $app->router->get('/ctest/patient-channeling-category-view',[PatientAuthController::class,'channelingView']);

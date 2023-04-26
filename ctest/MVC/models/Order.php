@@ -11,7 +11,9 @@ use app\core\DbModel;
         public ?string $delivery_ID="";
         public string $payment_status="pending"; //pending,completed
         public string $processing_status="pending";
-        
+        public string $name='';
+        public string $address='';
+
         public function __construct(){
 
         }
@@ -38,12 +40,12 @@ use app\core\DbModel;
         }
         
         public function tableRecords(): array{
-            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status']];
+            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status','name','address']];
         }
 
         public function attributes(): array
         {
-            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status']];
+            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status','name','address']];
         }
 
         public function completePayment($orderID){
@@ -72,8 +74,8 @@ use app\core\DbModel;
             return $this->updateRecord(['_order'=>['order_ID'=>$orderID]],['_order'=>['processing_status'=>'completed']]);
         }
 
-        public function addItem($order,$item,$amount){
-            return $this->saveByName(['medicine_in_order'=>['order_ID'=>$order,'med_ID'=>$item,'amount'=>$amount]]);
+        public function addItem($order,$item,$amount,$unit_price){
+            return $this->saveByName(['medicine_in_order'=>['order_ID'=>$order,'med_ID'=>$item,'amount'=>$amount,'order_current_price'=>$unit_price]]);
         }
 
         public function getPrescriptionsInOrder($order){
@@ -81,8 +83,9 @@ use app\core\DbModel;
         }
 
         public function getOrderItem($orderID){
+            if(!$orderID) return false;
             //create view here
-            return $this->customFetchAll("SELECT * FROM medicine_in_order LEFT JOIN _order ON _order.order_ID=medicine_in_order.order_ID RIGHT JOIN medical_products ON medical_products.med_ID=medicine_in_order.med_ID WHERE medicine_in_order.order_ID=$orderID");
+            return $this->customFetchAll("SELECT * FROM medicine_in_order LEFT JOIN _order ON _order.order_ID=medicine_in_order.order_ID RIGHT JOIN medical_products ON medical_products.med_ID=medicine_in_order.med_ID WHERE medicine_in_order.order_ID=$orderID")??'';
         }
 
      
@@ -186,7 +189,7 @@ use app\core\DbModel;
 
         public function getPatientOrder(){
             $patientID=Application::$app->session->get('user');
-            return $this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'completed'")[0];
+            return $this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'completed'")[0]??'';
         }
         public function getLackedItems(){
             $order=$this->getPatientOrder()['order_ID']??'';
@@ -224,6 +227,7 @@ use app\core\DbModel;
         public function setOrderStatus($orderID,$status){
             $this->customFetchAll("update _order set processing_status="."'".$status."'"." where order_ID=".$orderID);
         }
+        
     }
 
 ?>

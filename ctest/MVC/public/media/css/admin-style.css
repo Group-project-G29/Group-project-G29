@@ -199,3 +199,14 @@ input [type="time"]::-webkit-time-picker-indicator{
     width:1.5vw;
     height:3vh;
 }
+
+.nurse-error-container{
+    color:red;
+    display: flex;
+    align-items: center;
+    gap:1vw;
+}
+.error-texts{
+    display: flex;
+    flex-direction: column;
+}

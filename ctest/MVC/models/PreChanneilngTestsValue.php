@@ -19,6 +19,10 @@ class PreChanneilngTestsValue extends DbModel{
         endforeach;
         return 1;
     }
+    
+    public function getTestsByOp($channeling){
+        return $this->customFetchAll("select DISTINCT t.name from pre_channeling_tests as t RIGHT join pre_channeilng_test_aloc as al on al.test_ID=t.test_ID left join channeling as c on c.channeling_ID=al.channeling_ID where c.channeling_ID=".$channeling);
+    }
 
     //update channeling test values
     public function updateChannelingTestValues($values,$ids,$appointment_ID,){

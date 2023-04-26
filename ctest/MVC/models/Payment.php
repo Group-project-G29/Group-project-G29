@@ -5,74 +5,53 @@ use app\core\DbModel;
 use app\core\Application;
 use app\core\UserModel;
 
-class Patient extends DbModel{
+class Payment extends DbModel{
     public string $patient_ID='';
     public string $name='';
-    public string $nic='';
-    public  $age=0;
-    public string $contact="";
-    public string $email="";
-    public string $address="";
-    public string $gender='';
-    public string $password="";
-    public string $cpassword="";
-    public string $type="";
-    public string $verification='';
-    public ?string $relation='';
-    public string $guardian_name='';
-  
+    public string $type='';
+    public string $payment_status="";
+    public float $amount=0;
+    public ?string $order_ID=null;
+    public ?string $appointment_ID=null;
 
-    public function register(){
-        $this->password=password_hash($this->password,PASSWORD_DEFAULT);
-        $last_id=parent::save();
-        $this->patient_ID=$last_id[0]['last_insert_id()'];
-        Application::$app->login($this,'patient');
-        return true; 
+    //get payment information of a patient
+    public function getOrderPay($patient){
+        return $this->fetchAssocAll(['type'=>'order','payment_status'=>'pending','patient_ID'=>$patient]);
+    }
+
+    //pay  payment
+    public function createAppointmenPay($patient_ID,$name,$amount,$appointment_ID,$payment){
+        //create payment
+        $payment=new Payment();
+        $payment->patient_ID=$patient_ID;
+        $payment->name=$name;
+        $payment->type='appointment';
+        $payment->payment_status=$payment;
+        $payment->amount=$amount;
+        $payment->appointment_ID=$appointment_ID;
+        return $payment->save();
+
+    }   
+    
+     public function createOrderPay($patient_ID,$name,$amount,$payme){
+        //create payment
+        $payment=new Payment();
+        $payment->patient_ID=$patient_ID;
+        $payment->name=$name;
+        $payment->type='order';
+        $payment->payment_status=$payme;
+        $payment->amount=$amount;
+        return $payment->save();
+
+    } 
         
-    }
-    public function register_non_session(){
-        $this->password=password_hash($this->password,PASSWORD_DEFAULT);
-        $last_id=parent::save();
-       
-        return true; 
         
-    }
-    public function logout(){
-        Application::$app->logout();
-        return true;
-    }
-    public function rules(): array
-    {
-        return [
-            'name'=>[self::RULE_REQUIRED],
-            'nic'=>[/*self::RULE_REQUIRED,[self::RULE_MIN,'min'=>12],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee'],*/[self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>'NIC number']],
-            'age'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120]],
-            'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
-            'email'=>[self::RULE_EMAIL],
-            'address'=>[],       
-          //  'relation'=>[self::RULE_REQUIRED],
-            'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)]]
-               
 
-        ];
-    }
-    // get recent patient 
-    public function getRecentPatientDoctor(){
-        //get the last patients in past channelin session
-        //also get the patient where nurse got involoved in today channeling session
-        $doctor=Application::$app->session->get('userObject')->nic;
-        $patient= $this->customFetchAll("select * from past_channeling as p left join opened_channeling as o on p.opened_channeling_ID=o.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID left join appointment as a on a.opened_channeling_ID=o.opened_channeling_ID left join nurse_channeling_allocataion as n on n.channeling_ID=c.channeling_ID left join employee as e on e.emp_ID=n.emp_ID left join patient as pa on  pa.patient_ID=a.patient_ID  where c.doctor='".$doctor."' order by o.channeling_date") ;
-        return $patient;
 
-    }
-    public function getRecentPatientNurse(){
-        //get the last patients in past channelin session
-        //also get the patient where nurse got involoved in today channeling session
-        $nurse=Application::$app->session->get('userObject')->emp_ID;
-        echo "select * from past_channeling as p left join opened_channeling as o on p.opened_channeling_ID=o.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID left join appointment as a on a.opened_channeling_ID=o.opened_channeling_ID left join nurse_channeling_allocataion as n on n.channeling_ID=c.channeling_ID  left join patient as pa on  pa.patient_ID=a.patient_ID  where n.emp_ID=".$nurse." order by o.channeling_date";
-        $patient= $this->customFetchAll("select * from past_channeling as p left join opened_channeling as o on p.opened_channeling_ID=o.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID left join appointment as a on a.opened_channeling_ID=o.opened_channeling_ID left join nurse_channeling_allocataion as n on n.channeling_ID=c.channeling_ID left join employee as e on e.emp_ID=n.emp_ID left join patient as pa on  pa.patient_ID=a.patient_ID  where n.emp_ID=".$nurse." order by o.channeling_date") ;
-        return $patient;
-
+    //sandbox
+    
+    public function rules():array{
+        return [];
     }
     public function fileDestination(): array
     {
@@ -80,20 +59,87 @@ class Patient extends DbModel{
     }
     public function tableName(): string
     {
-        return 'patient';
+        return 'payment';
     }
     public function primaryKey(): string
     {
-        return 'patient_ID';
+        return 'payment_ID';
     }
     public function tableRecords(): array{
-        return ['patient'=>['name','guardian_name','nic','age','contact','email','gender','address','type','password','verification']];
+        return ['payment'=>['patient_ID','name','type','payment_status','amount','order_ID','appointment_ID']];
     }
 
     public function attributes(): array
     {
-        return ['name','guardian_name','nic','age','contact','email','gender','address','type','password','verification'];
-    } 
+        return ['patient_ID','name','type','payment_status','amount','order_ID','appointment_ID'];
+    }
+    
+
+
+
+    public function payNow($amount,$text,Patient $patientModel,$order,$hash,$return_complete,$return_fail){
+        $hash1 = strtoupper(
+                            md5(
+                                '1222960' . 
+                                $order . 
+                                number_format($amount, 2, '.', '') . 
+                                'LKR' .  
+                                strtoupper(md5('MzAzOTcxMjc5NTIzODU1OTk5ODg3MTE2MTM1NDU0MDgxODMzNjk2')) 
+                            ) 
+        );
+        $str='<script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
+    <script>
+    // Payment completed. It can be a successful failure.
+    payhere.onCompleted = function onCompleted(orderId) {
+        location.href="%s";
+        // Note: validate the payment and show success or failure page to the customer
+    };
+
+    // Payment window closed
+    payhere.onDismissed = function onDismissed() {
+        // Note: Prompt user to pay again or show an error page
+        location.href="%s";
+    };
+
+    // Error occurred
+    payhere.onError = function onError(error) {
+        // Note: show an error page
+        location.href="%s";
+    };
+
+    // Put the payment variables here
+    var payment = {
+        "sandbox": true,
+        "merchant_id": "1222960",    // Replace your Merchant ID
+        "return_url": undefined,     // Important
+        "cancel_url": undefined,     // Important
+        "notify_url": "http://sample.com/notify",
+        "order_id": "%s",
+        "items": "%s",
+        "amount": "%s",
+        "currency": "LKR",
+        "hash": "%s", // *Replace with generated hash retrieved from backend
+        "first_name": "%s",
+        "last_name": "%s",
+        "email": "%s",
+        "phone": "%s",
+        "address": "%s",
+        "city": "Colombo",
+        "country": "Sri Lanka",
+        "delivery_address": "No. 46, Galle road, Kalutara South",
+        "delivery_city": "Kalutara",
+        "delivery_country": "Sri Lanka",
+        "custom_1": "",
+        "custom_2": ""
+    };
+
+    // Show the payhere.js popup, when "PayHere Pay" is clicked
+    
+        payhere.startPayment(payment);
+    
+</script>';   
+        return sprintf($str,$return_complete,$return_fail,$return_fail,$order,$text,$amount,$hash,explode(" ",$patientModel->name)[0],explode(" ",$patientModel->name)[1]??'',$patientModel->email,$patientModel->contact,$patientModel->address);
+    }
 
     
 }   

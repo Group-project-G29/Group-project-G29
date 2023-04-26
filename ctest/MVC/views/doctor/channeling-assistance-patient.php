@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <div class="channeling-patient">
     <?php
 use app\core\component\Component;
@@ -72,13 +73,14 @@ Application::$app->session->set('popup','unset');
                 <div class="wrapper--referrals">
                     <div class="variable-container">
                         <table>
-                            <tr>
+                            <tr class="fixer">
                                 <th>Referral</th><th>Added Date</th><th></th><th></th>
                             </tr>
                             <?php foreach($referrals['sent'] as $referral): ?>
                     
-                                <tr>
+                                <tr class="border-bottom--1">
                                     <td><a href=<?="/ctest/doctor-report?spec=referral&mod=view&id=".$referral['ref_ID']?>><?=$referral['issued_doctor']?("Dr. ".$employeeModel->getDocName($referral['issued_doctor']))."'s":"Softcopy-".$referral['ref_ID']."' "."Referral"?></a></td><td><?=$referral['date'] ?></td>
+                                   
     
                                 </tr>
                             <?php endforeach; ?>
@@ -120,9 +122,11 @@ Application::$app->session->set('popup','unset');
                         <?=$appointmentModel->getTotoalPatient(Application::$app->session->get('channeling'))?>
                     </div>
                 </div>
-                <div class="nav_container">
+                <div class="nav_container-db">
                     <div class="nav-item">
+                       
                         <input type="number" id="patient-input">
+                        
                         <?=$component->button('btn','','Move','','move-btn'); ?>
                        
                     </div>
@@ -164,17 +168,19 @@ Application::$app->session->set('popup','unset');
                     <?php endforeach; ?>
                 </table>
                 <section class="graph">
-                    <div>
+                    <div class="editable-select">
                         <?=$form->editableselectversion2('tests_ed','','test_select',array_keys($alltests)) ?>
                     </div>
+                    <div class="graph-part">
                     <?php foreach($alltests as $val=>$test):?>
                         
-                        <div id=<?='"'.'c'.join('_',explode(' ',$val)).'"'?> class=<?='"'.'c'.join('_',explode(' ',$val)).' hide gcontainer"'?>>
+                        <div id=<?='"'.'c'.join('_',explode(' ',$val)).'"'?> class=<?='"'.'c'.join('_',explode(' ',$val)).' hide gcontainer"'?> class="chart-ast">
                             
-                            <canvas id=<?='"myChart'.$val.'"'?> style="width:100%;max-width:700px"></canvas>
+                            <canvas id=<?='"myChart'.$val.'"'?> style="width:100%;max-width:700px chart-ast"></canvas>
                             <?=$chart->lineChart($test['labels'],[],$test['data'],[],$val,'rgb(0,0,0)',$val);?>
                         </div>
                         <?php endforeach;?>
+                    </div>
                 </section>
             </div>
        
@@ -313,7 +319,7 @@ Application::$app->session->set('popup','unset');
         const  movebtn=document.getElementById('move-btn');
         const painput=document.getElementById('patient-input');
         movebtn.addEventListener('click',()=>{
-        
+            console.log("dfdf");
             if(checkbox.checked){
                 location.href="channeling-assistance?cmd=move&id="+painput.value+"&set=used";
                 

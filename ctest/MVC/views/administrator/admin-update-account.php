@@ -13,30 +13,25 @@ $form=Form::begin('','post');?>
         <h1 class="fs-200 ">Employee Update</h1>
     </div>
     <div class="reg-body_fields">
-    <table>
-    <tr><th></th><th></th></tr>
-    <?php echo $form->spanfield($model,'name','Name*','field','text') ?>
-    <?php echo $form->spanfield($model,'nic','NIC*','field','text') ?>
-    <?php echo $form->spanfield($model,'age','Age*','field','text') ?>
-    <?php echo $form->spanselect($model,'gender','Gender*','field',['select'=>'','male'=>'male','female'=>'femalie'],'gender')?>
-    <?php echo $form->spanfield($model,'contact','Contact*','field','text') ?>
-    <?php echo $form->spanfield($model,'email','Email*','field','text') ?>
-    <?php echo $form->spanfield($model,'address','Address','field ','text') ?>
-    <?php echo $form->spanselect($model,'role','Role*','field',['select'=>'','doctor'=>'doctor','nurse'=>'nurse','pharmacist'=>'pharmcist','receptionist'=>'receptionist'],'picker')?>
-    <?php echo $form->spanselect($model,'career_speciality','Speciality','hide',['select'=>'','Cardiologist'=>'Cardiologist','Gastrologist'=>'Gastrologist','Radiologist'=>'Radiologist'],'career_speciality');?>
-    <?php echo $form->spanfield($model,'description','Description','hide','text','description');?>
-    <?php echo $form->spanfield($model,'img','Profile Picture','field','file') ?>
+    
+    <?php echo $form->field($model,'name','Name*','field','text') ?>
+    <?php echo $form->field($model,'nic','NIC*','field','text') ?>
+    <?php echo $form->field($model,'age','Age*','field','text') ?>
+    <?php echo $form->select($model,'gender','Gender*','field',['select'=>'Select','male'=>'Male','female'=>'Female'],'gender')?>
+    <?php echo $form->field($model,'contact','Contact*','field','text') ?>
+    <?php echo $form->field($model,'email','Email*','field','text') ?>
+    <?php echo $form->field($model,'address','Address','field ','text') ?>
+   
+   
+    <?php echo $form->field($model,'img','Profile Picture','field','file') ?>
 
     
-</div>
 
-</table>
 <div class="button-container"><input class="button--class-1" style="margin-bottom:3vh;" type="submit" value="Update"></div>
     <?php Form::end() ?>   
      <script>
         const select=document.querySelector("#picker");
         const speciality=document.querySelector("#career_speciality");
-        console.log(speciality);
         const  description=document.querySelector('#description');
         if(select.value=='doctor') {
                 visible(speciality);

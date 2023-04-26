@@ -1444,7 +1444,9 @@ select{
 
       background-color: rgba(0, 0, 0, .75);
       position: fixed;
-      width: 100vw;
+      top:-0vh;
+      left:15vw;
+      width: 120vw;
       height: 100vh;
       z-index: 9;
   }
@@ -2052,4 +2054,34 @@ select{
   background-color:var(--clr-dark);
   border:none;
   border-radius:5px;
+}
+
+
+/* editable selects */
+.in{
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+    min-width:250px;
+}
+.edse{
+    border-bottom: 1px solid gainsboro;
+    height:30px;
+    padding: 5px;
+    background-color: white;
+}
+.edsecon{
+    position: relative;
+    
+}
+.edse-container{
+    position:relative;
+    left:148px;
+    overflow-y: scroll;
+    max-height:200px;
+    max-width:250px;
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+    border-top: none;
+    border-bottom: none;
+    
 }

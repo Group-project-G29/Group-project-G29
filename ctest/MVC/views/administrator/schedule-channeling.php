@@ -36,7 +36,7 @@ $form=Form::begin('','post');
             <table>    
                 <center><h2 style="margin-top: 5vh;">Set Date Time</h2></center>
                 
-                <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Select'=>'','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursay','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday'])?>
+                <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Select'=>'','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday'])?>
                 <?php echo $form->spanfield($channelingmodel,'time','Starting Time*','field','time') ?>
                 
                 <?php echo $form->spanfield($channelingmodel,'session_duration','Session Duration*','field','time') ?>
@@ -67,12 +67,21 @@ $form=Form::begin('','post');
                 <center><h2 style="margin-top: 5vh;">Set Rooms and Nurses</h2></center> 
                 <div class="flex">
                     <?php echo $form->spanselect($channelingmodel,'room','Room','field',$rooms)?>
-                    <?php if(isset($roomOverlaps)):?>
-                        <img src="media/images/common/delete.png" class="delete-btn" id="room">
-                        <div>
-                            <?php var_dump($roomOverlaps); ?>
+                     <?php if(isset($roomOverlaps)):?> 
+                        <div class="nurse-error-container">
+                            <div>
+                                <img src="media/images/common/delete.png" class="delete-btn" id="room">
+                            </div>
+                            <div class="error-texts">
+                                <?php echo "Room is assigned to channeling ".$roomOverlaps[0]['channeling_ID']." at ".$roomOverlaps[0]['time'].(($roomOverlaps[count($roomOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
+                                <?php if(isset($roomOverlaps[count($roomOverlaps)-1]) and $roomOverlaps[count($roomOverlaps)-1]['channeling_ID']!=$roomOverlaps[0]['channeling_ID']): ?>
+                                    <?="<br>Room is assigned to channeling ".$roomOverlaps[count($roomOverlaps)-1]['channeling_ID']." at ".$roomOverlaps[count($roomOverlaps)-1]['time'].(($roomOverlaps[count($roomOverlaps)-1]['time']>'12.00')?'PM':'AM' )?> 
+                                
+                                    <?php endif;?>
+                        
+                            </div>
                         </div>
-                    <?php endif;?>
+                    <?php endif; ?>   
                 </div>
             </table>
             
@@ -81,15 +90,23 @@ $form=Form::begin('','post');
 
             <div class="nurse-assign-body">
                 <div>
-                    <div class="flex ">
+                    <div >
                         <h3>Assign Nurses</h3>
                         <?php if(isset($nurseOverlaps)):?>
-                            <div class="overlaps">
-                            <img src="media/images/common/delete.png" class="delete-btn" id="nurse">
-                            <div>
-                                <?php var_dump($nurseOverlaps); ?>
+                                <div class="nurse-error-container">
+                                <div>
+                                    <img src="media/images/common/delete.png" class="delete-btn" id="room">
+                                </div>
+                                <div class="error-texts">
+                                    <?//php// var_dump($nurseOverlaps)?>
+                                    <?php echo "Nurse ".$nurseOverlaps[0]['name']." is assigned to channeling ".$nurseOverlaps[0]['channeling_ID']." at ".$nurseOverlaps[0]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
+                                    <?php if(isset($nurseOverlaps[count($nurseOverlaps)-1]) and $nurseOverlaps[count($nurseOverlaps)-1]['emp_ID']!=$nurseOverlaps[0]['emp_ID']): ?>
+                                        <?="<br>Nurse".$nurseOverlaps[count($nurseOverlaps)-1]."is assigned to channeling ".$nurseOverlaps[count($nurseOverlaps)-1]['channeling_ID']." at ".$nurseOverlaps[count($nurseOverlaps)-1]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
+                                    
+                                        <?php endif;?>
+                            
+                                </div>
                             </div>
-                        </div>
                         <?php endif;?>
                     </div>
                     <div class="nurse-container"></div>

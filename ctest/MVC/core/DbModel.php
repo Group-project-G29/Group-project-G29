@@ -40,9 +40,9 @@
         }
         public function saveByName($values){
             foreach($values as $tablename=>$attributes){
-                var_dump($attributes);
                 $tablerecords=array_keys($attributes);
                 $params=array_map(fn($attr)=>$attributes[$attr],$tablerecords);
+               
                 $statement=self::prepare("Insert into $tablename (".implode(',',$tablerecords).") VALUES (".implode(',',$params).")");
                 $statement->execute();
             }
@@ -61,7 +61,7 @@
             $statement->execute();
             return $statement->fetchObject(static::class);
         }
-        //to get medicine panadol  call findByKeyword('name',"pana")
+    //to get medicine panadol  call findByKeyword('name',"pana")
         public function findByKeyword($parameter,$keyword){
             $tablename=static::tableName();
             $statement=self::prepare("Select * from $tablename where $parameter like '%$keyword%'");
