@@ -168,8 +168,8 @@ use app\core\DbModel;
 
         public function getOrderType( $order_ID ) {
             $online_order = $this->customFetchAll(" SELECT * FROM medicine_in_order WHERE order_ID = $order_ID; ");
-            $e_prescription = $this->customFetchAll(" SELECT * FROM prescription WHERE order_ID = $order_ID AND type = 'ep'; ");
-            $soft_copy_prescription = $this->customFetchAll(" SELECT * FROM prescription WHERE order_ID = $order_ID AND type = 'sf'; ");
+            $e_prescription = $this->customFetchAll(" SELECT * FROM prescription WHERE order_ID = $order_ID AND type = 'E-prescription'; ");
+            $soft_copy_prescription = $this->customFetchAll(" SELECT * FROM prescription WHERE order_ID = $order_ID AND type = 'softcopy  prescription'; ");
 
             if ( sizeof($online_order)>0 ){
                 return 'Online Order';
@@ -183,6 +183,18 @@ use app\core\DbModel;
 
         public function getOrderByID($orderID) {
             return $this->customFetchAll("SELECT * FROM _order WHERE order_ID = $orderID");
+        }
+
+        public function take_online_orders( $orderID ){
+
+        }
+
+        public function take_ep_orders( $orderID ){
+            
+        }
+
+        public function take_sf_orders( $orderID ){
+            
         }
 
     }
