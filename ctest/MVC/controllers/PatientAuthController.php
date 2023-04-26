@@ -4,6 +4,7 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
+use app\models\LabTest;
 use app\models\User;
 use app\core\DbModel;
 use app\core\Response;
@@ -859,6 +860,23 @@ class PatientAuthController extends Controller{
         
     }
     
+
+    public function contact_us(){
+        // $this->setLayout("patient",['select'=>'Payments']);
+        $this->setLayout('visitor-homepage');
+        return $this->render('patient/contact',[
+        ]);
+    }
+
+    public function labpage(){
+        // $this->setLayout("patient",['select'=>'Payments']);
+        $lab_test = new LabTest();
+        $tests = $lab_test->get_lab_tests();
+        $this->setLayout('patient-lab');
+        return $this->render('patient/lab-page',[
+            'tests' => $tests
+        ]);
+    }
 
  
 
