@@ -32,7 +32,7 @@ use ReflectionFiber;
 class PatientAuthController extends Controller{
     public function login(Request $request,Response $response){
       
-        $this->setLayout('visitor-homepage');
+        $this->setLayout('visitor-homepage-landing');
         $PatientLoginForm=new PatientLoginForm();
 
 
@@ -53,7 +53,7 @@ class PatientAuthController extends Controller{
     }
     public function pedlogin(Request $request,Response $response){
       
-        $this->setLayout('visitor-homepage');
+        $this->setLayout('visitor-homepage-landing');
         $PatientLoginForm=new PatientLoginForm();
 
 

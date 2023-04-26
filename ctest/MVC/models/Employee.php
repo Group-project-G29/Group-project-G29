@@ -243,7 +243,16 @@ class Employee extends DbModel{
     public function get_rider_availability( $delivery_rider ) {
         return $this->customFetchAll("SELECT availability FROM delivery_rider WHERE emp_ID = $delivery_rider");
     }
-    
+
+     public function updateAccounts($id){
+        echo "update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id;
+        $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id);
+        
+        return true;
+    }
+
+ 
+
    
 
 }   

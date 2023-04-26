@@ -34,7 +34,8 @@
             <?php echo $form->field($model,'username','Username','field','text') ?>
             <?php echo $form->field($model,'name','Patient Name','field','text') ?>
             <?php echo $form->field($model,'password','Password','field','password') ?>
-            <div class="patient-login-lower-text">Want to register? click<a href="/ctest/register"> here</a></div>
+            <div class="patient-login-lower-text">Adult Patient? click<a href="/ctest/pediatric"> here</a></div>
+            <div class="patient-login-lower-text">Forgot Password? click<a href="/ctest/register"> here</a></div>
             <div><input class="button-lighter" type="submit" value="Log In"></div>
             </div>
             <?php Form::end() ?>

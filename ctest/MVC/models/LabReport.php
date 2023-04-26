@@ -50,7 +50,7 @@ use app\core\PDF;
             return  ['type','fee','label','template_ID','location'];
         }
         public function getPatientReport($patient){
-            return $this->fetchAssocAllByName(['patient_ID'=>$patient],'lab_report_allocation');
+            return $this->customFetchAll("select * from lab_report left join lab_request on lab_request.request_ID=lab_report.request_ID where lab_request.patient_ID=".$patient);
         }
         public function getReport($reportID){
             return $this->customFetchAll("select * from  lab_report_content left join lab_report_template on lab_report_content.template_ID=lab_report_template.template_ID left join  lab_report_content_allocation as l on l.content_ID=lab_report_content.content_ID where l.report_ID=".$reportID." order by lab_report_content.position asc");
@@ -104,7 +104,7 @@ use app\core\PDF;
         } 
         public function create_new_report($fee, $type, $label, $template_ID, $location, $request_ID){
             //get patient and doctor from request table and send data to lab_report_alloction $this->customFetchAll("select last_insert_id()"[0]['last_insert_id']
-            $this->customFetchAll("INSERT INTO lab_report ( fee, upload_date_time, type,label,template_ID,location,request_ID) VALUES ( $fee,current_timestamp(), '$type', '$label', $template_ID, '$location', $request_ID); ");
+ /*change*/ $this->customFetchAll("INSERT INTO lab_report ( fee, type,label,template_ID,location,request_ID) VALUES ( $fee, 'e-prescription', '$label', $template_ID, '$location', $request_ID); ");
             return $this->customFetchAll("select last_insert_id()")[0]['last_insert_id()'];
         }
         public function payment($patient_ID,$amount,$generated_timestamp, $type,$name,$payement_status,$order_ID,$appointment_ID){

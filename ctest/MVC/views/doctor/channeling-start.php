@@ -42,12 +42,16 @@ $appointmentModel=new Appointment();
 </div>
 <script>
     const btn=document.querySelector(".start");
-    btn.addEventListener('click',()=>{
-        location.href="channeling-assistance?cmd=start&id="+btn.id;
-    })
-     const btn2=document.querySelector(".start2");
-    btn.addEventListener('click',()=>{
-        location.href="channeling-assistance?cmd=start&id="+btn.id;
-    })
+    const btn2=document.querySelector(".start2");
+    if(btn){
+        btn.addEventListener('click',()=>{
+            location.href="channeling-assistance?cmd=start&id="+btn.id;
+        })
+    }
+    else if(btn2){
+        btn2.addEventListener('click',()=>{
+            location.href="channeling-assistance?cmd=start&id="+btn2.id;
+        })
+    }
 
 </script>

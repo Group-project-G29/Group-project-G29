@@ -110,7 +110,6 @@ class DoctorController extends Controller{
         //if session variable is no there redirect to last seen patient
         
         
-        var_dump($parameters=$request->getParameters());
         $parameters=$request->getParameters();
         // if(!Application::$app->session->get('cur_patient') && $parameters['cmd']!='start' && $parameters['cmd']!='finish'){
             //     $response->redirect("channeling-assistance?cmd=start");
