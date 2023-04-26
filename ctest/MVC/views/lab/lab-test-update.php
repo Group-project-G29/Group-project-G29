@@ -23,11 +23,13 @@ $form=Form::begin('/ctest/lab-test-update?cmd=update&id='.Application::$app->ses
         <div class="field-container">
             <section class="reg_body-spec" style="padding-bottom:50px">
 
-
+           
                 <div class="reg-body-spec fields" style="padding-left:15vw">
                     <table>
                         <?php echo $form->spanfield($model, 'name', 'Name*', 'field', 'text') ?>
-                        <?php echo $form->spanfield($model, 'fee', 'Fee*', 'field', 'text') ?>
+                        <?php echo $form->spanfield($model, 'test_fee', 'Test Fee*', 'field', 'text') ?>
+                        <?php echo $form->spanfield($model, 'hospital_fee', 'Hospital Fee*', 'field', 'text') ?>
+                       
                     </table>
                     <div class="button" style="margin-top: 2vh;">
                         <?= $component->button('update-test', 'submit', 'Update', 'button--class-0'); ?>

@@ -331,11 +331,7 @@ class AdminController extends Controller{
         //Delete operation
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
             $delRow= $advertisementModel->customFetchAll("Select * from advertisement where ad_ID = ".$parameters[1]['id']);
-            $advertisementModel->deleteImage($delRow[0]['img'], $delRow[0]['type']);
             $advertisementModel->deleteRecord(['ad_ID'=>$parameters[1]['id']]);
-            Application::$app->session->setFlash('success',"Advertisement successfully deleted ");
-            $response->redirect('/ctest/main-adds');
-            return true;
         }
 
         //Go to update page of a advertisement

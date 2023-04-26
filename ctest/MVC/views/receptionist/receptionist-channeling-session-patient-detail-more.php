@@ -5,10 +5,10 @@ use app\models\Employee;
 
 $component = new Component();
 ?>
-<div class="header-container">
-    <h2>Patient Detail</h2>
-
-    <div class="semi-header-container">
+<div class="header-container"style="padding-top:5vh">
+    
+<div class="semi-header-container">
+        <h2>Patient Detail</h2>
         <h5>Patient ID = <?= $PatientDetail['patient_ID'] ?></h5>
         <h5>Name = <?= $PatientDetail['name'] ?></h5>
         <h5>NIC = <?= $PatientDetail['nic'] ?></h5>
@@ -18,16 +18,16 @@ $component = new Component();
         echo "Categoty = Pediatric";}
         else{echo "Categoty = Adult";}?></h5>
 
-        <div class="button">
+        <!-- <div class="button">
             <?php echo $component->button('edit-details', '', 'Edit', 'button--class-0  width-10', 'edit-details'); ?>
-        </div>
+        </div> -->
 
        
 
     </div>
 </div>
 <div class="table-container">
-    <table border="0">
+    <table border="0" style="margin-left:0px">
 
         <tr class="row-height header-underline">
             <th>Clinic</th>
@@ -41,14 +41,16 @@ $component = new Component();
 
         <?php foreach ($channelings as $channeling) : ?>
 
-            <tr>
+            <tr class=" " id=<?= $channeling['patient_ID'] ?> >
                 <td><?= $channeling['career_speciality'] ?></td>
                 <td><?= $channeling['name'] ?></td>
                 <td><?= $channeling['day'] ?></td>
                 <td><?= $channeling['time'] ?></td>
                 <td><?= $channeling['fee'] ?></td>
-                <td class='table-row-0  row-height hover' style="padding-left: 1px;">Cancel</td>
-
+               
+                <!-- <td class='table-row-0  row-height hover' style="padding-left: 1px;">Cancel</td> -->
+                <td><?php echo $component->button('cancel', '', 'Cancel', 'button-3 table-row-0 row-height hover', $channeling['patient_ID']); ?></td>
+               
             </tr>
 
         <?php endforeach; ?>
@@ -77,16 +79,21 @@ $component = new Component();
     elementsArray = document.querySelectorAll(".button-1");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href = 'receptionist-channeling-set-appointment?id=' + elem.id;
+            location.href = 'receptionist-patient-appointment?mod=view&id=' + elem.id;
         });
     });
-</script>
 
-<script>
     elementsArray = document.querySelectorAll(".button-0");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href = 'receptionist-channeling-payment?id=' + elem.id;
+        });
+    });
+
+    elementsArray = document.querySelectorAll(".button-3");
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href = 'receptionist-channeling-session-patient-detail-more?cmd=delete&id=' + elem.id;
         });
     });
 </script>

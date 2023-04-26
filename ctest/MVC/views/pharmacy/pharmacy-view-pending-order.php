@@ -66,4 +66,5 @@
     btn1.addEventListener('click',function(){
         location.href="pharmacy-take-pending-order?id="+<?=$orders[0]['order_ID']?>; //get
     })
+    
 </script>

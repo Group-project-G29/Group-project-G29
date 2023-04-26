@@ -881,10 +881,7 @@ select{
 
   }
 
-  .header-container {
-      padding-top: 20vh;
-      text-align: center;
-  }
+ 
 
 
 .header-container{
@@ -1328,7 +1325,7 @@ select{
     /* border-radius: 5px; */
 }
 
-.button--class-0:hover,
+/* .button--class-0:hover,
 .button--class-0-deactive:hover {
     scale: 1.05;
     transition: 0.5s;
@@ -1336,7 +1333,7 @@ select{
 
 .button--class-0-deactive:hover {
     opacity: 80%;
-}
+} */
 
 .button--class-1{
     height:4vh;
@@ -1521,11 +1518,20 @@ select{
   .card-header-1 {
       text-align: center;
       padding: 2vh;
+      /* background-color:#AEE2FF; */
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      /* height: 50vh;
+      width: 50vh; */
+
   }
 
   .main-card {
       margin-top: 2vh;
       padding-top: 5vh;
+      /* background-image: url(media/images/lab/bg/1.jpeg); */
+
   }
 
   .image {
@@ -1533,7 +1539,7 @@ select{
       height: 35%;
       margin-left: 13vh;
       transform: translateX(-10%);
-      background-color: var(--clr-card-blue);
+      background-color: var(--clr-font-color);
       border-radius: 50%;
       margin-top: 2vh;
       /* position: absolute; */

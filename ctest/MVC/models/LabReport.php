@@ -18,7 +18,16 @@ use app\core\PDF;
     
         public function rules(): array
         {
-            return [];
+            return [
+                'report_ID'=>[self::RULE_REQUIRED],
+                'fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>100000000000]],
+                'type'=>[self::RULE_REQUIRED],
+                'label'=>[self::RULE_REQUIRED],
+                'upload_date_time'=>[],
+                'Template_ID'=>[self::RULE_REQUIRED],
+                'location'=>[self::RULE_REQUIRED]
+    
+            ];
         }
         public function fileDestination(): array
         {
@@ -44,7 +53,6 @@ use app\core\PDF;
             return $this->fetchAssocAllByName(['patient_ID'=>$patient],'lab_report_allocation');
         }
         public function getReport($reportID){
-            echo "select * from  lab_report_content left join lab_report_template on lab_report_content.template_ID=lab_report_template.template_ID left join  lab_report_content_allocation as l on l.content_ID=lab_report_content.content_ID where l.report_ID=".$reportID." order by lab_report_content.position asc";
             return $this->customFetchAll("select * from  lab_report_content left join lab_report_template on lab_report_content.template_ID=lab_report_template.template_ID left join  lab_report_content_allocation as l on l.content_ID=lab_report_content.content_ID where l.report_ID=".$reportID." order by lab_report_content.position asc");
         }
         public function distinctPatientTests($patient){
@@ -89,6 +97,24 @@ use app\core\PDF;
         }
         public function getCreatedDate($report_ID){
             return $this->customFetchAll("select upload_date from lab_report  where lab_report.report_ID=".$report_ID)[0]['upload_date'];
+        }
+        public function get_report_by_ID($request_ID){
+            return $this->customFetchAll(" SELECT * FROM lab_report where request_ID=$request_ID");
+    
+        } 
+        public function create_new_report($fee, $type, $label, $template_ID, $location, $request_ID){
+            //get patient and doctor from request table and send data to lab_report_alloction $this->customFetchAll("select last_insert_id()"[0]['last_insert_id']
+            $this->customFetchAll("INSERT INTO lab_report ( fee, upload_date_time, type,label,template_ID,location,request_ID) VALUES ( $fee,current_timestamp(), '$type', '$label', $template_ID, '$location', $request_ID); ");
+            return $this->customFetchAll("select last_insert_id()")[0]['last_insert_id()'];
+        }
+        public function payment($patient_ID,$amount,$generated_timestamp, $type,$name,$payement_status,$order_ID,$appointment_ID){
+            //get patient and doctor from request table and send data to lab_report_alloction $this->customFetchAll("select last_insert_id()"[0]['last_insert_id']
+            return $this->customFetchAll("INSERT INTO payment (patient_ID,amount,generated_timestamp, type,name,payement_status,order_ID,appointment_ID) VALUES ( $patient_ID,$amount,current_timestamp(), 'labreport', '$name', NONE, NONE, NONE); ");
+        }
+
+        public function create_report_allocation($report_ID,$patient_ID,$doctor){
+            return $this->customFetchAll("INSERT INTO lab_report_allocation ( report_ID,patient_ID,doctor) VALUES ( $report_ID, $patient_ID,$doctor); ");
+
         }
         public function labreporttoPDF($reportID){
             $valuerows=$this->getReport($reportID);

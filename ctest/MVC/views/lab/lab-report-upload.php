@@ -5,89 +5,47 @@ use \app\core\form\Form;
 
 $component = new Component();
 
-$form = Form::begin('', 'post'); ?>
-<div class="header-container">
-    <div class="reg-body-spec_title">
-        <h1 class="fs-200 fc-color--dark" style="padding-bottom: 2vh;">Upload Report</h1>
-    </div>
-    <div class="semi-header-container">
+?>
+<div class="semi-header-container">
+    <div class="field-container">
+        <div class="header-container" style=" padding-top:0vh;">
 
-        <div class="field-container">
-            <div class="detail-container">
+            <h1 class="fs-200 fc-color--dark">Upload Report</h1>
 
-                <table class="table-session">
-                    <tr class="table-row-session">
-                        <td>Request No</td>
-                        <td>:</td>
-                        <td class="table-row-data"></td>
-                    </tr>
-               
-                <tr class="table-row-session">
-                    <td>Doctor</td>
-                    <td>:</td>
-                    <td class="table-row-data">Dr.<?= $tests['doc_name'] ?></td>
-                </tr>
-                <tr class="table-row-session">
-                    <td>patient</td>
-                    <td>:</td>
-                    <td class="table-row-data"><?= $tests['patient_name'] ?></td>
-                </tr>
-                <tr class="table-row-session">
-                    <td>Requested date</td>
-                    <td>:</td>
-                    <td class="table-row-data"><?= $tests['requested_date_time'] ?></td>
-                </tr>
-                </table>
-            </div>
-            <section class="reg_body-spec" style="padding-bottom:50px">
 
-                <div class="reg-body-spec fields" style="padding-left:15vw">
-                    <table>
-                    <!-- <?php echo $form->field($model,'img','Report','field','file') ?> -->
 
-                    </table>
-                    <!-- <div class="button" style="margin-top: 2vh;">
-                        <?= $component->button('btn', '', 'upload', 'button--class-0'); ?>
-                    </div> -->
-                </div>
+            <h5>Request No =<?= $tests[0]['request_ID'] ?> </h5>
+            <h5>Doctor = Dr.<?= $tests[0]['ename'] ?></h5>
+            <h5>patient = <?= $tests[0]['pname'] ?></h5>
+            <h5>Requested date & Time = <?= $tests[0]['requested_date_time'] ?></h5>
+
 
         </div>
+        <? $form = Form::begin('', 'post'); ?>
+        <div class="reg-body-spec fields" style="padding-left:15vw">
+        <div class="inputbox">
+            <label for="image"> </label><br>
+            <input type='file'><br>
+            </div>
+        </div>
+            <div class="button" style="padding-left:40vw">
 
-        <?php Form::end() ?>
-        </section>
+                <?php echo $component->button('submit', 'submit', 'Submit', 'button--class-0  width-10 curser', 'add'); ?>
+            </div>
+
+            <?php Form::end() ?>
+
     </div>
+
 </div>
+  
 
-
-
-
-
-
-
-
-
-<script>
-    elementsArray = document.querySelectorAll(".button-1");
-    console.log(elementsArray);
-    elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href = 'lab-add-new-test'; //pass the variable value
+    <script>
+        elementsArray = document.querySelectorAll(".button--class-0");
+        console.log(elementsArray);
+        elementsArray.forEach(function(elem) {
+            elem.addEventListener("click", function() {
+                location.href = 'lab-test-request'; //pass the variable value
+            });
         });
-    });
-
-    elementsArray = document.querySelectorAll(".button");
-    console.log(elementsArray);
-    elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href = 'lab-test-update?mod=update&id=' + elem.id; //pass the variable value
-        });
-    });
-
-    elementsArray = document.querySelectorAll(".button-0");
-    console.log(elementsArray);
-    elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href = 'lab-test-delete?cmd=delete&id=' + elem.id; //pass the variable value
-        });
-    });
-</script>
+    </script>

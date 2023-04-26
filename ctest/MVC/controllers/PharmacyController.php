@@ -186,6 +186,7 @@ class PharmacyController extends Controller{
 //=========================PROCESSING ORDERS====================================
     public function viewProcessingOrder(){
         $this->setLayout("pharmacy",['select'=>'Orders']);
+
         $orderModel=new Order();
         $orders=$orderModel->get_processing_orders();
         
@@ -606,6 +607,7 @@ class PharmacyController extends Controller{
                    'model'=>$medicineModel
                ]);
             }
+
         }
 
         return $this->render('pharmacy/pharmacy-add-medicine',[
