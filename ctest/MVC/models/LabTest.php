@@ -63,16 +63,7 @@ class LabTest extends DbModel{
     public function get_lab_tests() {
         return $this->customFetchAll("SELECT * FROM lab_tests");
     }
-    public function getAllTests(){
-        $array=$this->customFetchAll("select * from lab_tests");
-        $return_result=[];
-        foreach($array as $el){
-            $return_result[$el['name']]=$el['name'];
-            
-        }
-        return $return_result;
-    }
-    
+
     
     
  
