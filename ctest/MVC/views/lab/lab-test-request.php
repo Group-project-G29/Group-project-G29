@@ -10,13 +10,13 @@ $component = new Component();
   <?php echo $component->searchbar('', 'search', 'search-bar--class2', 'Search by name,specilaity', 'searchbar'); ?>
 </div>
 
-<div class="main-card ">
+<div class="main-card">
   <?php foreach ($tests as $test) : ?>
 
     <div class="card" id=<?=$test['patient_ID']?> >
 
       <div class="card-header-1 " style="padding-top: 5vh;padding-bottom:7.9vh">
-        <h5><b>Name :</b><?= $test['doc_name'] ?> </h5>
+        <h5><b>Doctor Name :</b><?= $test['doc_name'] ?> </h5>
 
         <h5><b>Patient :</b><?= $test['patient_name'] ?> </h5>
         <h5><b>Req date & Time :</b><?= $test['requested_date_time'] ?> </h5>
@@ -24,7 +24,7 @@ $component = new Component();
         <h5><b>Test :</b><?= $test['test_name'] ?> </h5>
 
       </div>
-      <!-- <a href="lab-write-test-result.php"> -->
+     
       <div >
       <?php echo $component->button('edit-details', '', 'Write Test Result', 'button--class-7  width-10', $test['request_ID']); ?>
       </div></a>

@@ -7,7 +7,7 @@
 use app\core\component\Component;
 
 $component = new Component();
-$curr_test = $labtestmodel->name;
+// $curr_test = $labtestmodel->name;
 // var_dump($curr_test);
 // exit;
 
@@ -21,7 +21,7 @@ use \app\core\form\Form; ?>
     <div class="field-container">
         <div class="header-container" style=" padding-top:0vh;">
 
-            <?php $form = Form::begin('lab-add-new-test?cmd=tst', 'post'); ?>
+            <?php $form = Form::begin('', 'post'); ?>
             <section class="reg_body-spec" style="padding:5vw;">
                 <!-- <div class="reg-body-spec fields" style="padding-left:15vw"> -->
                 <table>
@@ -41,82 +41,49 @@ use \app\core\form\Form; ?>
 
                     ?>
                 </table>
-                <div class="button" style="margin-top: 2vh;padding-left:15vw">
-                    <?= $component->button('btn', '', 'Add Template', 'button--class-0', 'btn-1'); ?>
+                <div class="button" style="margin-top: 2vh;padding-left:15vw" id=<?= $labtestmodel->name?>>
+                    <?= $component->button('btn-0', '', 'Submit', 'button--class-0', 'btn-1'); ?>
                 </div>
                 <?php Form::end() ?>
+               
             </div>
         </section>
 
 
     </div>
 </div>
-    <!-- popup -->
-    <div class="popup-container" id="popup">
-        <div class="modal-form">
-
-            <h1 class="modal-title">Add Report Template</h1>
-
-            <div class="form-body">
-                <?php $form = Form::begin('lab-add-new-test?cmd=tmp&id=' . $curr_test, 'post'); ?>
-
-                <?php echo $form->field($templatemodel, 'title', 'Title*', 'field-1', 'text', 'title-1') ?>
-                <?php echo $form->field($templatemodel, 'subtitle', 'Sub Title', 'field-1', 'text', 'sub') ?>
-               
-                <div class="button" style="margin-top: 2vh;padding-left:15vw">
-                <?= $component->button('btn', 'submit', 'NEXT', 'button--class-0 width-10', 'btn-2'); ?>
-                </div>
-
-                <?php Form::end() ?>
-                <?= $component->button('btn', 'submit', 'next', 'button--class-5', 'btn-2'); ?>
-
-            </div>
-            <?= $component->button('btn', 'submit', "&times", '', 'closebtn'); ?>
-
-        </div>
-
-    </div>
+    
+    
 
     <script>
-        // <?php if (isset($popup)) : ?>
-        //     <?php if ($popup == 'add-temp') : ?>
-        //         openPopup_popup_add_tmp();
-        //     <?php endif; ?>
-        // <?php endif; ?>
-        // function openPopup_popup_add_tmp(){
-        //     popup_add_tmp.classList.add("open-popup");
-        // }
-        // function closePopup_popup_add_tmp(){
-        //     popup_add_tmp.classList.remove("open-popup");
-        // }
-
-        elementsArray = document.querySelectorAll("#btn-2");
+        
+        elementsArray = document.querySelectorAll("#btn-1");
         console.log(elementsArray);
         elementsArray.forEach(function(elem) {
             elem.addEventListener("click", function() {
-                location.href = 'lab-test-template'; //pass the variable value
+                location.href = 'lab-add-new-template?id='+elem.id; //pass the variable value
             });
         });
+        
+        // var closebtn = document.getElementById("closebtn");
+        // var addtemplatebtn = document.getElementById("btn-1");
+        // // var add = document.getElementById("btn-2");
+        // addtemplatebtn.onclick = function(event) {
+        //     event.preventDefault();
+        //     popup.style.display = "block";
 
-        var popup = document.getElementById("popup");
-        var closebtn = document.getElementById("closebtn");
-        var addtemplatebtn = document.getElementById("btn-1");
-        var add = document.getElementById("btn-2");
-        addtemplatebtn.onclick = function() {
-            popup.style.display = "block";
-
-        }
-        closebtn.onclick = function() {
-            popup.style.display = "none";
-        }
+        // }
+        // closebtn.onclick = function() {
+        //     popup.style.display = "none";
+        // }
         // add.onclick=function(x){
         //     // x.disable=true;
         //     popup.style.display="none";
         // }
 
-        window.onclick = function(event) {
-            if (event.target == popup) {
+        // window.onclick = function(event) {
+        //     if (event.target == popup) {
 
-            }
-        }
+        //     }
+        // }
     </script>

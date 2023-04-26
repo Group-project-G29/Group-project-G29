@@ -15,7 +15,7 @@ $component = new Component();
   <?php echo $component->button('edit-details', '', 'Add New Test', 'button--class-0  width-10', 'edit-details'); ?>
   </div>
 </div>
-<div class="main-card ">
+<!-- <div class="main-card ">
   <?php foreach ($tests as $test) : ?>
 
     <div class="card">
@@ -41,7 +41,25 @@ $component = new Component();
 
   <?php endforeach; ?>
 
+</div> -->
+
+
+<?php foreach ($tests as $test) : ?>
+<div class="card-new">
+
+  <div class="card-details">
+    <p class="text-title"><?= $test['name'] ?></p>
+    <!-- <p class="text-body"><b>Name :</b><?= $test['name'] ?> </h4> -->
+        <p class="text-body"4><b>Test Fee :</b><?= $test['test_fee'] ?> </h4>
+        <p class="text-body"><b>Hospital Fee :</b><?= $test['hospital_fee'] ?> </h4>
+  </div>
+  <!-- <button class="card-button"> -->
+  <?php echo $component->button('edit-details', '', 'Edit Details', 'button--class-7 ', $test['name']) ?>
+  <?php echo $component->button('edit-details', '', 'Delete', 'button--class-9', $test['name']) ?>
+
+  <!-- </button> -->
 </div>
+<?php endforeach; ?>
 
 <script>
   elementsArray = document.querySelectorAll(".button--class-0");
@@ -68,11 +86,15 @@ $component = new Component();
     });
   });
 
-  elementsArray = document.querySelectorAll(".button--class-8");
+  elementsArray = document.querySelectorAll(".button--class-9");
   console.log(elementsArray);
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {
       location.href = 'lab-test-delete?cmd=delete&id=' + elem.id; //pass the variable value
     });
   });
+
+  // const color=[];
+
+  // color[1]=
 </script>

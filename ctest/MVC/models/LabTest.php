@@ -15,13 +15,13 @@ class LabTest extends DbModel{
    
 
     public function addTest(){
-        parent::save();
+        return parent::save();
     }
  
     public function rules(): array
     {
         return [
-            'name'=>[self::RULE_REQUIRED],
+            'name'=>[self::RULE_REQUIRED,[self::RULE_UNIQUE,'attribute'=>'name','tablename'=>'lab_tests']],
             'test_fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>100000000000]],
             'hospital_fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>100000000000]],
             'template_ID'=>[],

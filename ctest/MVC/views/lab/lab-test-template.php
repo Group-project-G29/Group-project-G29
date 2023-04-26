@@ -44,11 +44,11 @@ $component = new Component();
     <table class="template">
         <tr>
 
-            <td> <?php echo $form->select($contentmodel, 'type', 'Type', 'field', [ 'image', 'field', 'text','select'], 'picker'); ?></td>
+            <td> <?php echo $form->select($contentmodel, 'type', 'Type', 'field', [  'field','image', 'text','select'], 'picker'); ?></td>
             <td> <?php echo $form->field($contentmodel, 'name', 'Name', 'hide', 'text', 'name'); ?></td>
             <td><?php echo $form->field($contentmodel, 'reference_ranges', 'Reference Range', 'hide', 'text', 'range'); ?></td>
             <td> <?php echo $form->select($contentmodel, 'metric', 'Metric', 'hide', [ 'K/UL', 'MIL/UL', 'G/UL', 'FL','select'], 'metric'); ?></td>
-            <!-- <td><?php echo $form->field($contentmodel, 'position', '', 'hide', 'file', 'img'); ?></td> -->
+            
         </tr>
     </table>
     <div class="button" style="margin-top: 2vh;">
@@ -74,7 +74,6 @@ $component = new Component();
                                 <td><b>Name :</b><?= $content['name'] ?> </td>
                                 <td><b>Metric :</b><?= $content['metric'] ?> </td>
                                 <td><b>Reference Ranges :</b><?= $content['reference_ranges'] ?> </td>
-                                <!-- <td> <i class="fa fa-trash" aria-hidden="true"></i> -->
                                 <td><?= $component->button('btn', '', 'X', 'btn-1', $content["content_ID"]); ?></td>
                                 <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $content["content_ID"]); ?></td> -->
 
@@ -158,7 +157,7 @@ $component = new Component();
     const name = document.querySelector("#name");
     const reference_ranges = document.querySelector('#range');
     const metric = document.querySelector('#metric');
-    const position = document.querySelector('#position');
+    
 
     function hide(element, hideClass = 'hide', visibleClass = 'field') {
         element.classList.remove(visibleClass);
@@ -179,8 +178,8 @@ $component = new Component();
 
         } else if (select.value == 'image') {
             visible(name);
-            visible(img);
-            hide(reference_ranges);
+            hide(img);
+            visible(reference_ranges);
             hide(metric)
 
 

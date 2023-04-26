@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 
 require_once __DIR__.'/../vendor/autoload.php';
 // require_once 'C:\xampp\htdocs\ctest\MVC\public\dompdf\autoload.inc.php';
-// require_once '.dompdf\autoload.inc.php';
+ require_once 'dompdf\autoload.inc.php';
 use app\controllers\AdminController;
 use \app\core\Application;
 use \app\controllers\SiteController;
@@ -192,12 +192,17 @@ $app->router->get('/ctest/lab-test-update',[LabController::class,'handleTest']);
 $app->router->post('/ctest/lab-test-update',[LabController::class,'handleTest']);
 $app->router->get('/ctest/lab-test-delete',[LabController::class,'handleTest']);
 $app->router->post('/ctest/lab-test-delete',[LabController::class,'handleTest']);
+$app->router->get('/ctest/lab-add-new-template',[LabController::class,'handleTemplate']);
+$app->router->post('/ctest/lab-add-new-template',[LabController::class,'handleTemplate']);
+
 $app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']);
 $app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);
 $app->router->get('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
 $app->router->post('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
 $app->router->get('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
 $app->router->post('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
+$app->router->get('/ctest/lab-view-report-detail',[LabController::class,'ReportDetail']);
+$app->router->post('/ctest/lab-view-report-detail',[LabController::class,'ReportDetail']);
 $app->router->get('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
 $app->router->post('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
 $app->router->get('/ctest/lab-write-test-report',[LabController::class,'writeReport']);

@@ -10,7 +10,7 @@ include "../views/layouts/navbar/lab-navbar.php";
 
 
 
-         <?php $sidebar=new Sidebar(['Requests'=>'/ctest/lab-test-request','Tests'=>'/ctest/lab-view-all-test','Templates'=>'/ctest/lab-view-all-template','Advertisement'=>'/ctest/lab-view-advertisement','My Detail'=>'/ctest/lab-view-personal-details'],$select);?>
+         <?php $sidebar=new Sidebar(['Requests'=>'/ctest/lab-test-request','Tests'=>'/ctest/lab-view-all-test','Templates'=>'/ctest/lab-view-all-template','Lab Reports'=>'/ctest/lab-view-all-report','My Detail'=>'/ctest/lab-view-personal-details'],$select);?>
 
          <?php echo $sidebar;  ?>
         

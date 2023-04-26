@@ -1521,12 +1521,20 @@ padding-left:5vh;
   .card-header-1 {
       text-align: center;
       padding: 2vh;
+      /* background-color:#AEE2FF; */
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      /* height: 50vh;
+      width: 50vh; */
 
   }
 
   .main-card {
       margin-top: 2vh;
       padding-top: 5vh;
+      /* background-image: url(media/images/lab/bg/1.jpeg); */
+
   }
 
   .image {
