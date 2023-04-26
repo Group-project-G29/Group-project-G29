@@ -25,14 +25,14 @@
             $str="";
             foreach($this->options as $option){
                 
-                if ($this->model->{$this->attribute}??'' && strcmp($this->model->{$this->attribute},$option)) {
+                if (strcmp($this->model->{$this->attribute},$option)) {
                     $str.="<option value='$option'>".ucfirst($option)."</option>";
                 }
                 else{
                     $str .= "<option value='$option' selected>" .ucfirst($option) . "</option>";
                 }
             }
-            $str='<div class="%s" id=%s>
+            $str='<div class="%s" id="%s">
                     <div class="field-upper_text">
                         <label for="%s">%s</label>
                         <h3 class="fs-50  fc-color--error">%s</h3>

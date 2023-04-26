@@ -28,7 +28,7 @@
             $i=0;
             foreach($this->options as $name=>$value){
            
-                if ($this->model->{$this->attribute} && strcmp($this->model->{$this->attribute},$value)) {
+                if (strcmp($this->model->{$this->attribute},$value)) {
                     $str .= "<option value='$value' >" . ucfirst($name) . "</option>";
                 }
                 else{

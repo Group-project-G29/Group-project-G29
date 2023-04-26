@@ -39,8 +39,8 @@ $appointmentModel=new Appointment();
                         </table>
                     </div>
                     <div class="ass-button-set">
-                            <?=$component->button('write report','','Write Report','button-class--lightblue','write-ref');?>
-                            <?=$component->button('Upload report','','Upload Report','button-class--lightblue','upload-ref');?>
+                            <?=$component->button('write referral','','Write Referral','button-class--lightblue','write-ref');?>
+                            <?=$component->button('Upload referral','','Upload Referral','button-class--lightblue','upload-ref');?>
                     </div>
                 </div>
                 <div class="wrapper--last-consultation none">
@@ -138,7 +138,15 @@ $appointmentModel=new Appointment();
                         <div>
                             <table>
                                 <tr>
+<<<<<<< HEAD
+<<<<<<< HEAD
+                                    <th>Prescription</th><th>created date</th>
+=======
                                     <th>Prescription</th><th>created date</th><th><?=$component->button('write Prescription','','Write Prescription','button-class--lightblue','write-pres');?></th><th> <?=$component->button('Upload Prescription','','Write Prescription','button-class--lightblue','upload-pres');?></th>
+>>>>>>> 20000758
+=======
+                                    <th>Prescription</th><th>created date</th><th><?=$component->button('write Prescription','','Write Prescription','button-class--lightblue','write-pres');?></th><th> <?=$component->button('Upload Prescription','','Write Prescription','button-class--lightblue','upload-pres');?></th>
+>>>>>>> 20000804
                                 </tr>
                                 <?php foreach($reports as $report): ?>
                                 
@@ -150,6 +158,15 @@ $appointmentModel=new Appointment();
                         </div>
                         
                     </div>
+<<<<<<< HEAD
+<<<<<<< HEAD
+                    <div class="ass-button-set">    
+                        <?=$component->button('write Prescription','','Write Prescription','button-class--lightblue','write-pres');?>
+                    </div>
+=======
+>>>>>>> 20000758
+=======
+>>>>>>> 20000804
                 </div>
                 <div class="wrapper--lab-tests none">
                     <div class="variable-container-item flex">

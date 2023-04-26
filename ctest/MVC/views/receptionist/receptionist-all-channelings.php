@@ -37,12 +37,14 @@ $component = new Component();
 
   <table border="0">
 
-    <tr class="row-height header-underline">
-      <th>Doctor</th>
-      <th>Type</th>
+      <div class="card-0" id=<?= $channeling['career_speciality'] ?>>
+         
+          <div class="card-header-1 " style="padding-top: 15vh;">
 
-    </tr>
+            <h1><?= $channeling['career_speciality'] ?> </h1>
+          </div>
 
+       
 
     <?php foreach ($channelings as $key => $channeling) : ?>
       
@@ -54,6 +56,7 @@ $component = new Component();
     <?php endforeach; ?>
 
 
+</div>
 
 
   </table>

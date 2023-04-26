@@ -3,6 +3,7 @@
     use app\core\Application;
     use app\models\Cart;
 use app\models\Medicine;
+use app\models\Prescription;
 
     class CartView{
         public int $count;
@@ -16,8 +17,16 @@ use app\models\Medicine;
             $component=new Component();
             $cartModel=new Cart();
             $medicineModel=new Medicine();
+            $prescriptionModel=new Prescription();
             $items= $cartModel->fetchAssocAllByName(['cart_ID'=>$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID']],'medicine_cart');
             $stritem="";
+            $prescriptions=$prescriptionModel->fetchAssocAllByName(['cart_ID'=>$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID']],'prescription');
+            foreach($prescriptions as $pres){
+                $stritem.="<div>
+                                <h5>Added Date:".$pres['uploaded_date']."</h5>
+                                <div class='cart-item'><a href=#>".$pres['type']."</a><a href=patient-pharmacy?spec=prescription&cmd=delete&id=".$pres['prescription_ID'].">x</a></div>
+                        </div>";
+            }
             foreach($items as $item){
                 if($medicineModel->checkStock($item['med_ID'])){
                     $stritem.= '
@@ -56,14 +65,30 @@ use app\models\Medicine;
 
                 .'</div></div>
                 </section> 
+                <script src="./media/js/main.js"></script>
             <script>
-                const cart=document.querySelectorAll(".cart");
-                cart.addEventListener("click",()=>{
-                    location.href="#";
-                });
+               const updateButtons=e(".update-buttons-cart","classall");
+                updateButtons.forEach((elem)=>{
+                    elem.addEventListener("click",()=>{
+                        let element=(""+elem.id).split("_")[1];
+                        let input_amount=e("amount2_"+element);
+                        let amount=input_amount.value;
+                        if(!amount){
+                            
+                        }
+                        else{
+                            location.href="patient-pharmacy?spec=medicine&cmd=add&item="+element+"&amount="+amount;
+                        }
+                    })
+                })
+                const paymentbtn=e("proceed-to-payment");
+                paymentbtn.addEventListener("click",()=>{
+                    location.href="patient-medicine-order?spec=order&mod=view";
+                })
             </script>
             ',$cartModel->getItemCount(),$this->count);     
             
         
     }
+    
 }

@@ -30,6 +30,9 @@ class EmployeeAuthController extends Controller{
                 }
                 else if($user->role=='lab'){
                     $response->redirect('/ctest/lab-view-all-test');
+                } 
+                else if($user->role=='delivery'){
+                    $response->redirect('/ctest/delivery-my-deliveries');
                 }
                 else{
                     $response->redirect('/ctest/'.$user->role);

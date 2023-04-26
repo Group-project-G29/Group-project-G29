@@ -14,9 +14,9 @@
 <table border="0">
     
     <?php foreach($advertisements as $key=>$advertisement): ?>
-    <tr class="table-row">
-        <td><img src=<?="./media/images/advertisements/".$advertisement["img"] ?> alt="Loading image"></td>
-        <td style="width: 30vw; text-align:start;"><b style="font-size: 1.2rem; line-height: 4vh;"><?=$advertisement['title']?></b><br>
+    <tr class="table-row" style="width: 95vw;">
+        <td><img src=<?="./media/images/advertisements/".$advertisement["img"] ?> alt="Loading image" style="height: 250px; width: 300px;" ></td>
+        <td style="width: 40vw; text-align:start;"><b style="font-size: 1.2rem; line-height: 4vh;"><?=$advertisement['title']?></b><br>
             <?=$advertisement['description']?></td>
         <td><?php echo $component->button('update','','Update','button--class-2',$advertisement['ad_ID']) ?></td>
         <td><?php echo $component->button('delete',' ','Delete','button--class-3',$advertisement['ad_ID']) ?></td>  

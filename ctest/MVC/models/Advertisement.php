@@ -40,6 +40,7 @@ class Advertisement extends DbModel{
  
     
     public function addAdvertisement(){
+        // var_dump($this,"jhgoljh");exit;
         return parent::save();
     }
  
@@ -52,11 +53,10 @@ class Advertisement extends DbModel{
     }
 
     public function fileDestination(): array {
-        if($this->type=='pharmacy'){
+        if($this->type='pharmacy'){
             return ['img'=>"media/images/advertisements/pharmacy/".$this->img];
-        }else{
-            return ['img'=>"media/images/advertisements/".$this->img];
         }
+        return ['img'=>"media/images/advertisements/".$this->img];
     }
     public function deleteImage($imgName, $type){
         if($type=='pharmacy'){

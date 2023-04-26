@@ -5,11 +5,21 @@
             "app\\": "./"
         }
     },
+    
+     "repositories": [
+          {
+            "type": "git",
+            "url": "https://github.com/notifylk/notify-php.git"
+          }
+        ],
     "authors": [
         {
             "name": "YNimantha",
             "email": "2020cs205@stu.ucsc.cmb.ac.lk"
         }
     ],
-    "require": {}
+    "require": {
+        "dompdf/dompdf": "^0.6.2",
+         "notifylk/notify-php": "*@dev"
+    }
 }

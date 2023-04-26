@@ -5,8 +5,6 @@ use app\core\DbModel;
 use app\core\Application;
 use app\core\Calendar;
 use app\core\Date;
-use app\core\UserModel;
-use JetBrains\PhpStorm\Internal\ReturnTypeContract;
 
 class Appointment extends DbModel{
     public string $opened_channeling_ID='';
@@ -14,7 +12,7 @@ class Appointment extends DbModel{
     public int $queue_no=0;
     public string $payment_status='';
     public ?string $type="";
-    public ?string $status="";
+    public ?string $status="unused";
   
 
   
@@ -40,8 +38,10 @@ class Appointment extends DbModel{
         $this->queue_no=$ap[2];
         $this->payment_status=$ap[3];
         $this->type=$ap[4];
-        $this->status='new';
-        return parent::save();
+        $this->status='unused';
+        $result=parent::save();
+        Application::$app->session->set('Appointment',$result[0]['last_insert_id()']);
+        return $result;
 
     }
 
@@ -59,14 +59,19 @@ class Appointment extends DbModel{
         $calendarModel=new Calendar();
         $channeling_date=$this->fetchAssocAllByName(['opened_channeling_ID'=>$opened_channeling],'opened_channeling')[0]['channeling_date'];
         //check all  the past channeling dates of the doctor where patient joined
-        $last_appointment_date=$this->customFetchAll("select max(channeling_date) from past_channeling_patient where doctor=$doctor and patient_ID=$patient")[0]['max(channeling_date)']??'';
+        $last_appointment_date=$this->customFetchAll("select max(o.channeling_date)  from appointment as a right join  past_channeling as p on a.opened_channeling_ID=p.opened_channeling_ID left join opened_channeling as o on o.opened_channeling_ID=p.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID where c.doctor=$doctor and a.patient_ID=$patient")[0]['max(o.channeling_date)']??'';
         $l=$last_appointment_date;
         if($last_appointment_date=='') return false;
         //add two weeks
         $last_appointment_date=$calendarModel->addDaysToDate($last_appointment_date,14);
         //if channeling date<two week+patient last appointment reutrn true else false
         //if he already have labtest appointment return false
-        if($dateModel->greaterthan($last_appointment_date,$channeling_date)){
+        $labtestAppointments=$this->customFetchAll("select *  from appointment as a right join  past_channeling as p on a.opened_channeling_ID=p.opened_channeling_ID left join opened_channeling as o on o.opened_channeling_ID=p.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID where a.type='labtest' and c.doctor=$doctor and a.patient_ID=$patient")[0]['max(o.channeling_date)']??'';
+        if($labtestAppointments){
+            return false;
+        }
+        
+        else if($dateModel->greaterthan($last_appointment_date,$channeling_date)){
             return false;
         }
         else{
@@ -74,8 +79,13 @@ class Appointment extends DbModel{
         }
 
     }
-
-    
+    //check whether the appointment is valid
+    public function isInPass($appointment){
+        $result=$this->customFetchAll("Select * from opened_channeling left join appointment on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID where  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and appointment.status='unused' and appointment.appointment_ID=".$appointment);
+        if($result) return true;
+        else return false;
+    } 
+   
     public function getAppointmentType($patientID,$channelingID){
         return $this->customFetchAll("select type from appointment where patient_ID=$patientID and opened_channeling_ID=$channelingID ");
     }
@@ -106,12 +116,12 @@ class Appointment extends DbModel{
         return 'appointment_ID';
     }
     public function tableRecords(): array{
-        return ['appointment'=>['opened_channeling_ID','patient_ID','queue_no','payment_status','type']];
+        return ['appointment'=>['opened_channeling_ID','patient_ID','queue_no','payment_status','type','status']];
     }
 
     public function attributes(): array
     {
-        return ['opened_channeling_ID','patient_ID','queue_no','payment_status','type'];
+        return ['opened_channeling_ID','patient_ID','queue_no','payment_status','type','status'];
     }
      public function getTotoalPatient($channelingID){
         //take count in the database on appointment
@@ -125,7 +135,28 @@ class Appointment extends DbModel{
     public function updateStatus($id,$status){
         $this->customFetchAll("update appointment set status='$status' where appointment_ID=".$id);
     }
+    public function getAppointmentCount($opened_channeling){
+        return $this->customFetchAll("select count(appointment_ID) from appointment where opened_channeling_ID= ".$opened_channeling)[0]['count(appointment_ID)'];
+    }
     
+    public function growthOfPatients(){
+        $dateModel=new Date();
+        $today=Date('Y-m-d');
+        $year=$dateModel->get($today,'year')-1;
+        $month=$dateModel->get($today,'month');
+        $day=$dateModel->get($today,'day');
+        $lowdate=$dateModel->arrayToDate([$day,$month,$year]);
+        $update=$dateModel->arrayToDate([01,$month,$dateModel->get($today,'year')]);
+
+        $result = $this->customFetchAll("SELECT MONTH(opened_channeling.channeling_date), COUNT(appointment.appointment_ID) FROM `appointment` LEFT JOIN `opened_channeling` ON appointment.opened_channeling_ID = opened_channeling.opened_channeling_ID WHERE opened_channeling.channeling_date>='$lowdate' and opened_channeling.channeling_date<'$update' AND appointment.status='used' GROUP by MONTH(opened_channeling.channeling_date);");
+
+        $value=[0,0,0,0,0,0,0,0,0,0,0,0];
+        foreach($result as $row){
+            $value[$row['MONTH(opened_channeling.channeling_date)']-1]=$row['COUNT(appointment.appointment_ID)'];
+        }
+
+        return ['values'=>$value];
+    }
 }   
 
 
