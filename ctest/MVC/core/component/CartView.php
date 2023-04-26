@@ -24,7 +24,11 @@ use app\models\Prescription;
             foreach($prescriptions as $pres){
                 $stritem.="<div>
                                 <h5>Added Date:".$pres['uploaded_date']."</h5>
+<<<<<<< HEAD
                                 <div class='cart-item'><a href=#>".$pres['type']."</a><a href='patient-pharmacy?spec=prescription&cmd=remove&id=".$pres['prescription_ID']."'>x</a></div>
+=======
+                                <div class='cart-item'><a href=#>".$pres['type']."</a><a href=patient-pharmacy?spec=prescription&cmd=delete&id=".$pres['prescription_ID'].">x</a></div>
+>>>>>>> 20000758
                         </div>";
             }
             foreach($items as $item){

@@ -5,6 +5,7 @@ use app\core\component\Component;
 $component=new Component();
 $form=Form::begin('','post');
 
+// var_dump($doctors);
 ?> 
 
 

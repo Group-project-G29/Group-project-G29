@@ -876,24 +876,6 @@ class PatientAuthController extends Controller{
         return $this->render('patient/lab-page',[
             'tests' => $tests
         ]);
-    }
-
- 
-
-
-   
-
-
-
-   
-
-
-
-   
-
-
-
-   
-
+    } 
 
 }

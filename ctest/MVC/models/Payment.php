@@ -3,6 +3,7 @@ namespace app\models;
 
 use app\core\DbModel;
 use app\core\Application;
+use app\core\Date;
 use app\core\UserModel;
 
 class Payment extends DbModel{
@@ -46,6 +47,34 @@ class Payment extends DbModel{
     } 
         
         
+
+    public function earningValues($para){
+        $dateModel=new Date();
+        $today=Date('Y-m-d');
+        $year=$dateModel->get($today,'year')-1;
+        $month=$dateModel->get($today,'month');
+        $update=$dateModel->arrayToDate([01,$month,$dateModel->get($today,'year')]);
+
+        if($para == 'year'){
+            $lowdate=$dateModel->arrayToDate([01,$month,$year]);
+            
+            $result = $this->customFetchAll("SELECT MONTH(generated_timestamp), SUM(amount) FROM `payment` WHERE generated_timestamp>='$lowdate' and generated_timestamp<'$update' GROUP by MONTH(generated_timestamp);");
+            // var_dump($result);exit;
+    
+            $value=[0,0,0,0,0,0,0,0,0,0,0,0];
+            foreach($result as $row){
+                $value[$row['MONTH(generated_timestamp)']-1]=$row['SUM(amount)'];
+            }
+        }
+        elseif($para == 'month'){
+            $value = $this->customFetchAll("SELECT SUM(amount) FROM `payment` WHERE generated_timestamp>='$update';");
+        }
+        return ['value'=>$value];
+    }
+
+    //pay  payment
+
+    //create payment
 
 
     //sandbox

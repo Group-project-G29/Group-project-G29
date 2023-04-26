@@ -488,7 +488,7 @@ select{
     position: absolute;
     top:14vh;
     left:15vw;
-    width:75vw
+    width:80vw
   
   }
   .semi-header-container{
@@ -881,7 +881,10 @@ select{
 
   }
 
- 
+  .header-container {
+      padding-top: 20vh;
+      text-align: center;
+  }
 
 
 .header-container{
@@ -916,15 +919,15 @@ select{
     margin-top: 3vh;
     align-items: center;
     justify-content: center;
-    width: 80vw;
 }
 
 .table-container>table{
     border-collapse: separate;
     border-style: hidden;
     border-spacing: 0px 1vh;
-    margin: 0vh 3vw 5vw 1vw;
+    margin-top: 0vh;
     width: 80vw;
+    margin-left: 2vw;
     border-color:transparent;
     z-index: 0;
 }
@@ -1126,6 +1129,12 @@ select{
 
 .button--class-0-deactive{
     opacity: 80%;
+    height:4vh;
+    font-size: 0.9em;
+    color: var(--clr-white);
+    background-color:var(--clr-dark);
+    border:none;
+    border-radius:5px;
 }
 /* buttons */
 .button-1{
@@ -1325,7 +1334,7 @@ select{
     /* border-radius: 5px; */
 }
 
-/* .button--class-0:hover,
+.button--class-0:hover,
 .button--class-0-deactive:hover {
     scale: 1.05;
     transition: 0.5s;
@@ -1333,7 +1342,7 @@ select{
 
 .button--class-0-deactive:hover {
     opacity: 80%;
-} */
+}
 
 .button--class-1{
     height:4vh;
@@ -1441,9 +1450,7 @@ select{
 
       background-color: rgba(0, 0, 0, .75);
       position: fixed;
-      top:-0vh;
-      left:15vw;
-      width: 120vw;
+      width: 100vw;
       height: 100vh;
       z-index: 9;
   }
@@ -1518,20 +1525,11 @@ select{
   .card-header-1 {
       text-align: center;
       padding: 2vh;
-      /* background-color:#AEE2FF; */
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-      /* height: 50vh;
-      width: 50vh; */
-
   }
 
   .main-card {
       margin-top: 2vh;
       padding-top: 5vh;
-      /* background-image: url(media/images/lab/bg/1.jpeg); */
-
   }
 
   .image {
@@ -1539,7 +1537,7 @@ select{
       height: 35%;
       margin-left: 13vh;
       transform: translateX(-10%);
-      background-color: var(--clr-font-color);
+      background-color: var(--clr-card-blue);
       border-radius: 50%;
       margin-top: 2vh;
       /* position: absolute; */
@@ -2060,34 +2058,4 @@ select{
   background-color:var(--clr-dark);
   border:none;
   border-radius:5px;
-}
-
-
-/* editable selects */
-.in{
-    border: 1px solid gainsboro;
-    border-radius: 5px;
-    min-width:250px;
-}
-.edse{
-    border-bottom: 1px solid gainsboro;
-    height:30px;
-    padding: 5px;
-    background-color: white;
-}
-.edsecon{
-    position: relative;
-    
-}
-.edse-container{
-    position:relative;
-    left:148px;
-    overflow-y: scroll;
-    max-height:200px;
-    max-width:250px;
-    border: 1px solid gainsboro;
-    border-radius: 5px;
-    border-top: none;
-    border-bottom: none;
-    
 }

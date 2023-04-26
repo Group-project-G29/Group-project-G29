@@ -108,8 +108,17 @@ class NurseController extends Controller{
             $id = $parameters[0]['id'];
             // echo($id);exit();
         }
+
         $channeling=$Channeling->customFetchAll("SELECT * FROM `channeling` INNER JOIN `employee` ON channeling.doctor = employee.nic WHERE channeling_ID=$id;");
-        $openedChanneling=$OpenedChanneling->customFetchAll("SELECT * FROM `opened_channeling` WHERE channeling_ID=$id AND status != 'not open' AND status != 'end';");
+
+        $day = $channeling[0]['open_before'];
+        // Declare a date
+        $today = date("Y-m-d");
+        // Add days to date and display it
+        $afterDate = date('Y-m-d', strtotime($today. ' + '.$day.' days'));
+        // adde((event)=>{event.preventDefault()})
+        $openedChanneling=$OpenedChanneling->customFetchAll("SELECT * FROM `opened_channeling` WHERE channeling_ID=$id AND channeling_date >= '$today' AND channeling_date <= '$afterDate';");
+        // var_dump($afterDate);exit;
         $docNIC = $channeling[0]['doctor'];
         $doctor = $Doctor->customFetchAll("SELECT * FROM `employee` WHERE nic=$docNIC;");
         $nurse = $Nurse->customFetchAll("SELECT * FROM `nurse_channeling_allocataion` INNER JOIN `employee` ON nurse_channeling_allocataion.emp_ID = employee.emp_ID WHERE channeling_ID=$id;");
@@ -173,7 +182,12 @@ class NurseController extends Controller{
         $pre = $parameters[2]['p']??"";
         $nex = $parameters[2]['n']??"";
         $view2 = $parameters[3]['view']??"";
+        $prevNum = $parameters[3]['prevNum']??"";
         $number = (int)$num;
+
+        if(!$prevNum){
+            if($number == 0){$prevNum = 1;}else if($number>0){$prevNum=$number+1;}else{$prevNum=0;}
+        }
 
         // var_dump($parameters);exit;
         $Channeling=new Channeling();
@@ -197,10 +211,11 @@ class NurseController extends Controller{
 
         // $nurse = $Nurse->customFetchAll("SELECT * FROM `nurse_channeling_allocataion` INNER JOIN `employee` ON nurse_channeling_allocataion.emp_ID = employee.emp_ID WHERE channeling_ID=$id;");
         
-        $reApp = count($patient);
+        // number of remaining Appointments
+        $reAppo = count($patient);
         // var_dump($reApp);exit;
         if($pre){
-            if(0<$number && $number<$reApp){
+            if(0<$number && $number<$reAppo){
                 $newNumber = $number-1;
             }
             else{
@@ -208,11 +223,11 @@ class NurseController extends Controller{
             }
         }
         else if($nex){
-            if(-1<$number && $number<$reApp-1){
+            if(-1<$number && $number<$reAppo-1){
                 $newNumber = $number+1;
             }
-            else if($number >= $reApp-1){
-                $newNumber = $reApp-1;
+            else if($number >= $reAppo-1){
+                $newNumber = $reAppo-1;
             }
             else if($number < 0){
                 $newNumber = 0;
@@ -240,11 +255,11 @@ class NurseController extends Controller{
                 "number" => $newNumber,
                 "id" => $id,
                 "tests" => $tests,
-                "testValues" => $testValue
+                "testValues" => $testValue,
             ]);
         }
         
-
+ 
         return $this->render('nurse/nurse-list-patient',[
             "channeling" => $channeling[0],
             "doctor" => $doctor[0],
@@ -252,7 +267,9 @@ class NurseController extends Controller{
             "number" => $newNumber,
             "id" => $id,
             "tests" => $tests,
-            "testValues" => $testValue
+            "testValues" => $testValue,
+            "reAppo" => $reAppo,
+            "prevNum" => $prevNum
         ]);
     }
 

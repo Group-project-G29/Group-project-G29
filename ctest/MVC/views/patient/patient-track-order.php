@@ -60,6 +60,7 @@ use app\core\component\Component;
             }
             
                 ?>
+<<<<<<< HEAD
 <section class="order-main">
 <?php if($order['pickup_status']=='delivery'):?>
     <section>
@@ -67,10 +68,18 @@ use app\core\component\Component;
         <div>
             <h4>Track Your Orders</h4>
             <h5>Share PIN with Delivery Rider on Completion of Delivery</h5>
+=======
+<?php if($order['pickup_status']=='delivery'):?>
+    <section>
+        <div>
+            <h3>Track Your Orders</h2>
+            <h3>Share PIN with Delivery Rider on Completion of Delivery</h3>
+>>>>>>> 20000758
             <div>
                 <h3><?=$order['PIN'] ?></h3>
             </div>
         </div>
+<<<<<<< HEAD
         <div class="recepient-information">
             <table border="0">
                 <tr><td><h4>Recipient Name</h4></td><td><h4>: <?=$order['name']?></h4></td></tr>
@@ -78,10 +87,20 @@ use app\core\component\Component;
                 <tr><td><h4>Time</h4></td><td><h4>: <?=explode(" ",$order['time_of_creation'])[0]?></h4></td></tr>
                 <tr><td><h4>Date</h4></td><td><h4>: <?=explode(" ",$order['time_of_creation'])[1]?></h4></td></tr>
                 <tr><td><h4>Payment</h4></td><td><h4>: <?=$order['payment_status']?></h4></td></tr>
+=======
+        <div>
+            <table border="0">
+                <tr><td><h3>Recipient Name</h2></td><td><h4>: <?=$order['name']?></h4></td></tr>
+                <tr><td><h3>Address</h2></td><td><h4>: <?=$order['address'] ?></h4></td></tr>
+                <tr><td><h3>Time</h2></td><td><h4>: <?=explode(" ",$order['time_of_creation'])[0]?></h4></td></tr>
+                <tr><td><h3>Date</h2></td><td><h4>: <?=explode(" ",$order['time_of_creation'])[1]?></h4></td></tr>
+                <tr><td><h3>Payment</h2></td><td><h4>: <?=$order['payment_status']?></h4></td></tr>
+>>>>>>> 20000758
             
             </table>
         </div>
       
+<<<<<<< HEAD
         <div>
             <h3>Order Status</h3>
             
@@ -198,6 +217,72 @@ use app\core\component\Component;
 
 </section>
 </section>
+=======
+        <div>
+            <h3>Order Status</h2>
+            
+        </div>
+        <div>
+            <div>
+                <img src="media/images/patient/pending.png" class=<?="'".$pending."'"?>>
+                <h3>Order Pending</h2>
+            </div>
+            <div>
+                <img src="media/images/patient/process.png" class=<?="'".$process."'"?>>
+                <h3>Order Processing</h2>
+            </div>
+            <div>
+                <img src="media/images/patient/delivering.png" class=<?="'".$delivering."'"?>>
+                <h3>Out for delivery</h2>
+            </div>
+            <div>
+                <img src="media/images/patient/packed.png" class=<?="'".$completed."'"?>>
+                <h3>Delivered</h2>
+            </div>
+        </div>
+    </section>
+<?php else:?>
+    <section class="track-order-section">
+        <div>
+            <div class="track-order">
+                <h4>Track Your Orders</h4>
+            </div>
+            <div>
+                <table border="0">
+                    <tr><td><h3>Recipient Name</h3></td><td><h3>: <?=(Application::$app->session->get('userObject')->name)?></h3></td></tr>
+                    <tr><td><h3>Date</h3></td><td><h3>: <?=explode(" ",$order['created_date'])[0]?></h3></td></tr>
+                    <tr><td><h3>Time</h3></td><td><h3>: <?=explode(" ",$order['created_time'])[0]?></h3></td></tr>
+                    <tr><td><h3>Payment</h3></td><td><h3>: <?=$order['payment_status']?></h3></td></tr>
+                
+                </table>
+            </div>
+        
+        </div>
+        <div class="track-order-status">
+            <div>
+                <h3>Order Status</h2>
+                
+            </div>
+            <div class="status-box">
+                <img src="media/images/patient/pending.png" class=<?="'".$pending."'"?>>
+                <h3>Order Pending</h2>
+            </div>
+            <div class="status-box">
+                <img src="media/images/patient/process.png" class=<?="'".$process."'"?>>
+                <h3>Order Processing</h2>
+            </div>
+            <div class="status-box">
+                <img src="media/images/patient/delivering.png" class=<?="'".$delivering."'"?>>
+                <h3>Packed</h2>
+            </div>
+            <div class="status-box">
+                <img src="media/images/patient/packed.png" class=<?="'".$completed."'"?>>
+                <h3>Picked Up</h2>
+            </div>
+        </div>
+    </section>   
+<?php endif; ?>
+>>>>>>> 20000758
 <script>
     const accept=document.querySelector('.acpt-btn');
     const reject=document.querySelector('.rjct-btn');
@@ -210,6 +295,9 @@ use app\core\component\Component;
     })
 
 </script>
+<<<<<<< HEAD
 <?php else:?>
     <h3>No orders</h3>
 <?php endif;?>
+=======
+>>>>>>> 20000758

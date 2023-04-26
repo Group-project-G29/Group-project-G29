@@ -143,6 +143,24 @@ class Appointment extends DbModel{
         return $this->customFetchAll("select * from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on opened_channeling.channeling_ID=channeling.channeling_ID left join employee on  employee.nic=channeling.doctor where appointment.appointment_ID=".$appointment);
     }
     
+    public function growthOfPatients(){
+        $dateModel=new Date();
+        $today=Date('Y-m-d');
+        $year=$dateModel->get($today,'year')-1;
+        $month=$dateModel->get($today,'month');
+        $day=$dateModel->get($today,'day');
+        $lowdate=$dateModel->arrayToDate([$day,$month,$year]);
+        $update=$dateModel->arrayToDate([01,$month,$dateModel->get($today,'year')]);
+
+        $result = $this->customFetchAll("SELECT MONTH(opened_channeling.channeling_date), COUNT(appointment.appointment_ID) FROM `appointment` LEFT JOIN `opened_channeling` ON appointment.opened_channeling_ID = opened_channeling.opened_channeling_ID WHERE opened_channeling.channeling_date>='$lowdate' and opened_channeling.channeling_date<'$update' AND appointment.status='used' GROUP by MONTH(opened_channeling.channeling_date);");
+
+        $value=[0,0,0,0,0,0,0,0,0,0,0,0];
+        foreach($result as $row){
+            $value[$row['MONTH(opened_channeling.channeling_date)']-1]=$row['COUNT(appointment.appointment_ID)'];
+        }
+
+        return ['values'=>$value];
+    }
 }   
 
 

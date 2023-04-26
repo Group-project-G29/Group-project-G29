@@ -272,6 +272,17 @@
     border-radius: 10px;
 
 }
+.variable-container-mu{
+    overflow-y: scroll;
+    height: 70vh;
+    width:25vw;
+    border:1px solid #e7e6e6;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    justify-content: start;
+    border-radius: 10px;
+
+}
 .variable-container table{
     border-color: #cfcfcf;
     border-collapse: separate;

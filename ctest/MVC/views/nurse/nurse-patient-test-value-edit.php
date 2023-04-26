@@ -20,7 +20,7 @@ var_dump($tests);
         <div class="number-content">
             <h2>Patient Number</h2>
             <div class="number-pad">
-                <div class="number-item--blue fs-200"><?=$number+1?></div>
+                <div class="number-item fs-200"><?=$number+1?></div>
             </div>
         </div>
     

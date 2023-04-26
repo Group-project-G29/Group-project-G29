@@ -23,11 +23,15 @@ $apoid = $patient[$number]['appointment_ID']??'';
             <div class="number-content">
                 <h2>Patient Number</h2>
                 <div class="number-pad">
-                    <div class="number-item--blue fs-200"><?=$number+1?></div>
+                    <div class="number-item fs-200"><?=$number+1?></div>
                 </div>
                 <div class="move-number-div">
                     <input type="number" id="move-number" name="move-number">
                     <button onclick="move(<?=$id?>)">Move</button>
+                </div>
+                <div class="patient-numbers">
+                    <div class="ptient-count">Total Patients : <span><?=$reAppo?></span></div>
+                    <div class="ptient-count">Previous Patient Number : <span><?=$prevNum?></span></div>
                 </div>
             </div>
 
@@ -115,7 +119,7 @@ $apoid = $patient[$number]['appointment_ID']??'';
         const num = document.getElementById("move-number").value
         const num1 = num-2;
         console.log(num1);
-        location.href='nurse-list-patient?id='+id+'&num='+num1+'&n=1';
+        location.href='nurse-list-patient?id='+id+'&num='+num1+'&n=1&prevNum='+<?=$number+1?>;
 
     }
     

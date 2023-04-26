@@ -86,7 +86,7 @@ class OpenedChanneling extends DbModel{
         $patient_queue=$this->customFetchAll("select * from  patient right join appointment on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID =".$channeling." and patient.patient_ID=".$patient);
         if($patient_queue) return $patient_queue[0];
         else return false;
-    }
+    } 
 
     public function getAllAppointments($id){
         return $this->customFetchAll("select * from appointment left join patient on patient.patient_ID=appointment.patient_ID where appointment.opened_channeling_ID='$id'");
