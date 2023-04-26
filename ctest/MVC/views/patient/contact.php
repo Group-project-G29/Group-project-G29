@@ -6,7 +6,7 @@ use app\core\component\ScatterChart;
 
 
 <section class="contact-us-body">
-    <div class="bg-image-div">
+    <div class="bg-image-div" id="contact-bg-image-div">
         <p id="contact-topic">CONTACT US</p>
     </div>
 
