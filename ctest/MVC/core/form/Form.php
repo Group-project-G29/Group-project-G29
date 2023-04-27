@@ -26,6 +26,9 @@ class Form{
     // public function check(Model $model,$name,$label,$class,$options,$id=""){
     //     return new Check($model,$name,$label,$class,$options,$id);
     // }
+    public function labselect(Model $model,$name,$label,$class,$options,$id=""){
+        return new LabSelect($model,$name,$label,$class,$options,$id);
+    }
     public function spanselect(Model $model,$name,$label,$class,$options,$id=""){
         return new SpanSelect($model,$name,$label,$class,$options,$id);
     }
