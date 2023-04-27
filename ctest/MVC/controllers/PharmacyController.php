@@ -523,23 +523,7 @@ class PharmacyController extends Controller{
             'model'=>$orderModel
         ]);
     }
-    
-    //==========================DELIVERING ORDERS=====================================
-    public function viewDeliveringOrder(){
-        $this->setLayout("pharmacy",['select'=>'Orders']);
-        $orderModel=new Order();
-        $orders=$orderModel->get_packed_orders();
-        
-        $order_types = array();
-        foreach ($orders as $key=>$order){
-            $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
-        }
-        return $this->render('pharmacy/pharmacy-orders-delivering',[
-            'orders'=>$orders,
-            'model'=>$orderModel,
-            'order_types'=>$order_types
-        ]);
-    }
+
 
     public function trackOrder($request){
         
