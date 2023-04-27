@@ -24,7 +24,7 @@ use app\models\LabReport;
 
 class LabController extends Controller
 {
-   //------------------test handle------------//
+    //------------------test handle------------//
     public function handleTest(Request $request, Response $response)
     {
         // %20 must be converted to a space
@@ -57,7 +57,7 @@ class LabController extends Controller
             ]);
         }
         if ($request->isPost()) {
-            
+
             // update test
             $LabTestModel->loadData($request->getBody());
             $TemplateModel->loadData($request->getBody());
@@ -93,17 +93,17 @@ class LabController extends Controller
             }
 
             //add test;
-           
-                if ($LabTestModel->validate()) {
-                    if($LabTestModel->addTest()){
-                        Application::$app->session->set('testname',$LabTestModel->name);
+
+            if ($LabTestModel->validate()) {
+                if ($LabTestModel->addTest()) {
+                    Application::$app->session->set('testname', $LabTestModel->name);
 
                     //  echo 'done add test';
                     //  exit;
                     $this->setLayout("lab", ['select' => 'Tests']);
                     $labtest = $LabTestModel->customFetchAll("SELECT * FROM lab_report_template join lab_tests on lab_report_template.template_ID=lab_tests.template_ID");
-                    $testDetail=$LabTestModel->customFetchAll("SELECT * from lab_tests where name=" . "'" . Application::$app->session->get('testname') . "'");
-                   
+                    $testDetail = $LabTestModel->customFetchAll("SELECT * from lab_tests where name=" . "'" . Application::$app->session->get('testname') . "'");
+
                     Application::$app->session->setFlash('success', "Lab Test successfully added ");
                     // Application::$app->response->redirect('/ctest/lab-add-new-template');
                     // echo 'success';
@@ -113,28 +113,27 @@ class LabController extends Controller
                         // 'popup' => 'add-temp',
                         'model' => $LabTestModel,
                         'labtest' => $labtest,
-                        'labtestmodel'=> $LabTestModel,
-                        'templatemodel'=>$TemplateModel,
-                        'testDetail'=>$testDetail
-                    ]);
-                }
-            }
-             else {
-                    // echo 'unsuccess';
-                    // exit;
-                    return $this->render('lab/lab-add-new-test', [
-                        // 'popup' => 'add-temp',
-                        
                         'labtestmodel' => $LabTestModel,
-                        'tempmodel' => $TemplateModel,
-                        'template' => $template,
                         'templatemodel' => $TemplateModel,
-                        'template_name_list' => $template_name_list,
-
-
+                        'testDetail' => $testDetail
                     ]);
                 }
-            
+            } else {
+                // echo 'unsuccess';
+                // exit;
+                return $this->render('lab/lab-add-new-test', [
+                    // 'popup' => 'add-temp',
+
+                    'labtestmodel' => $LabTestModel,
+                    'tempmodel' => $TemplateModel,
+                    'template' => $template,
+                    'templatemodel' => $TemplateModel,
+                    'template_name_list' => $template_name_list,
+
+
+                ]);
+            }
+
 
             // add template
             // if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'tmp') {
@@ -186,7 +185,7 @@ class LabController extends Controller
 
     public function handleTemplate(Request $request, Response $response)
     {
-        
+
         $this->setLayout("lab", ['select' => 'Tests']);
         $LabTestModel = new LabTest();
         $TemplateModel = new Template();
@@ -195,15 +194,15 @@ class LabController extends Controller
         $TemplateModel->loadData($request->getBody());
         // var_dump($parameters);
         // exit;
-        $testDetail=$LabTestModel->customFetchAll("SELECT * from lab_tests where name='200' ");
-// var_dump($testDetail);
-// exit;
+        $testDetail = $LabTestModel->customFetchAll("SELECT * from lab_tests where name='200' ");
+        // var_dump($testDetail);
+        // exit;
         if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'tmp') {
             $TemplateModel->validate();
             var_dump($TemplateModel->errors);
-            
+
             if ($TemplateModel->validate() && $TemplateModel->addTemplate()) {
-                
+
                 $template = '';
                 $this->setLayout("lab", ['select' => 'Tests']);
                 $template = $TemplateModel->addTemplate()[0]['last_insert_id()'];
@@ -216,17 +215,16 @@ class LabController extends Controller
                 exit;
             }
         }
-       // $newly_created_test_name=$LabTestModel->select_last_ID
-       
+        // $newly_created_test_name=$LabTestModel->select_last_ID
+
         return $this->render('lab/lab-add-new-template', [
-            'labtestmodel'=> $LabTestModel,
-            'templatemodel'=>$TemplateModel,
-            'testDetail'=>$testDetail
+            'labtestmodel' => $LabTestModel,
+            'templatemodel' => $TemplateModel,
+            'testDetail' => $testDetail
 
 
-            
-            ]);
 
+        ]);
     }
 
 
@@ -249,6 +247,7 @@ class LabController extends Controller
         $labTestModel = new LabTest();
         $tests = $labTestModel->customFetchAll("SELECT lab_request.request_ID, patient.patient_ID,lab_request.name as test_name ,lab_request.requested_date_time , patient.name as patient_name,employee.name as doc_name 
         from lab_request join employee on employee.nic=lab_request.doctor join patient on patient.patient_ID=lab_request.patient_ID");
+
         return $this->render('lab/lab-test-request', [
             'tests' => $tests
         ]);
@@ -265,26 +264,28 @@ class LabController extends Controller
         $contents = $contentModel->customFetchAll("SELECT lab_request.request_ID,lab_report_content.content_ID,patient.name as pname,patient.age,patient.gender,patient.patient_ID,lab_report_content.name as cname,lab_report_content.type from patient join lab_request on patient.patient_ID=lab_request.patient_ID
         join lab_tests on lab_tests.name=lab_request.name
         join lab_report_content on lab_report_content.template_ID=lab_tests.template_ID where lab_request.request_ID=" . $parameters[0]['id']);
-        $reports = $labtest->customFetchAll("SELECT sum(lab_tests.hospital_fee+lab_tests.test_fee)as fee,lab_tests.template_ID,doctor.career_speciality,lab_request.request_ID from lab_tests join lab_request on lab_tests.name=lab_request.name
+        $reports = $labtest->customFetchAll("SELECT sum(lab_tests.hospital_fee+lab_tests.test_fee)as fee,lab_tests.template_ID,lab_request.request_ID from lab_tests join lab_request on lab_tests.name=lab_request.name
         join doctor on doctor.nic=lab_request.doctor where lab_request.request_ID=" . $parameters[0]['id']);
         // $payments=$reportmodel->customFetchAll("SELECT sum(lab_tests.hospital_fee+lab_tests.test_fee)as fee,lab_report_allocation.patient_ID,lab_report_allocation.report_ID from lab_tests join lab_request on lab_tests.name=lab_request.name
         // join lab_report_allocation on lab_report_allocation.patient_ID=lab_request.patient_ID where lab_request.request_ID=" . $parameters[0]['id']);
-        $reportallocation=$reportmodel->customFetchAll("SELECT lab_request.patient_ID,lab_request.doctor,lab_report.report_ID from lab_report join lab_request on lab_request.request_ID=lab_report.request_ID order by lab_report.report_ID desc");
+        $reportallocation = $reportmodel->customFetchAll("SELECT lab_request.patient_ID,lab_request.doctor,lab_report.report_ID from lab_report join lab_request on lab_request.request_ID=lab_report.request_ID order by lab_report.report_ID desc");
         // var_dump($reportallocation);
         // exit;
         if ($request->isPost()) {
+            
             $reportmodel->loadData($request->getBody());
             $reportmodel->loadFiles($_FILES);
             $AllocationModel = new LabContentAllocation();
             $requst_reports = $reportmodel->get_report_by_ID($parameters[0]['id']);
+            
             if (!$requst_reports) {
-                $createReport = $reportmodel->create_new_report($reports[0]['fee'], $reports[0]['career_speciality'], ' ', $reports[0]['template_ID'], ' ', $parameters[0]['id']);
+                $createReport = $reportmodel->create_new_report($reports[0]['fee'], ' ', ' ', $reports[0]['template_ID'], ' ', $parameters[0]['id']);
                 // $setPayment=$reportmodel->payment($payments[0]['patient_ID'],$payments[0]['fee'],'','',$payments[0]['report_ID'],'','','');
                 // var_dump($setPayment);
                 // exit;
-                $createreportallocation=$reportmodel->create_report_allocation($createReport,$reportallocation[0]['patient_ID'],$reportallocation[0]['doctor']);
+                // $createreportallocation = $reportmodel->create_report_allocation($createReport, $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);
+                // $createreportallocation = $reportmodel->create_report_allocation($reportallocation[0]['report_ID'], $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);
                 $requst_reports = $reportmodel->get_report_by_ID($parameters[0]['id']);
-
             }
 
             $setreport = $reportmodel->customFetchAll("SELECT report_ID from lab_report where request_ID=" . $parameters[0]['id']);
@@ -293,15 +294,12 @@ class LabController extends Controller
                     if ($AllocationModel->get_types($content_ID)[0]['type'] === 'field') {
                         $AllocationModel->add_field_allocation($setreport[0]['report_ID'], $content_ID, $value);
                         echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
-
                     } elseif ($AllocationModel->get_types($content_ID)[0]['type'] === 'text') {
                         $AllocationModel->add_text_allocation($setreport[0]['report_ID'], $content_ID, $value);
                         echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
-
                     } else {
                         $AllocationModel->add_image_allocation($setreport[0]['report_ID'], $content_ID, $value);
                         echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
-
                     }
                     // echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
 
@@ -313,17 +311,18 @@ class LabController extends Controller
         }
         return $this->render('lab/lab-write-test-result', [
             'contentmodel' => $contentModel,
-            'allocationmodel' => $AllocationModel,
+            // 'allocationmodel' => $AllocationModel,
             'contents' => $contents
         ]);
     }
-//-----------------------view report-------------------//
+    //-----------------------view report-------------------//
     public function viewReport(Request $request, Response $response)
     {
         $reportmodel = new LabReport();
         $parameters = $request->getParameters();
         $this->setLayout("lab", ['select' => 'Lab Reports']);
-        $reports = $reportmodel->customFetchAll("SELECT lab_report_allocation.report_ID,patient.name as pname, employee.name as dname from lab_report_allocation join patient on lab_report_allocation.patient_ID= patient.patient_ID join doctor on doctor.nic=lab_report_allocation.doctor join employee on employee.nic=doctor.nic ");
+        // $reports = $reportmodel->customFetchAll("SELECT lab_report_allocation.report_ID,patient.name as pname, employee.name as dname from lab_report_allocation join patient on lab_report_allocation.patient_ID= patient.patient_ID join doctor on doctor.nic=lab_report_allocation.doctor join employee on employee.nic=doctor.nic ");
+        $reports = $reportmodel->customFetchAll("SELECT lab_report.report_ID,patient.name as pname, employee.name as dname from lab_report join lab_request on lab_report.request_ID= lab_request.request_ID join doctor on doctor.nic=lab_request.doctor join employee on employee.nic=doctor.nic join patient on patient.patient_ID=lab_request.patient_ID");
         // $requst_reports = $reportmodel->get_report_by_ID($parameters[0]['id']);
         // $reportmodel->labreporttoPDF($requst_reports[0]['report_ID']);
 
@@ -354,12 +353,15 @@ class LabController extends Controller
         $reportmodel = new LabReport();
         $parameters = $request->getParameters();
         $this->setLayout("lab", ['select' => 'Requests']);
+
         $tests = $labTestModel->customFetchAll("SELECT lab_request.requested_date_time,employee.name as ename,lab_request.request_ID,lab_report_content.content_ID,patient.name as pname,patient.age,patient.gender,patient.patient_ID,lab_report_content.name as cname,lab_report_content.type from patient join lab_request on patient.patient_ID=lab_request.patient_ID
         join lab_tests on lab_tests.name=lab_request.name
         join employee on lab_request.doctor= employee.nic
         join lab_report_content on lab_report_content.template_ID=lab_tests.template_ID where lab_request.request_ID=" . $parameters[0]['id']);
-       
-       if ($request->isPost()) {
+
+
+        if ($request->isPost()) {
+
             $reportmodel->loadData($request->getBody());
             $reportmodel->loadFiles($_FILES);
             $AllocationModel = new LabContentAllocation();
@@ -385,6 +387,59 @@ class LabController extends Controller
         ]);
     }
 
+
+    public function uploadSReport(Request $request, Response $response)
+    {
+        $labTestModel = new LabTest();
+        $reportmodel = new LabReport();
+        $parameters = $request->getParameters();
+        $this->setLayout("lab", ['select' => 'Requests']);
+        $reports = $labTestModel->customFetchAll("SELECT sum(lab_tests.hospital_fee+lab_tests.test_fee)as fee,lab_tests.template_ID,lab_request.request_ID from lab_tests join lab_request on lab_tests.name=lab_request.name
+    join doctor on doctor.nic=lab_request.doctor where lab_request.request_ID=" . $parameters[0]['id']);
+        $tests = $labTestModel->customFetchAll("SELECT lab_report_content.template_ID,lab_request.requested_date_time,employee.name as ename,lab_request.request_ID,lab_report_content.content_ID,patient.name as pname,patient.age,patient.gender,patient.patient_ID,lab_report_content.name as cname,lab_report_content.type from patient join lab_request on patient.patient_ID=lab_request.patient_ID
+    join lab_tests on lab_tests.name=lab_request.name
+    join employee on lab_request.doctor= employee.nic
+    join lab_report_content on lab_report_content.template_ID=lab_tests.template_ID where lab_request.request_ID=" . $parameters[0]['id']);
+        $reportallocation = $reportmodel->customFetchAll("SELECT lab_request.patient_ID,lab_request.doctor,lab_report.report_ID from lab_report join lab_request on lab_request.request_ID=lab_report.request_ID order by lab_report.report_ID desc");
+
+
+        if ($request->isPost()) {
+
+            $AllocationModel = new LabContentAllocation();
+            $reportmodel->loadData($request->getBody());
+            $reportmodel->loadFiles($_FILES);
+     
+            
+            $reportmodel->fee = $reports[0]['fee'];
+            $reportmodel->type = 'softcopy';
+            $reportmodel->template_ID = $reports[0]['template_ID'];
+            $reportmodel->request_ID = $parameters[0]['id'];
+            // $createReport=$reportmodel->customFetchAll("SELECT report_ID from lab_report order by report_ID desc");
+            // $createreportallocation = $reportmodel->create_report_allocation($createReport, $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);
+// var_dump($reportmodel->report_ID);
+
+            if ( $reportmodel->save()) {
+        
+                Application::$app->session->setFlash('success', "Lab Report successfully added ");
+                Application::$app->response->redirect('/ctest/lab-test-request');
+                exit;
+            }
+            return $this->render('lab/lab-report-upload', [
+                'reports' => $reports,
+                'reportmodel'=>"This field is required",
+                'tests'=>$tests
+
+
+            ]);
+
+
+            //pass
+
+            //faill
+
+
+        }
+    }
 
     // --------------------- view personal detail---------------------------
 
@@ -553,8 +608,8 @@ class LabController extends Controller
         $this->setLayout('lab', ['select' => 'Templates']);
         $contentModel = new TemplateContent();
         $templateModel = new Template();
-        $templates = $contentModel->customFetchAll("SELECT * from lab_report_content where template_ID= ".(isset($parameters[1]['id'])?$parameters[1]['id']:$parameters[0]['id']));
-        $detail = $templateModel->customFetchAll("SELECT * from lab_report_template where template_ID= ".(isset($parameters[1]['id'])?$parameters[1]['id']:$parameters[0]['id']));
+        $templates = $contentModel->customFetchAll("SELECT * from lab_report_content where template_ID= " . (isset($parameters[1]['id']) ? $parameters[1]['id'] : $parameters[0]['id']));
+        $detail = $templateModel->customFetchAll("SELECT * from lab_report_template where template_ID= " . (isset($parameters[1]['id']) ? $parameters[1]['id'] : $parameters[0]['id']));
 
 
         //delete content
@@ -564,11 +619,10 @@ class LabController extends Controller
             $contentModel->deleteRecord(['content_ID' => $parameters[1]['id']]);
 
             Application::$app->session->setFlash('success', "Content Successfully Deleted ");
-            $response->redirect('/ctest/lab-view-all-template-more?id='.Application::$app->session->get('templateid'));
-        
+            $response->redirect('/ctest/lab-view-all-template-more?id=' . Application::$app->session->get('templateid'));
+
             return true;
-        }
-        else if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'update') {
+        } else if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'update') {
             $contentlist = $contentModel->customFetchAll("SELECT * FROM lab_report_content join lab_report_template on 
             lab_report_content.template_ID= lab_report_template.template_ID where content_ID=" . $parameters[1]['id']);
             $contentModel->updateData($contentlist, $contentModel->fileDestination());
@@ -577,10 +631,9 @@ class LabController extends Controller
                 'model' => $contentModel,
                 'contentlist' => $contentlist[0]
             ]);
-        }
-        else{
+        } else {
 
-            Application::$app->session->set('templateid',(isset($parameters[1]['id'])?$parameters[1]['id']:$parameters[0]['id']));
+            Application::$app->session->set('templateid', (isset($parameters[1]['id']) ? $parameters[1]['id'] : $parameters[0]['id']));
         }
         return $this->render('lab/lab-view-all-template-more', [
             'templates' => $templates,
@@ -665,5 +718,16 @@ class LabController extends Controller
             'advertisements' => $advertisements,
             'model' => $advertisementModel
         ]);
+    }
+
+    //create object for template content
+    public function handleTemplateContent()
+    {
+        //creaTe new content object
+        //define attributes as   public ?string metric=null in content object;
+        //load data object
+        //object->save();
+
+
     }
 }

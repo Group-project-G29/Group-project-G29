@@ -50,6 +50,18 @@ class LabTest extends DbModel{
     {
         return  ['name','test_fee','hospital_fee','template_ID'];
     }
+    public function getAllTests(){
+        $array=$this->customFetchAll("select * from lab_tests");
+        $return_result=[];
+        foreach($array as $el){
+            $return_result[$el['name']]=$el['name'];
+            
+        }
+        return $return_result;
+    }
+    
+    
+ 
 
     public function updateLabtest($prev_name){
         $name = $this->name;

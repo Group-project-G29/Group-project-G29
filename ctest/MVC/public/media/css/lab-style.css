@@ -39,7 +39,26 @@
     --box-shadow-secondary: 0px 2px 2px 1px rgba(0, 0, 0, 0.25);
 }
 /* header */
+.semi-header-container-1{
+    background-color: white;
+    /* border:20vh 20vh 20vh 20vh; */
+    padding-top: 0vh;
+    padding-bottom: 4vh;
+    width: 70%;
+    /* position:absolute; */
+    left: 25vw;
+    border: 3px;
+    border-radius: 15px;
+    margin-left:12vw;
+    
+    
 
+}
+.semi-field-container{
+    text-align:center;
+    padding-top:3vw;
+    font-size:large;
+}
 /* input field */
 
 .inputbox{
@@ -48,16 +67,22 @@
 }
 .inputbox input{
     width: 50%;
-    padding: 10px;
+    padding: 6px;
     border: 1px solid var( --clr-grey);
     background: var(--clr-bg-grey);
     border-radius: 10px;
     outline: none;
 }
-.field {
+.field-1 {
     display: flex;
     flex-direction: column;
-
+   width: fit-content;
+}
+.field-2{
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    
 }
 
 .field-input--class2 {
@@ -72,9 +97,28 @@
     padding-inline: 15px;
 }
 
+.field-input--class3 {
+    background: #F0F0F0;
+    border: 1px solid #cfcfcf;
+    border-radius: 10px;
+    width: 11vw;
+    height: 4vh;
+    color: var(--clr-dark);
+    font-weight: normal;
+    font-size: var(--fs-50);
+    padding-inline: 5px;
+}
+
 
 
 /* button */
+.background-color-green{
+    
+   
+    background-color:var(--clr-button-green);
+    width: 6vw;
+    
+}
 .button--class-5{
     font-size: 0.9em;
     color: var(--clr-white);
@@ -111,7 +155,7 @@
     color: var(--clr-white);
     background-color:var(--clr-button-green);
     border:none;
-    /* border-radius:5px; */
+    border-radius:8px;
 }
 .button--class-8{
     height:4vh;
@@ -120,7 +164,7 @@
     color: var(--clr-white);
     background-color:var(--clr-light);
     border:none;
-    /* border-radius:5px; */
+    border-radius:5px;
 }
 .button--class-9{
     height:4vh;
@@ -129,7 +173,26 @@
     color: var(--clr-white);
     background-color:var(--clr-error);
     border:none;
-    /* border-radius:5px; */
+    border-radius:8px;
+}
+.button--class-10{
+    height:4vh;
+    width: 100%;
+    font-size: 0.9em;
+    color: var(--clr-white);
+    background-color:var(--clr-dark);
+    border:none;
+    border-radius:8px;
+}
+.button--class-11{
+    width: 6vw;
+    height:4vh;
+    font-size: 0.9em;
+    color: var(--clr-white);
+    background-color:var(--clr-dark);
+    border:none;
+    border-radius:5px;
+    background-color:var(--clr-button-green);
 }
 /* .field-1{
     display: flex;
@@ -140,7 +203,7 @@
 
 .popup-container {
     padding-top: 25vh;
-    padding-left: 30vh;
+    padding-left: 20vh;
     position: fixed;
     height: 100vh;
     width: 100%;
@@ -166,7 +229,7 @@
 } */
 
 .popup-container .modal-form{
-    max-width: 50%;
+    max-width: 40%;
     height: 50vh;
     display: flex;
     flex-direction:column ;
@@ -182,7 +245,7 @@
 }
 
 .popup-container .modal-form .modal-title{
-    padding: 10px;
+    padding: 5px;
     text-align: center;
     font-size: 20px;
     color: rgb(255, 255, 255);
@@ -191,8 +254,9 @@
 }
 
 .popup-container .modal-form .form-body{
-    padding: 7.5vw;
+    padding: 5vw;
     position: relative;
+    width: fit-content;
     
 }
 /* title list select option */
@@ -334,6 +398,21 @@
     margin-top: 5vh;
 
    }
+   .card-new-0 {
+    width: 280px;
+    height: 254px;
+    border-radius: 20px;
+    background: #f5f5f5;
+    position: relative;
+    padding: 1.8rem;
+    border: 2px solid #c3c6ce;
+    transition: 0.5s ease-out;
+    overflow: visible;
+    display: inline-block;
+    margin-left: 5vh;
+    margin-top: 5vh;
+
+   }
    
    .card-details {
     color: black;
@@ -370,12 +449,22 @@
    }
    
    /*Hover*/
-   .card:hover {
+   .card-new:hover {
     border-color: #008bf8;
     box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
    }
    
-   .card:hover .card-button {
+   .card-new:hover .card-button {
     transform: translate(-50%, 50%);
     opacity: 1;
    }
+   .card-new-0:hover {
+    border-color: #008bf8;
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+   }
+   
+   .card-new-0:hover .card-button {
+    transform: translate(-50%, 50%);
+    opacity: 1;
+   }
+

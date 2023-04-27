@@ -10,7 +10,7 @@ include "../views/layouts/navbar/patient-navbar.php";
 </div>
     <div class="main-container">
 
-         <?php $sidebar=new Sidebar(['Appointments'=>'patient-dashboard?spec=appointments','My Documentation'=>'patient-dashboard?spec=documentation','My Orders'=>'patient-dashboard?spec=orders','My Payments'=>'patient-dashboard?spec=payments','Medical Analysis'=>'patient-dashboard?spec=medical-analysis','My Detail'=>'patient-dashboard?spec=my-detail'],$select);?>
+         <?php $sidebar=new Sidebar(['Appointments'=>'patient-dashboard?spec=appointments','My Documentation'=>'patient-dashboard?spec=documentation','My Orders'=>'patient-dashboard?spec=orders','My Payments'=>'patient-dashboard?spec=payments','Medical Analysis'=>'patient-dashboard?spec=medical-analysis','My Detail'=>'patient-my-detail?cmd=view'],$select);?>
 
          <?php echo $sidebar;  ?>
         

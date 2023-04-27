@@ -2,9 +2,8 @@
     use app\core\component\Component;
     $component=new Component();
     $total = 0;
-    // var_dump($orders);
-    // var_dump($order_ID);
-        // exit;
+    // var_dump($orders[0]['order_ID']);
+    //     exit;
 
 ?>
    
@@ -30,20 +29,32 @@
             <td><?=$order['med_ID']?></td>
             <td><?=$order['name']?></td> 
             <td><?=$order['strength']?></td> 
-            <td><?=$order['unit_price']?></td> 
-            <td><?=$order['amount']?></td> 
-            <td><?=$order['unit_price']*$order['amount']?></td> 
-            <?php $total = $total + $order['unit_price']*$order['amount'] ?>
+            <td><?=$order['current_price']?></td> 
+            <td><?=$order['order_amount']?></td> 
+            <td><?=$order['current_price']*$order['order_amount']?></td> 
+            <?php $total = $total + $order['current_price']*$order['order_amount'] ?>
             <?php endforeach; ?>
         </tr>
     </table>
 </div>
     <h1>Total Price : <?=$total?></h1>
 
+
+<div class='upper-container'>
+    <?php if( $orders[0]['pickup_status']=='pickup' ): ?>
+    <?php echo $component->button('go-to-process','','Go To Process','button--class-0  width-10','go-to-process');?>
+    <?php echo $component->button('picked-up','','Picked Up','button--class-0  width-10','picked-up');?>
+    <?php endif; ?>
+</div>
 <!-- ==================== -->
 <script>
-    const btn=document.getElementById(".table-row");
-    btn.addEventListener('click',function(){
-        location.href="/ctest/pharmacy-track-order?id="+<?=$order_ID?>; //get
+    const btn1=document.getElementById("go-to-process");
+    btn1.addEventListener('click',function(){
+        location.href="pharmacy-go-to-process-order?id="+<?=$orders[0]['order_ID']?>; //get
+    })
+
+    const btn2=document.getElementById("picked-up");
+    btn2.addEventListener('click',function(){
+        location.href="pharmacy-picked-up-order?id="+<?=$orders[0]['order_ID']?>; //get
     })
 </script>

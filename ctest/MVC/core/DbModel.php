@@ -30,21 +30,19 @@
                 $params=array_map(fn($attr)=>":$attr",$attributes);
                 $statement=self::prepare("Insert into $tablename (".implode(',',$attributes).") VALUES (".implode(',',$params).")");
                 foreach ($attributes as $attribute){
-                    $statement->bindValue(":$attribute",$this->{$attribute});
-                    echo $this->{$attribute} ;
+                     $statement->bindValue(":$attribute",$this->{$attribute});
+                     echo $this->{$attribute} ;
                 }
-                // var_dump($statement);
                 $statement->execute();
             }
             return $this->customFetchAll("select last_insert_id()");
            
         }
         public function saveByName($values){
-            $this->fileStore();
             foreach($values as $tablename=>$attributes){
-                var_dump($attributes);
                 $tablerecords=array_keys($attributes);
                 $params=array_map(fn($attr)=>$attributes[$attr],$tablerecords);
+               
                 $statement=self::prepare("Insert into $tablename (".implode(',',$tablerecords).") VALUES (".implode(',',$params).")");
                 $statement->execute();
             }
@@ -63,7 +61,7 @@
             $statement->execute();
             return $statement->fetchObject(static::class);
         }
-        //to get medicine panadol  call findByKeyword('name',"pana")
+    //to get medicine panadol  call findByKeyword('name',"pana")
         public function findByKeyword($parameter,$keyword){
             $tablename=static::tableName();
             $statement=self::prepare("Select * from $tablename where $parameter like '%$keyword%'");

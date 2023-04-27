@@ -16,12 +16,12 @@ class Sidebar{
         $str='';
         foreach($this->item as $name=>$link){
             if($name==$this->select){
-                $str.= "<div class='sidebar_grid-item sidebar-selected' id=$link>
+                $str.= "<div class='sidebar_grid-item sidebar-selected' id='$link'>
                         <h4>$name</h4>
                     </div>";    
             }
             else{
-                $str.= "<div class='sidebar_grid-item' id=$link>
+                $str.= "<div class='sidebar_grid-item' id='$link'>
                          <h4>$name</h4>
                         </div>";
             }

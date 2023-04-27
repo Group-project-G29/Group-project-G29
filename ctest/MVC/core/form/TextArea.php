@@ -11,8 +11,9 @@ class TextArea
     public int $row;
     public int $col;
     public string $id;
+    public string $value;
 
-    public function __construct($model,$attribute,$name, $label, $row, $col, $id)
+    public function __construct($model,$attribute,$name, $label, $row, $col,$value, $id)
     {
         $this->model = $model;
         $this->name = $name;
@@ -21,17 +22,16 @@ class TextArea
         $this->col = $col;
         $this->id = $id;
         $this->attribute = $attribute;
+        $this->value=$value;
     }
 
     public function __toString()
     {
         $str = "<label for='%s'>%s</label>
         <h3 class='fs-50  fc-color--error'>%s</h3>
-        <textarea id='%s' name='%s' rows='%s' cols='%s'>
-        
-        </textarea> ";
+        <textarea id='%s' name='%s' rows='%s' cols='%s'>%s</textarea> ";
 
-        return sprintf($str,$this->label,$this->label,($this->model->errors)[$this->attribute][0] ?? '',$this->id,$this->name,$this->row,$this->col);
+        return sprintf($str,$this->label,$this->label,($this->model->errors)[$this->attribute][0] ?? '',$this->id,$this->name,$this->row,$this->col,$this->value);
     }
 
 

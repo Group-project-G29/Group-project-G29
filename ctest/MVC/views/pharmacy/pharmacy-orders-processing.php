@@ -3,10 +3,16 @@
     $component=new Component();
 
 ?>
+
+<p class="navigation-text-line-p"> 
+    <a class="navigation-text-line-link" href="/ctest/pharmacy-orders-pending">orders</a>/
+    <a class="navigation-text-line-link">processing orders</a> 
+</p>
+
 <div class='upper-container'>
     <?php echo $component->button('pending','','Pending Orders','button--class-0-deactive  width-10','pending');?>
     <?php echo $component->button('processing','','Processing Orders','button--class-0-active  width-10','processing');?>
-    <?php echo $component->button('delivering','','Delivering Orders','button--class-0-deactive  width-10','delivering');?>
+    <?php echo $component->button('delivering','','Packed Orders','button--class-0-deactive  width-10','delivering');?>
 </div>
 
 <div class='upper-container'>
@@ -14,7 +20,7 @@
         <?php echo $component->searchbar($model,"name","search-bar--class1","Search by order ID, patient 1D","searh");?>
     </div>
     <?php 
-    // echo $component->button('new-order','','Add New Order','button--class-0  width-10','new-order');
+    echo $component->button('new-order','','Add New Order','button--class-0  width-10','new-order');
     ?>
 </div>
    
@@ -22,7 +28,6 @@
 <table border="0">
     <tr>
         <th>Order ID</th>
-        <th>Patient ID</th>
         <th>Name</th>
         <th>Contact</th>
         <th>Date</th>
@@ -33,7 +38,6 @@
         <?php foreach($orders as $key=>$order): ?>
             <tr class="table-row" id=<?=$order['order_ID']?> >
                 <td><?=$order['order_ID']?></td>
-                <td><?=$order['patient_ID']?></td> 
                 <td><?=$order['name']?></td> 
                 <td><?=$order['contact']?></td> 
                 <td><?=$order['created_date']?></td> 

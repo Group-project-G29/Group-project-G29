@@ -1,3 +1,41 @@
+:root {
+    /* =========== colors =========== */
+    --clr-dark:#1746A2;
+    --clr-light:#1c7db6;
+    /* --clr-light:#38B6FF; */
+    --clr-white:white;
+    --clr-hover:#EEF1FF;
+    --clr-grey:rgb(180, 180, 180);
+    --clr-font-color:#2c4666;
+    --clr-bg-grey:#F8F8F8;
+    --clr-error:red;
+    --clr-flashmsg-bg: #DAFBE1;
+    --clr-flashmsg-brdr:#A1E5B2;
+    --clr-button-green:#39d700;
+    --clr-borders:rgb(218, 218, 218);
+
+    /* =========== font-size =========== */
+    --fs-200:1.9rem;
+    --fs-100:1.1rem;
+    --fs-50:0.9rem;
+
+    /* =========== font-family =========== */
+    --ff-primary:sora;
+    --ff-sans-cond:sans-serif;
+    --ff-sans-normal:sans-serif;
+
+    /* =========== input type =========== */
+    --border-input-type-class1:1px solid var(--clr-grey);
+
+    /* =========== all button setting =========== */
+    --button-border:0px solid var(--clr-light);
+    --button-border-radius:5px;
+
+    /* =========== box shadow =========== */
+    --box-shadow-primary:0px 5px 10px 1px rgba(0, 0, 0, 0.25);
+    --box-shadow-secondary:0px 2px 2px 1px   rgba(0, 0, 0, 0.25);
+}
+
 .search-bar-container{
     gap:10vw;
     margin-left:0vw;
@@ -7,17 +45,16 @@
     
     
 }
+
 .upper-container{
-    margin-left: 10vw;
+    margin-left: 15%;
     margin-top: 5vh;
-    width: 60vw;
+    width: 85%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    
-    
-   
 }
+
 .form-body{
     display: flex;
     justify-content: center;
@@ -25,6 +62,7 @@
     flex-direction: column;
     width:75vw;
 }
+
 .form-body [type="text"],.form-body [type="file"],.form-body select{
     width: 30vw;
 }
@@ -32,6 +70,7 @@
 .form-body button{
     width: 37.5vw;
 }
+
 .form-body table{
     border-collapse: separate;
     border-style: hidden;
@@ -64,10 +103,64 @@
     text-align: center;
 }
 
+.new-order-add-item {
+    /* background-color: aqua; */
+    
+    padding-bottom: 20px;
+    /* width: 300px; */
+}
+
+/* .new-order-add-item-col { */
+    /* display: flex; 
+    flex-direction: row;
+    width: 100px; */
+/* } */
 
 /* ===============My detail==================== */
 
 .detail-container {
     width: 50%;
     align-content: center;
+}
+
+
+/* ================Popup==================== */
+.popup {
+    width: 400px;
+    background: rgb(97, 164, 241);
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%) scale(0);
+    text-align: center;
+    padding: 0 30px 30px;
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4s;
+    transition: 0.3s;
+}
+
+.open-popup {
+    visibility: visible;
+    transform: translate(-50%,-50%) scale(1);
+}
+
+.popup h2 {
+    font-size: 40px;
+    font-weight: 500;
+    margin: 30px 0 10px;
+}
+
+.popup button {
+    width: 100%;
+    margin-top: 50px;
+    padding: 10px 0;
+    background: var(--clr-light);
+    color: black;
+    border: 0;
+    outline: none;
+    font-size: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
 }

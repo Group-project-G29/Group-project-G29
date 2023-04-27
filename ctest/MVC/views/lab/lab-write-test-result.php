@@ -34,25 +34,28 @@ $component = new Component();
             
         </div>
         <?php $form = Form::begin('', 'post'); ?>
-        <div class="reg-body-spec fields" style="padding-left:15vw">
 
+        <div class="button" style="padding-left:25vw">
+            <?php echo $component->button('Add', '', 'Add', 'button--class-0  width-10 ', 'add'); ?>
+        </div>
+
+        <div class="reg-body-spec fields" style="padding-left:8vw">
             <?php foreach ($contents as $key => $content) : ?>
-                <?php if ($content["type"] === 'image') : ?>
+                <!-- <?php if ($content["type"] === 'image') : ?>
                     <div class="inputbox">
                     <label for="image"><?php echo $content["cname"] ?></label><br>
                     <input type='file' id=<?= $content["content_ID"] ?> name=<?= $content["content_ID"] ?>><br>
-                    </div>
-                <?php else : ?>
+                    </form>
+                    </div> -->
+                <!-- <?php else : ?> -->
                     <div class="inputbox">
                     <label for="cname"><?php echo $content["cname"] ?></label><br>
                     <input type='text' id=<?= $content["content_ID"] ?> name=<?= $content["content_ID"] ?>><br>
                     </div>
-                <?php endif; ?>
+                <!-- <?php endif; ?> -->
             <?php endforeach; ?>
         </div><br>
-        <div class="button" style="padding-left:40vw">
-            <?php echo $component->button('Add', '', 'Add', 'button--class-0  width-10 ', 'add'); ?>
-        </div>
+        
 
         <?php Form::end() ?>
 

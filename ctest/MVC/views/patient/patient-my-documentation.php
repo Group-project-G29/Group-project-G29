@@ -1,79 +1,84 @@
 <?php
-    use app\core\component\Component;
-    $component=new Component();
-    $popup=$component->popup("Are you sure you want to delete the channeling session","popup-value","popup--class-1","yes");
-    echo $popup;
+
+use app\core\component\Component;
+use app\models\LabReport;
+use app\models\Prescription;
+
+$component=New Component();
+$labreportModel=new LabReport();
+$prescriptionModel=new Prescription();
+
 ?>
-
-
-<div class="table-container">
-<?php if($channelings):?>
-<table border="0">
-    <tr>
-        <th>Clinic</th><th>Doctor</th><th>Date</th><th>Time</th>
-    </tr>
-    
-        <?php foreach($channelings as $key=>$channeling): ?>
-        <tr class="table-row">
-            
-            <td><?=$channeling['speciality']?></td>
-            <td><?=$channeling['name']?></td>  
-            <td><?=$channeling['channeling_date']?></td>
-            <td><?=$channeling['time']?></td>  
-            <td>
-                <div>
-                    <?php echo $component->button('delete',' ','Cancel Appointment','button--class-3',$channeling['appointment_ID']) ?>
-                </div>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
-    <?php else: ?>
-        <div class="empty-container">
-            Empty
+<section class="document-section">
+<section class="docu-searchbar-container">
+    <?=$component->searchbar($component,'','search-bar--class1','Search by report type','search-bar'); ?>
+</section>
+<section class="document-main-container">
+    <?php  foreach($labreports as $labreport): ?>
+        <div class="document-container" id=<?="'".$labreportModel->getTitle($labreport['report_ID'])."'" ?>>
+            <div class="document-image">
+                <img src="./media/images/common/labreport.png">
+            </div>
+            <a href=<?="'"."handle-labreports?spec=lab-report&cmd=view&id=".$labreport['report_ID']."'" ?>><?=($labreportModel->getTitle($labreport['report_ID'])?$labreportModel->getTitle($labreport['report_ID']):'Lab Report')."-".$labreportModel->getUploadedDate($labreport['report_ID'])?></a>
         </div>
-    <?php endif; ?>
-</div>
+    <?php endforeach;?>
+    <?php  foreach($reports as $report): ?>
+        <div class="document-container" id=<?="'".$report['type']."'" ?>>
+            <div class="document-image">
+                <img src="./media/images/common/medicalreport.png">
+            </div>
+            <a href=<?="'"."handle-documentation?spec=".$report['type']."&mod=view&id=".$report['report_ID']."'" ?>><?=$report['type']." Report-".$report['uploaded_date']?></a>
+        </div>
+    <?php endforeach;?>
+    <?php  foreach($prescriptions as $prescription): ?>
+        <div class="document-container" id="prescription">
+            <div class="document-image">
+                <img src="./media/images/common/prescription.png">
+            </div>
+            <div class="referral-name">
+                <a href=<?="'"."handle-documentation?spec=prescription"."&mod=view&id=".$prescription['prescription_ID']."'" ?>><?="Prescription-".$prescription['uploaded_date']?></a>
+                <?php if(!$prescriptionModel->isInCart($prescription['prescription_ID'])):?>
+                    <div>
+                        <?=$component->button('btn','','Add to Cart','button--class-0 btn-presc',$prescription['prescription_ID']); ?>
+                    </div>
+                    <?php endif;?>
+                </div>
+        </div>
+    <?php endforeach;?>
+   
 
+</section>
+</section>
 <script>
-    elementsArray = document.querySelectorAll(".button--class-3");
-    elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            url='handle-appointment?cmd=delete&id='+elem.id;
-            div.style.display="flex";
-            bg.classList.add("background");
-        });
-    });
-    yes.addEventListener("click",()=>{
-        location.href=url;
+    const searchBar=document.getElementById('search-bar');
+    const documents=document.querySelectorAll('.document-container');
+      function checker(){
+          var re=new RegExp("^"+searchBar.value)
+          documents.forEach((el)=>{
+              comp=""+el.id;
+              
+              if(searchBar.value.length==0){
+                  // el.classList.add("none")
+                }
+                else if(re.test(comp)){
+                    el.style.display='flex';
+                }
+                else{
+                el.style.display='none';
+               
+            }
+            })
+            if(searchBar.value.length==0){
+                documents.forEach((el)=>{
+                    el.style.display='flex';
+                }) 
+            }
+        }
+        searchBar.addEventListener('input',checker);
+        const btns=document.querySelectorAll(".btn-presc");
+        btns.forEach((elem)=>{
+            elem.addEventListener('click',()=>{
+                location.href="handle-documentation?spec=sec-prescription&cmd=add&id="+elem.id;
+            });
         })
-</script>
-<script>
-    const labels = Utils.months({count: 7});
-const data = {
-  labels: labels,
-  datasets: [{
-    label: 'My First Dataset',
-    data: [65, 59, 80, 81, 56, 55, 40],
-    backgroundColor: [
-      'rgba(255, 99, 132, 0.2)',
-      'rgba(255, 159, 64, 0.2)',
-      'rgba(255, 205, 86, 0.2)',
-      'rgba(75, 192, 192, 0.2)',
-      'rgba(54, 162, 235, 0.2)',
-      'rgba(153, 102, 255, 0.2)',
-      'rgba(201, 203, 207, 0.2)'
-    ],
-    borderColor: [
-      'rgb(255, 99, 132)',
-      'rgb(255, 159, 64)',
-      'rgb(255, 205, 86)',
-      'rgb(75, 192, 192)',
-      'rgb(54, 162, 235)',
-      'rgb(153, 102, 255)',
-      'rgb(201, 203, 207)'
-    ],
-    borderWidth: 1
-  }]
-};
 </script>

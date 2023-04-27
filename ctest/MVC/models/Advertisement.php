@@ -6,7 +6,7 @@ use app\core\Application;
 use app\core\UserModel;
 
 class Advertisement extends DbModel{
-    public string $id='';
+    public string $ad_ID='';
     public string $title='';
     public string $description='';
     public string $remark='';
@@ -57,8 +57,12 @@ class Advertisement extends DbModel{
         }
         return ['img'=>"media/images/advertisements/".$this->img];
     }
-    public function deleteImage($imgName){
-        $path = "media/images/advertisements/".$imgName['ad_ID'];
+    public function deleteImage($imgName, $type){
+        if($type=='pharmacy'){
+            $path = "media/images/advertisements/pharmacy/".$imgName;
+        }else{
+            $path = "media/images/advertisements/".$imgName;
+        }
         unlink($path);
     }
 

@@ -10,6 +10,7 @@ class AdminNotification extends DbModel{
     public string $doctor='';
     public string $content='';
     public string $created_date_time='';
+    public string $is_read='1';
 
    
   
@@ -50,12 +51,12 @@ class AdminNotification extends DbModel{
         return 'noti_ID,doctor';
     }
     public function tableRecords(): array{
-        return ['admin_notification'=>['noti_ID','doctor','content','created_date_time']];
+        return ['admin_notification'=>['noti_ID','doctor','content','created_date_time','is_read']];
     }
 
     public function attributes(): array
     {
-        return ['noti_ID','doctor','content','created_date_time'];
+        return ['noti_ID','doctor','content','created_date_time','is_read'];
     }
 
     
