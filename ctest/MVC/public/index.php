@@ -269,9 +269,6 @@ $app->router->get('/ctest/lab-view-report-detail',[LabController::class,'ReportD
 $app->router->post('/ctest/lab-view-report-detail',[LabController::class,'ReportDetail']);
 $app->router->get('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
 $app->router->post('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
-
-$app->router->post('/ctest/lab-S-report-upload',[LabController::class,'uploadSReport']);
-
 $app->router->get('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
 $app->router->post('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
 $app->router->get('/ctest/lab-test-template',[LabController::class,'createTemplate']);

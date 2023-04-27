@@ -37,9 +37,9 @@ class LabController extends Controller
         $contents = '';
 
         //Delete operation
-        if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
-            $LabTestModel->deleteRecord(['name'=>$parameters[1]['id']]);
-            Application::$app->session->setFlash('success',"Lab Test successfully deleted ");
+        if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'delete') {
+            $LabTestModel->deleteRecord(['name' => $parameters[1]['id']]);
+            Application::$app->session->setFlash('success', "Lab Test successfully deleted ");
             $response->redirect('/ctest/lab-view-all-test');
             return true;
         }
@@ -57,7 +57,7 @@ class LabController extends Controller
             ]);
         }
         if ($request->isPost()) {
-           
+
             // update test
             $LabTestModel->loadData($request->getBody());
             $TemplateModel->loadData($request->getBody());
@@ -251,7 +251,6 @@ class LabController extends Controller
         return $this->render('lab/lab-test-request', [
             'tests' => $tests
         ]);
-      
     }
     // ---------------------------wrire test result---------------------//
     public function writeResult(Request $request, Response $response)
@@ -728,6 +727,7 @@ class LabController extends Controller
         //define attributes as   public ?string metric=null in content object;
         //load data object
         //object->save();
+
 
     }
 }

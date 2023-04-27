@@ -474,8 +474,6 @@ class PharmacyController extends Controller{
             'model'=>$orderModel,
             // 'order_types'=>$order_types
         ]);
-        // header("/ctest/pharmacy-orders-pending");
-        // $this->viewPendingOrder();
     }
 
     public function finishProcessingOrder($request){    //check if the order is pickup or delivery
@@ -523,13 +521,28 @@ class PharmacyController extends Controller{
             'model'=>$orderModel
         ]);
     }
-
+    
+    //==========================DELIVERING ORDERS=====================================
+    public function viewDeliveringOrder(){
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orderModel=new Order();
+        $orders=$orderModel->get_packed_orders();
+        
+        $order_types = array();
+        foreach ($orders as $key=>$order){
+            $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
+        }
+        return $this->render('pharmacy/pharmacy-orders-delivering',[
+            'orders'=>$orders,
+            'model'=>$orderModel,
+            'order_types'=>$order_types
+        ]);
+    }
 
     public function trackOrder($request){
         
         $parameters=$request->getParameters();
         $this->setLayout("pharmacy",['select'=>'Orders']);
-        $riderMOdel = new Employee;
         $orderModel=new Order();
         $order_details = $orderModel->get_order_details($parameters[0]['id']);
 
@@ -572,23 +585,6 @@ class PharmacyController extends Controller{
         //     'orders'=>$orders,
         //     'model'=>$orderModel,
         // ]);
-    }
-    
-    //==========================DELIVERING ORDERS=====================================
-    public function viewDeliveringOrder(){
-        $this->setLayout("pharmacy",['select'=>'Orders']);
-        $orderModel=new Order();
-        $orders=$orderModel->get_packed_orders();
-        
-        $order_types = array();
-        foreach ($orders as $key=>$order){
-            $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
-        }
-        return $this->render('pharmacy/pharmacy-orders-delivering',[
-            'orders'=>$orders,
-            'model'=>$orderModel,
-            'order_types'=>$order_types
-        ]);
     }
 
     public function processOrderAgain(Request $request){
