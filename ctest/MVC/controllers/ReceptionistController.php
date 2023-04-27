@@ -211,7 +211,7 @@ class ReceptionistController extends Controller
         $channelingModel = new Channeling();
         $parameters = $request->getParameters();
         $this->setLayout("receptionist", ['select' => 'All Channelings']);
-        $channelings = $channelingModel->customFetchAll("SELECT employee.name,employee.emp_ID,employee.img,doctor.description,doctor.career_speciality from employee  join doctor on employee.nic = doctor.nic where doctor.career_speciality=" . "'" . $parameters[0]['id'] . "' ");
+        $channelings = $channelingModel->customFetchAll("SELECT employee.name,employee.emp_ID,employee.img,doctor.description,doctor.career_speciality,employee.age from employee  join doctor on employee.nic = doctor.nic where doctor.career_speciality=" . "'" . $parameters[0]['id'] . "' ");
         $channelingSp = $channelingModel->customFetchAll("SELECT * from doctor where career_speciality=" . "'" . $parameters[0]['id'] . "' ");
         ;
         return $this->render('receptionist/receptionist-all-channeling-type', [

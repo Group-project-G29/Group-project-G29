@@ -10,6 +10,7 @@ use app\core\PDF;
         public string $label='';
         public string $template_ID='';
         public string $location='';
+        public string $request_ID='';
     
         public function addReport()
         {
@@ -19,12 +20,7 @@ use app\core\PDF;
         public function rules(): array
         {
             return [
-                'report_ID'=>[self::RULE_REQUIRED],
-                'fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>100000000000]],
-                'type'=>[self::RULE_REQUIRED],
-                'label'=>[self::RULE_REQUIRED],
-                'upload_date_time'=>[],
-                'Template_ID'=>[self::RULE_REQUIRED],
+                
                 'location'=>[self::RULE_REQUIRED]
     
             ];
@@ -42,12 +38,12 @@ use app\core\PDF;
             return 'report_ID';
         }
         public function tableRecords(): array{
-            return ['lab_report'=> ['type','fee','label','template_ID','location']];
+            return ['lab_report'=> ['type','fee','label','template_ID','location','request_ID']];
         }
 
         public function attributes(): array
         {
-            return  ['type','fee','label','template_ID','location'];
+            return  ['type','fee','label','template_ID','location','request_ID'];
         }
         public function getPatientReport($patient){
             return $this->customFetchAll("select * from lab_report left join lab_request on lab_request.request_ID=lab_report.request_ID where lab_request.patient_ID=".$patient);
@@ -113,9 +109,15 @@ use app\core\PDF;
         }
 
         public function create_report_allocation($report_ID,$patient_ID,$doctor){
-            return $this->customFetchAll("INSERT INTO lab_report_allocation ( report_ID,patient_ID,doctor) VALUES ( $report_ID, $patient_ID,$doctor); ");
+            return $this->customFetchAll("INSERT INTO lab_report_allocation ( report_ID,patient_ID,doctor) VALUES ( $report_ID, $patient_ID,$doctor) ");
 
         }
+
+
+        public function isreport($request_ID){
+            return $this->customFetchAll("SELECT report_ID from lab_report where request_ID=$request_ID");
+        }
+
         public function labreporttoPDF($reportID){
             $valuerows=$this->getReport($reportID);
             $addstr='<tr><td>Parameter</td><td>Test Value</td><td>Reference Range</td></tr>';

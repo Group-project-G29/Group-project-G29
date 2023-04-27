@@ -11,11 +11,13 @@ use app\core\Application;
 <div class="search-bar-container" style="padding-left:19vw">
   <?php echo $component->searchbar('', 'search', 'search-bar--class2', 'Search by name,specilaity', 'searchbar'); ?>
 </div>
-<div class="sub-header-container" style="padding:2vh 0 2vh 0">
-<tr>
-        <h4><b>Title :</b><?=$detail["title"]?></h4>
-        <h4><b>subtitle :</b><?=$detail["subtitle"]?></h4>
-    </tr>
+<div class="semi-header-container-1">
+    <div class="semi-field-container" style="margin-top:5vw">
+        <tr>
+            <td><b>Title   :</b><?= $detail["title"] ?></td><br>
+            <td><b>Subtitle   :</b><?= $detail["subtitle"] ?></td><br><br>
+        </tr>
+    </div>
 <div class="table-container">
     <table border="0">
                     <?php foreach ($templates as $template) : ?>
@@ -62,6 +64,7 @@ use app\core\Application;
                         </tr>
                     <?php endforeach; ?>
     </table>
+</div>
 </div>
 
 <!-- //popup -->

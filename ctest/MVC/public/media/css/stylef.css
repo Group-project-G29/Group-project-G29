@@ -234,7 +234,7 @@ select{
 .top-stripe a{
     color:var(--clr-white);
     text-decoration: none;
-    font-size: 1.2em;
+    font-size: 1.0em;
     padding-inline: 3vw;
 
 }
@@ -457,7 +457,6 @@ select{
     width:75vw
   
   }
-  
   .semi-header-container{
     background-color: white;
     /* border:20vh 20vh 20vh 20vh; */
@@ -493,6 +492,13 @@ select{
     text-align: center;
 }
   
+  .normal-container{
+    padding-top:3vh;
+    position: absolute;
+    top:14vh;
+    left:8vw;
+    width:84vw
+  }
   .main-container--iso{
     position: absolute;
     top:14vh;
@@ -554,15 +560,15 @@ select{
     margin-top: 3vh;
     align-items: center;
     justify-content: center;
-    width: 80vw;
 }
 
 .table-container>table{
     border-collapse: separate;
     border-style: hidden;
     border-spacing: 0px 1vh;
-    margin: 0vh 3vw 5vw 1vw;
+    margin-top: 0vh;
     width: 80vw;
+    margin-left: 10vw;
     border-color:transparent;
     z-index: 0;
 }
@@ -690,6 +696,12 @@ padding-left:5vh;
 
 .button--class-0-deactive{
     opacity: 80%;
+    height:4vh;
+    font-size: 0.9em;
+    color: var(--clr-white);
+    background-color:var(--clr-dark);
+    border:none;
+    border-radius:5px;
 }
 /* buttons */
 .button-1{
@@ -712,7 +724,7 @@ padding-left:5vh;
     border-radius:5px;
 }
 
-.button--class-0:hover,
+/* .button--class-0:hover,
 .button--class-0-deactive:hover {
     scale: 1.05;
     transition: 0.5s;
@@ -720,7 +732,7 @@ padding-left:5vh;
 
 .button--class-0-deactive:hover {
     opacity: 80%;
-}
+} */
 
 .button--class-1{
     height:4vh;
@@ -851,12 +863,10 @@ padding-left:5vh;
     position: fixed;
     width: 100vw;
     height: 100vh;
-    z-index: 9;
+    z-index: 90;
 }
 
 .detail-container {
     width: 100px;
     align-items: center;
 }
-
-

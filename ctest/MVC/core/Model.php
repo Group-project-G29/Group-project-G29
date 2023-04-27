@@ -30,8 +30,6 @@ abstract class Model{
     }
     //Input $_FILES 
     public function loadFiles($files){
-        
-        
         foreach($files as $key=>$value){
             if(property_exists($this,$key)){
 

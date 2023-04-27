@@ -54,7 +54,11 @@ class PatientAuthController extends Controller{
     }
     public function pedlogin(Request $request,Response $response){
       
+<<<<<<< HEAD
         $this->setLayout('visitor-homepage-landing');
+=======
+        $this->setLayout('visitor-homepage');
+>>>>>>> 20001843
         $PatientLoginForm=new PatientLoginForm();
 
 

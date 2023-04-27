@@ -37,9 +37,9 @@ class LabController extends Controller
         $contents = '';
 
         //Delete operation
-        if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
-            $LabTestModel->deleteRecord(['name'=>$parameters[1]['id']]);
-            Application::$app->session->setFlash('success',"Lab Test successfully deleted ");
+        if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'delete') {
+            $LabTestModel->deleteRecord(['name' => $parameters[1]['id']]);
+            Application::$app->session->setFlash('success', "Lab Test successfully deleted ");
             $response->redirect('/ctest/lab-view-all-test');
             return true;
         }
@@ -57,7 +57,7 @@ class LabController extends Controller
             ]);
         }
         if ($request->isPost()) {
-           
+
             // update test
             $LabTestModel->loadData($request->getBody());
             $TemplateModel->loadData($request->getBody());
@@ -251,7 +251,6 @@ class LabController extends Controller
         return $this->render('lab/lab-test-request', [
             'tests' => $tests
         ]);
-      
     }
     // ---------------------------wrire test result---------------------//
     public function writeResult(Request $request, Response $response)
@@ -278,13 +277,12 @@ class LabController extends Controller
             $reportmodel->loadFiles($_FILES);
             $AllocationModel = new LabContentAllocation();
             $requst_reports = $reportmodel->get_report_by_ID($parameters[0]['id']);
-            
             if (!$requst_reports) {
                 $createReport = $reportmodel->create_new_report($reports[0]['fee'], ' ', ' ', $reports[0]['template_ID'], ' ', $parameters[0]['id']);
                 // $setPayment=$reportmodel->payment($payments[0]['patient_ID'],$payments[0]['fee'],'','',$payments[0]['report_ID'],'','','');
                 // var_dump($setPayment);
                 // exit;
-                // $createreportallocation = $reportmodel->create_report_allocation($createReport, $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);
+                $createreportallocation = $reportmodel->create_report_allocation($createReport, $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);
                 // $createreportallocation = $reportmodel->create_report_allocation($reportallocation[0]['report_ID'], $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);
                 $requst_reports = $reportmodel->get_report_by_ID($parameters[0]['id']);
             }
@@ -295,14 +293,16 @@ class LabController extends Controller
                     if ($AllocationModel->get_types($content_ID)[0]['type'] === 'field') {
                         $AllocationModel->add_field_allocation($setreport[0]['report_ID'], $content_ID, $value);
                         echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
-                    } elseif ($AllocationModel->get_types($content_ID)[0]['type'] === 'text') {
+                    }
+                   elseif ($AllocationModel->get_types($content_ID)[0]['type'] === 'text') {
                         $AllocationModel->add_text_allocation($setreport[0]['report_ID'], $content_ID, $value);
                         echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
-                    } else {
-                        $AllocationModel->add_image_allocation($setreport[0]['report_ID'], $content_ID, $value);
-                        echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
-                    }
-                    // echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
+                    } 
+                    // if ($AllocationModel->get_types($content_ID)[0]['type'] === 'image'){
+                    //     $AllocationModel->add_image_allocation($setreport[0]['report_ID'], $content_ID, $value);
+                    //     echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
+                    // }
+                    echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
 
                 }
             }
@@ -312,7 +312,6 @@ class LabController extends Controller
         }
         return $this->render('lab/lab-write-test-result', [
             'contentmodel' => $contentModel,
-            // 'allocationmodel' => $AllocationModel,
             'contents' => $contents
         ]);
     }
@@ -322,8 +321,7 @@ class LabController extends Controller
         $reportmodel = new LabReport();
         $parameters = $request->getParameters();
         $this->setLayout("lab", ['select' => 'Lab Reports']);
-        // $reports = $reportmodel->customFetchAll("SELECT lab_report_allocation.report_ID,patient.name as pname, employee.name as dname from lab_report_allocation join patient on lab_report_allocation.patient_ID= patient.patient_ID join doctor on doctor.nic=lab_report_allocation.doctor join employee on employee.nic=doctor.nic ");
-        $reports = $reportmodel->customFetchAll("SELECT lab_report.report_ID,patient.name as pname, employee.name as dname from lab_report join lab_request on lab_report.request_ID= lab_request.request_ID join doctor on doctor.nic=lab_request.doctor join employee on employee.nic=doctor.nic join patient on patient.patient_ID=lab_request.patient_ID");
+        $reports = $reportmodel->customFetchAll("SELECT lab_report_allocation.report_ID,patient.name as pname, employee.name as dname from lab_report_allocation join patient on lab_report_allocation.patient_ID= patient.patient_ID join doctor on doctor.nic=lab_report_allocation.doctor join employee on employee.nic=doctor.nic ");
         // $requst_reports = $reportmodel->get_report_by_ID($parameters[0]['id']);
         // $reportmodel->labreporttoPDF($requst_reports[0]['report_ID']);
 
@@ -571,7 +569,7 @@ class LabController extends Controller
             } else if ($_POST["type"] === 'image') {
                 $contents = $contentModel->add_image_type($_POST["name"], $new_position, $newly_created_temp_ID[0]['template_ID']);  //pass template id from above created new template
             }
-            Application::$app->session->setFlash('success', "new template created ");
+            Application::$app->session->setFlash('success', "new lab template content created ");
         }
 
         $newly_created_temp_ID = $contentModel->select_last_ID();
@@ -728,6 +726,7 @@ class LabController extends Controller
         //define attributes as   public ?string metric=null in content object;
         //load data object
         //object->save();
+
 
     }
 }

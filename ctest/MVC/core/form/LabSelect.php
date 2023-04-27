@@ -3,7 +3,7 @@
     
     use app\core\Model;
 
-    class Select{
+    class LabSelect{
         public Model $model;
         public string $class;
         public string $id;
@@ -36,7 +36,7 @@
                         <label for="%s">%s</label>
                         <h3 class="fs-50  fc-color--error">%s</h3>
                     </div>
-                   <select name="%s" class="field-input--class1" id="%s">'.
+                   <select name="%s" class="field-input--class3" id="%s">'.
                          $str
                    .'</select>
                   </div>';

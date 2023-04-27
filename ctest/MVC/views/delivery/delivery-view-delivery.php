@@ -50,6 +50,10 @@ $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID'],'post'
     <div class="form-body-fields">
 
     <table>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 20001843
         <?php echo $form->spanfield($model,'confirmation_PIN','Enter PIN here','field','text') ?>
         <?php 
             if (isset($err)){
@@ -61,6 +65,12 @@ $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID'],'post'
                 }
             }
         ?> 
+<<<<<<< HEAD
+=======
+=======
+    <?php echo $form->spanfield($model,'PIN','','field','text') ?>
+>>>>>>> 20001843
+>>>>>>> 20001843
     </table>
 
     <div><?php echo $component->button("complete","submit","Complete Order","button--class-0","complete")?></div><br>
@@ -68,4 +78,23 @@ $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID'],'post'
     </div>
    
     
+<<<<<<< HEAD
     <?php Form::end() ?>  
+=======
+    <?php Form::end() ?>  
+
+<<<<<<< HEAD
+=======
+
+<!-- form to get the pin
+button to confirm -->
+
+<script>
+
+    const btn1=document.getElementById("complete");
+    btn1.addEventListener('click',function(){
+        location.href="delivery-complete?id="+<?=$delivery['order_ID']?>; //get
+    })
+</script>
+>>>>>>> 20001843
+>>>>>>> 20001843

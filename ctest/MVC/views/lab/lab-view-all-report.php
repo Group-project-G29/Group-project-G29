@@ -3,7 +3,7 @@
 use app\core\component\Component;
 
 $component = new Component();
-// var_dump($templates);
+// var_dump($reports);
 // exit;
 ?>
 

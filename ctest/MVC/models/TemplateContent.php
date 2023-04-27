@@ -6,7 +6,7 @@ use app\core\Application;
 use app\core\UserModel;
 
 class TemplateContent extends DbModel{
-    public int $content_ID;
+    public string $content_ID='';
     public ?string $name=null;
     public ?string $reference_ranges=null;
     public ?string $position=null;
