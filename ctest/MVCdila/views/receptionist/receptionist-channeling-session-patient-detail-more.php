@@ -1,0 +1,99 @@
+<?php
+
+use app\core\component\Component;
+use app\models\Employee;
+
+$component = new Component();
+?>
+<div class="header-container"style="padding-top:5vh">
+    
+<div class="semi-header-container">
+        <h2>Patient Detail</h2>
+        <h5>Patient ID = <?= $PatientDetail['patient_ID'] ?></h5>
+        <h5>Name = <?= $PatientDetail['name'] ?></h5>
+        <h5>NIC = <?= $PatientDetail['nic'] ?></h5>
+
+        <?php $age="18"?>
+        <h5><?php if ($PatientDetail['age']< $age){
+        echo "Categoty = Pediatric";}
+        else{echo "Categoty = Adult";}?></h5>
+
+        <!-- <div class="button">
+            <?php echo $component->button('edit-details', '', 'Edit', 'button--class-0  width-10', 'edit-details'); ?>
+        </div> -->
+
+       
+
+    </div>
+</div>
+<div class="table-container">
+    <table border="0" style="margin-left:0px">
+
+        <tr class="row-height header-underline">
+            <th>Clinic</th>
+            <th>Doctor</th>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Fee</th>
+            <th> </th>
+        </tr>
+
+
+        <?php foreach ($channelings as $channeling) : ?>
+
+            <tr class=" " id=<?= $channeling['patient_ID'] ?> >
+                <td><?= $channeling['career_speciality'] ?></td>
+                <td><?= $channeling['name'] ?></td>
+                <td><?= $channeling['day'] ?></td>
+                <td><?= $channeling['time'] ?></td>
+                <td><?= $channeling['fee'] ?></td>
+               
+                <!-- <td class='table-row-0  row-height hover' style="padding-left: 1px;">Cancel</td> -->
+                <td><?php echo $component->button('cancel', '', 'Cancel', 'button-3 table-row-0 row-height hover', $channeling['patient_ID']); ?></td>
+               
+            </tr>
+
+        <?php endforeach; ?>
+
+
+
+
+    </table>
+
+</div>
+<div class="button-1" id=<?= $channeling['patient_ID'] ?>>
+    <?php echo $component->button('Set Appoinment', '', 'Set Appoinment', 'button--class-0  width-10', 'edit-details'); ?>
+    
+</div>
+
+<div class="button-0" id=<?= $channeling['patient_ID'] ?>>
+    <?php echo $component->button('edit-details', '', 'Payments', 'button--class-0  width-10', 'edit-details'); ?>
+</div>
+
+
+<br>
+
+
+
+<script>
+    elementsArray = document.querySelectorAll(".button-1");
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href = 'receptionist-patient-appointment?mod=view&id=' + elem.id;
+        });
+    });
+
+    elementsArray = document.querySelectorAll(".button-0");
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href = 'receptionist-channeling-payment?id=' + elem.id;
+        });
+    });
+
+    elementsArray = document.querySelectorAll(".button-3");
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href = 'receptionist-channeling-session-patient-detail-more?cmd=delete&id=' + elem.id;
+        });
+    });
+</script>

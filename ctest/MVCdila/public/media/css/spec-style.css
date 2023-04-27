@@ -1,0 +1,113 @@
+
+
+
+/*-------------------------------------*/
+/* Registration body and sign in form */
+/*-------------------------------------*/
+.reg_body-ped{
+    margin-left: 30vw;
+    margin-top: -2vh;
+    height: 120vh;
+    margin-top:35vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap:40px;
+    background-color: var(--clr-white);
+    border-radius: 10px;
+    width: 40vw;   
+}
+.reg_body-ped [type='text']{
+    width: 30vw;
+}
+.reg_body{
+    margin-left: 30vw;
+    height: 100vh;
+    margin-top:20vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap:40px;
+    background-color: var(--clr-white);
+    border-radius: 10px;
+    width: 40vw;
+  
+}
+.fix-margin{
+    margin-top: 3vh;
+}
+.reg_body [type="text"],.reg_body [type="password"],.reg_body [type="file"],.reg_body select{
+    
+    width:30vw;
+}
+.hide{display:none;}
+.reg-body_fields{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 100px;;
+}
+
+.reg-body_bottom{
+    display: flex;
+    gap:5px;
+}
+
+.reg-width{
+    width: 30vw;
+}
+
+.reg-body_bottom-text{
+    margin-top: 30px;;
+    display: flex;
+    gap:3px;
+    
+}
+
+
+.reg-body_bottom{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.reg-body_bottom [type="submit"]{
+    margin-right:50px;
+}
+
+.reg-main-image{
+   
+    width: 30%;
+    max-width: 1000px;
+    height: 7vh ;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -5vh;
+    scale: 1.25;
+}
+
+.field-input--class1{
+    background: #F0F0F0;
+    border: 1px solid #cfcfcf;
+    border-radius: 10px;
+    width: 100%;
+    height:4vh;
+    color:var(--clr-dark);
+    font-weight: normal;
+    font-size: var(--fs-50);
+    padding-inline: 15px;
+}
+/* buttons */
+.button-lighter{
+    height:4vh;
+    width: 100%;
+    font-size: 0.9em;
+    color: var(--clr-white);
+    background-color:var(--clr-light);
+    border:var(--button-border);
+    border-radius: var(--button-border-radius);
+
+}

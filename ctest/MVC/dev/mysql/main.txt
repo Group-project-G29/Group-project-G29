@@ -1,0 +1,326 @@
+create table employee(
+    emp_ID int not null auto_increment=10,
+    name varchar(50) not null,
+    nic varchar(15),
+    gender varchar(7),
+    contact varchar(15) not null,
+    email varchar(50) not null unique,
+    address varchar(50),
+    start_date date,
+    role varchar(20) not null,
+    password varchar(255),
+    img varchar(100),
+    primary key(nic),
+
+);
+
+
+CREATE TABLE doctor(
+    emp_ID int,
+    speciality VARCHAR(20) NOT NULL,
+    description VARCHAR(255),
+    PRIMARY KEY(nic),
+    FOREIGN KEY (nic) REFERENCES employee(nic) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE patient(
+    patient_ID  INT AUTO_INCREMENT=1000,
+    nic varchar(15),
+    type varchar(10),
+    name varchar(30) not null,
+    guardian_name  varchar(30),
+    relation varchar(30),
+    age  int,
+    email varchar(50) unique,
+    contact varchar(15) unique,
+    gender varchar(10),
+    verfication varchar(10),
+    address varchar(50),
+    primary key(patient_ID)
+
+)
+
+create table free_appointments(
+    emp_ID int,
+    patient_ID int,
+    expire_date date,
+    primary key(emp_ID,patient_ID),
+    foreign key (emp_ID) references  doctor(emp_ID) on update cascade,
+    foreign key (patient_ID) references patient(patient_ID) on delete cascade on update cascade,
+)
+create table channeling(
+    channeling_ID int auto_increment=500,
+    doctor varchar(15),
+    fee int not null,
+    total_patient int,
+    extra_patient int,
+    max_free_appointments int,
+    day varchar(15),
+    time varchar(20),
+    start_date date,
+    count int,
+    type varchar(10),
+    primary key(channeling_ID)
+    foreign key(doctor) references doctor(nic) on delete cascade on update cascade
+
+)
+
+create table nurse_channeling_allocataion(
+    emp_ID int,
+    channeling_ID int,
+    primary key(emp_ID,channeling_ID),
+    foreign key(emp_ID) references employee(emp_ID),
+    foreign key(channeling_ID) references channeling(channeling_ID)
+)
+
+create table past_channeling(
+    channeling_ID int,
+    no_of_patient int,
+    total_time varchar(20),
+    total_income int,
+    free_appointments int,
+    primary key(channeling_ID),
+    foreign key (channeling_ID) references channeling(channeling_ID) on update cascade
+)
+
+create table opened_channeling(
+    channeling_ID int,
+    remaining_free_appointments int,
+    remaining_appointments int,
+    channeling_date date,
+    status varchar(10),
+     primary key(channeling_ID),
+    foreign key (channeling_ID) references channeling(channeling_ID) on update cascade
+
+);
+
+create table appointment(
+    appointment_ID int auto_increment=500,
+    created_date datetime,
+    channeling_ID int,
+    patient_ID int,
+    type varchar(10),
+    expire_date datetime,
+    payment_status varchar(10),
+    primary key(appointment_ID),
+    foreign key(channeling_ID) references channeling(channeling_ID) on delete cascade on update cascade
+    foreign key(patient_ID) references patient(patient_ID) on delete cascade on update cascade
+)
+
+create table referrel(
+    doctor_ID int,
+    appointment_ID int,
+    ref_ID int auto_increment=200;
+    speciality varchar(20),
+    location varchar(100),
+    text text,
+    primary key(ref_ID),
+    foreign key(appointment_ID) references appointment(appointment_ID),
+    foreign key (doctor_ID) references doctor(doctor_ID)
+    
+
+
+)
+
+create table pre_channeling_tests(
+    test_ID int auto_increment,
+    metric varchar(50),
+    name varchar(100),
+    primary key(test_ID),
+)
+
+create table pre_channeling_tests_values(
+    value float,
+    test_ID int,
+    appointment_ID int,
+    primary key(test_ID,appointment_ID),
+    foreign key (test_ID) references pre_channeling_tests(test_ID),
+    foreign key (appointment_ID) references appointment(appointment_ID)
+)
+
+create table pre_channeilng_test_aloc(
+    channeling_ID int,
+    test_ID int,
+    foreign key(test_ID) references pre_channeling_tests(test_ID),
+    foreign key(channeling_ID) references channeling
+    primary key(test_ID,channeling_ID)
+)
+
+
+create table cart(
+    cart_ID int auto_increment,
+    created_date date
+    primary key(cart_ID)
+)
+
+create table medicine(
+    med_ID int,
+    name varchar(50),
+    brand varchar(40),
+    strength varchar(10),
+    availability varchar(10),
+    category varchar(10),
+    unit varchar(10),
+    unit_price int,
+    primary key(med_ID)
+
+)
+create table prescription(
+    prescription_ID int,
+    uploaded_date date,
+    type varchar(20),
+    location varchar(50),
+    primary key(prescription_ID)
+)
+
+create table prescription_medicine(
+    med_ID int,
+    prescription_ID int,
+    amount int,
+    route varchar(10),
+    dispense varchar(10),
+    frequency varchar(10),
+    foreign key (med_ID) references medicine(med_ID),
+    foreign key(prescription_ID) references prescription(prescription_ID),
+    primary key(med_ID,prescription_ID)
+)
+
+create  table _order(
+    order_ID int,
+    recipient_name varchar(100),
+    address varchar(100),
+    date date,
+    contact varchar(20),
+    status varchar(20),
+    patient_ID int
+    cart_ID int,
+    medicine_ID int,
+    primary key(order_ID),
+    foreign key (patient_ID)  references patient(patient_ID),
+    foreign key (cart_ID) references cart(cart_ID),
+    foreign key (med_ID) references medicine(med_ID),
+
+)
+
+create table delivery(
+    delivery_ID int auto_increment,
+    contact varchar(15),
+    address varchar(50),
+    time_of_creation varchar(50),
+    delivery_rider int,
+    primary key(delivery_ID),
+    foreign key (delivery_rider) references employee(emp_ID) on update cascade 
+)
+
+
+create table delivery_detail(
+    order_ID int,
+    patient_ID int,
+    delivery_ID int,
+    primary key(order_ID,patient_ID,delivery_ID),
+    foreign key(order_ID) references order(order_ID),
+    foreign key(patient_ID) references patient(patient_ID),
+    foreign key(delivery_ID) references  delivery(delivery_ID)
+)
+
+create table  patient_notification(
+    noti_ID int auto_increment=200,
+    created_date_time varchar(30),
+    type varchar(20),
+    text varchar(255),
+    patient_ID int,
+    primary key(noti_ID),
+    foreign key (patient_ID) patient(patient_ID)
+)
+
+create table medical_report(
+    report_ID int auto_increment=400,
+    uploaded_date_time varchar(30),
+    type varchar(30),
+    primary key(report_ID),
+    location varchar(50)
+
+)
+
+create table Medical_history(
+    report_ID int,
+    note text,
+    history text,
+    medication text,
+    allergies text,
+    foreign key (report_ID) references medical_report(report_ID)
+)
+
+create table consultation_report(
+    report_ID int,
+    examination text,
+    consultation text,
+    foreign key  (report_ID) references medical_report(report_ID)
+)
+
+create table report_allocation(
+    report_ID int,
+    doctor_ID int,
+    patient_ID int,
+    primary key(report_ID,doctor_ID,patient_ID),
+    foreign key(report_ID) references medical_report(report_ID),
+    foreign key (doctor_ID) references doctor(doctor_ID),
+    foreign key (patient_ID) references patient(patient_ID)
+)
+
+create table admin_notification(
+        noti_ID int auto_increment,
+        doctor int,
+        type varchar(20),
+        content text,
+        primary key(noti_ID),
+        foreign key (doctor) references doctor(emp_ID)
+
+        
+)
+
+ create table notification_allocation(
+	noti_ID int,
+    doctor int,
+    content text,
+    created_date_time datetime,
+    PRIMARY key(noti_ID,doctor),
+    FOREIGN key (noti_ID) REFERENCES admin_notification(noti_ID),
+    FOREIGN key(doctor) REFERENCES doctor(emp_ID)
+    
+
+);
+           
+
+create table lab_report(
+    report_ID int,
+    fee int,
+    upload_date_time datatime,
+    type varchar(20),
+    location varchar(50),
+    primary key(report_ID),
+    
+
+)
+
+
+create table content(
+    content_ID int auto_increment,
+    name varchar(50),
+    reference_ranges varchar(100),
+    position varchar(50),
+    primary key(content_ID)
+
+)
+
+create table lab_report_content(
+    report_ID int,
+    fee int,
+    uploaded_date_time datetime,
+    patient_ID int,
+    doctor_ID int,
+    primary key(report_ID,patient_ID,doctor_ID),
+    foreign key (report_ID) references lab_report(report_ID), 
+    foreign key (patient_ID) references patient(patient_ID), 
+    foreign key (doctor_ID) references  doctor(emp_ID)
+)
