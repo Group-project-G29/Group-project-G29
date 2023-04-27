@@ -42,8 +42,10 @@ use app\core\DbModel;
 
 
         public function addItem(string $itemID,string $cartID,string $amount){
+            $medicineModel=new Medicine();
             //check item is in the cart
             $cart_item=$this->fetchAssocAllByName(['med_ID'=>$itemID,'cart_ID'=>$cartID],'medicine_cart');
+            $unit_price=$medicineModel->getMedicinePrice($itemID);
             //update if it is in cart
             if($cart_item){
                 $this->customFetchAll("update medicine_in_cart set amount=".$amount." where cart_ID=".$cartID." and med_ID=".$itemID);
@@ -51,6 +53,7 @@ use app\core\DbModel;
             }
             //add if it is not in cart
             else{
+
                 $this->customFetchAll("insert into medicine_in_cart (med_ID,cart_ID,amount) values('$itemID','$cartID','$amount')");
             }
 
@@ -68,6 +71,34 @@ use app\core\DbModel;
         public function getItemCount(){
             $cart=$this->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID'];
             return $this->customFetchAll("select count(*) from medicine_in_cart where cart_ID=".$cart)[0]['count(*)']+$this->customFetchAll("select count(*) from prescription where cart_ID=".$cart)[0]['count(*)'];
+        }
+        public function getMedicinePrice($cart){
+            $cartModel=new Cart();
+            $medicineModel=new Medicine();
+            $medicines=$cartModel->fetchAssocAllByName(['cart_ID'=>$cart],'medicine_in_cart');
+            $total=0;
+            foreach($medicines as $medicine){
+                $med=$medicineModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0];
+                $total=$total+$medicine['amount']*$med['unit_price'];
+            }
+            return $total;
+        }
+        public function getEpres($cart){
+            $prescriptionModel=new Prescription();
+            $prescriptions=$prescriptionModel->fetchAssocAll(['cart_ID'=>$cart,'type'=>'E-prescription']);
+            $total=0;
+            foreach($prescriptions as $prescription){
+                $total=$total+$prescriptionModel->getPrice($prescription['prescription_ID']);
+            }
+            return $total;
+        }
+        public function getCartPrice(){
+            $cartModel=new Cart();
+            $cart=$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID'];
+            $total=0;
+            $total=$total+$this->getMedicinePrice($cart)+$this->getEpres($cart);
+            return $total;
+
         }
         public function createCart($patientID){
              $this->customFetchAll("insert into cart (patient_ID) values('$patientID')");
@@ -92,21 +123,23 @@ use app\core\DbModel;
             }
             else{
                 //create an delivery 
+                $deliveryModel->createPIN();
                 $delivery_id=$deliveryModel->save();
                 $orderModel->delivery_ID=$delivery_id[0]['last_insert_id()'];
             }
             $orderID=$orderModel->save()[0]['last_insert_id()'];
+            Application::$app->session->set('order_ID',$orderID);
             //get all item in cart
             //['0=>["cart_ID"=>"121"...]']
             $cartItems=$this->getCartItem($cartID);
-            // ---------------create a function to check whether cart has old items 
+            // ---------PIN------create a function to check whether cart has old items 
             //transfer item in to order
             foreach($cartItems as $item ){
                 if(!$medicineModel->checkStock($item['med_ID'])){ 
                     array_push($unavailableItems,$medicineModel->getMedicineByID($item['med_ID']));
                     continue;
                 }
-                $orderModel->addItem($orderID,$item['med_ID'],$item['amount']);
+                $orderModel->addItem($orderID,$item['med_ID'],$item['amount'],$medicineModel->customFetchAll("select * from medical_products where med_ID=".$item['med_ID'])[0]['unit_price']);// change here
                 //reduce medicine
                 $medicineModel->reduceMedicine($item['med_ID'],$item['amount'],true);
             }
@@ -124,6 +157,7 @@ use app\core\DbModel;
             //delete all item in cart
             $this->deleteRecordByName(['cart_ID'=>$cartID],'medicine_in_cart');
             //if all items are available return true
+            
             return true;
         }
         

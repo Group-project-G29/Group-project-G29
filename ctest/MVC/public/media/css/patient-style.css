@@ -300,6 +300,7 @@
     background-color: var(--clr-white);
     height: 27vh;
     border-radius: 5px;
+    gap:3.5vw;
     border:1px solid var(--clr-borders);
 
 }
@@ -309,13 +310,14 @@
     gap:1vw;
 }
 .item--left img{
-    width:auto;
+    max-width:9vw;
     height:20vh;
 }
 .item--right{
     display: flex;
     flex-direction: column;
     gap:2vh;
+    min-width:6vw;
 }
 .channeling-vital-info{
     margin-top: 5vh;
@@ -335,9 +337,9 @@
     flex-direction: column;
     align-items: center;
     gap:5vh;
-    padding-top:2vh ;
+    padding-top:4vh ;
     padding-inline: 1vw;
-    border-radius: 2px;
+    border-radius: 5px;
     position:fixed;
     top:30vh;
     left:35vw;
@@ -345,8 +347,19 @@
     height: 40vh;
     z-index: 100;
     background-color:white;
-}
 
+}
+.variable-small-container{
+    overflow-y: scroll;
+}
+.referral-popup-wrapper [type='file']{
+    width:15vw
+}
+.small-column{
+    display: flex;
+    flex-direction: column;
+    gap:2vh;
+}
 /* pharmacy pages styles */
 .medicine-main-container{
     display: flex;
@@ -581,6 +594,7 @@
     justify-content: flex-start;
     flex-wrap: wrap;
     gap:5vw;
+    border-radius: 10px;
 
 }
 .doctor-item-identity--one{
@@ -616,7 +630,7 @@
 .button--class-5{
     height: 4vh;
     font-size: 1.1em;
-    padding-inline: 40px;
+    padding-inline: 20px;
     color: var(--clr-button-green);
     background-color: var(--clr-white);
     border: 1px solid var(--clr-button-green);
@@ -658,10 +672,64 @@
     width:10vw;
     height:20vh;
 
+
+}
+.btn-contnet{
+    display: flex;
+    flex-direction: column;
+    gap:2vh;
+}
+.btn-content button{
+    position: relative;
+    top:-5vh;
+    left:3.2vw;
+}
+.patient-appointment-tile--1{
+    display: flex;
+    flex-direction: column;
+    gap:1vh;
+    background-image:url('images/notepad1.jpg');
+    background-size: cover;
+    height:35vh;
+    width:15vw;
+    padding-inline:1vw;
+    padding-block: 1vh;
+    
+
+}
+.patient-appointment-tile--2{
+    background-image:url('images/notepad1.jpg');
+    background-size: cover;
+}
+.bg-image-div {
+    width: 100%;
+    height: 62vh;
+    min-height: 500px;
+    /* margin-top: -20vh; */
+    /* height: 100%; */
+    background-image: url('images/Contact-Us-Background.jpg');
+    /* scroll; */
+    background-position-y: center;
+    background-position-x: center;
+    /* background: url("./images/contact-us-2.png"); */
+    /* scale: 1.1; */
+    
+}
+.appointment-container{
+    display: flex;
+    justify-content: left;
+
+}
+.patient-appointment-tile--1 img,.patient-appointment-tile--2 img{
+    position: relative;
+    width:2vw;
+    height: 4vh;
+    left:5vw;
+    top:-0.2vh;
 }
 .document-image{
     height:5vh;
-    width:5vw;
+    width:4.5vw;
 }
 .illusion-button a{
     text-decoration: none;
@@ -702,7 +770,7 @@
 .track-order-status{
     display:flex;
     flex-direction: row;
-    gap:5vw;
+    gap:2vw;
     align-items: center;
 }
 .track-order-status img{
@@ -721,12 +789,258 @@
     flex-direction: column;
     gap:15vh;
 }
+/* payment page */
+.pharmacy-order-container--2{
+    background-color:var(--clr-white);
+    display: flex;
+    flex-direction: column;
+    padding-top: 4vh;
+    align-items: center;
+    gap:7vh;
+    border-radius: 20px;
+    margin-left: 18vw;
+    margin-top: 3vh;
+    width: 40vw;
+    min-height:75vh;
+}
+.pharmacy-order-container--3{
+    background-color:var(--clr-white);
+    display: flex;
+    flex-direction: column;
+    padding-top: 4vh;
+    align-items: center;
+    gap:7vh;
+    border-radius: 20px;
+    
+    width: 37vw;
+    min-height:75vh;
+}
 
-.medical-analysis-section{
+.medicine-table{
+    border-collapse: separate;
+    border-spacing: 50px 0px;
+    overflow-y:scroll;
+}
+.medicine-table td{
+    max-height:2vh;
+}
+.payways img{
+    width:22vw;
+}
+.medicine-payment{
     display: flex;
     align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    gap:2.5vh;
 }
-.medical-analysis-charts{
-    margin-left: 9vw;
+
+.medicine-table tr{
+    border: 10px solid red;
+}
+
+.price-container{
+    display: flex;
+    justify-content: right;
+    align-items: right;
+}
+.price-container h3{
+    margin-left:12vw;
+}
+.no-item{
+    color:gainsboro
+}
+.prescription-table{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    
+}
+.order-main{
+    display: flex;
+    
+    
+}
+.recepient-information table tr td h4{
+    font-size:28;
+}
+.left-container{
+    position: fixed;
+    left:59vw;
+    top:17vh;
+}
+.order-main img{
+    height:3vw;
+    width: 7vh;
+}
+
+
+/* medical analysis part */
+.sub-container {
+    width: 80vw!important;
+    margin-left: 1vw!important;
+}
+
+.medical-analysis-section{
+   position: relative;
+   display: flex; 
+   align-items: center;
+   justify-content: center;
+   gap:4vw;
+   margin-top: 5vh;
+   /* margin-left: 3vw; */
+   width: 100%;
+   background-color: white;
+   /* min-height:70vh; */
+   padding: 5vh 0;
+   border-radius:20px;
+
+   
+}
+
+.medical-analysis-types table{
+    border-collapse: separate;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+    width:19vw;
+    min-height:40vh;
+    padding: none;
+    
+}
+
+.medical-analysis-types table td:hover{
+   background-color: var(--clr-light);
+   width:20vw;
+
+}
+.medical-analysis-types-select{
+   background-color: var(--clr-light);
+  
+
+}
+
+.test-chart{
+    margin-top: 5vh;
+    width: 50vw;
+    height:50vh
+
+}
+
+.nothing>textarea{
+    border:1px solid gainsboro;
+    background-color: white;
+    border-radius: 10px;
+}
+.referral-name{
+    display: flex;
+    flex-direction: column;
+    
+}
+.reg_body-ped{
+    margin-left: 30vw;
+    height: 100vh;
+    margin-top:20vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap:40px;
+    background-color: var(--clr-white);
+    border-radius: 10px;
+    width: 40vw;   
+}
+
+.patient-my-detail{
+    display: flex;
+    flex-direction: column;
+    background-color:var(--clr-white);
+    border-radius: 10px;
+    width:40vw;
+    margin-left: 12vw;
+    align-items: center;
+
+}
+
+.patient-my-detail table{
+    border-collapse: separate;
+    border-spacing: 2vw 2vh;
+    width:28vw;
+    font-size:22;
+    margin-left: -15vw;
+    
+}
+.detail-container{
+    background-color:red;
+    width:20vw;
+    height:5vh;
+}
+.patient-detail-s{
+    margin-left:5vw;
+}
+
+.patient-update{
+    margin-left: 15vw;
+    margin-top: 7vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(213, 237, 243);
+    width: 50vw;
+    padding-block:3vh;
+   border-radius:20px;
+}
+.patient-update table{
+    border-collapse: separate;
+    border-spacing:2vw 2vh;
+}
+
+.patient-update button{
+    width:10vw;
+    margin-left: 2vw;
+}
+.payment-lslip{
+    margin-left:13vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+    width:50vw;
+    padding-block:5vh;
+    padding-inline:2vw;
+    border-radius: 10px;
+    height:80vh;    
+}
+
+.payment-table {
+   border-collapse: separate;
+   border-spacing:2vw 3vh;
+}
+
+
+
+@media(max-width:1350px){
+    .flex-container{
+        display: flex;
+        flex-direction: column;
+    }
+    .left-container{
+        left: 19.5vw;
+        top: 70vh;
+    }
+    .pharmacy-order-container--3 {
+        width: 75vw;
+        min-height: 50vh;
+    }
+}
+
+@media(max-width:1000px){
+    .medical-analysis-section{
+        flex-direction: column;
+    }
+    .medical-analysis-types table{
+        width: 30vw;
+        margin-top: 3vh;
+        padding: 0;
+        min-height: 20vh;
+    }
 }

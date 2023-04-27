@@ -13,7 +13,7 @@ use app\core\form\Form;
         <?=$form->editableselect('name','Medical Product*','',$medicines);  ?>
     </div>
          <div class="cls-frequency">   
-        <?=$form->editableselect('frequency','Frequency*','',['frequency1'=>'frequency1']); ?>
+        <?=$form->editableselect('frequency','Frequency*','',['Daily'=>'Daily','BID(twice a day)'=>'BID','TID(Thrice a day)'=>'TID','QID(Four times a day)'=>'QID','QHS(Every bedtime)'=>'QHS','QWK(every week)'=>'QWK']); ?>
         </div>
         <div class="cls-dev-amount hide">
         <?=$form->editableselect('amount','Amount*','',[]); ?>
@@ -25,18 +25,18 @@ use app\core\form\Form;
         <?=$form->dispenseselect('dispense','Dispense','');?>
         </div>
         
-        <?=$component->button('submit','submit','Add','','addbtn'); ?>
+        <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
     </div>
     <?php $form->end(); ?>
 
 </section>
-<section>
+<section class="medicine-table">
     <?php if($prescription_medicine): ?>
     <table>
         <tr><th>Item</th><th>Frequency</th><th>Amount per Dose</th><th>Dispense</th></tr>
         <?php foreach($prescription_medicine as $med): ?>
-            <tr>
-                <td><?=$med['name']."-".$med['strength'] ?></td>
+            <tr class="medicine-item">
+                <td align='center'><?=$med['name']."-".$med['strength'] ?></td>
                 <td><?=$med['frequency'] ?></td>
                 <td><?=$med['med_amount'] ?></td>
                 <td><?=$med['dispense_count']." ".$med['dispense_type'] ?></td>

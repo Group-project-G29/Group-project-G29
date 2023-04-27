@@ -31,9 +31,10 @@
                 <h1 class="fs-200 fc-color--dark">Patient Login<h1>
             </div>
             <div class="patient-login-fields">
-            <?php echo $form->field($model,'username','Username','field','text') ?>
-            <?php echo $form->field($model,'password','Password','field','password') ?>
-            <div class="patient-login-lower-text">Want to register? click<a href="/ctest/register"> here</a></div>
+                <?php echo $form->field($model,'username','Username','field','text') ?>
+                <?php echo $form->field($model,'password','Password','field','password') ?>
+                <div class="patient-login-lower-text">Pediatric Patient? click<a href="/ctest/pediatric"> here</a></div>
+                <div class="patient-login-lower-text">Forgot Password? click<a href="/ctest/register"> here</a></div>
             <div><input class="button-lighter" type="submit" value="Log In"></div>
             </div>
             <?php Form::end() ?>

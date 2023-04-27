@@ -109,6 +109,10 @@ class SOAPReport extends DbModel{
 
 
     } 
+    public function getMedicalReports(){
+        $patient=Application::$app->session->get('user');
+        return $this->customFetchAll("Select * from medical_report where patient=".$patient);
+    }   
 }   
 
 

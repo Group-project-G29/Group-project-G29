@@ -12,15 +12,24 @@ use app\models\LabReport;
 
 <section class="medical-analysis-section">
     <section class="medical-analysis-types">
-        <?php foreach($keys as $key): ?>
-            <div class="test-key" id=<?="'".join('-',explode(' ',$key))."'" ?>>
-                <?php echo $key; ?>
-            </div>
-        <?php endforeach ;?>
+        <table>
+            <?php foreach($keys as $key): ?>
+                <tr>
+                    <td class="test-key" id=<?="'".join('-',explode(' ',$key))."'" ?>>
+                        <center>
+                        <div >
+                            <?php echo $key; ?>
+                    
+                        </div>
+                        </center>
+                    </td>
+                <tr>
+            <?php endforeach ;?>
+        </table>
     </section>
     <section class="medical-analysis-charts">
         <?php foreach($keys as $key): ?>
-            <div class="test-chart hide" id=<?="'".join('-',explode(' ',$key))."'" ?>>
+            <div class="test-chart" id=<?="'".join('-',explode(' ',$key))."'" ?>>
                 <?php $row=$labreports->makeChartInputs($mainArray[$key]); ?>
                 <canvas id=<?="'myChart".join('-',explode(' ',$key))."'"?>></canvas>
                 <?=$chartModel->barchart($row['labels'],[],$row['values'],[],[],'',join('-',explode(' ',$key)),join('-',explode(' ',$key))); ?>
@@ -33,15 +42,28 @@ use app\models\LabReport;
 <script>
     const testItems=document.querySelectorAll(".test-key");
     const testCharts=document.querySelectorAll(".test-chart");
-    testItems.forEach((elem)=>{
-        elem.addEventListener('click',()=>{
-            clicked_item=""+elem.id;
+ 
+            testCharts.forEach((elem)=>{
+                
+                    elem.style.display='none';
+            })
+   
+    testItems.forEach((elemq)=>{
+        elemq.addEventListener('click',()=>{
+            testItems.forEach((elemq)=>{
+                elemq.classList.remove('medical-analysis-types-select');
+        
+            })
+            clicked_item=""+elemq.id;
+            elemq.classList.add('medical-analysis-types-select');
             testCharts.forEach((elem)=>{
                 if(""+elem.id==clicked_item){
-                    elem.classList.remove('hide');
+                    elem.style.display='block';
+
+
                 }
                 else{
-                    elem.classList.add('hide');
+                    elem.style.display='none'
                 }
             })
         })

@@ -17,6 +17,7 @@ class PharmacyAdvertisement extends DbModel {
     }
     
     public function addAdvertisement(){
+        echo "phamacy";exit;
         return parent::save();
     }
  

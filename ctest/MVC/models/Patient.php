@@ -20,9 +20,20 @@ class Patient extends DbModel{
     public string $verification='';
     public ?string $relation='';
     public string $guardian_name='';
+    public string $firstname='';
+    public string $lastname='';
+    
   
 
     public function register(){
+        if($this->age<=18){
+            $this->type="pedatric"; 
+            $this->name=$_POST['firstname']." ".$_POST['lastname'];
+           
+        }
+        else{
+            $this->type="adult";
+        }
         $this->password=password_hash($this->password,PASSWORD_DEFAULT);
         $last_id=parent::save();
         $this->patient_ID=$last_id[0]['last_insert_id()'];
@@ -43,6 +54,20 @@ class Patient extends DbModel{
     }
     public function rules(): array
     {
+        if($this->age<18){
+            return [
+                'firstname'=>[self::RULE_REQUIRED],
+                'lastname'=>[self::RULE_REQUIRED],
+                'age'=>[self::RULE_REQUIRED],
+                'gender'=>[self::RULE_REQUIRED],
+                'guardian_name'=>[self::RULE_REQUIRED],
+                'nic'=>[self::RULE_REQUIRED],
+                'contact'=>[self::RULE_REQUIRED],
+                'email'=>[self::RULE_EMAIL],
+               // 'password'=>[self::RULE_PASSWORD_VALIDATION]
+                'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
+            ];
+        }
         return [
             'name'=>[self::RULE_REQUIRED],
             'nic'=>[/*self::RULE_REQUIRED,[self::RULE_MIN,'min'=>12],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee'],*/[self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>'NIC number']],
@@ -51,8 +76,8 @@ class Patient extends DbModel{
             'email'=>[self::RULE_EMAIL],
             'address'=>[],       
             'gender'=>[self::RULE_REQUIRED],
-          //  'relation'=>[self::RULE_REQUIRED],
-            'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)]]
+            //'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)]]
+                'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
                
 
         ];

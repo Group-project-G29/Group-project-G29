@@ -43,6 +43,18 @@ class Employee extends DbModel{
 
     public function rules(): array
     {
+        //if update page is shown
+        if($this->emp_ID!=''){
+             return [
+                'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
+                'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],
+                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
+                'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
+                'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
+                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
+                'address'=>[],       
+            ];    
+        }
         if($this->role==='admin'){
             return [
                 'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
@@ -88,7 +100,7 @@ class Employee extends DbModel{
         return 'email';
     }
     public function tableRecords(): array{
-        if($this->role=='doctor') return ['employee'=>['name','nic','age','contact','email','address','gender','role','password','img'],'doctor'=>['nic','career_speciality','description']];
+        if($this->role=='doctor' && $this->emp_ID=='') return ['employee'=>['name','nic','age','contact','email','address','gender','role','password','img'],'doctor'=>['nic','career_speciality','description']];
         return ['employee'=>['name','nic','age','contact','email','gender','address','role','password','img']];
     }
 
@@ -143,10 +155,10 @@ class Employee extends DbModel{
         return $this->customFetchAll("select count(appointment.appointment_ID) from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID right join patient on appointment.patient_ID=patient.patient_ID where channeling.doctor=".$doctor." and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."') and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."')")[0]['count(appointment.appointment_ID)']; 
     }
     public function  getThisMonthChannelings($doctor){
-        return $this->customFetchAll("select * from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.doctor=".$doctor." and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."') and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."')")[0];
+        return $this->customFetchAll("select * from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.doctor=".$doctor." and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."') and YEAR(opened_channeling.channeling_date)=YEAR('".Date('Y-m-d')."')")[0];
     }
     public function calcuateThisMonthIncome($doctor){
-        return $this->customFetchAll("select sum(past_channeling.total_income) from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join past_channeling on past_channeling.opened_channeling_ID=opened_channeling.opened_channeling_ID where channeling.doctor=".$doctor." and MONTH(opened_channeling.channeling_date)=MONTH('".Date('Y-m-d')."') and YEAR(opened_channeling.channeling_date)=YEAR('".Date('Y-m-d')."')")[0]['sum(past_channeling.total_income)'];
+        return $this->customFetchAll("select sum(total_income) from past_channeling where opened_channeling_ID in (select opened_channeling.opened_channeling_ID from  opened_channeling  left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID   where channeling.doctor=".$doctor.") and MONTH(created_date)=MONTH('".Date('Y-m-d')."') and YEAR(created_date)=YEAR('".Date('Y-m-d')."')")[0]['sum(total_income)'];
     }
     public function growthOfPatients($doctor){
         $months=['dummy','January','February','March','April','May','June','July','August','September','Octomber','November','December'];
@@ -156,7 +168,7 @@ class Employee extends DbModel{
         $month=$dateModel->get($today,'month');
         $day=$dateModel->get($today,'day');
         $lowdate=$dateModel->arrayToDate([$day,$month,$year]);
-        $result=$this->customFetchAll("select MONTH(opened_channeling.channeling_date),sum(past_channeling.no_of_patient) from past_channeling  left join opened_channeling on opened_channeling.opened_channeling_ID=past_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID  where channeling.doctor='200003483345' and opened_channeling.channeling_date>='$lowdate' and opened_channeling.channeling_date<='$today' GROUP by MONTH(opened_channeling.channeling_date);");
+        $result=$this->customFetchAll("select MONTH(opened_channeling.channeling_date),sum(past_channeling.no_of_patient) from past_channeling  left join opened_channeling on opened_channeling.opened_channeling_ID=past_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID  where channeling.doctor='$doctor' and opened_channeling.channeling_date>='$lowdate' and opened_channeling.channeling_date<='$today' GROUP by MONTH(opened_channeling.channeling_date);");
         $label=[];
         $value=[];
         foreach($result as $row){
@@ -194,9 +206,26 @@ class Employee extends DbModel{
         }
     }
     
-   
-    
- 
+    public function get_employee_details($emp_ID) {
+        return $this->customFetchAll("SELECT * FROM employee WHERE emp_ID=$emp_ID");
+    }
+
+    public function select_suitable_rider( $postal_code, $order_ID ) {
+        //error in query -> no elements in array
+        return $this->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE delivery_rider.availability='AV' AND _order.order_ID != $order_ID AND delivery.postal_code BETWEEN $postal_code-10 AND $postal_code+10");
+    }
+
+    public function select_queue_rider() {
+        return $this->customFetchAll("SELECT * FROM delivery_riders_queue");
+    }
+
+    public function dequeue_rider( $rider_ID ) {
+        return $this->customFetchAll("DELETE FROM delivery_riders_queue WHERE delivery_rider_ID = $rider_ID");
+    }
+
+    public function enqueue_rider( $rider_ID ) {
+        return $this->customFetchAll("INSERT INTO delivery_riders_queue (delivery_rider_ID) VALUES ($rider_ID);");
+    }
     
     public function make_rider_offline( $delivery_rider_ID ) {
         return $this->customFetchAll("UPDATE delivery_rider SET availability = 'NA' WHERE emp_ID = $delivery_rider_ID;");
@@ -215,13 +244,16 @@ class Employee extends DbModel{
         return $this->customFetchAll("SELECT availability FROM delivery_rider WHERE emp_ID = $delivery_rider");
     }
 
-    public function updateAccounts($id){
-        $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."', role='".$_POST['role']."' where emp_ID=".$id);
-        if($_POST['role']=='doctor'){
-            $this->customFetchAll("update employee set career_speciality='".$_POST['career_speciality']."', description='".$_POST['description']."' where emp_ID=".$id);
-        }
+     public function updateAccounts($id){
+        echo "update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id;
+        $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id);
+        
         return true;
     }
+
+ 
+
+   
 
 }   
 

@@ -64,20 +64,21 @@ class Channeling extends DbModel{
 
     public function timeCheckOverlap($date){
         $timeModel=new Time();
-        
-        $channelings=$this->customFetchAll("select * from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where doctor='".$this->doctor."' and channeling_date='".$date."'");
-    
+        $channelings=$this->customFetchAll("select * from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.doctor='".$this->doctor."' and opened_channeling.channeling_date='".$date."'");
         foreach($channelings as $key=>$channeling ){
             if($this->time){
                 $ses_s='';
-                if($channeling['session_duration']) $ses_s='06:00';
+                if($channeling['session_duration']) $ses_s=$channeling['session_duration'];
                 else $ses_s=$channeling['session_duration'];
-                if($timeModel->isInRange($this->time,$ses_s,$channeling['time'])){
-                    return [true,$channeling['time']];
+                if($timeModel->isInRange($channeling['time'],$ses_s,$this->time)){
+            
+                    return [true,$channeling];
+                    
+                    
                 }
             }
             else{
-                return ['required'];
+                return [false,'required'];
             }
         }
         return [false];
@@ -90,19 +91,32 @@ class Channeling extends DbModel{
         $calendarModel=new Calendar();
         $frequency=$this->frequency." ".$this->frequency_type;
         $duration=$this->schedule_for." ".$this->schedule_type;
-        $dates=$calendarModel->generateDays($this->start_date,$this->day,date('l', strtotime($this->start_date)),$duration,$frequency);
+        $dates=$calendarModel->generateDays($this->start_date,date('l', strtotime($this->start_date)),$this->day,$duration,$frequency);
+    
+        $array=[];
         foreach($dates as $date){
             $result=$this->timeCheckOverlap($date);
-            if(isset($result[0]) && $result[0]=='required'){
+            if(isset($result[1]) && !$result[0]){
                 $this->customAddError('time',"Time field is empty");
                 return ['required'];
             }
-            else if(isset($result[0]) && $result[0]){
-                $this->customAddError('time',"Time overlap with ".$result[1]." channeling session"."<a href='#'>See Channeling Timetable</a>");
-                return $result;
+            if(isset($result[0]) && $result[0]){
+            
+                array_push($array,$result[1]);
             }
         }
-        
+
+        if($array){
+            if($array[0]==$array[count($array)-1]){
+                $this->customAddError('time',"Time overlap :".$array[0]['channeling_ID']." at ".$array[0]['time']);
+                return $array;
+            }
+            else{
+                $this->customAddError('time',"Time overlap :".$array[0]['channeling_ID']." at ".$array[0]['time']." and ".$array[1]['channeling_ID']." at ".$array[1]['time']);
+                return $array;
+            }
+
+        }
         return [false];
     }
     public function fileDestination(): array
@@ -142,6 +156,7 @@ class Channeling extends DbModel{
    }
    
    public function checkNurseOverlap($nurses,$channelingModel){
+        
         $timeModel=new Time();
         $results=[];
         $calendarModel=new Calendar();
@@ -149,10 +164,10 @@ class Channeling extends DbModel{
         //nurses is an array of nusrse employee ids
         foreach($nurses as $nurse){
             //get all the channeling nurse is allocated to
-            $channelings=$channelingModel->customFetchAll("select * from  nurse_channeling_allocataion left join channeling on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID where emp_ID=".$nurse);
+            $channelings=$channelingModel->customFetchAll("select * from  nurse_channeling_allocataion left join channeling on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID left join employee on employee.emp_ID=nurse_channeling_allocataion.emp_ID where employee.emp_ID=".$nurse);
             foreach($channelings as $channeling){
                 foreach($dates as $date){
-                    $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join nurse_channeling_allocataion on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID where nurse_channeling_allocataion.emp_ID=$nurse  and opened_channeling.channeling_date='".$date."' and (opened_channeling.status='Opened' or opened_channeling.status='started' ) and channeling.channeling_ID=".$channeling['channeling_ID']);
+                    $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join nurse_channeling_allocataion on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID left join employee on employee.emp_ID=nurse_channeling_allocataion.emp_ID where nurse_channeling_allocataion.emp_ID=$nurse  and opened_channeling.channeling_date='".$date."' and (opened_channeling.status='Opened' or opened_channeling.status='started' ) and channeling.channeling_ID=".$channeling['channeling_ID'].(($channelingModel->channeling_ID!='')?(" and channeling.channeling_ID<>".$channelingModel->channeling_ID):''));
                     if($confilict_channelings){
                         foreach($confilict_channelings as $conflict){
                             $check_time=$channelingModel->time;
@@ -176,7 +191,8 @@ class Channeling extends DbModel{
         $channelings=$channelingModel->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where  room='".$room."'");
             foreach($channelings as $channeling){
                 foreach($dates as $date){
-                    $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.room='$room' and  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and opened_channeling.channeling_date='".$date."' and channeling.channeling_ID=".$channeling['channeling_ID']);
+                    $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.room='$room' and  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and opened_channeling.channeling_date='".$date."' and channeling.channeling_ID=".$channeling['channeling_ID'].(($channelingModel->channeling_ID!='')?(" and channeling.channeling_ID<>".$channelingModel->channeling_ID):''));
+                    exit;
                     if($confilict_channelings){
                         foreach($confilict_channelings as $conflict){
                             $check_time=$channelingModel->time;

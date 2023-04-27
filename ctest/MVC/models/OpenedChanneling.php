@@ -54,37 +54,39 @@ class OpenedChanneling extends DbModel{
     public function getPatient($channeling,$current_patient,$type,$queuetype):array{
         $patient_queue=$this->customFetchAll("select * from  patient right join appointment on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID =".$channeling." and appointment.type='$queuetype' order by appointment.queue_no");
         $i=0;
-        
-
+      
         while(isSet($patient_queue[$i]['patient_ID']) && $patient_queue[$i]['patient_ID']!=$current_patient){
             $i+=1;
-             
+            
         }
+        
         
         
         
         if($type=="this"){
+           
             return $patient_queue[$i]??[];
         }
-        if($type=='next'){
-           
+        elseif($type=='next'){
+            
             return $patient_queue[$i+1]??[];
             
         }
         else{
-            if($i==0){
-                return [];
-            }
+            
+            
             return $patient_queue[$i-1]??[];
         }
         
     }
-
+    public function getPatientByQ($number){
+        return $this->fetchAssocAllByName(['opened_channeling_ID'=>Application::$app->session->get('channeling'),'queue_no'=>$number],'appointment')[0]['patient_ID']??[];
+    }
     public function getAPatient($channeling,$patient){
         $patient_queue=$this->customFetchAll("select * from  patient right join appointment on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID =".$channeling." and patient.patient_ID=".$patient);
         if($patient_queue) return $patient_queue[0];
         else return false;
-    }
+    } 
 
     public function getAllAppointments($id){
         return $this->customFetchAll("select * from appointment left join patient on patient.patient_ID=appointment.patient_ID where appointment.opened_channeling_ID='$id'");
@@ -208,6 +210,7 @@ class OpenedChanneling extends DbModel{
         $patient_count=0+$this->customFetchAll("select count(appointment_ID) from appointment where type='consultation' and payment_status='done' and opened_channeling_ID=".$channeling)[0]['count(appointment_ID)'];
         $income=$patient_count*($this->getFee(Application::$app->session->get('channeling')));
         $free_count=0+$this->customFetchAll("select count(appointment_ID) from appointment where type='labtest' and payment_status='done' and opened_channeling_ID=".$channeling)[0]['count(appointment_ID)'];
+        $this->customFetchAll("update opened_channeling set status='finished' where opened_channeling_ID=".$channeling);
         $past=new PastChanneling();
         $past->opened_channeling_ID=$channeling;
         $past->no_of_patient=$patient_count;

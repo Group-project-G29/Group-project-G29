@@ -1,31 +1,66 @@
 <?php
-use app\core\component\Component;
-$component=new Component();
+// var_dump($patient)
 ?>
-<section>
-    <?php if($patient['type']!='pediatric'):?>
-        <div>
-            <h2><?=$patient['name']?></h2>
-            <h3><?="Account ID: ".$patient['patient_ID']?></h3>
-            <table border='0'>
-                <tr><td>NIC :</td><td><?=$patient['nic']?></td></tr>
-                <tr><td>Age :</td><td><?=$patient['age']?></td></tr>
-                <tr><td>Gender :</td><td><?=$patient['gender']?></td></tr>
-                <tr><td>Contact Number :</td><td><?=$patient['contact']?></td></tr>
-                <tr><td>Email :</td><td><?=$patient['email']?></td></tr>
-                <tr><td>Address :</td><td><?=$patient['address']?></td></tr>
-            </table>
+
+<?php
+    use app\core\component\Component;
+    $component=new Component();
+    // var_dump($patient);exit;
+?>
+
+<link rel="stylesheet" href="./media/css/nurse-style.css">
+<section class="patient-detail-s">
+<div class="container">
+
+    <div class="detail-container-left">
+        <img src="./media/images/user.png " >  
+        <div><?php echo $component->button('edit-details','','Edit Details','button--class-0  width-10', $patient['patient_ID'])?></div>
+    </div>
+    
+    <div class="detail-container-right">
+        <div class="data-row">
+            <div class="data-row-left">Employee ID</div>
+            <div class="data-row-rite">: <?= $patient['patient_ID'] ?></div>
         </div>
-        <?=$component->button('btn','','Update','btn-classs--0','btn');?>
-        <?php else:?>
-    <?php endif;?>
-
-
-</section>
-
+        <div class="data-row">
+            <div class="data-row-left">Name</div>
+            <div class="data-row-rite">: <?= $patient['name'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">NIC</div>
+            <div class="data-row-rite">: <?= $patient['nic'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Gender</div>
+            <div class="data-row-rite">: <?= $patient['gender'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Age</div>
+            <div class="data-row-rite">: <?= $patient['age'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Contact Number</div>
+            <div class="data-row-rite">: <?= $patient['contact'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Email</div>
+            <div class="data-row-rite">: <?= $patient['email'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Address</div>
+            <div class="data-row-rite">: <?= $patient['address'] ?></div>
+        </div>
+       
+    </div>
+    
+</div>
+<section>
 <script>
-    const btn=document.getElementById('btn');
-    btn.addEventListener('click',()=>{
+    // const btn=document.getElementById("edit-details");
+    const btn=document.querySelector(".button--class-0");
+    btn.addEventListener('click',function(){
         location.href="patient-my-detail?mod=update"
     })
 </script>
+
+

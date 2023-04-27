@@ -66,7 +66,7 @@ class Appointment extends DbModel{
         $last_appointment_date=$calendarModel->addDaysToDate($last_appointment_date,14);
         //if channeling date<two week+patient last appointment reutrn true else false
         //if he already have labtest appointment return false
-        $labtestAppointments=$this->customFetchAll("select *  from appointment as a right join  past_channeling as p on a.opened_channeling_ID=p.opened_channeling_ID left join opened_channeling as o on o.opened_channeling_ID=p.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID where a.type='labtest' and c.doctor=$doctor and a.patient_ID=$patient")[0]['max(o.channeling_date)']??'';
+        $labtestAppointments=$this->customFetchAll("select * from appointment as a right join opened_channeling as o on a.opened_channeling_ID=o.opened_channeling_ID left join past_channeling as p on p.opened_channeling_ID=o.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID where a.type='labtest' and a.status='unused' and c.doctor=$doctor and a.patient_ID=$patient");
         if($labtestAppointments){
             return false;
         }
@@ -137,6 +137,10 @@ class Appointment extends DbModel{
     }
     public function getAppointmentCount($opened_channeling){
         return $this->customFetchAll("select count(appointment_ID) from appointment where opened_channeling_ID= ".$opened_channeling)[0]['count(appointment_ID)'];
+    }
+
+    public function getAppointmentDetail($appointment){
+        return $this->customFetchAll("select * from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on opened_channeling.channeling_ID=channeling.channeling_ID left join employee on  employee.nic=channeling.doctor where appointment.appointment_ID=".$appointment);
     }
     
     public function growthOfPatients(){

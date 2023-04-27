@@ -148,6 +148,10 @@ class Medicine extends DbModel{
         return $this->customFetchAll("SELECT * FROM medical_products ORDER BY name ASC");
     }
 
+    public function getMedicinePrice($med_ID){
+        return $this->fetchAssocAll(['med_ID'=>$med_ID])[0]['unit_price'];
+    }
+
     
 }   
 

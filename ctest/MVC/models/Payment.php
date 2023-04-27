@@ -3,8 +3,8 @@ namespace app\models;
 
 use app\core\DbModel;
 use app\core\Application;
-use app\core\UserModel;
 use app\core\Date;
+use app\core\UserModel;
 
 class Payment extends DbModel{
     public string $patient_ID='';
@@ -17,8 +17,36 @@ class Payment extends DbModel{
 
     //get payment information of a patient
     public function getOrderPay($patient){
-        return $this->fetchAssocAll(['type'=>'order','payement_status'=>'pending','patient_ID'=>$patient]);
+        return $this->fetchAssocAll(['type'=>'order','payment_status'=>'pending','patient_ID'=>$patient]);
     }
+
+    //pay  payment
+    public function createAppointmenPay($patient_ID,$name,$amount,$appointment_ID,$payment){
+        //create payment
+        $payment=new Payment();
+        $payment->patient_ID=$patient_ID;
+        $payment->name=$name;
+        $payment->type='appointment';
+        $payment->payment_status=$payment;
+        $payment->amount=$amount;
+        $payment->appointment_ID=$appointment_ID;
+        return $payment->save();
+
+    }   
+    
+     public function createOrderPay($patient_ID,$name,$amount,$payme){
+        //create payment
+        $payment=new Payment();
+        $payment->patient_ID=$patient_ID;
+        $payment->name=$name;
+        $payment->type='order';
+        $payment->payment_status=$payme;
+        $payment->amount=$amount;
+        return $payment->save();
+
+    } 
+        
+        
 
     public function earningValues($para){
         $dateModel=new Date();
@@ -80,14 +108,14 @@ class Payment extends DbModel{
 
     public function payNow($amount,$text,Patient $patientModel,$order,$hash,$return_complete,$return_fail){
         $hash1 = strtoupper(
-    md5(
-        '1222960' . 
-        $order . 
-        number_format($amount, 2, '.', '') . 
-        'LKR' .  
-        strtoupper(md5('MzAzOTcxMjc5NTIzODU1OTk5ODg3MTE2MTM1NDU0MDgxODMzNjk2')) 
-    ) 
-);
+                            md5(
+                                '1222960' . 
+                                $order . 
+                                number_format($amount, 2, '.', '') . 
+                                'LKR' .  
+                                strtoupper(md5('MzAzOTcxMjc5NTIzODU1OTk5ODg3MTE2MTM1NDU0MDgxODMzNjk2')) 
+                            ) 
+        );
         $str='<script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
     <script>
     // Payment completed. It can be a successful failure.

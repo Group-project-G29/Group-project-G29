@@ -24,7 +24,11 @@ use app\models\Prescription;
             foreach($prescriptions as $pres){
                 $stritem.="<div>
                                 <h5>Added Date:".$pres['uploaded_date']."</h5>
+<<<<<<< HEAD
+                                <div class='cart-item'><a href=#>".$pres['type']."</a><a href='patient-pharmacy?spec=prescription&cmd=remove&id=".$pres['prescription_ID']."'>x</a></div>
+=======
                                 <div class='cart-item'><a href=#>".$pres['type']."</a><a href=patient-pharmacy?spec=prescription&cmd=delete&id=".$pres['prescription_ID'].">x</a></div>
+>>>>>>> 20000758
                         </div>";
             }
             foreach($items as $item){
@@ -36,19 +40,21 @@ use app\models\Prescription;
                                 <h3 class="fs-50">'.$item["name"]." ".$item["strength"]." ".$item["unit"].'</h3>
                                 <input type="number" id='.'"'."amount2_".$item['med_ID'].'"'.' value='.$item['amount'].'>
                                 '.$component->button('update','','Change Amount','update-buttons-cart','cartbtn_'.$item['med_ID'])
-                                .'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><font class="fs-50">X</font></a>'.
+                                .'<a href='."'patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID']."'".'><font class="fs-50">X</font></a>'.
                             '</div>
                     </div>';
                 }
                 else{
                     $stritem.= '
                     <div class="cart-item">
-                            <img src=<?="./media/images/medicine/"'.$item["img"].'?>>
+                            <img src=./media/images/medicine/'.$item["img"].'>
                             <div class="scrollable-body">
                                 <h3 class="fs-50">'.$item["name"]." ".$item["strength"]." ".$item["unit"].'</h3>
-                                <h3 color="red">Out of stock</h3>'.'>
-                                '.'<a href='."patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID'].'><font class="fs-50">X</font></a>'.
+                                <div class="flex">
+                                <h3 color="red">Out of stock</h3>
+                                <a href='."'patient-pharmacy?spec=medicine&cmd=delete&item=".$item['med_ID']."'".'><font class="fs-50">X</font></a>'.
                             '</div>
+                            </div>
                     </div>';
                 }
             }

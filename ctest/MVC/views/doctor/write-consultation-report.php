@@ -6,10 +6,9 @@
     $component=new Component();
 ?>
 <?php  $form->begin('','post')?>
-<sectoin>
-    <div>
-         <div class="wrapper--referrals">
-                    <div class="variable-container">
+    <div class="referral-container"">
+         <div class="wrapper--referrals-showit">
+                    <div class="variable-container-mu">
                         <table>
                             <tr>
                                 <th>Medical Report</th><th>Added Date</th><th></th><th></th>
@@ -18,7 +17,7 @@
                                 <?php foreach($todayreport as $report): ?>
                                     <?php $count=$count+1; ?>
                                     <tr>
-                                        <td><a href=<?="/ctest/doctor-report?spec=referral&mod=view&id=".$report['report_ID']?>><?=$report['type']."-".$report['report_ID']?></a></td><td><?=$report['uploaded_date'] ?></td>
+                                        <td><a href=<?="/ctest/doctor-report?spec=".$report['type']."&mod=view&id=".$report['report_ID']?>><?=$report['type']."-".$report['report_ID']?></a></td><td><?=$report['uploaded_date'] ?></td>
                                         <?php if($report['uploaded_date']==Date('Y-m-d')):   ?>
                                             <td><?=$component->button('update','','Update','button--class-2-small ref-update',$report['report_ID']); ?></td>
                                             <td><?=$component->button('delete','','Delete','button--class-3-small ref-delete',$report['report_ID']); ?></td>
@@ -30,14 +29,14 @@
                     </div>
         </div>
     </div>
-    <div>
-        <div>
+    <div class="write-referral-form">
+        <div class='write-referral-head'>
             <div>
                 <?= $form->select($model,'report_ID','','',['SOAP Report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report','Refferal'=>'referral'],'select-main') ?>
             </div>
-            <div>
-                <?= $component->button('','submit','Add Report','button--class-0'); ?>
-            </div>
+        </div>
+        <div class="write-referral-btn">
+            <?= $component->button('','submit','Add Report','button--class-0'); ?>
         </div>
         <div>
             <?= $form->textarea($model,'examination','examination','Examination',10,120,'');?>
@@ -54,7 +53,6 @@
 
 
     </div>
-</section>
 <?php $form->end(); ?>
 <script src="./media/js/main.js"></script>
 <script>

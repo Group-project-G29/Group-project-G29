@@ -25,6 +25,7 @@
                                             <td><?=$component->button('update','','Update','button--class-2-small ref-update',$referral['ref_ID']); ?></td>
                                             <td><?=$component->button('delete','','Delete','button--class-3-small ref-delete',$referral['ref_ID']); ?></td>
                                         <?php endif; ?>
+                                        
                                         </tr>
                                 <?php endforeach; ?>
                                 <?php if($count==0): ?><script>(document.querySelector('.wrapper--referrals')).classList.add('hide');</script><?php endif; ?>
@@ -36,7 +37,7 @@
         </div>
     </div>
     <div class="write-referral-form">
-        <div>
+        <div class='write-referral-head'>
             <div>
                 <?php $form->begin('','post')  ?>
                 <div>
@@ -45,19 +46,21 @@
                 </div>
                 <?= $form->spanselect($model,'doctor','Refer to Doctor','field',$doctors,''); ?>
                 <?= $form->spanselect($model,'speciality','Select speciality','field',$specialities,'select-main') ?>
-                
-            </div>
-            <div>
-                <label>Refer External Party :</label><input type="checkbox" class="checkbox" > 
-            </div>
-            <div class="choose-doctor hide">
-                <div>
-                    <?= $form->field($model,'third_party','Refer to(Practitioner/Institute/Department)','field','text'); ?>
-                
+                <div class="write-referral-btn">
+                    <?= $component->button('','submit','Add Report','button--class-0'); ?>
                 </div>
+                
             </div>
             <div>
-                <?= $component->button('','submit','Add Report','button--class-0'); ?>
+                <div>
+                    <label>Refer External Party :</label><input type="checkbox" class="checkbox" > 
+                </div>
+                <div class="choose-doctor hide">
+                    <div>
+                        <?= $form->field($model,'third_party','Refer to(Practitioner/Institute/Department)','field','text'); ?>
+                    
+                    </div>
+                </div>
             </div>
         </div>
         <div>
@@ -77,6 +80,7 @@
             
         </div>
 
+    </div>
 
     </div>
 

@@ -2,7 +2,7 @@
 use app\core\Application;
 use app\core\component\Sidebar;
 use app\models\Employee;
-include "../views/layouts/navbar/pharmacy-navbar.php";
+include "../views/layouts/navbar/lab-navbar.php";
 ?>
 
 </nav>
@@ -10,7 +10,7 @@ include "../views/layouts/navbar/pharmacy-navbar.php";
 
 
 
-         <?php $sidebar=new Sidebar(['Requests'=>'/ctest/lab-test-request','Tests'=>'/ctest/lab-view-all-test','Advertise'=>'/ctest','My Detail'=>'/ctest/lab-view-personal-details'],$select);?>
+         <?php $sidebar=new Sidebar(['Requests'=>'/ctest/lab-test-request','Tests'=>'/ctest/lab-view-all-test','Templates'=>'/ctest/lab-view-all-template','Lab Reports'=>'/ctest/lab-view-all-report','My Detail'=>'/ctest/lab-view-personal-details'],$select);?>
 
          <?php echo $sidebar;  ?>
         

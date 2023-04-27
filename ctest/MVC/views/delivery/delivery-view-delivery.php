@@ -69,4 +69,3 @@ $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID'],'post'
    
     
     <?php Form::end() ?>  
-

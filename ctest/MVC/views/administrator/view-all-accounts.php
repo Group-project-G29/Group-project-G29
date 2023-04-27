@@ -39,12 +39,7 @@ use app\models\Employee;
                     }
                     else{
                         echo $component->button('update','','Update','button--class-2',$account['emp_ID']); 
-                        if($account['employee_status'] == 'active'){
-                            echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);
-                        }
-                        else{
-                            echo $component->button('delete',' ','Activate','button--class-3',$account['emp_ID']);
-                        }
+                        echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);
                         
                     }
                 }

@@ -4,7 +4,23 @@
 /*-------------------------------------*/
 /* Registration body and sign in form */
 /*-------------------------------------*/
-
+.reg_body-ped{
+    margin-left: 30vw;
+    margin-top: -2vh;
+    height: 120vh;
+    margin-top:35vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap:40px;
+    background-color: var(--clr-white);
+    border-radius: 10px;
+    width: 40vw;   
+}
+.reg_body-ped [type='text']{
+    width: 30vw;
+}
 .reg_body{
     margin-left: 30vw;
     height: 100vh;

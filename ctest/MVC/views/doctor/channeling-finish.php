@@ -7,6 +7,7 @@ use app\models\Appointment;
 $appointmentModel=new Appointment();
  $component=new Component(); ?>
 <div class="finish-page">
+   <div class="number-upper">
       <div class="number-pad">
                <div class="number-item--white">
                   <?=$appointmentModel->getUsedPatient(Application::$app->session->get('channeling'))?>
@@ -16,6 +17,7 @@ $appointmentModel=new Appointment();
                   <?=$appointmentModel->getTotoalPatient(Application::$app->session->get('channeling'))?>
                </div>
          </div>
+</div>
          <section class="finish-patient-list">
             <?php foreach($appointments as $appointment): ?>
                <?php if($appointment['status']=='used'): ?>
@@ -29,27 +31,13 @@ $appointmentModel=new Appointment();
                </div>
             <?php endforeach; ?>
    </section>
+   <?= $component->button('finish','','finish channeling session','button--class-2','finish'); ?>
+</div>
 
- <section class="finish-patient-list">
-   <div>
-      <table>
-         <tr>
-            <th>Patient Name</th><th>Appointment Status</th>
-         </tr>
-         <?php foreach($appointments as $appointment): ?>
-            <tr>
-               <td><?=$appointment['name']?></td><td><?=($appointment['status']=='used')?'Completed':'Not Seen';?></td>
-            </tr>
-         <?php endforeach; ?>
-      </table> 
-      </div>
- </section>
-
-
- <?= $component->button('finish','','finish channeling session','button--class-2','finish'); ?>
 <script>
    const fbtn=document.getElementById("finish");  
    fbtn.addEventListener('click',()=>{
       location.href="channeling-assistance?spec=pre-channeling-test&cmd=channeling-finish";
+      
    })       
 </script> 

@@ -30,6 +30,8 @@ $component = new Component();
             <div class="card-header-0" style="padding-bottom: 5vh;">
                 <h3 style="">Dr.<?= $channeling['name'] ?></h3>
                 <h5><?= $channeling['description'] ?></h5>
+                <h5>Age: <?= $channeling['age'] ?></h5>
+                
             </div>
 
         </div>
