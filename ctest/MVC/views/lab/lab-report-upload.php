@@ -21,14 +21,18 @@ $component = new Component();
 
 
         </div>
-        <? $form = Form::begin('', 'post'); ?>
-        <div class="reg-body-spec fields" style="padding-left:15vw">
+        <?php $form = Form::begin('lab-S-report-upload?id='.$tests[0]['request_ID'], 'post'); ?>
+        <div class="reg-body-spec fields" style="padding-left:8vw">
         <div class="inputbox">
             <label for="image"> </label><br>
-            <input type='file'><br>
+            <div>
+              
+                <?php var_dump($reportmodel)?>
+            </div>
+            <input type='file' name="location"><br>
             </div>
         </div>
-            <div class="button" style="padding-left:40vw">
+            <div class="button" style="padding-left:25vw;margin-top:5vh">
 
                 <?php echo $component->button('submit', 'submit', 'Submit', 'button--class-0  width-10 curser', 'add'); ?>
             </div>

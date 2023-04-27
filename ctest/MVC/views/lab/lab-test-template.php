@@ -3,110 +3,100 @@
 use app\core\component\Component;
 use app\core\DbModel;
 use \app\core\form\Form;
+use app\models\TemplateContent;
 
 $component = new Component();
-// var_dump($contents);
-// var_dump($templatemodel);
-// var_dump($template);
-// var_dump($contentmodel);
-// var_dump($temp_title_sub);
-// exit;
+$contentM = new TemplateContent();
 
-// 'templatemodel' => $TemplateModel,
-//             'template' => $template,
-//             'contents' => $contents,
-//             'contentmodel' => $contentModel,
-//             'model' => $contentModel 
 ?>
 
 <div>
-    <h1 class="fs-200 fc-color--dark"style="padding-left: 60vh;padding-top: 10vh">Add Template Content</h1>
+    <h1 class="fs-200 fc-color--dark" style="padding-left: 65vh;padding-top: 1vh">Add Template Content</h1>
 
-    <tr>
-        <h4><b>Title :</b><?=$temp_title_sub["title"]?></h4>
-        <h4><b>subtitle :</b><?=$temp_title_sub["subtitle"]?></h4><br>
 
-    
-    </tr>
-    <!-- <div class="button-0" style="margin-top: 2vh; margin-left:65vw">
-        <?= $component->button('temp', '', 'View all Template', 'button--class-0', 'btn-4'); ?>
-    </div> -->
+
 </div>
 
-<!-- <div class="semi-header-container"> -->
-
-<div class="field-container">
-    <!-- <section class="reg_body-spec" style="padding:5vw"> -->
-    <?php $form = Form::begin('', 'post'); ?>
-
-    <!-- <div class="reg-body-spec fields" style="padding-left:15vw"> -->
-
-    <table class="template">
+<div class="semi-header-container-1">
+    <div class="semi-field-container">
         <tr>
-
-            <td> <?php echo $form->select($contentmodel, 'type', 'Type', 'field', [  'field','image', 'text','select'], 'picker'); ?></td>
-            <td> <?php echo $form->field($contentmodel, 'name', 'Name', 'hide', 'text', 'name'); ?></td>
-            <td><?php echo $form->field($contentmodel, 'reference_ranges', 'Reference Range', 'hide', 'text', 'range'); ?></td>
-            <td> <?php echo $form->select($contentmodel, 'metric', 'Metric', 'hide', [ 'K/UL', 'MIL/UL', 'G/UL', 'FL','select'], 'metric'); ?></td>
-            
+            <td><b>Title   :</b><?= $temp_title_sub["title"] ?></td><br>
+            <td><b>Subtitle   :</b><?= $temp_title_sub["subtitle"] ?></td><br><br>
         </tr>
-    </table>
-    <div class="button" style="margin-top: 2vh;">
-        <?= $component->button('btn', '', 'Add', 'button--class-0', 'btn-2'); ?>
     </div>
-    
+    <div class="field-container" style="margin-left:5vw;margin-top:1vw">
+        <?php $form = Form::begin('', 'post'); ?>
 
- 
+        <!-- <div class="reg-body-spec fields" style="padding-left:15vw"> -->
 
-    <!-- </div> -->
+        <table class="template">
+            <tr>
 
-</div>
+                <td> <?php echo $form->labselect($contentM, 'type', 'Type', 'field-1', ['field', 'text', 'select'], 'picker'); ?></td>
+                <td> <?php echo $form->labfield($contentmodel, 'name', 'Name', 'hide', 'text', 'name'); ?></td>
+                <td><?php echo $form->labfield($contentmodel, 'reference_ranges', 'Reference Range', 'hide', 'text', 'range'); ?></td>
+                <td> <?php echo $form->labselect($contentM, 'metric', 'Metric', 'hide', ['K/UL', 'MIL/UL', 'G/UL', 'FL', 'select'], 'metric'); ?></td>
 
-<?php Form::end() ?>
-</section>
-<div class="table-container">
-    <table border="0" style="margin-left:0px">
-                    <?php foreach ($contents as $content) : ?>
-                        <tr class='table-row  ' id=<?= $content["content_ID"] ?>>
-
-                            <?php if ($content['type'] === "field") : ?>
-                                <td><b>Type :</b><?= $content['type'] ?> </td>
-                                <td><b>Name :</b><?= $content['name'] ?> </td>
-                                <td><b>Metric :</b><?= $content['metric'] ?> </td>
-                                <td><b>Reference Ranges :</b><?= $content['reference_ranges'] ?> </td>
-                                <td><?= $component->button('btn', '', 'X', 'btn-1', $content["content_ID"]); ?></td>
-                                <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $content["content_ID"]); ?></td> -->
-
-
-                            <?php endif; ?>
-
-                            <?php if ($content['type'] === "image") : ?>
-                                <td><b>Type :</b><?= $content['type'] ?> </td>
-                                <td><b>Name :</b><?= $content['name'] ?> </td>
-                                <td><b> </b><?    ?> </td>
-                                <td><b> </b><?    ?> </td>
+            </tr>
+        </table>
+        <div class="button" style="margin-top: 2vh;">
+            <?= $component->button('btn', '', 'Add', 'button--class-0', 'btn-2'); ?>
+        </div>
 
 
 
-                                <td><?= $component->button('btn', '', 'X', 'btn-1', $content["content_ID"]); ?></td>
-                                <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $content["content_ID"]); ?></td> -->
-
-                            <?php endif; ?>
-
-                            <?php if ($content['type'] === "text") : ?>
-                                <td><b>Type :</b><?= $content['type'] ?> </td>
-                                <td><b>Name :</b><?= $content['name'] ?> </td>
-                                <td><b> </b><?    ?> </td>
-                                <td><b> </b><?    ?> </td>
 
 
-                                <td><?= $component->button('btn', '', 'X', 'btn-1', $content["content_ID"]) ?></td>
-                                <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $content["content_ID"]); ?></td> -->
+    </div>
 
-                            <?php endif; ?>
-                        </tr>
-                    <?php endforeach; ?>
-    </table>
+    <?php Form::end() ?>
+    <!-- <section class="reg_body-spec" style="padding:5vw"> -->
+    </section>
+    <div class="table-container">
+        <table border="0" style="margin-left:0px">
+            <?php foreach ($contents as $content) : ?>
+                <tr class='table-row  ' id=<?= $content["content_ID"] ?>>
+
+                    <?php if ($content['type'] === "field") : ?>
+                        <td><b>Type :</b><?= $content['type'] ?> </td>
+                        <td><b>Name :</b><?= $content['name'] ?> </td>
+                        <td><b>Metric :</b><?= $content['metric'] ?> </td>
+                        <td><b>Reference Ranges :</b><?= $content['reference_ranges'] ?> </td>
+                        <td><?= $component->button('btn', '', 'X', 'btn-1', $content["content_ID"]); ?></td>
+                        <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $content["content_ID"]); ?></td> -->
+
+
+                    <?php endif; ?>
+
+                    <?php if ($content['type'] === "image") : ?>
+                        <td><b>Type :</b><?= $content['type'] ?> </td>
+                        <td><b>Name :</b><?= $content['name'] ?> </td>
+                        <td><b> </b><?    ?> </td>
+                        <td><b> </b><?    ?> </td>
+
+
+
+                        <td><?= $component->button('btn', '', 'X', 'btn-1', $content["content_ID"]); ?></td>
+                        <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $content["content_ID"]); ?></td> -->
+
+                    <?php endif; ?>
+
+                    <?php if ($content['type'] === "text") : ?>
+                        <td><b>Type :</b><?= $content['type'] ?> </td>
+                        <td><b>Name :</b><?= $content['name'] ?> </td>
+                        <td><b> </b><?    ?> </td>
+                        <td><b> </b><?    ?> </td>
+
+
+                        <td><?= $component->button('btn', '', 'X', 'btn-1', $content["content_ID"]) ?></td>
+                        <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $content["content_ID"]); ?></td> -->
+
+                    <?php endif; ?>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+
 </div>
 
 
@@ -121,18 +111,18 @@ $component = new Component();
 
         <div class="form-body">
             
-            <?php if ($contents[0]['type'] === "field"): ?>
+            <?php if ($contents[0]['type'] === "field") : ?>
              //  echo $form->select($model, 'type', 'Type', 'field', ['select', 'image', 'field', 'text'], 'picker');  -->
-            <!-- <?php echo $form->field($model, 'name', 'Name', '', 'text', 'name'); ?>
+<!-- <?php echo $form->field($model, 'name', 'Name', '', 'text', 'name'); ?>
             <?php echo $form->field($model, 'reference_ranges', 'Reference Range', '', 'text', 'range'); ?>
-             <?php echo $form->select($model, 'metric', 'Metric', '', [ 'K/UL', 'MIL/UL', 'G/UL', 'FL','select'], 'metric'); ?>
+             <?php echo $form->select($model, 'metric', 'Metric', '', ['K/UL', 'MIL/UL', 'G/UL', 'FL', 'select'], 'metric'); ?>
              
-             <?php elseif ($contents[0]['type'] === "image") :?>
-              <?php  echo $form->field($model, 'name', 'Name', '', 'text', 'name'); ?> -->
+             <?php elseif ($contents[0]['type'] === "image") : ?>
+              <?php echo $form->field($model, 'name', 'Name', '', 'text', 'name'); ?> -->
 
-            <!-- //  echo $form->field($model, 'position', 'Upload', '', 'file', 'img');  -->
-            <!-- <?php elseif ($contents[0]['type'] === "text"): ?>
-              <?php  echo $form->field($model, 'name', 'Name', '', 'text', 'name'); ?>
+<!-- //  echo $form->field($model, 'position', 'Upload', '', 'file', 'img');  -->
+<!-- <?php elseif ($contents[0]['type'] === "text") : ?>
+              <?php echo $form->field($model, 'name', 'Name', '', 'text', 'name'); ?>
 
               <?php endif ?>
 
@@ -157,14 +147,14 @@ $component = new Component();
     const name = document.querySelector("#name");
     const reference_ranges = document.querySelector('#range');
     const metric = document.querySelector('#metric');
-    
 
-    function hide(element, hideClass = 'hide', visibleClass = 'field') {
+
+    function hide(element, hideClass = 'hide', visibleClass = 'field-1') {
         element.classList.remove(visibleClass);
         element.classList.add(hideClass);
     }
 
-    function visible(element, hideClass = 'hide', visibleClass = 'field') {
+    function visible(element, hideClass = 'hide', visibleClass = 'field-1') {
         element.classList.remove(hideClass);
         element.classList.add(visibleClass);
     }
@@ -225,23 +215,23 @@ $component = new Component();
         });
     });
 
-    var popup=document.getElementById("popup");
-    var closebtn=document.getElementById("closebtn");
-    var addeditbtn=document.getElementById("btn-2");
-    var add=document.getElementById("btn-3");
-    addeditbtn.onclick=function(){
-        popup.style.display="block";
+    var popup = document.getElementById("popup");
+    var closebtn = document.getElementById("closebtn");
+    var addeditbtn = document.getElementById("btn-2");
+    var add = document.getElementById("btn-3");
+    addeditbtn.onclick = function() {
+        popup.style.display = "block";
     }
-    closebtn.onclick=function(){
-        popup.style.display="none";
-    } 
-    add.onclick=function(x){
-        x.disable=true;
+    closebtn.onclick = function() {
+        popup.style.display = "none";
+    }
+    add.onclick = function(x) {
+        x.disable = true;
     }
 
-    window.onclick=function(event){
-        if(event.target== popup){
-            
+    window.onclick = function(event) {
+        if (event.target == popup) {
+
         }
     }
 </script>

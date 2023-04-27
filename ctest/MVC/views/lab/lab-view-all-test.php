@@ -50,7 +50,7 @@ $component = new Component();
   <div class="card-details">
     <p class="text-title"><?= $test['name'] ?></p>
     <!-- <p class="text-body"><b>Name :</b><?= $test['name'] ?> </h4> -->
-        <p class="text-body"4><b>Test Fee :</b><?= $test['test_fee'] ?> </h4>
+        <p class="text-body"><b>Test Fee :</b><?= $test['test_fee'] ?> </h4>
         <p class="text-body"><b>Hospital Fee :</b><?= $test['hospital_fee'] ?> </h4>
   </div>
   <!-- <button class="card-button"> -->

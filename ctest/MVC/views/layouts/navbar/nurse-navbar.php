@@ -35,7 +35,11 @@
                         <ul>
                             <div class="nav-box-item">
                                 <li>
+<<<<<<< HEAD
+                                    <a href="/ctest/nurse">Dashboard</a>
+=======
                                     <a href="/ctest/all-channelings">Dashboard</a>
+>>>>>>> 20001843
                                 </li>
                             </div>
                             <div class="nav-box-item">

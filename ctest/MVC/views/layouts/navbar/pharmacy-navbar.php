@@ -19,6 +19,7 @@
 
 </head>
 <body>
+<<<<<<< HEAD
 <nav class="nav" >
     <div class="nav_row--top">
         <div class="nav_row--top_logo">
@@ -42,16 +43,42 @@
                                 </li>
                             </div>
                         </ul>
+=======
+<div class="layout-div-row">
+    <nav class="nav" >
+        <div class="nav_row--top">
+            <div class="nav_row--top_logo">
+                <img src="./media/images/logo-1.png">
             </div>
-           
-          
+            <div class="nav_row--top_user flex">
+                <div class="nav-box">
+                            <div class="flex">
+                                <?php echo Application::$app->session->get('userObject')->name ?>
+                                <img src=<?php echo "./media/images/emp-profile-pictures/".Application::$app->session->get('userObject')->img ?>>
+                            </div>
+                            <ul>
+                                <div class="nav-box-item">
+                                    <li>
+                                        <a href="/ctest/patient-all-appointment">Dashboard</a>
+                                    </li>
+                                </div>
+                                <div class="nav-box-item">
+                                    <li>
+                                        <a href="/ctest/employee-logout">Log Out</a>
+                                    </li>
+                                </div>
+                            </ul>
+                </div>
+>>>>>>> 20000804
+            </div>
         </div>
-    </div>
-    <div class="nav_row--bottom">
-        <h2 class="uppercase">Anspaugh Care</h2>
-       
-    </div>
-</nav>
+
+        <div class="nav_row--bottom">
+            <h2 class="uppercase">Anspaugh Care</h2>
+        </div>
+    </nav>
+</div>
+
 <script>
     const button=document.getElementById('sign in');
     if(button){

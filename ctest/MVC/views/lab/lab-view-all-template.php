@@ -50,9 +50,9 @@ $component = new Component();
 
         </div>
         <div class="flip-card-back" >
-          <h3>title:</h3>
+          <h3>Title:</h3>
             <p class="title"><?= $template['title'] ?></p>
-            <h3>Sub title:</h3>
+            <h3>Sub Title:</h3>
             <p class="title"><?= $template['subtitle'] ?> </p>
             
           </div>

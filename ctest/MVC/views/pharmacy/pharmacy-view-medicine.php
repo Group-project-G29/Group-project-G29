@@ -38,12 +38,14 @@
     btn.addEventListener('click',function(){
         location.href="handle-medicine";
     })
+
     elementsArray = document.querySelectorAll(".button--class-2");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href='update-medicine?mod=update&id='+elem.id;
         });
     });
+    
     elementsArray = document.querySelectorAll(".button--class-3");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {

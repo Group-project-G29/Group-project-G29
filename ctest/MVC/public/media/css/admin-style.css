@@ -1,4 +1,3 @@
-
 :root{
     --clr-white:white;
 }
@@ -31,14 +30,21 @@ input [type="time"]::-webkit-time-picker-indicator{
     justify-content: center;
     align-items: center;
     padding-block: 5vh;
-    gap: 3vh;
     background-color: var(--clr-white);
     border-radius: 10px;
     border: 1px solid rgb(228, 228, 228);
-    width:40vw;
-
-
+    width:45vw;
 }
+
+.form-body-inputs{
+    display: flex;
+}
+
+.form-body{
+    display: flex;
+    gap: 1.5vw;
+}
+
 .reg_body{
     margin-top:3vh;
     display: flex;
@@ -60,33 +66,20 @@ input [type="time"]::-webkit-time-picker-indicator{
 .form-body [type="text"],.form-body [type="file"],.form-body [type="time"],.form-body [type="date"],.form-body select{
     width: 20vw;
 }
-.scheduling-container{
-    margin-top: 3vh;
-    display: flex;
-    gap:2vw;
-    width:112%;
 
-}
 .nurse-assign-body{
     display: flex;
     align-items: center;
-    width: 60vw;
-    height: 97vh;
-    padding-top: 5vh;
+    height: 50vh;
+    padding-top: 1vh;
     flex-direction: column;
-    background-color: var(--clr-white);
-    border-radius: 10px;
-    border: 1px solid rgb(228, 228, 228);
     
 }
-.nurse-assign-body-button button{
-    width:20vw;    
+
+.search-bar--class2{
+    justify-content: center;
 }
-.nurse-assign-body button{
-    margin-top: 5vh;
-    
- 
-}
+
 
 .nurse-assign-top{
     display: flex;
@@ -121,7 +114,6 @@ input [type="time"]::-webkit-time-picker-indicator{
 
 .input-container table{
     border-spacing: 1vw 2vh;
-    margin-top: -35vh;
 }
 
 .table table{
@@ -134,20 +126,20 @@ input [type="time"]::-webkit-time-picker-indicator{
     gap:2vw;
     align-items: center;
     background-color: var(--clr-bg-grey);
-   
+    margin-bottom: 2vh;
     overflow: scroll;
     height: 10vh;
-    width: 35vw;
+    width: 33vw;
     flex-shrink: 0;
     flex-basis: 4vw;
 }
 /* view channeling page */
 .search-bar-container{
     margin-left: 20vw;
-   display: flex;
-  
-   align-items: center;
-   justify-content: center;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
 }
 
 .upper-container{
@@ -184,4 +176,37 @@ input [type="time"]::-webkit-time-picker-indicator{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+
+
+
+/* Notification */
+
+.notification-btn{
+    display: flex;
+    justify-content:flex-end;
+    gap: 2vw;
+    margin-right: 2vw;
+}
+
+.eek-button{
+    width:5vw;
+    height: 5vh;
+    color: red;
+}
+.delete-btn{
+    width:1.5vw;
+    height:3vh;
+}
+
+.nurse-error-container{
+    color:red;
+    display: flex;
+    align-items: center;
+    gap:1vw;
+}
+.error-texts{
+    display: flex;
+    flex-direction: column;
 }

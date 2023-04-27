@@ -14,18 +14,18 @@ use app\core\Application;
 
 
 $form=Form::begin('/ctest/lab-personal-detail-update?cmd=update&id='.Application::$app->session->get('user'),'post');?> 
-<div class="header-container">
+<div class="header-container"  style="padding-top:0vw">
     
     <div class="semi-header-container">
     <div class="reg-body-spec_title">
-        <h1 class="fs-200 fc-color--dark" style="padding-bottom: 2vh;"><?= $user['name']?></h1>
+        <h1 class="fs-200 fc-color--dark" style="padding-bottom: 2vh;">Update <?= $user['name']?></h1>
         <h4 class="fc-color--dark" style="padding-bottom: 2vh;">Employee ID = <?= $user['emp_ID']?></h1>
     </div>
         <div class="field-container">
             <section class="reg_body-spec" style="padding-bottom:50px">
 
 
-                <div class="reg-body-spec fields" style="padding-left:15vw">
+                <div class="reg-body-spec fields" style="padding-left:5vw">
                     <table>
                         <?php echo $form->spanfield($model, 'name', 'Full Name*', 'field', 'text') ?>
                         <?php echo $form->spanfield($model, 'nic', 'NIC*', 'field', 'text') ?>
