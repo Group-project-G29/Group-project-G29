@@ -49,14 +49,24 @@ use app\models\Employee;
                     }
                     else{
                         echo $component->button('update','','Update','button--class-2',$account['emp_ID']); 
-                        echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);    
+                        if($account['employee_status'] == 'active'){
+                            echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);    
+                        }
+                        else{
+                            echo $component->button('delete',' ','Activate','button--class-3',$account['emp_ID']);    
+                        }
                         
                     }
                     
                 }
                 else{
                         echo $component->button('update','','Update','button--class-2',$account['emp_ID']); 
-                        echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);    
+                        if($account['employee_status'] == 'active'){
+                            echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);    
+                        }
+                        else{
+                            echo $component->button('delete',' ','Activate','button--class-3',$account['emp_ID']);    
+                        }
                     
                 }
                 
@@ -83,7 +93,7 @@ use app\models\Employee;
     elementsArray = document.querySelectorAll(".button--class-3");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='admin?cmd=delete&id='+elem.id;
+            location.href='admin?cmd=deactivate&id='+elem.id;
         });
     });
     const patients=document.querySelectorAll('.table-row');

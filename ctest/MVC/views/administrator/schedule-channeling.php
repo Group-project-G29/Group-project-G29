@@ -5,6 +5,7 @@ use app\core\component\Component;
 $component=new Component();
 $form=Form::begin('','post');
 
+// var_dump($doctors);
 ?> 
 
 
@@ -33,9 +34,8 @@ $form=Form::begin('','post');
                 <!-- <div><?php //echo $form->spanfield($channelingmodel,'total_patients','Limit Patient Count','field','text') ?></div> -->
             </table>
 
-            <table>    
-                <center><h2 style="margin-top: 5vh;">Set Date Time</h2></center>
-                
+            <center><h2 style="margin-top: 5vh;">Set Date Time</h2></center>
+            <table style="margin-top:-15vh;">    
                 <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Select'=>'','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday'])?>
                 <?php echo $form->spanfield($channelingmodel,'time','Starting Time*','field','time') ?>
                 
@@ -57,8 +57,8 @@ $form=Form::begin('','post');
         </div>
 
         <div class="input-container">
-            <table> 
-                <center><h2>Set payment detail</h2></center>   
+            <center><h2 style="margin-top:-11vh;">Set payment detail</h2></center>   
+            <table style="margin-top:-8vh;"> 
                 <?php echo $form->spanfield($channelingmodel,'fee','Basic Fee (Rs.)*','field','text') ?>
                 <?php echo $form->spanfield($channelingmodel,'percentage','Doctor\'s Income Percentage (%)*','field','text') ?>
             </table>
@@ -73,10 +73,11 @@ $form=Form::begin('','post');
                                 <img src="media/images/common/delete.png" class="delete-btn" id="room">
                             </div>
                             <div class="error-texts">
-                                <?php echo "Room is assigned to channeling ".$roomOverlaps[0]['channeling_ID']." at ".$roomOverlaps[0]['time'].(($roomOverlaps[count($roomOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
                                 <?php if(isset($roomOverlaps[count($roomOverlaps)-1]) and $roomOverlaps[count($roomOverlaps)-1]['channeling_ID']!=$roomOverlaps[0]['channeling_ID']): ?>
-                                    <?="<br>Room is assigned to channeling ".$roomOverlaps[count($roomOverlaps)-1]['channeling_ID']." at ".$roomOverlaps[count($roomOverlaps)-1]['time'].(($roomOverlaps[count($roomOverlaps)-1]['time']>'12.00')?'PM':'AM' )?> 
-                                
+                                    <?="<br><font color='red'>Room is assigned to channeling ".$roomOverlaps[count($roomOverlaps)-1]['channeling_ID']." at ".$roomOverlaps[count($roomOverlaps)-1]['time'].(($roomOverlaps[count($roomOverlaps)-1]['time']>'12.00')?'PM':'AM' )." </font>"?> 
+                                    <?php else:?>
+                                    <?php echo "Room is assigned to channeling ".$roomOverlaps[0]['channeling_ID']." at ".$roomOverlaps[0]['time'].(($roomOverlaps[count($roomOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
+                                    
                                     <?php endif;?>
                         
                             </div>
@@ -92,17 +93,16 @@ $form=Form::begin('','post');
                 <div>
                     <div >
                         <h3>Assign Nurses</h3>
-                        <?php if(isset($nurseOverlaps)):?>
+                        <?php if($nurseOverlaps):?>
                                 <div class="nurse-error-container">
                                 <div>
                                     <img src="media/images/common/delete.png" class="delete-btn" id="room">
                                 </div>
                                 <div class="error-texts">
-                                    <?//php// var_dump($nurseOverlaps)?>
+                                    <?php if($nurseOverlaps && isset($nurseOverlaps[count($nurseOverlaps)-1]) and $nurseOverlaps[count($nurseOverlaps)-1]['emp_ID']!=$nurseOverlaps[0]['emp_ID']): ?>
+                                        <?="<br><font color='red'>Nurse".$nurseOverlaps[count($nurseOverlaps)-1]."is assigned to channeling ".$nurseOverlaps[count($nurseOverlaps)-1]['channeling_ID']." at ".$nurseOverlaps[count($nurseOverlaps)-1]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM')." </font>" ?> 
+                                        <?php else:?>
                                     <?php echo "Nurse ".$nurseOverlaps[0]['name']." is assigned to channeling ".$nurseOverlaps[0]['channeling_ID']." at ".$nurseOverlaps[0]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
-                                    <?php if(isset($nurseOverlaps[count($nurseOverlaps)-1]) and $nurseOverlaps[count($nurseOverlaps)-1]['emp_ID']!=$nurseOverlaps[0]['emp_ID']): ?>
-                                        <?="<br>Nurse".$nurseOverlaps[count($nurseOverlaps)-1]."is assigned to channeling ".$nurseOverlaps[count($nurseOverlaps)-1]['channeling_ID']." at ".$nurseOverlaps[count($nurseOverlaps)-1]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
-                                    
                                         <?php endif;?>
                             
                                 </div>
@@ -114,7 +114,7 @@ $form=Form::begin('','post');
                 </div>
                 <div class="nurse-list">
                     <?php foreach($nurses as $nurse):?>
-                        <div class="nurse-wrapper class none" id=<?=$nurse['name']?>>
+                        <div class="nurse-wrapper class none" id=<?="'".$nurse['name']."'"?>>
                             <div class="nurse-item" >
                                 <img src=<?="./media/images/emp-profile-pictures/".$nurse['img']?>>
                                 <?=$nurse['name']?>
@@ -153,8 +153,9 @@ $form=Form::begin('','post');
         if(elem.checked)nurseContainer.appendChild(elem.parentNode);
         else {
             
-            nurseList.appendChild(elem.parentNode);
             elem.parentNode.classList.add('none');
+            console.log("hit");
+            nurseList.appendChild(elem.parentNode);
             
         }
             

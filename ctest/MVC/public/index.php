@@ -28,6 +28,7 @@ $app =new Application(dirname(__DIR__));
 //patient
 
 $app->router->get('/ctest/contact-us',[PatientAuthController::class,'contact_us']);
+$app->router->get('/ctest/patient-lab-main',[PatientAuthController::class,'labPage']);
 
 
 
@@ -62,6 +63,10 @@ $app->router->get('/ctest/handle-documentation', [PatientAuthController::class, 
 $app->router->get('/ctest/handle-labreports', [PatientAuthController::class, 'handelLabReports']);
 $app->router->get('/ctest/patient-my-detail', [PatientAuthController::class,'accountHandle']);
 $app->router->post('/ctest/patient-my-detail', [PatientAuthController::class,'accountHandle']);
+$app->router->get('/ctest/nic', [PatientAuthController::class,'getNIC']);
+$app->router->post('/ctest/nic', [PatientAuthController::class,'getNIC']);
+
+
 
 //--------------------employee routers--------------------------------------
 $app->router->get('/ctest/login',[EmployeeAuthController::class, 'login']);
@@ -227,6 +232,7 @@ $app->router->post('/ctest/schedule-channeling',[AdminController::class,'schedul
 $app->router->get('/ctest/admin-notification',[AdminController::class,'handleNotifications']);
 $app->router->get('/ctest/update-channeling',[AdminController::class,'changeChanneling']);
 $app->router->post('/ctest/update-channeling',[AdminController::class,'changeChanneling']);
+$app->router->get('/ctest/admin-reports',[AdminController::class,'viewReports']);
 $app->router->get('/ctest/test1',[AdminController::class,'test']);
 
 
@@ -263,9 +269,6 @@ $app->router->get('/ctest/lab-view-report-detail',[LabController::class,'ReportD
 $app->router->post('/ctest/lab-view-report-detail',[LabController::class,'ReportDetail']);
 $app->router->get('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
 $app->router->post('/ctest/lab-report-upload',[LabController::class,'reportUpload']);
-
-$app->router->post('/ctest/lab-S-report-upload',[LabController::class,'uploadSReport']);
-
 $app->router->get('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
 $app->router->post('/ctest/lab-write-test-report',[LabController::class,'writeReport']);
 $app->router->get('/ctest/lab-test-template',[LabController::class,'createTemplate']);

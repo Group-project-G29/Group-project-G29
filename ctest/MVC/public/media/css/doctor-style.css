@@ -272,6 +272,17 @@
     border-radius: 10px;
 
 }
+.variable-container-mu{
+    overflow-y: scroll;
+    height: 70vh;
+    width:25vw;
+    border:1px solid #e7e6e6;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    justify-content: start;
+    border-radius: 10px;
+
+}
 .variable-container table{
     border-color: #cfcfcf;
     border-collapse: separate;
@@ -569,9 +580,17 @@
     top:40vh;
     left:45vw;
     z-index:99;
+    margin-left:-7vw;
     background-color: var(--clr-white);
     border-radius:5px;
+    padding-inline:5vw;
+    padding-block:5vh;
 
+}
+
+.popup-test{
+    display: flex;
+    gap:1vw;
 }
 .upper-boxes{
     background-color: var(--clr-white);
@@ -710,4 +729,8 @@
 .number-upper{
     margin-left:-15vw;
 }
-
+.popup-button-flex{
+    display: flex;
+    align-items: center;
+    gap:3vw;
+}

@@ -21,6 +21,8 @@ use app\models\Prescription;
             $items= $cartModel->fetchAssocAllByName(['cart_ID'=>$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID']],'medicine_cart');
             $stritem="";
             $prescriptions=$prescriptionModel->fetchAssocAllByName(['cart_ID'=>$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID']],'prescription');
+            if(!$items && !$prescriptions) $class='hide';
+            else $class='';
             foreach($prescriptions as $pres){
                 $stritem.="<div>
                                 <h5>Added Date:".$pres['uploaded_date']."</h5>
@@ -55,17 +57,18 @@ use app\models\Prescription;
                 }
             }
             return sprintf('
-            <section class="hover-cart">
+            <section class="hover-cart ">
                 <div class="cart-container cart" id="$s">
                     <img src="./media/images/patient/cart.png">
                 </div>
                 <div class="cart-counter">
                     <h6>%s</h6>
                 </div>
+                <div class="%s">
                 <div class="cart-content"> <div class="cart--wrapper">'.
                     $component->button("","","Proceed to Payment","cart-payment-button",'proceed-to-payment')."</hr>".$stritem
 
-                .'</div></div>
+                .'</div></div> </div>
                 </section> 
                 <script src="./media/js/main.js"></script>
             <script>
@@ -88,7 +91,7 @@ use app\models\Prescription;
                     location.href="patient-medicine-order?spec=order&mod=view";
                 })
             </script>
-            ',$cartModel->getItemCount(),$this->count);     
+            ',$cartModel->getItemCount(),$class);     
             
         
     }

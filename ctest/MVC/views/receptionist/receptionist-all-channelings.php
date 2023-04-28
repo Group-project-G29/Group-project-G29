@@ -14,7 +14,7 @@ $component = new Component();
 
 
 </div>
-<div class="main-card ">
+<!-- <div class="main-card ">
   <?php foreach ($channelingmore as $key => $channeling) : ?>
 
       <div class="card-3" id=<?= $channeling['career_speciality'] ?>>
@@ -30,7 +30,17 @@ $component = new Component();
     
   <?php endforeach; ?>
 
+</div> -->
+
+<?php foreach ($channelingmore as $key => $channeling) : ?>
+<div class="card-new-0" id=<?= $channeling['career_speciality'] ?>>
+
+  <div class="card-details">
+    <p class="text-title"><?= $channeling['career_speciality'] ?></p>
+  </div>
+  
 </div>
+<?php endforeach; ?>
 
 <!-- <div class="table-container">
 
@@ -62,7 +72,7 @@ $component = new Component();
   </table>
 </div> -->
 <script>
-  elementsArray = document.querySelectorAll(".card-3");
+  elementsArray = document.querySelectorAll(".card-new-0");
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {
       location.href = 'receptionist-all-channeling-type?id=' + elem.id; //pass the variable value

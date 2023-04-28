@@ -1011,3 +1011,116 @@
 .total-payment{
     margin-left:24vw;
 }
+/* ====================================== */
+/* =============contact us=============== */
+.contact-us-body {
+    width: 100vw;
+    height: 100vh;
+
+    /* margin-left: -30vh; */
+}
+
+.laboratory-body {
+    width: 100vw;
+    height: 100vh;
+
+    /* margin-left: -30vh; */
+}
+
+.bg-image-div {
+    width: 100%;
+    height: 62vh;
+    min-height: 500px;
+}
+
+#contact-bg-image-div {
+    background-image: url('images/Contact-Us-Background.jpg');
+    background-position-y: center;
+    background-position-x: center;
+}
+
+#lab-bg-image-div {
+    background-image: url('images/lab2.jpg');
+    background-position-y:100%;
+    background-position-x: center;
+    background-size:cover;
+}
+
+#contact-topic {
+    padding-top:3%;
+    /* padding-left: 10%; */
+    text-align: center;
+    color: var(--clr-white);
+    font-size: 80px;
+    font-weight: bold;
+}
+
+.contact-row {
+    display: flex; 
+    flex-direction: row;
+    align-items: center;
+    align-self: center;
+    text-align: center;
+}
+
+.contact-col-description {
+    width: 50%;
+    text-align: center;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: var(--clr-dark);
+    font-size: 20px;
+}
+
+#contact-map {
+    width: 40%;
+    /* padding: 0% 10% 0% 10%; */
+    /* background-color: #38B6FF; */
+}
+
+#contact-map-photo {
+    width: 100%;
+    padding: 0% 15% 0% 15%;
+}
+
+.contact-details {
+    width: 20%;
+    font-size: 20px;
+    padding-top: 40px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
+#contact-phone,
+#contact-email, 
+#contact-location {
+    width: 50px;
+    height: 50px;
+}
+
+#contact-image {
+    width: 100%;
+}
+
+.contact-icon {
+    width: 35%;
+    align-items: center;
+}
+
+.contact-icon-img {
+    width: 80px;
+    height: 80px;
+    margin: auto;
+}
+
+.none {
+    display: none;
+}
+
+.hide {
+    display: none;
+}

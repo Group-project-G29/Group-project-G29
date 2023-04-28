@@ -23,6 +23,7 @@
             return $this->customFetchAll("select last_insert_id()");
            
         }
+      
         public function savenofiles(){
          
             $tablerecords=$this->tableRecords();

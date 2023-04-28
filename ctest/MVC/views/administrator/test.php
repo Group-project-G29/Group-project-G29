@@ -3,6 +3,8 @@
 use app\models\Appointment;
 use app\models\Cart;
 use app\models\Channeling;
+use app\core\Time;
+use app\models\Prescription;
 
     $cm=new Channeling();
     $cart=new Cart();
@@ -21,21 +23,11 @@ use app\models\Channeling;
     //$cm->checkRoomOverlap();
     
     ?>
-    <div class="result">
-
-            <?//php var_dump($cm->checkOverlap()); ?>
-    </div>
-
-<!-- 
-<?php
-
-    //$appointmentModel=new Appointment();
-    //var_dump($appointmentModel->labReportEligibility(34,'200045456060',165));
-
-?> -->
-
-<?php  
-    $cart->getCartPrice();
 
 
+<?php 
+ $prescriptionModel=new Prescription();
+ $prescriptionModel->setPrices(65);
+   
+    
 ?>

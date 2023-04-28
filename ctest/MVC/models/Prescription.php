@@ -160,10 +160,23 @@ class Prescription extends DbModel{
         return false;
 
     }
+    
+    public function setPrices($prescription){
+        $medicines=$this->getPrescriptionMedicine($prescription);
+        var_dump($medicines);
+        foreach($medicines as $medicine){
+            $this->customFetchAll("update prescription_medicine set prescription_current_price=".$medicine['unit_price']." where med_ID=".$medicine['med_ID']." and prescription_ID=$prescription");
+        }
+        exit;
+    }
     public function removeFromCart($prescription){
         $this->customFetchAll("update prescription set cart_ID=null  where prescription_ID=".$prescription);
     }
     public function addToOrder($orderID,$cartID){
+        $prescriptions=$this->customFetchAll("select prescription_ID from prescription where cart_ID=$cartID and type='E-prescription'");
+        foreach($prescriptions as $pres){
+            $this->setPrices($pres);
+        }
         $this->customFetchAll("update prescription set order_ID='$orderID' ,cart_ID=null where cart_ID='$cartID'");
         return true;
     }
@@ -249,7 +262,6 @@ class Prescription extends DbModel{
         
 
     }
-
     public function prescriptionToPDF($presID){
         $pdfModel=new PDF();
         $meds=$this->getPrescriptionMedicine($presID);
@@ -278,9 +290,9 @@ class Prescription extends DbModel{
         }
         $str="
             <html>
-                <head>
+            <head>
                 <style>
-                    .show{
+                .show{
     
                       background-color:red;
                       
@@ -298,29 +310,46 @@ class Prescription extends DbModel{
                         </div>
                         <div>
                             Patient :".$header['name']."
-                        </div>
+                            </div>
 
                         
-                    </section>
-                    <section>
-                        <table border='0'>
+                            </section>
+                            <section>
+                            <table border='0'>
                         
-                        ".$medrows."
+                            ".$medrows."
+                            </table>
+                            ".$head."
+                            <table border='0'>
+                            "
+                            
+                            .$devrows."
                         </table>
-                        ".$head."
-                        <table border='0'>
-                        "
-                        
-                        .$devrows."
-                        </table>
-                    </section>
-                </body>
-            <html>
+                        </section>
+                        </body>
+                        <html>
         ";
-       
+        
         $pdfModel->createPDF($str,'Prescription-'.$header['uploaded_date']);
 
 
+    }
+    // =========CREATE NEW ORDER===============
+    
+    public function add_med_rec ($med_ID, $prescription_ID, $amount) {
+       return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, amount ) VALUES ( $med_ID, $prescription_ID, $amount ); ");
+    }
+    
+    public function get_curr_orders($prescription_ID) {
+       return $this->customFetchAll("SELECT *, prescription_medicine.amount AS order_amount, prescription_medicine.prescription_current_price AS current_price, medical_products.amount AS available_amount FROM prescription_medicine INNER JOIN prescription ON prescription_medicine.prescription_ID=prescription.prescription_ID INNER JOIN medical_products ON prescription_medicine.med_ID=medical_products.med_ID WHERE prescription_medicine.prescription_ID=$prescription_ID; ");
+    }
+    
+    public function get_patient_details($prescription_ID) {
+       return $this->customFetchAll("SELECT * FROM prescription INNER JOIN patient ON prescription.patient=patient.patient_ID WHERE prescription.prescription_ID=$prescription_ID;");
+    }
+    
+    public function get_prescription_location( $order_ID ) {
+       return $this->customFetchAll(" SELECT *, patient.name AS p_name FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID INNER JOIN prescription ON _order.order_ID=prescription.order_ID WHERE prescription.order_ID=$order_ID ");
     }
     
 

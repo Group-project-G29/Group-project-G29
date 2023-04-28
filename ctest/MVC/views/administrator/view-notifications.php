@@ -18,16 +18,19 @@
     <tr>
     </tr>
     <?php foreach($notifications as $key=>$notification): ?>
-    <tr class="table-row">
+        <?php if($notification['is_read']==1){ 
+            $isRead = "no-read";
+            } ?>
+    <tr class="table-row <?=$isRead?>">
         <td class="add-dec">
-            <?=$notification['doctor']?> on <?=$notification['created_date_time']?><br><br>
-            <?=$notification['content']?><br><br>
+            <?=$notification['doctor']?> - ON - <?=$notification['created_date_time']?><br><br>
+            <div class="content"><?=$notification['content']?></div><br>
             <div class="notification-btn">
-                <?php
-                if($notification['is_read']==1){ ?>
+
+                <?php if($notification['is_read']==1){ ?>
                     <div onclick="update(<?=$notification['noti_ID']?>)"><?php echo $component->button('update','','Mark as Read','button--class-2',$notification['noti_ID']) ?></div>
-                <?php }
-                ?>
+                <?php } ?>
+
                 <div onclick="deletenoty(<?=$notification['noti_ID']?>)"><?php echo $component->button('update','','Delete','button--class-3',$notification['noti_ID']) ?></div>
             </div>
         </td>

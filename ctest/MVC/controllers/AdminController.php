@@ -15,6 +15,8 @@ use app\models\Employee;
 use app\models\NurseAllocation;
 use app\models\OpenedChanneling;
 use app\core\Time;
+use app\models\Appointment;
+use app\models\Payment;
 
 class AdminController extends Controller{
     // create add,view channeling session
@@ -251,7 +253,23 @@ class AdminController extends Controller{
         }
         // delete an account 
         else if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
+            var_dump("ok");exit;
             $registerModel->deleteRecord(['emp_ID'=>$parameters[1]['id']]);
+            Application::$app->session->setFlash('success',"Account successfully deleted ");
+            $response->redirect('/ctest/admin');
+            return true;
+        }
+
+        // deactivate an account 
+        else if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='deactivate'){
+            $emp_ID = $parameters[1]['id'];
+            $status = $registerModel->customFetchAll("SELECT employee_status FROM `employee` WHERE emp_ID = $emp_ID;");
+            if($status[0]['employee_status'] == 'deactive'){
+                $registerModel->customFetchAll("UPDATE `employee` SET employee_status = 'active' WHERE emp_ID = $emp_ID;");
+            }
+            else{
+                $registerModel->customFetchAll("UPDATE `employee` SET employee_status = 'deactive' WHERE emp_ID = $emp_ID;");
+            }
             Application::$app->session->setFlash('success',"Account successfully deleted ");
             $response->redirect('/ctest/admin');
             return true;
@@ -367,7 +385,7 @@ class AdminController extends Controller{
             } 
             
             // add advertisement
-            if($advertisementModel->validate() && $advertisementModel->addAdvertisement()){
+            if($advertisementModel->validate() && $advertisementModel->save()){
                 Application::$app->session->setFlash('success',"Advertisement successfully added ");
                 Application::$app->response->redirect('/ctest/main-adds'); 
                 $this->setLayout("admin",['select'=>'Advertisement']);
@@ -390,7 +408,7 @@ class AdminController extends Controller{
 
     public function handleNotifications(Request $request,Response $response){
         $parameters=$request->getParameters();
-        $this->setLayout('admin',['select'=>"Notification"]);
+        $this->setLayout('admin',['select'=>""]);
         $notificationModel=new AdminNotification();
         
 
@@ -417,7 +435,7 @@ class AdminController extends Controller{
 
         return $this->render('administrator/view-notifications',[
             "notifications"=>$notifications,
-            "model"=>$notificationModel,
+            "model"=>$notificationModel
         ]);
     }
     //update channeling session information
@@ -425,6 +443,7 @@ class AdminController extends Controller{
         $this->setLayout('admin',['select'=>'Channelings Sessions']);
         $parameters=$request->getParameters();
         $channelingModel=new Channeling();
+        $opModel=new OpenedChanneling();
         $employeeModel=new Employee();
         $Employee=new Employee();
         $channelingModel=new Channeling();
@@ -437,12 +456,21 @@ class AdminController extends Controller{
         if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='opened_channeling'){
             if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='cancel'){
                 $channelingModel->cancelOpenedChanneling($parameters[2]['id']);
+                $oid=$opModel->fetchAssocAll(['opened_channeling_ID'=>$parameters[2]['id']])[0]['channeling_ID'];
+                $response->redirect("update-channeling?cmd=view&id=".$oid);
+                exit;
             }
             else if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='close'){
                 $channelingModel->closeOpenedChanneling($parameters[2]['id']);
+                $oid=$opModel->fetchAssocAll(['opened_channeling_ID'=>$parameters[2]['id']])[0]['channeling_ID'];
+                $response->redirect("update-channeling?cmd=view&id=".$oid);
+                exit;
             }
             else if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='open'){
-                $channelingModel->openOpenedChanneling($parameters[2]['id']);
+                $channelingModel->closeOpenedChanneling($parameters[2]['id']);
+                 $oid=$opModel->fetchAssocAll(['opened_channeling_ID'=>$parameters[2]['id']])[0]['channeling_ID'];
+                $response->redirect("update-channeling?cmd=view&id=".$oid);$channelingModel->openOpenedChanneling($parameters[2]['id']);
+                exit;
             }
             
             $response->redirect('update-channeling?cmd=view&id='.Application::$app->session->get('selected_channeling'));           
@@ -508,6 +536,36 @@ class AdminController extends Controller{
         
             
     }
+
+       
+    public function viewReports(){
+        $this->setLayout('admin',['select'=>'Reports']);
+
+        $EmployeeModel = new Employee();
+        $AppointmentModel = new Appointment();
+        $PaymentModel = new Payment();
+
+
+        // all doctors count
+        $doctorsCount = count($EmployeeModel->customFetchAll("SELECT * FROM `employee` WHERE role = 'doctor';"));
+        $employeesCount = count($EmployeeModel->customFetchAll("SELECT * FROM `employee` WHERE role != 'admin';"));
+        $patiyentsCount = count($AppointmentModel->customFetchAll("SELECT * FROM `appointment` WHERE status = 'used';"));
+        $thisMonthEarnings = $PaymentModel->earningValues('month');
+
+        $patients = $AppointmentModel->growthOfPatients();
+        $earnings = $PaymentModel->earningValues('year');
+        // var_dump($thisMonthEarnings['value'][0]['SUM(amount)']);exit;
+        return $this->render('administrator/admin-reports',[
+            'doctorsCount' => $doctorsCount,
+            'employeesCount' => $employeesCount,
+            'patientsCount' => $patiyentsCount,
+            'thisMonthEarnings' => $thisMonthEarnings['value'][0]['SUM(amount)'],
+            'valuesP' => $patients['values'],
+            'valuesE' => $earnings['value']
+        ]);
+    }
+
+
     public function test(){
         return $this->render('administrator/test');
     }

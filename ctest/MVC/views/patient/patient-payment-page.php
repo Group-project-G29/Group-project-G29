@@ -77,11 +77,18 @@ use app\models\Prescription;
    
     const btn2=document.getElementById('btn-2'); 
    //to payment gateway
-    btn2.addEventListener('click',()=>{
-        location.href="patient-payment?spec=payment-gateway"
-    })
+   if(btn2){
+        btn2.addEventListener('click',()=>{
+            location.href="patient-payment?spec=payment-gateway"
+        })
+   }
+    
+
     const btn1=document.getElementById('btn-1');
-    btn1.addEventListener('click',()=>{
+    if(btn1){
+         btn1.addEventListener('click',()=>{
         location.href="patient-payment?spec=medicine-order&cmd=complete&type=payon";
     })
+    }
+   
 </script>

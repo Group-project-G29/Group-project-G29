@@ -110,7 +110,6 @@ class DoctorController extends Controller{
         //if session variable is no there redirect to last seen patient
         
         
-        var_dump($parameters=$request->getParameters());
         $parameters=$request->getParameters();
         // if(!Application::$app->session->get('cur_patient') && $parameters['cmd']!='start' && $parameters['cmd']!='finish'){
             //     $response->redirect("channeling-assistance?cmd=start");
@@ -134,7 +133,6 @@ class DoctorController extends Controller{
         }
         $prescriptionModel=new Prescription();
         $labreportModel=new LabReport();
-        $labreports=$labreportModel->getAllLabReports(Application::$app->session->get('cur_patient'));
         //check if there is a patient no
         
     
@@ -192,6 +190,7 @@ class DoctorController extends Controller{
             $type=$appointmentMOdel->getappointmentType($patient,$id)[0]['type'];
             $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
             $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
+            $labreports=$labreportModel->getAllLabReports(Application::$app->session->get('cur_patient'));
             if($type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),
@@ -259,6 +258,7 @@ class DoctorController extends Controller{
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
             $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
+            $labreports=$labreportModel->getAllLabReports(Application::$app->session->get('cur_patient'));
             if($type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),
@@ -311,6 +311,7 @@ class DoctorController extends Controller{
             $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
             $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
             $alltests=$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'));
+            $labreports=$labreportModel->getAllLabReports(Application::$app->session->get('cur_patient'));
             if($appointment_type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),
@@ -362,6 +363,7 @@ class DoctorController extends Controller{
             $reports = $reportModel->getReports($appointment_detail[0]['patient_ID'],$doctor);
             $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
             $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
+            $labreports=$labreportModel->getAllLabReports(Application::$app->session->get('cur_patient'));
             if($appointment_type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),
@@ -417,6 +419,7 @@ class DoctorController extends Controller{
             $testvalue=$prechannelingtest->getAssistanceValue(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
             $weight=$prechannelingtest->getTestChanneling(1,Application::$app->session->get('cur_patient'));
             $alltests=$prechannelingtest->mainGetAllTestValues(Application::$app->session->get('cur_patient'));
+            $labreports=$labreportModel->getAllLabReports(Application::$app->session->get('cur_patient'));
             if($appointment_type=='consultation'){
                 return $this->render("doctor/channeling-assistance-patient",[
                     'labrequests'=>$labRequestModel->getLabTestRequests(),

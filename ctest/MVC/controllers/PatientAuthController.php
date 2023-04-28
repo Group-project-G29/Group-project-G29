@@ -4,6 +4,7 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\Controller;
 use app\core\Request;
+use app\models\LabTest;
 use app\models\User;
 use app\core\DbModel;
 use app\core\Response;
@@ -22,6 +23,7 @@ use app\models\MedicalHistory;
 use app\models\MedicalReport;
 use app\models\Medicine;
 use app\models\Order;
+use app\models\OTP;
 use app\models\Payment;
 use app\models\Prescription;
 use app\models\Referral;
@@ -31,7 +33,7 @@ use ReflectionFiber;
 class PatientAuthController extends Controller{
     public function login(Request $request,Response $response){
       
-        $this->setLayout('visitor-homepage');
+        $this->setLayout('visitor-homepage-landing');
         $PatientLoginForm=new PatientLoginForm();
 
 
@@ -52,7 +54,7 @@ class PatientAuthController extends Controller{
     }
     public function pedlogin(Request $request,Response $response){
       
-        $this->setLayout('visitor-homepage');
+        $this->setLayout('visitor-homepage-landing');
         $PatientLoginForm=new PatientLoginForm();
 
 
@@ -156,10 +158,55 @@ class PatientAuthController extends Controller{
             
         ]);
     }
+    public function getNIC(Request $request,Response $response){
+        $this->setLayout('auth');
+        $patient=new Patient();
+        if($request->isPost()){
+            
+            $patient->loadData($request->getBody());
+            $pat=$patient->fetchAssocAll(['nic'=>$patient->nic,'type'=>'adult']);
+          
+            if(!$pat){
+                $patient->customAddError('nic',"No Patient Exists with this NIC");
+                  return $this->render('patient/get-nic',[
+                     'patient'=>$patient
+                  ]);
+            }
+            else{
+                Application::$app->session->set('temp_user',$patient->patient_ID);
+                return $this->render('patient/set-otp');
+            }
+        }
+        return $this->render('patient/get-nic',[
+            'patient'=>$patient
+        ]);
+    }
+    public function OTP(Request $request,Response $response){
+        $parameters=$request->getParameters();
+        $this->setLayout('auth');
+        $OTP=new OTP();
+        if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='send'){
+          //create otp
+          if($OTP->canSend(Application::$app->session->get('temp_user'))){
+              $OTP->createOTP();
+          }
+            
+        }
+        if($request->isPost()){
+            if($OTP->checkOTP(Application::$app->session->get('temp_user'))){
+
+            }
+        }
+        return $this->render('patient/set-otp');
+
+
+    }
+    public function changePassword(){
+        
+    }
 
     public function channelingView(Request $request){
         $this->setLayout('visitor');
-        
         $parameters=$request->getParameters();
         $speciality=$parameters[0]['spec']??'';
         $ChannelingModel=new Channeling();
@@ -230,6 +277,7 @@ class PatientAuthController extends Controller{
         $parameters=$request->getParameters();
         $opened_channeling_id=$parameters[1]['id']??''; 
         $AppointmentModel=new Appointment();
+        $PaymentModel=new Payment();
         $appointment_id='';
         if(!$patient){
                 Application::$app->session->setFlash('success',"Login to set appointments");
@@ -264,9 +312,9 @@ class PatientAuthController extends Controller{
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
             $id=$AppointmentModel->customFetchAll("select opened_channeling_ID from appointment where appointment_ID=".$parameters[1]['id']);
             $AppointmentModel->deleteRecord(['Appointment_ID'=>$parameters[1]['id']]);
+            $PaymentModel->deleteRecord(['appointment_ID'=>$parameters[1]['id']]);
             Application::$app->session->setFlash('success',"Appointment successfully cancelled ");
-            $OpenedChannelingModel->decreasePatientNumber($id[0]['opened_channeling_ID']);
-             $OpenedChannelingModel->fixAppointmentNumbers($id[0]['opened_channeling_ID']);
+            $OpenedChannelingModel->increasePatientNumber($id[0]['opened_channeling_ID']);
             $response->redirect('/ctest/patient-all-appointment');
             return true;
         }
@@ -282,17 +330,19 @@ class PatientAuthController extends Controller{
             }
             if(isSet($parameters[2]['type']) && $parameters[2]['type']=='consultation'){
                 $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
-                $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
+                $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
+                $PaymentModel->createAppointmenPay(Application::$app->session->get('user'),'appointment',$AppointmentModel->getFee($appointment_id[0]['last_insert_id()']),$appointment_id[0]['last_insert_id()'],'pending');
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
             else if(isSet($parameters[2]['type']) && $parameters[2]['type']??''=='labtest'){
                 $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'labtest']);
-                $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
+                $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
             else{
                 $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
-                $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
+                $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
+                $PaymentModel->createAppointmenPay(Application::$app->session->get('user'),'appointment',$AppointmentModel->getFee($appointment_id[0]['last_insert_id()']),$appointment_id[0]['last_insert_id()'],'pending');
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
         }
@@ -687,18 +737,18 @@ class PatientAuthController extends Controller{
                 // $delivery->createPIN();
                 // $delivery->createPIN();
                 $cartModel=new Cart();
-                 //get the patient cart
-                 $user=$cartModel->getPatientCart(Application::$app->session->get('user'));
-                 //call the transfer function
-                 $cartModel->transferCartItem($user[0]['cart_ID'],$order->pickup_status,$delivery);
-                 var_dump("\nherehere");
-
-                 //redirect to patient dashboard
-                 Application::$app->response->redirect("/ctest/patient-dashboard?spec=orders");
-                 
-
+                //get the patient cart
+                $user=$cartModel->getPatientCart(Application::$app->session->get('user'));
+                //call the transfer function
+                $cartModel->transferCartItem($user[0]['cart_ID'],$order->pickup_status,$delivery);
+                
+                //redirect to patient dashboard
+                Application::$app->response->redirect("/ctest/patient-dashboard?spec=orders");
+                
+                
             }
         }
+
         $cart=$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID'];
         return $this->render("patient/patient-payment-page",[
             'prescriptions'=>$orderModel->fetchAssocAllByName(['cart_ID'=>$cart],'prescription'),
@@ -860,22 +910,21 @@ class PatientAuthController extends Controller{
     }
     
 
- 
+    public function contact_us(){
+        // $this->setLayout("patient",['select'=>'Payments']);
+        $this->setLayout('visitor-homepage');
+        return $this->render('patient/contact',[
+        ]);
+    }
 
-
-   
-
-
-
-   
-
-
-
-   
-
-
-
-   
-
+    public function labpage(){
+        // $this->setLayout("patient",['select'=>'Payments']);
+        $lab_test = new LabTest();
+        $tests = $lab_test->get_lab_tests();
+        $this->setLayout('patient-lab');
+        return $this->render('patient/lab-page',[
+            'tests' => $tests
+        ]);
+    } 
 
 }

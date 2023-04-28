@@ -1,6 +1,13 @@
 <?php 
     use app\core\Application;
+    use app\models\AdminNotification;
+    $notificationModel=new AdminNotification();
+
+    
+    $count = count($notificationModel->customFetchAll("SELECT * FROM `admin_notification` WHERE is_read = 1;"));
+
 ?>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,6 +33,13 @@
             <img src="./media/images/logo-1.png">
         </div>
         <div class="nav_row--top_user flex">
+            <a href="/ctest/admin-notification"><div class="noti-icon"><img src="./media/images/patient/notification bell.png" alt="Notification Icon"> </div></a>
+            <?php if($count) { ?>
+                <div class="msg-count"><?=$count?></div>
+            <?php } else { ?>
+                <div class="msg-count-0"></div>
+            <?php } ?>
+
             <div class="nav-box">
                         <div class="flex"> 
                             <?php echo Application::$app->session->get('userObject')->name ?>

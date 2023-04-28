@@ -40,6 +40,7 @@ class Advertisement extends DbModel{
  
     
     public function addAdvertisement(){
+        // var_dump($this,"jhgoljh");exit;
         return parent::save();
     }
  

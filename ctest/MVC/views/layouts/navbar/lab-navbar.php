@@ -8,7 +8,7 @@
     <!-- <title>
         PHP & MySql Blog Application with Admin
     </title> -->
-    <link rel="stylesheet" href="./media/css/style.css">
+    <!-- <link rel="stylesheet" href="./media/css/style.css"> -->
     <link rel="stylesheet" href="./media/css/lab-style.css">
     <!-- <link rel="stylesheet" href="./media/header-footer.css"> -->
     <link rel="stylesheet" href="https:unicons.iconscout.com/release/v4.0.0/css/line.css">

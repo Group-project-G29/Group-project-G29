@@ -4,6 +4,13 @@
 // var_dump($orders);
 // var_dump($order_types);
 // exit;
+// var_dump($order_details);    //done
+//     var_dump($online_orders);    //done
+//     var_dump($sf_orders);
+//     var_dump($sf_pres_med);
+//     var_dump($ep_orders);
+//     var_dump($ep_pres_med);
+//     exit;
 
 ?>
 
@@ -18,12 +25,11 @@
     </div>
 
 </div>
-   
+
 <div class="table-container">
 <table border="0">
     <tr>
         <th>Order ID</th>
-        <th>Order Type</th>
         <th>Name</th>
         <th>Contact</th>
         <th>Date</th>
@@ -35,7 +41,6 @@
             <?php if($order['processing_status']=='pickedup'): ?>  
                     <tr class="table-row" id=<?=$order['order_ID']?> >
                         <td><?=$order['order_ID']?></td>
-                        <td><?=$order_types[$key]?></td>
                         <td><?=$order['name']?></td> 
                         <td><?=$order['contact']?></td> 
                         <td><?=$order['created_date']?></td> 
@@ -44,7 +49,6 @@
             <?php elseif($order['processing_status']=='deleted'): ?> 
                     <tr class="table-row_red" id=<?=$order['order_ID']?> >
                         <td><?=$order['order_ID']?></td>
-                        <td><?=$order_types[$key]?></td>
                         <td><?=$order['name']?></td> 
                         <td><?=$order['contact']?></td> 
                         <td><?=$order['created_date']?></td> 

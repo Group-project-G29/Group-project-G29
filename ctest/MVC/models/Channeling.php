@@ -92,10 +92,10 @@ class Channeling extends DbModel{
         $frequency=$this->frequency." ".$this->frequency_type;
         $duration=$this->schedule_for." ".$this->schedule_type;
         $dates=$calendarModel->generateDays($this->start_date,date('l', strtotime($this->start_date)),$this->day,$duration,$frequency);
-    
+      
         $array=[];
         foreach($dates as $date){
-            $result=$this->timeCheckOverlap($date);
+           $result=$this->timeCheckOverlap($date);
             if(isset($result[1]) && !$result[0]){
                 $this->customAddError('time',"Time field is empty");
                 return ['required'];
@@ -107,12 +107,13 @@ class Channeling extends DbModel{
         }
 
         if($array){
-            if($array[0]==$array[count($array)-1]){
-                $this->customAddError('time',"Time overlap :".$array[0]['channeling_ID']." at ".$array[0]['time']);
+            var_dump($array[count($array)-1]['opened_channeling_ID']);
+            if($array[0]['channeling_ID']==$array[count($array)-1]['channeling_ID']){
+                $this->customAddError('time',"Time overlap :".$array[0]['channeling_ID']." at ".$array[0]['time'].(($array[0]['time']>='12:00')?'PM':'AM'));
                 return $array;
             }
             else{
-                $this->customAddError('time',"Time overlap :".$array[0]['channeling_ID']." at ".$array[0]['time']." and ".$array[1]['channeling_ID']." at ".$array[1]['time']);
+                $this->customAddError('time',"Time overlap :".$array[0]['channeling_ID']." at ".$array[0]['time'].(($array[0]['time']>='12:00')?'PM':'AM')." and ".$array[1]['channeling_ID']." at ".$array[1]['time'].(($array[0]['time']>='12:00')?'PM':'AM'));
                 return $array;
             }
 
@@ -192,7 +193,6 @@ class Channeling extends DbModel{
             foreach($channelings as $channeling){
                 foreach($dates as $date){
                     $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.room='$room' and  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and opened_channeling.channeling_date='".$date."' and channeling.channeling_ID=".$channeling['channeling_ID'].(($channelingModel->channeling_ID!='')?(" and channeling.channeling_ID<>".$channelingModel->channeling_ID):''));
-                    exit;
                     if($confilict_channelings){
                         foreach($confilict_channelings as $conflict){
                             $check_time=$channelingModel->time;

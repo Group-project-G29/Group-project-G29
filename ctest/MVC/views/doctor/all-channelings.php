@@ -23,13 +23,19 @@ use app\models\PreChannelingTest;
             <?php else: ?>
                 <div class=<?="'"."popup-channeling-setting popup_".$channeling['channeling_ID']." hide pops'"?>>
             <?php endif; ?>
+            <div class="popup-button-flex">
                 <?=$form->editableselect("test_".$channeling['channeling_ID'],"Select Pre-channeling Test",'tinput_'.$channeling['channeling_ID'],['weight'=>'weight','height'=>'height','blood pressure'=>'blood pressure']); ?>
-                <?= $component->button('btn','','Add','add-btn',$channeling['channeling_ID'] ); ?>
-                <div>
+                <?= $component->button('btn','','Add','add-btn button--class-0',$channeling['channeling_ID'] ); ?>
+            </div>
+                <div >
                     <?php $tests=$preModel->getTestsByOp($channeling['channeling_ID']); ?>
+                    <div class="test-names">
                     <?php foreach($tests as $test):?>
-                        <?php echo '<br>'.$test['name']; ?>
+                        <div class="popup-test">
+                            <?php echo '<br>'.$test['name']; ?>
+                        </div>
                     <?php endforeach;?>
+                    </div>
                 </div>
             </div>
             <div class="doctor-channeling-tile" id=<?="'".$channeling['channeling_ID']."'" ?>>

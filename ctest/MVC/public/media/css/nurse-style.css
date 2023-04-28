@@ -209,11 +209,14 @@
     
 }
 
-.number-pad{
-    width: 80px!important;
-}
-.number-pad div{
-    width: 80px!important;
+.number-item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2vw;
+    height: 7vh;
+    background-color: var(--clr-dark);
+    color: var(--clr-white);
 }
 
 
@@ -221,6 +224,11 @@
 
 
 /* Channeling Allocations */
+
+.sub-container{
+    width: 80vw!important;
+    margin-left: 1vw!important;
+}
 
 .allocation-days{
     margin-bottom: 8vh;
@@ -265,7 +273,7 @@
     background-color: rgb(204, 252, 237);
 }
 .red{
-    background-color: rgb(253, 200, 200);
+    background-color: rgb(197, 194, 194);
 }
 .yellow{
     background-color: rgb(248, 248, 185);

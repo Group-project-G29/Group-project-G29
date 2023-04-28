@@ -6,4 +6,7 @@ use app\core\component\ScatterChart;
     echo $scatter;
     $popup=new PopUp("Is it true \?","popup-value","pop--class-0","/ctest/");
 
+
+    
+
 ?>
