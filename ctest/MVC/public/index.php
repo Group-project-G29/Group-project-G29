@@ -29,6 +29,7 @@ $app =new Application(dirname(__DIR__));
 
 $app->router->get('/ctest/contact-us',[PatientAuthController::class,'contact_us']);
 $app->router->get('/ctest/patient-lab-main',[PatientAuthController::class,'labPage']);
+$app->router->post('/ctest/patient-lab-main',[PatientAuthController::class,'labPage']);
 
 
 
