@@ -234,7 +234,21 @@ class ReceptionistController extends Controller
         ]);
     }
 
+    public function todayChannelings(Request $request)
+    {
+        // echo 'test';
+        $channelingModel = new Channeling();
+        $parameters = $request->getParameters();
 
+        $this->setLayout("receptionist", ['select' => 'Today Channelings']);
+        $channelings = $channelingModel->customFetchAll("SELECT * from employee  inner join channeling on employee.nic = channeling.doctor inner 
+join doctor  on channeling.doctor=doctor.nic 
+left join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.start_date=CURRENT_DATE ");
+
+        return $this->render('receptionist/receptionist-today-channelings', [
+            'channelings' => $channelings
+        ]);
+    }
 
 
     // all session detail
@@ -400,19 +414,5 @@ class ReceptionistController extends Controller
 
         return $this->render('receptionist/receptionist-channeling-payment', []);
     }
-    public function todayChannelings(Request $request)
-    {
-        // echo 'test';
-        $channelingModel = new Channeling();
-        $parameters = $request->getParameters();
-
-        $this->setLayout("receptionist", ['select' => 'Today Channelings']);
-        $channelings = $channelingModel->customFetchAll("SELECT * from employee  inner join channeling on employee.nic = channeling.doctor inner 
-join doctor  on channeling.doctor=doctor.nic 
-left join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.start_date=CURRENT_DATE ");
-
-        return $this->render('receptionist/receptionist-today-channelings', [
-            'channelings' => $channelings
-        ]);
-    }
+   
 }

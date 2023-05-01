@@ -336,8 +336,7 @@ class LabController extends Controller
         $reportmodel = new LabReport();
         $parameters = $request->getParameters();
         $this->setLayout("lab", ['select' => 'Lab Reports']);
-        $reports = $reportmodel->customFetchAll("SELECT * from lab_report_content_allocation join lab_report on lab_report_content_allocation.report_ID=lab_report.report_ID
-        join lab_report_content on lab_report_content.content_ID=lab_report_content_allocation.content_ID where lab_report_content_allocation.report_ID=" . $parameters[0]['id']);
+        $reports = $reportmodel->customFetchAll("SELECT * from lab_report_content_allocation join lab_report on lab_report_content_allocation.report_ID=lab_report.report_ID join lab_report_content on lab_report_content.content_ID=lab_report_content_allocation.content_ID where lab_report_content_allocation.report_ID=" . $parameters[0]['id']);
         // $requst_reports = $reportmodel->get_report_by_ID($parameters[0]['id']);
         // $reportmodel->labreporttoPDF($requst_reports[0]['report_ID']);
         echo $reportmodel->labreporttoPDF($reports[0]['report_ID']);

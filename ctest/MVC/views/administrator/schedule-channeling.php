@@ -93,7 +93,7 @@ $form=Form::begin('','post');
                 <div>
                     <div >
                         <h3>Assign Nurses</h3>
-                        <?php if($nurseOverlaps):?>
+                        <?php if(isset($nurseOverlaps)):?>
                                 <div class="nurse-error-container">
                                 <div>
                                     <img src="media/images/common/delete.png" class="delete-btn" id="room">

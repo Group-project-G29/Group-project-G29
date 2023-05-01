@@ -100,7 +100,7 @@ use app\core\PDF;
         } 
         public function create_new_report($fee, $type, $label, $template_ID, $location, $request_ID){
             //get patient and doctor from request table and send data to lab_report_alloction $this->customFetchAll("select last_insert_id()"[0]['last_insert_id']
-            $this->customFetchAll("INSERT INTO lab_report ( fee, upload_date_time, type,label,template_ID,location,request_ID) VALUES ( $fee,current_timestamp(), 'e-report', '$label', $template_ID, '$location', $request_ID); ");
+ /*change*/ $this->customFetchAll("INSERT INTO lab_report ( fee, type,label,template_ID,location,request_ID) VALUES ( $fee, 'e-report', '$label', $template_ID, '$location', $request_ID); ");
             return $this->customFetchAll("select last_insert_id()")[0]['last_insert_id()'];
         }
         public function payment($patient_ID,$amount,$generated_timestamp, $type,$name,$payement_status,$order_ID,$appointment_ID){

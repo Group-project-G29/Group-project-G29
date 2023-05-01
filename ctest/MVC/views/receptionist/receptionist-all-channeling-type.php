@@ -24,7 +24,7 @@ $component = new Component();
     <?php foreach ($channelings as $key => $channeling) : ?>
         
         <div class="card-0" style="width:30vh;height:35vh" id=<?= $channeling['emp_ID'] ?>>
-            <div class="image" style="margin-left: 35%;">
+            <div class="image" >
                 <img src="./media/images/emp-profile-pictures/<?= $channeling['img'] ?> ">
             </div>
             <div class="card-header-0" style="padding-bottom: 5vh;">

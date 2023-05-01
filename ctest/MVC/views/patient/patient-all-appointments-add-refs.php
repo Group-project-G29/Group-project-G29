@@ -8,7 +8,7 @@ use app\models\Appointment;
     echo $popup;
     $appointmentModel=new Appointment();
 ?>
-<div class="background">
+<div class="background" style="margin-top:-3vh; margin-left:-34.8vh; width:120vw">
 
 </div>
 <div class="referral-popup" id="popup-main">

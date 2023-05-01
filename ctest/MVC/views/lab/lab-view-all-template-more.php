@@ -14,8 +14,8 @@ use app\core\Application;
 <div class="semi-header-container-1">
     <div class="semi-field-container" style="margin-top:5vw">
         <tr>
-            <td><b>Title   :</b><?= $detail["title"] ?></td><br>
-            <td><b>Subtitle   :</b><?= $detail["subtitle"] ?></td><br><br>
+             <td><b><?= $detail["title"] ?></b></td><br>
+            <td><?= $detail["subtitle"] ?></td><br><br>
         </tr>
     </div>
 <div class="table-container">

@@ -70,7 +70,7 @@
 
             </td>
             <td>
-                 <?php echo $component->button('view', ' ', 'View All Appointments', 'button--class-00', $patient['patient_ID']) ?>
+                 <?php echo $component->button('view', ' ', 'View All Appointments', 'button--class-00 width ', $patient['patient_ID']) ?>
 
             </td>
         </tr>

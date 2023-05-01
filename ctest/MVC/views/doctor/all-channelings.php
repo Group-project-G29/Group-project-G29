@@ -3,12 +3,17 @@
 use app\core\Application;
 use app\core\component\Component;
 use app\core\form\Form;
+use app\models\AdminNotification;
+use app\models\Channeling;
+use app\models\OpenedChanneling;
 use app\models\PreChanneilngTestsValue;
 use app\models\PreChannelingTest;
 
     $form=new Form();
     $component=new Component();
     $preModel=new PreChanneilngTestsValue();
+    $openeChanneling=new OpenedChanneling();
+    $adminN=new AdminNotification();
     
 ?>
 
@@ -29,12 +34,38 @@ use app\models\PreChannelingTest;
             </div>
                 <div >
                     <?php $tests=$preModel->getTestsByOp($channeling['channeling_ID']); ?>
+                    <?php $channelings=$openeChanneling->getOpenedChannelings($channeling['channeling_ID']); ?>
                     <div class="test-names">
                     <?php foreach($tests as $test):?>
                         <div class="popup-test">
                             <?php echo '<br>'.$test['name']; ?>
                         </div>
                     <?php endforeach;?>
+        
+                    <div class="popup-channelings">
+                    <h3>Currently Opened Channelings</h3>
+                    <?php foreach($channelings as $ch):?>
+                           <?php $channelingModel=new  Channeling() ?>
+                            <?php $time=$channelingModel->fetchAssocAll(['channeling_ID'=>$ch['channeling_ID']])[0]['time']; ?>
+                            <div>
+                                <?php echo '<br>'."Channeling On ".$ch['channeling_date']." at time ".substr($time,0,5).(($time>='12:00')?'PM':'AM'); ?>
+                                <?php if($ch['status']=='closed' || $ch['status']=='cancelled'): ?>
+                                    <?=$component->button('btn-op','','Request to Channeling','open',$ch['opened_channeling_ID']); ?>
+                                <?php else:?>
+                                    
+                                    <?php if($adminN->isThereNoti($ch['opened_channeling_ID'])!='close'): ?>
+                                    Cancellation Request has been sent
+                                    <?=$component->button('btn-close','','Request to Close Channeling','close',$ch['opened_channeling_ID']); ?>
+                                    <?php endif;?>
+                                    <?php if($adminN->isThereNoti($ch['opened_channeling_ID'])!='cancel'): ?>
+                                        <?=$component->button('btn-cancel','','Request to Cancel Channeling','cancel',$ch['opened_channeling_ID']); ?>
+                                        Closing Request had been sent
+                                    <?php endif;?>
+            
+                                <?php endif;?>        
+                            </div>
+                            <?php endforeach;?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -100,6 +131,24 @@ use app\models\PreChannelingTest;
             pops.forEach((el)=>{
                     el.classList.add('hide');
              })
+        })
+        closes=document.querySelectorAll('.close');
+        cancels=document.querySelectorAll('.cancel');
+        opens=document.querySelectorAll('.open');
+        closes.forEach((el)=>{
+            el.addEventListener('click',()=>{
+                location.href="notification?cmd=close&id="+el.id;
+            })
+        })
+        opens.forEach((el)=>{
+            el.addEventListener('click',()=>{
+                location.href="notification?cmd=open&id="+el.id;
+            })
+        })
+        cancels.forEach((el)=>{
+            el.addEventListener('click',()=>{
+                location.href="notification?cmd=cancel&id="+el.id;
+            })
         })
          
 

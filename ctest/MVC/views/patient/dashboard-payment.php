@@ -16,7 +16,8 @@ use app\models\Payment;
         <table border='0' class="payment-table">
             <tr class="payment-lslip-header"><th class="width-10">Payment</th><th class="width-10">Created Timestamp</th><th>Price</th><th class="width-10">Status</th></tr>
             <?php foreach($payments as $payment):?>
-                <?php 
+                <?php
+
                     switch($payment['type']){
                         case 'order':
                             $name='Medicine Order-'.$payment['order_ID'];
@@ -35,8 +36,8 @@ use app\models\Payment;
                     
                 ?>
                 <tr class="payment-lslip-tr"><td class="width-10" align='left'><?="$name"?></td><td class="width-10" align='center'><?=$payment['generated_timestamp']?></td><td class="width-10" align='center'><?="LKR ".$payment['amount'].".00"?></td><td class="width-10" align='center'><?=$payment['payment_status'] ?></td></tr>
-                <?php endforeach;?>
                 <?php $total=$total+$payment['amount'] ?>
+                <?php endforeach;?>
             </table>
         </div>
         <div class="total-payment">

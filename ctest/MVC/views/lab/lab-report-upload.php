@@ -25,10 +25,7 @@ $component = new Component();
         <div class="reg-body-spec fields" style="padding-left:8vw">
         <div class="inputbox">
             <label for="image"> </label><br>
-            <div>
-              
-                <?php var_dump($reportmodel)?>
-            </div>
+           
             <input type='file' name="location"><br>
             </div>
         </div>

@@ -12,12 +12,12 @@ class Prescription extends DbModel{
     public ?string $order_ID=null;
     public ?string $type=null;
     public ?string $location=null;
-    public ?string $note=null;
+    public ?string $note='';
     public ?string $last_processed_timestamp=null;
     public ?string $cart_ID=null;
     public ?string $channeling_ID=null;
-   
-  
+    public ?int $refills=1;
+    
  
     public function rules(): array{
         return [];
@@ -40,12 +40,12 @@ class Prescription extends DbModel{
 
     public function tableRecords(): array{
 
-        return ['prescription'=> ['doctor','patient','order_ID','type','location','note','last_processed_timestamp','cart_ID','channeling_ID']];
+        return ['prescription'=> ['doctor','patient','order_ID','type','location','note','last_processed_timestamp','cart_ID','channeling_ID','refills']];
     }
 
     public function attributes(): array{
 
-        return  ['doctor','patient','order_ID','type','location','note','last_processed_timestamp','cart_ID','channeling_ID'];
+        return  ['doctor','patient','order_ID','type','location','note','last_processed_timestamp','cart_ID','channeling_ID','refills'];
 
     }
     
@@ -99,7 +99,7 @@ class Prescription extends DbModel{
         if(!$result)return false;
         else return $result[0]['prescription_ID'];
     }
-
+ 
     //create new prescription for a patient
     public function createNewPrescription($patientID){
         $prescritpion=new Prescription();
@@ -123,6 +123,9 @@ class Prescription extends DbModel{
     public function addPrescriptionMedicine($patientID,$channelingID){
         $medicineModel=new Medicine();
         $prescription=$this->isTherePrescription($patientID,$channelingID);
+        $note=$_POST['note'];
+        $refills=$_POST['refills'];
+        $this->customFetchAll("update prescription set note='$note',refills=$refills where prescription_ID=".$prescription);
         if(!$prescription){
             $prescription=$this->createNewPrescription($patientID);
         }
@@ -135,17 +138,19 @@ class Prescription extends DbModel{
             if($dispense_count=='')$dispense_count=null;
             $amount=explode(' ',$_POST['amount'])[0];
             $frequency=$_POST['frequency'];
+        
         }
         else{
-            return false;
+            return [$note,$refills];       
         }
         $med_ID=$medicineModel->getMedicineID($name,$strength);
         if($this->alreadyIn($prescription,$med_ID)){
             $this->customFetchAll("update prescription_medicine set med_amount=$amount,dispense_type=$dispense_type,dispense_count='$dispense_count',frequency='$frequency' where med_ID=$med_ID and prescription_ID=$prescription");
-            return $prescription;   
+            return [$note,$refills];   
         }
         $this->customFetchAll("insert into prescription_medicine (med_ID,prescription_ID,med_amount,dispense_type,dispense_count,frequency) values('$med_ID','$prescription','$amount',$dispense_type,$dispense_count,'$frequency') ");
-        return $prescription;
+        return [$note,$refills];   
+
     }
     
     public function isInCart($pres){
@@ -201,7 +206,8 @@ class Prescription extends DbModel{
             }
         }
     }
-
+    //return total price of a E-prescription
+    //example: getPrice(70) will return int(1234)
     public function getPrice($presID){
         $medicineModel=new Medicine();
         $total=0;
@@ -250,13 +256,81 @@ class Prescription extends DbModel{
                     break;
             }
             $detmed=$medicineModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0];
-            if($type=='QWK'){
+            
+            if($frequency=='QWK'){
                 $total=$total+($medicine['med_amount']*$detmed['unit_price']*$qwk);
+                var_dump("med-".$total);
             }
             else{
                 $total=$total+($medicine['med_amount']*$detmed['unit_price']*$days*$freq);
 
             }
+        }
+        return $total;
+        
+
+    }
+    //return total amount units of each medicine in a E-prescription
+    //example : getAmount(70) will return array(['12'=>12,'23'=>24]) where ['med_ID'=>int(amount)]
+    public function getAmount($presID){
+        $medicineModel=new Medicine();
+        $total=0;
+        $prescription=$this->fetchAssocAll(['prescription_ID'=>$presID]);
+        if($prescription[0]['type']!='E-prescription'){
+            return '';
+        }
+        $medicines=$this->fetchAssocAllByName(['prescription_ID'=>$presID],'prescription_medicine');
+        $array=[];
+        foreach($medicines as $medicine){
+            $frequency=$medicine['frequency'];
+            $type=$medicine['dispense_type'];
+            $freq=1;
+            $days=1;
+            switch($frequency){
+                case 'frequency1':
+                    $freq=1;
+                    break;
+                case 'Daily':
+                    $freq=1;
+                    break;
+                case 'BID':
+                    $freq=2;
+                    break;
+                case 'TID':
+                    $freq=3;
+                    break;
+                case 'QID':
+                    $freq=4;
+                    break;
+                case 'QHS':
+                    $freq=1;
+                    break;
+            }
+            switch($type){
+                case 'days':
+                    $days=1;
+                    $qwk=1;
+                    break;
+                case 'week':
+                    $days=7;
+                    $qwk=$medicine['dispense_count'];
+                    break;
+                case 'months':
+                    $days=30;
+                    $qwk=4*$medicine['dispense_count'];
+                    break;
+            }
+            $detmed=$medicineModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0];
+            
+            if($frequency=='QWK'){
+                $total=$total+($medicine['med_amount']*$qwk);
+               
+            }
+            else{
+                $total=$total+($medicine['med_amount']*$days*$freq);
+
+            }
+            $array[$medicine['med_ID']]=$total;
         }
         return $total;
         

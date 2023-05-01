@@ -69,8 +69,8 @@ use app\core\DbModel;
         
 // functions
 
-        public function get_unfinished_deliveries( $emp_ID ) {
-            return $this->customFetchAll("SELECT * FROM delivery INNER JOIN _order ON delivery.delivery_ID=_order.delivery_ID WHERE delivery.completed_date IS NULL AND _order.processing_status='packed' AND delivery.delivery_rider = $emp_ID");
+      public function get_unfinished_deliveries( $emp_ID ) {
+            return $this->customFetchAll("SELECT * FROM delivery INNER JOIN _order ON delivery.delivery_ID=_order.delivery_ID WHERE delivery.completed_date IS NULL AND delivery.delivery_rider = $emp_ID");
         }
 
         public function get_finished_deliveries( $emp_ID ) {
@@ -102,12 +102,15 @@ use app\core\DbModel;
         }
 
         public function get_null_rider_deliveries() {
-            return $this->customFetchAll("SELECT * FROM delivery WHERE delivery_rider IS NULL");
+            //completed date time
+            return $this->customFetchAll("SELECT * FROM delivery INNER JOIN _order On _order.delivery_ID=delivery.delivery_ID WHERE delivery.delivery_rider IS NULL AND _order.processing_status='packed';");
+            // return $this->customFetchAll("SELECT * FROM delivery WHERE delivery_rider IS NULL");
         }
 
         public function get_nearby_deliveries( $postal_code ) {
-            return $this->customFetchAll("SELECT * FROM delivery WHERE delivery_rider IS NULL AND postal_code BETWEEN $postal_code-10 AND $postal_code+10");
+            return $this->customFetchAll("SELECT * FROM delivery INNER JOIN _order WHERE delivery.delivery_rider IS NULL AND _order.processing_status='packed' AND delivery.postal_code BETWEEN $postal_code-10 AND $postal_code+10");
         }
+
 
 
     }

@@ -170,7 +170,7 @@
     flex-direction: row;
     justify-content: space-around;
 
-    margin-left: -15vw;
+    margin-left: -7.5vw;
     width: 100vw;
  }
 
@@ -466,6 +466,11 @@
     padding: 2vw;
     background-color: var(--clr-white);
 }
+.test-names{
+    display: flex;
+    flex-direction: column;
+    gap:5vh;
+}
 /* referral styles */
 .labreport-popup{
     position: fixed;
@@ -710,15 +715,13 @@
 
 }
 .medicine-table table{
-    border-collapse: separate;
-    border-spacing:0 2vh;
-    margin-left: -15vw;
+    margin-left: -16vw;
 }
 .medicine-table td{
     border-bottom: 1px solid gainsboro;
    text-align: center;
   vertical-align: middle;
-    min-width: 23.5vw;
+    min-width: 18.5vw;
     
 }
 .medicine-item{
@@ -733,4 +736,55 @@
     display: flex;
     align-items: center;
     gap:3vw;
+}
+.edse{
+    color: red;
+    cursor:zoom-in;
+}
+
+.refills [type='number']{
+    width:5vw;
+}
+.refill-bg{
+    background-color: white;
+    padding:0.5vh;
+}
+.sub a{
+ text-decoration: none;
+}
+
+/* update page */
+.container{
+    display: flex;
+    margin-top: 2vh;
+    justify-content: center;
+}
+
+.detail-container-left{
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(213, 237, 243);
+    margin-right: 1vw;
+}
+.detail-container-left img{
+    width: 10vw;
+    height: 10vw;
+    margin: 0 0 5vh 0;
+    border-radius: 50%;
+}
+
+.detail-container-right{
+    line-height: 5vh;
+    font-size: 1.1rem;
+    background-color: rgb(213, 237, 243);
+    padding: 6vh 6vw;
+}
+.data-row{
+    display: flex;
+}
+.data-row-left{
+    width: 10vw;
 }

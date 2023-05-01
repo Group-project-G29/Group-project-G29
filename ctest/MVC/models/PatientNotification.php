@@ -87,6 +87,11 @@ class PatientNotification extends DbModel{
     public function removeNotifications ( $notificationID ) {
         return $this->customFetchAll("DELETE FROM patient_notification WHERE noti_ID = $notificationID");
     }
+    public function getNotifcationCount(){
+        $result=$this->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user'),'is_read'=>0]);
+        if(!$result) return 0;
+        else return count($result);
+    }
     
 }   
 

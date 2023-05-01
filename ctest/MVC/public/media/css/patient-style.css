@@ -92,19 +92,27 @@
 }
 
 .homepage-main-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:7vh;
     position: absolute;
     z-index: 100;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
     padding-top: 7vh;
-    gap:7vw;
     background-color: rgba(255, 255, 255, 0.98);
     width: 100vw;
     height:70vh;
     margin-top: 47.5vh;
-   transition:transform 1.2s ease-out;
-  
+    transition:transform 1.2s ease-out;
+    
+}
+.homepage-main-container-sub{
+    display: flex;
+    width: 100vw;
+    flex-direction: row;
+    justify-content: center;
+    gap:7vw;
+
 }
 .pharmacy-main-container{
     position: absolute;
@@ -135,6 +143,7 @@
  }
 .prescription-popup{
     z-index: 100;
+    padding-block:5vh;
     position: fixed;
     left: 30vw;
     top:30vh;
@@ -266,8 +275,10 @@
 }
 /* notification bell */
 .bell-container img{
-    height:4vh;
+    height:4.5vh;
     width: 2.5vw;
+    margin-top: 5vh;
+    margin-left:38vw;
 } 
 /* styles for channeling doctor list on speciality */
 
@@ -765,8 +776,8 @@
 .track-order-status{
     display:flex;
     flex-direction: row;
-    gap:2vw;
-    align-items: center;
+    flex-wrap: wrap;
+    gap:1vw;
 }
 .track-order-status img{
     width:7vw;
@@ -805,8 +816,7 @@
     padding-top: 4vh;
     align-items: center;
     gap:7vh;
-    border-radius: 20px;
-    
+    border-radius: 20px; 
     width: 35vw;
     min-height:75vh;
 }
@@ -1123,4 +1133,84 @@
 
 .hide {
     display: none;
+}
+
+.backgroundp{
+    background-color:rgba(0,0,0,.75);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;    
+}
+.flex-gap{
+    display:flex;
+    flex-direction: column;
+    gap:5vh;
+
+}
+.blue-box{
+    background-color: var(--clr-dark);
+    color: white;
+    font-size:28;
+    
+}
+.recepient-information td{
+    font-size:19;
+    width:12vw;
+    height:3vh;
+}
+
+.lab-main{
+    background-image:url('images/labmain.jpg');
+    background-size: cover;
+    width:100vw;
+    height:100vh;
+    margin-top:-10vh;
+}
+
+.search-medicine{
+    position: relative;
+    top:20vh;
+    background-color: white;
+    border-radius: 10px;
+    width:25vw;
+    height:25vh;
+    padding:3vh;
+    margin-left: 70vw;
+    
+}
+.lab-test-search{
+    display: flex;
+    align-items: center;
+    gap:1vw;
+}
+.noti-counter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    height:23px;
+    width:23px;
+    font-size:13;
+    color: white;
+    border-radius: 100%;
+    position:relative;
+    top:-2vh;
+    left:39.5vw;
+}
+.noti-text{
+    background-color: white;
+    border-radius:10px;
+    min-height:15vh;
+    max-width:30vw;
+    padding:20px;
+    position: relative;
+    left:10vw;
+    top:1,5vh;
+}
+
+.noti-container{
+    position: absolute;
+    top: -3vh;
+    right:14vw;
 }

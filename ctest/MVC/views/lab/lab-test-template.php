@@ -20,8 +20,8 @@ $contentM = new TemplateContent();
 <div class="semi-header-container-1">
     <div class="semi-field-container">
         <tr>
-            <td><b>Title   :</b><?= $temp_title_sub["title"] ?></td><br>
-            <td><b>Subtitle   :</b><?= $temp_title_sub["subtitle"] ?></td><br><br>
+            <td><b><?= $temp_title_sub["title"] ?></b></td><br>
+            <td><?= $temp_title_sub["subtitle"] ?></td><br><br>
         </tr>
     </div>
     <div class="field-container" style="margin-left:5vw;margin-top:1vw">

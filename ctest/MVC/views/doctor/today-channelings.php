@@ -9,9 +9,9 @@
                 $channeling=$channeling_model->findOne(['channeling_ID'=>$value['channeling_ID']]);
                 $day="";
                 $appointmentModel=new Appointment();
-                if(($value['channeling_date']==Date('Y-m-d') && ($value['status']=='Opened' || $value['status']=='started')) || $value['opened_channeling_ID']==41){
+                if(($value['channeling_date']==Date('Y-m-d') && ($value['status']=='Opened' || $value['status']=='started')) || $value['opened_channeling_ID']==190){
                 echo "<div class='today_channeling_tiles' id=".$value['opened_channeling_ID'].">
-                        <div class='grid".rand(1,4)." font-32'>".$channeling->time." ".((($channeling->time)>='12.00')?'PM':'AM')."</div>
+                        <div class='grid".rand(1,4)." font-32'>".substr($channeling->time,0,5)." ".((($channeling->time)>='12.00')?'PM':'AM')."</div>
                         <div class='today-tile-content'><h3>".$channeling->speciality." channeling</h3>
                                                         <h4>Room :".$channeling->room."</h4>
                                                         <h4>Appointments :".$appointmentModel->getAppointmentCount($value['opened_channeling_ID'])."</h4>

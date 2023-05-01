@@ -54,7 +54,9 @@ $component=new Component();
         <?php endforeach; ?>
     <?php else: ?>
         <div class="empty-container">
-            Empty
+            
+            <h3>Looks like <br>You Have No Appointment</h3>
+            <img src="media/images/common/empty.jpg">
         </div>
         <?php endif; ?>
         <?php 

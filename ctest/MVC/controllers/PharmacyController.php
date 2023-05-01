@@ -294,7 +294,7 @@ class PharmacyController extends Controller{
         foreach ($ep_pres_med as $ep_pres_separate){
             foreach ($ep_pres_separate as $ep_pres_med_separate){
                 if($ep_pres_med_separate['order_amount']<=$ep_pres_med_separate['available_amount']){
-                    $reduce_med_amount = $medicineModel->reduceMedicine($sf_pres_med_separate['med_ID'],$sf_pres_med_separate['order_amount']);
+                    $reduce_med_amount = $medicineModel->reduceMedicine($ep_pres_med_separate['med_ID'],$ep_pres_med_separate['order_amount']);
                 }
             }
         }
@@ -305,7 +305,7 @@ class PharmacyController extends Controller{
         // var_dump($ep_pres_med);
         // var_dump($sf_orders);
         // var_dump($ep_orders);
-        exit;
+  
 
         return $this->render('pharmacy/pharmacy-view-processing-order',[
             'order_details'=>$order_details,
@@ -456,7 +456,6 @@ class PharmacyController extends Controller{
         $parameters=$request->getParameters();
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
-        $order_type = $orderModel->getOrderType($parameters[0]['id']);
 
         // if ( $order_type='Online Order' || $order_type='E-prescription' ) {
         $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'pending');
@@ -528,14 +527,14 @@ class PharmacyController extends Controller{
         $orderModel=new Order();
         $orders=$orderModel->get_packed_orders();
         
-        $order_types = array();
-        foreach ($orders as $key=>$order){
-            $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
-        }
+        // $order_types = array();
+        // foreach ($orders as $key=>$order){
+        //     $order_types[$key] = $orderModel->getOrderType($order['order_ID']);
+        // }
         return $this->render('pharmacy/pharmacy-orders-delivering',[
             'orders'=>$orders,
-            'model'=>$orderModel,
-            'order_types'=>$order_types
+            'model'=>$orderModel
+            
         ]);
     }
 

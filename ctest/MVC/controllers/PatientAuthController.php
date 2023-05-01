@@ -908,7 +908,7 @@ class PatientAuthController extends Controller{
         }
         
     }
-    
+
 
     public function contact_us(){
         // $this->setLayout("patient",['select'=>'Payments']);
@@ -917,13 +917,22 @@ class PatientAuthController extends Controller{
         ]);
     }
 
-    public function labpage(){
+    public function labpage(Request $request,Response $response){
         // $this->setLayout("patient",['select'=>'Payments']);
+        $this->setLayout('patient-lab');
         $lab_test = new LabTest();
         $tests = $lab_test->get_lab_tests();
-        $this->setLayout('patient-lab');
+        if($request->isPost()){
+            $lab_test->loadData($request->getBody());
+            $sel=$lab_test->fetchAssocAll(['name'=>$lab_test->name]);
+            return $this->render('patient/lab-page',[
+                'tests' => $tests,
+                'seltest'=>$sel
+         ]);
+        }
         return $this->render('patient/lab-page',[
-            'tests' => $tests
+            'tests' => $tests,
+            'seltest'=>''
         ]);
     } 
 

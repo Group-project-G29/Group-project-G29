@@ -40,12 +40,18 @@ use app\core\form\Form;
     
     <div class="prescription-popup hide" id="popup-main">
         <div class="prescription-popup-wrapper">
-            <h3 class="fs-50">Add prescriptions here. Prescrition should be a valid one or else it would be rejected.</h3>
-            <h3>Make sure to capture any authentication detail on the Prescription when uploading prescription.</h3>
-            <?php $form=Form::begin("patient-pharmacy?spec=prescription&cmd=add",'post');?>
-            <input type='file' name='prescription[]' multiple/> 
-            <?=$component->button("Done","submit","Done","button--class-0",);?>
-            <?php $form=Form::end();?>
+            <div class="flex-gap">
+                <div>
+                    <h3>Add prescriptions here. Prescrition should be a valid one or else it would be rejected.</h3>
+                </div>
+                <div>
+                    <?php $form=Form::begin("patient-pharmacy?spec=prescription&cmd=add",'post');?>
+                    <input type='file' name='prescription[]' multiple/> 
+                    <?=$component->button("Done","submit","Done","button--class-0",);?>
+                    <h3 class="fs-50">Make sure to capture any authentication detail on the Prescription when uploading prescription.</h3>
+                    <?php $form=Form::end();?>
+                </div>
+            </div>
         </div>        
     </div>
     <section class="pharmacy-main-container">
@@ -129,12 +135,12 @@ function showSlides(){
     const bg=document.querySelector(".bg");
     const trackOrderBtn=e('track-order');
     trackOrderBtn.addEventListener('click',()=>{
-        location.href="patient-pharmacy?spec=order-main";
+        location.href="patient-dashboard?spec=orders";
     })
     const uploadPres=e('upload-prescription');
     const popUp=e('.prescription-popup','class');
     uploadPres.addEventListener('click',()=>{
-        bg.classList.add("background");
+        bg.classList.add("backgroundp");
         popUp.classList.remove('hide');
     })
     
