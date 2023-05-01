@@ -20,7 +20,7 @@ class DeliveryController extends Controller{
     
     //view my deliveries
     public function viewMyDeliveries(){
-        $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
+        $this->setLayout("delivery-rider",['select'=>'My Deliveries']);
         $deliveryModel=new Delivery();
         $delivery=$deliveryModel->get_unfinished_deliveries(Application::$app->session->get('userObject')->emp_ID);
         // var_dump($delivery);
@@ -34,7 +34,7 @@ class DeliveryController extends Controller{
     //view details of a selected delivery
     public function viewDeliveryDetails(Request $request,Response $response){
         $parameters=$request->getParameters();
-        $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
+        $this->setLayout("delivery-rider",['select'=>'My Deliveries']);
         $deliveryModel=new Delivery();
         $delivery=$deliveryModel->view_delivery_details($parameters[0]['id']); //pass id
         return $this->render('delivery/delivery-view-delivery' ,[
@@ -48,7 +48,7 @@ class DeliveryController extends Controller{
         $parameters=$request->getParameters();
         // var_dump($parameters);
         
-        $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
+        $this->setLayout("delivery-rider",['select'=>'My Deliveries']);
         
         //make offline the user
         $userModel = new Employee();
@@ -74,10 +74,10 @@ class DeliveryController extends Controller{
         // exit;
         if($rider) {
             $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider"]);
-
+            
         } else {
             $rider = $riderMOdel->select_queue_rider();
-
+            
             if (!$rider){
                 $updated_rider_ID=$deliveryModel->set_delivery_without_rider($parameters[0]['id']);
             } else {
@@ -91,6 +91,28 @@ class DeliveryController extends Controller{
         $deliveryModel=new Delivery();
         $delivery=$deliveryModel->get_unfinished_deliveries(Application::$app->session->get('userObject')->emp_ID);
         return $this->render('delivery/delivery-my-deliveries' ,[
+            'deliveries'=>$delivery,
+            'model'=>$deliveryModel
+        ]);
+    }
+
+    public function viewPendingDeliveries(){
+        $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
+        $deliveryModel=new Delivery();
+        $delivery=$deliveryModel->get_null_rider_deliveries();
+        return $this->render('delivery/delivery-pending-deliveries' ,[
+            'deliveries'=>$delivery,
+            'model'=>$deliveryModel
+        ]);
+    }
+
+    public function getDelivery(Request $request){
+        $parameters=$request->getParameters();
+        $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
+        $deliveryModel=new Delivery();
+        $get_delivery = $deliveryModel->update_rider_ID($parameters[0]['id'],Application::$app->session->get('userObject')->emp_ID);
+        $delivery=$deliveryModel->get_null_rider_deliveries();
+        return $this->render('delivery/delivery-pending-deliveries' ,[
             'deliveries'=>$delivery,
             'model'=>$deliveryModel
         ]);
@@ -110,7 +132,7 @@ class DeliveryController extends Controller{
     //complete the delivery using the PIN
     public function completeDelivery(Request $request, Response $response){
         $parameters=$request->getParameters();
-        $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
+        $this->setLayout("delivery-rider",['select'=>'My Deliveries']);
         
         $deliveryModel=new Delivery();
         $riderMOdel = new Employee;
@@ -124,7 +146,7 @@ class DeliveryController extends Controller{
         //check the payment status on delivery
         if ( $confirming_delivery[0]['payment_status'] == 'pending' && !isset($_POST['payment_status']) ) { 
             $delivery=$deliveryModel->view_delivery_details($parameters[0]['id']); 
-            $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
+            $this->setLayout("delivery-rider",['select'=>'My Deliveries']);
             return $this->render('delivery/delivery-view-delivery' ,[
                 'delivery'=>$delivery[0],
                 'model'=>$deliveryModel,
@@ -133,9 +155,9 @@ class DeliveryController extends Controller{
 
         } else {
             // if pin is empty
-            if(empty($_POST["confirmation_PIN"])){
+            if(empty($_POST["PIN"])){
                 $delivery=$deliveryModel->view_delivery_details($parameters[0]['id']); 
-                $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
+                $this->setLayout("delivery-rider",['select'=>'My Deliveries']);
                 return $this->render('delivery/delivery-view-delivery' ,[
                     'delivery'=>$delivery[0],
                     'model'=>$deliveryModel,
@@ -143,7 +165,7 @@ class DeliveryController extends Controller{
                 ]);
             }
 
-            if ( $confirming_delivery[0]['PIN'] === $_POST['confirmation_PIN'] ) {
+            if ( $confirming_delivery[0]['PIN'] === $_POST['PIN'] ) {
                 $update_delivery_status = $deliveryModel->update_completed_date_time_delivery($parameters[0]['id']);
                 $update_order_status = $deliveryModel->update_processing_status_order($parameters[0]['id']);
                 
@@ -190,7 +212,7 @@ class DeliveryController extends Controller{
 
                 //if pin is incorrect
                 $delivery=$deliveryModel->view_delivery_details($parameters[0]['id']); 
-                $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
+                $this->setLayout("delivery-rider",['select'=>'My Deliveries']);
                 return $this->render('delivery/delivery-view-delivery' ,[
                     'delivery'=>$delivery[0],
                     'model'=>$deliveryModel,
@@ -249,7 +271,7 @@ class DeliveryController extends Controller{
                 //Remove existing nic and try, If not validated restore NIC.
                 // $nic_remove = $employeeModel->customFetchAll("UPDATE employee SET nic=NULL WHERE emp_ID=$curr_employee[0]['emp_ID']");
                 if($employeeModel->validate() && $employeeModel->updateRecord(['emp_ID'=>$parameters[1]['id']])){
-                    $response->redirect('/ctest/delivery-view-advertisement'); 
+                    // $response->redirect('/ctest/delivery-view-advertisement'); 
                     Application::$app->session->setFlash('success',"User Profile Updated Successfully.");
                     Application::$app->response->redirect('/ctest/delivery-view-personal-details');
                     exit; 
@@ -289,7 +311,6 @@ class DeliveryController extends Controller{
         $rider=$riderMOdel->make_rider_online(Application::$app->session->get('userObject')->emp_ID);
         return json_encode(['status'=>true,'message'=>'user online']);
     }
-
 
     public function makeOffline(){
         $riderMOdel = new Employee;

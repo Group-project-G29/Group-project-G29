@@ -5,6 +5,33 @@
 
 ?>
 
+<div class="cards">
+    <div class="card">
+        <div class="card-content">
+            <div class="number">45</div>
+            <div class="card-name">No of orders on Today</div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content">
+            <!-- <div class="number"><?=$doctorsCount?></div> -->
+            <div class="card-name">Orders to be processed</div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content">
+            <!-- <div class="number"><?=$employeesCount?></div> -->
+            <div class="card-name">No of Orders in this month</div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-content">
+            <!-- <div class="number"><?=$thisMonthEarnings?></div> -->
+            <div class="card-name">This Month Income</div>
+        </div>
+    </div>
+</div>
+
 <div class="charts">
 
     <div class="chart">

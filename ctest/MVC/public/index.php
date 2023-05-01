@@ -165,12 +165,14 @@ $app->router->get('/ctest/pharmacy-view-personal-details',[PharmacyController::c
 $app->router->get('/ctest/delivery-view-personal-details',[DeliveryController::class,'viewPersonalDetails']);
 $app->router->post('/ctest/delivery-view-personal-details',[DeliveryController::class,'viewPersonalDetails']);
 $app->router->get('/ctest/delivery-my-deliveries',[DeliveryController::class,'viewMyDeliveries']);
+$app->router->get('/ctest/delivery-pending-deliveries',[DeliveryController::class,'viewPendingDeliveries']);
 $app->router->get('/ctest/delivery-all-deliveries',[DeliveryController::class,'viewAllDeliveries']);
 $app->router->get('/ctest/delivery-view-delivery',[DeliveryController::class,'viewDeliveryDetails']);
 // $app->router->post('/ctest/delivery-view-delivery',[DeliveryController::class,'completeDelivery']);
 $app->router->get('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
 $app->router->post('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
 $app->router->get('/ctest/delivery-pass-delivery',[DeliveryController::class,'passDelivery']);
+$app->router->get('/ctest/delivery-get-delivery',[DeliveryController::class,'getDelivery']);
 $app->router->get('/ctest/delivery-update-personal-details',[DeliveryController::class,'editPersonalDetails']);
 $app->router->post('/ctest/delivery-update-personal-details',[DeliveryController::class,'editPersonalDetails']);
 

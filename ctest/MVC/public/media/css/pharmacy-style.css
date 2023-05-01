@@ -1400,6 +1400,54 @@ select {
 
 
 /* ========charts================ */
+.cards{
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px 0 35px 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+}
+
+.cards .card{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 7px 25px 0 rgba(0, 0, 0, 0.08);
+}
+
+.card {
+    padding: 35px 20px;
+    margin: 10px;
+    width: 100%;
+}
+
+.card:hover{
+    background-color: var(--clr-light);
+}
+.card:hover .number, .card:hover .card-name{
+    color: #fff;
+
+}
+
+.number{
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--clr-light);
+}
+
+.card-name{
+    color: #888;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.icon-box img{
+    height: 40px;
+    margin-right: 10px;
+}
 
 .charts{
     display: grid;
@@ -1423,5 +1471,45 @@ select {
     text-align: center;
     color: #666;
 }
+
+/* =============Responsive=========== */
+
+/* @media ( max-width:1074px) {
+    .sidebar {
+        width: 60px;
+    }
+} */
+
+
+/* ===============dropdwon orders====================== */
+
+.order-type-view{
+    margin-bottom: 8vh;
+}
+
+.one-drop-down{
+    background-color: rgb(226, 224, 224);
+    border-radius: 5px;
+    padding: 1vh 4vw;
+    margin-bottom: 1.5vh;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.drop-down-container {
+    margin: 50px 0px;
+}
+
+.one-drop-down img{
+    margin-top: 1vh;
+    width: 2vw;
+    height: 1.5vh;
+}
+.one-drop-down:hover{
+    background-color: var(--clr-light);
+}
+
 
 
