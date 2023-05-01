@@ -42,6 +42,7 @@ abstract class Model{
         }
     }
     public function updateData($data,$fileDestination){
+       
         foreach($data[0] as $key=>$value){
             if(property_exists($this,$key) && $value!=NULL){
                 if(array_key_exists($key,$fileDestination)){
@@ -55,12 +56,14 @@ abstract class Model{
             }
 
         }
+        return true;
     }
 
     abstract public function rules():array;
 
     public array $errors=[];
     public  function validate(){
+        
         foreach($this->rules() as $attribute=>$rules){
             $value=$this->{$attribute};
             foreach($rules as $rule){
@@ -68,7 +71,7 @@ abstract class Model{
                 if(!is_string($ruleName)){
                     $ruleName=$rule[0];
                 }
-                if($ruleName===self::RULE_REQUIRED && (!$value||$value=="select"||$value==0)){
+                if($ruleName===self::RULE_REQUIRED && (!$value||$value=="select"||$value==0||$value=='')){
                     $this->addError($attribute,self::RULE_REQUIRED);
 
                 }
@@ -107,10 +110,16 @@ abstract class Model{
                 }
                 if($ruleName==self::RULE_DATE_VALIDATION ){
                     $dateModel=new Date();
-                    if($dateModel->greaterthan($value,date("Y-m-d"))){
+                    
+                    if(!$value){
+                        $this->addError($attribute,self::RULE_DATE_VALIDATION);
+                    }
+                    
+                    else if($dateModel->greaterthan($value,date("Y-m-d"))){
                         $this->addError($attribute,self::RULE_DATE_VALIDATION);
                     }
                 }
+
                 if($ruleName==self::RULE_NUMBERS && !(preg_match("/^[1-9][0-9]*$/",$value))){
                     $this->addError($attribute,self::RULE_NUMBERS);
                 }

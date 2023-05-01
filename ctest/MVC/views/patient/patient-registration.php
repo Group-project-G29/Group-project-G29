@@ -9,10 +9,11 @@ use app\core\DbModel;
 use \app\core\form\Form;
 $form=Form::begin('','post');?> 
 <section class="reg_body" style="padding-bottom:100px">
+    
     <div class="reg-body_title">
         <h1 class="fs-200 fc-color--dark">Patient Registration</h1>
     </div>
-    <div class="reg-body_bottom-text">Pediatric patient click <a href="/ctest/patient/pediatric/login"> here</a></div>
+    <div class="reg-body_bottom-text">Pediatric patient click <a href="/ctest/pediatric-registration"> here</a></div>
     <div class="reg-body fields">
     <?php echo $form->field($model,'name','Name*','field','text') ?>
     <?php echo $form->field($model,'nic','NIC*','field','text') ?>

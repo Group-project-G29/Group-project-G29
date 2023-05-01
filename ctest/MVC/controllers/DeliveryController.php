@@ -47,13 +47,15 @@ class DeliveryController extends Controller{
     public function passDelivery(Request $request){
         $parameters=$request->getParameters();
         // var_dump($parameters);
-
+        
         $this->setLayout("delivery-rider",['select'=>'Pending Deliveries']);
         
         //make offline the user
         $userModel = new Employee();
-        $riderMOdel = new Employee;
-
+        $riderMOdel = new Employee();
+        $deliveryModel = new Delivery();
+        $order_details = $deliveryModel->view_delivery_details($parameters[0]['id']); 
+        
         // pop up message can be shown to select whether make offline or stay online
         $user=$userModel->make_rider_offline(Application::$app->session->get('userObject')->emp_ID);
         
@@ -61,13 +63,15 @@ class DeliveryController extends Controller{
         $orderModel=new Order();
         
         //selected the available rider 
-        $postal_code = $orderModel->get_postal_code($parameters[0]['id']);
+        $postal_code = $orderModel->get_postal_code($order_details[0]["order_ID"]);
+        // var_dump($order_details);
         // var_dump($postal_code);
         $rider = $userModel->select_suitable_rider($postal_code[0]["postal_code"], $postal_code[0]["order_ID"]);
         // var_dump($rider);
         // exit;
         
-        $deliveryModel = new Delivery;
+        // echo 'pass';
+        // exit;
         if($rider) {
             $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider"]);
 
@@ -143,22 +147,23 @@ class DeliveryController extends Controller{
                 $update_delivery_status = $deliveryModel->update_completed_date_time_delivery($parameters[0]['id']);
                 $update_order_status = $deliveryModel->update_processing_status_order($parameters[0]['id']);
                 
-                // ==== pop up implement ===============>>>
-                if ( $confirming_delivery[0]['payment_status'] == 'pending'){
-                    // echo 'payment done now';
-                    //pop up msg is good
-                    // exit;
-                } else {
-                    // echo 'payment done earlier';
-                    //pop up msg is good
-                    // exit;
-                }
-                // ====================<<<<<<
-                
-                $delivery=$deliveryModel->get_unfinished_deliveries(Application::$app->session->get('userObject')->emp_ID);
-                //enque the rider to the queue if there is no deliveries to him
-                if ( !$delivery ) {
+                        // ==== pop up implement ===============>>>
+                        // if ( $confirming_delivery[0]['payment_status'] == 'pending'){
+                            // echo 'payment done now';
+                            //pop up msg is good
+                            // exit;
+                        // } else {
+                            // echo 'payment done earlier';
+                            //pop up msg is good
+                            // exit;
+                        // }
+                        // ====================<<<<<<
+                        $unfinished_delivery=$deliveryModel->get_unfinished_deliveries(Application::$app->session->get('userObject')->emp_ID);
+                        //enque the rider to the queue if there is no deliveries to him
+                if ( !$unfinished_delivery ) {
                     $null_rider_deliveries = $deliveryModel->get_null_rider_deliveries();
+                    // var_dump($null_rider_deliveries);
+                    // exit;
                     if ($null_rider_deliveries) {
                         $updated_rider_ID=$deliveryModel->update_rider_ID($null_rider_deliveries[0]["delivery_ID"], Application::$app->session->get('userObject')->emp_ID);
                         $postal_code = $null_rider_deliveries[0]["postal_code"];
@@ -204,6 +209,77 @@ class DeliveryController extends Controller{
         $user = $userModel->customFetchAll("SELECT * FROM employee WHERE email=".'"'.Application::$app->session->get('user').'"');
         return $this->render('delivery/delivery-view-personal-details' ,[
             'user' => $user[0]
+        ]);
+    }
+
+    public function editPersonalDetails(Request $request,Response $response){  
+        $parameters=$request->getParameters();
+        
+        $this->setLayout("delivery-rider",['select'=>'My Detail']);
+        $employeeModel=new Employee();
+        
+        if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
+            $employee=$employeeModel->get_employee_details($parameters[1]['id']);
+            $employeeModel->updateData($employee,$employeeModel->fileDestination());
+            Application::$app->session->set('employee',$parameters[1]['id']);
+            return $this->render('delivery/delivery-update-personal-details',[
+                'model'=>$employeeModel,
+                'user' => $employee[0]
+            ]);
+        }
+
+        if($request->isPost()){
+            // update personal details
+            $employeeModel->loadData($request->getBody());
+            $employeeModel->loadFiles($_FILES);
+            if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
+                $curr_employee = $employeeModel->get_employee_details($parameters[1]['id']);
+                if(!isset($_POST['img'])){
+                    $employeeModel->img = $curr_employee[0]['img'];
+                }
+                if($_POST['gender'] === 'select'){
+                    $employeeModel->gender = $curr_employee[0]['gender'];
+                }
+                $employeeModel->emp_ID = $curr_employee[0]['emp_ID'];
+                $employeeModel->role = $curr_employee[0]['role'];
+                $employeeModel->password = $curr_employee[0]['password'];
+                $employeeModel->cpassword = $curr_employee[0]['password'];
+
+                //NIC duplication in validate
+                //Remove existing nic and try, If not validated restore NIC.
+                // $nic_remove = $employeeModel->customFetchAll("UPDATE employee SET nic=NULL WHERE emp_ID=$curr_employee[0]['emp_ID']");
+                if($employeeModel->validate() && $employeeModel->updateRecord(['emp_ID'=>$parameters[1]['id']])){
+                    $response->redirect('/ctest/delivery-view-advertisement'); 
+                    Application::$app->session->setFlash('success',"User Profile Updated Successfully.");
+                    Application::$app->response->redirect('/ctest/delivery-view-personal-details');
+                    exit; 
+                };
+
+                // var_dump($curr_employee);
+                // var_dump($_POST);
+                var_dump($employeeModel);
+                exit;
+            } 
+            
+            // if($employeeModel->validate() && $employeeModel->register()){
+            //     echo 'efwesagdsg';
+            //         // exit;
+            //     Application::$app->session->setFlash('success',"Employee successfully added ");
+            //     Application::$app->response->redirect('/ctest/pharmacy-view-personal-details'); 
+            //     $this->setLayout("pharmacy",['select'=>'My Detail']);
+            //     $userModel = new Employee();
+            //     $user = $userModel->customFetchAll("SELECT * FROM employee WHERE email=".'"'.Application::$app->session->get('user').'"');
+            //     return $this->render('pharmacy/pharmacy-view-personal-details',[
+            //         'user'=>$user,
+            //         'model'=>$userModel
+            //     ]);
+            // }
+        }
+
+        // echo "finish";
+        // exit;
+        return $this->render('delivery/delivery-view-personal-details',[
+            'model'=>$employeeModel,
         ]);
     }
 

@@ -1,8 +1,11 @@
 <?php
     use app\core\component\Component;
+use app\models\Appointment;
+
     $component=new Component();
     $popup=$component->popup("Are you sure you want to delete the channeling session","popup-value","popup--class-1","yes");
     echo $popup;
+    $appointmentModel=new Appointment();
 ?>
 
 
@@ -14,18 +17,20 @@
     </tr>
     
         <?php foreach($appointments as $key=>$channeling): ?>
-        <tr class="table-row">
-            
-            <td><?=$channeling['speciality']?></td>
-            <td><?=$channeling['name']?></td>  
-            <td><?=$channeling['channeling_date']?></td>
-            <td><?=$channeling['time']?></td>  
-            <td>
-                <div>
-                    <?php echo $component->button('delete',' ','Cancel Appointment','button--class-3',$channeling['appointment_ID']."&patient=".$channeling['patient_ID']) ?>
-                </div>
-            </td>
-        </tr>
+            <?php if($appointmentModel->isInPass($channeling['appointment_ID'])): ?>
+                <tr class="table-row">
+                    
+                    <td><?=$channeling['speciality']?></td>
+                    <td><?=$channeling['name']?></td>  
+                    <td><?=$channeling['channeling_date']?></td>
+                    <td><?=$channeling['time']?></td>  
+                    <td>
+                        <div>
+                            <?php echo $component->button('delete',' ','Cancel Appointment','button--class-3',$channeling['appointment_ID']."&patient=".$channeling['patient_ID']) ?>
+                        </div>
+                    </td>
+                </tr>
+            <?php endif;?>
         <?php endforeach; ?>
     </table>
     <?php else: ?>

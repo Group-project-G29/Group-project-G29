@@ -41,7 +41,7 @@ class Medicine extends DbModel{
     }
 
     public function getMedicineAmount($id){
-        return $this->fetchAssocAll(['med_ID'=>$id])[0]['med_ID'];
+        return $this->fetchAssocAll(['med_ID'=>$id])[0]['amount'];
     }
 
     public function reduceMedicine($id,$amount,$updateDB=false){
@@ -55,7 +55,7 @@ class Medicine extends DbModel{
         }
         //else update table || return true;
         else if($updateDB){
-            $this->customFetchAll("upate medical_products set amount=$cur_amount where med_ID=$id");
+            $this->customFetchAll("update medical_products set amount=$cur_amount where med_ID=$id");
             return true;
         }
         else{
@@ -74,7 +74,17 @@ class Medicine extends DbModel{
         }
 
     }
+    public function getAllMedicine(){
+        $medicines=$this->customFetchAll("select * from medical_products");
+        $medarray=[];
 
+        foreach($medicines as $med){
+            $str=$med['strength']?'-'.$med['strength']:'';
+            $medarray[$med['name'].$str]=$med['name'].$str."_".$med['unit'];
+        }
+        return $medarray;
+
+    }
     public function getMedicineByPage($content_amount,$page,$parameters):array{
         $medicines=$this->fetchAssocAll($parameters);
         $array=[];
@@ -99,6 +109,13 @@ class Medicine extends DbModel{
             $array[$i]=$medicines[$start+$i];
         }
         return $array;
+    }
+    public function getMedicineID($name,$strength){
+        
+        return $this->fetchAssocAll(['name'=>$name,'strength'=>$strength])[0]['med_ID'];
+    }
+    public function getMedicineByID($ID){
+        return $this->fetchAssocAll(['med_ID'=>$ID])[0]['name'];
     }
     public function fileDestination(): array
     {
@@ -129,6 +146,10 @@ class Medicine extends DbModel{
 
     public function select_medical_products() {
         return $this->customFetchAll("SELECT * FROM medical_products ORDER BY name ASC");
+    }
+
+    public function getMedicinePrice($med_ID){
+        return $this->fetchAssocAll(['med_ID'=>$med_ID])[0]['unit_price'];
     }
 
     

@@ -7,8 +7,9 @@
     $NA_count = 0;
     // var_dump($orders);
     // var_dump($curr_pres_orders);
+    // echo 'hi';
     // exit;
-?>
+    ?>
 
 <div class="detail">
     <h3>Patient Name : <?=$orders[0]['name']?></h3>

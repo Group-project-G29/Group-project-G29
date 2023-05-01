@@ -7,13 +7,16 @@ use app\core\form\Form;
 ?>
 
 <section>
-    <?php $form->begin('','post'); ?>
+    <?php $form->begin('','post');?>
     <div class="prescription-field-container">
         <div class="cls-name">
-        <?=$form->editableselect('name','Medical Product*','',$medicines); ?>
-        </div>
+        <?=$form->editableselect('name','Medical Product*','',$medicines);  ?>
+    </div>
          <div class="cls-frequency">   
-        <?=$form->editableselect('frequency','Frequency*','',['frequency1'=>'frequency1']); ?>
+        <?=$form->editableselect('frequency','Frequency*','',['Daily'=>'Daily','BID(twice a day)'=>'BID','TID(Thrice a day)'=>'TID','QID(Four times a day)'=>'QID','QHS(Every bedtime)'=>'QHS','QWK(every week)'=>'QWK']); ?>
+        </div>
+        <div class="cls-dev-amount hide">
+        <?=$form->editableselect('amount','Amount*','',[]); ?>
         </div>  
         <div class="cls-amount">
         <?=$form->editableselect('amount','Amount per Dose*','',[]); ?>
@@ -21,25 +24,23 @@ use app\core\form\Form;
         <div class="cls-dispense">
         <?=$form->dispenseselect('dispense','Dispense','');?>
         </div>
-        <div class="cls-route ">
-        <?=$form->editableselect('route','Route','',['Oral'=>'Oral','Rectal'=>'Rectal','Intravenouse'=>'Intravenouse']); ?>
-        </div>
-        <?=$component->button('submit','submit','Add','','addbtn'); ?>
+        
+        <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
     </div>
     <?php $form->end(); ?>
 
 </section>
-<section>
+<section class="medicine-table">
     <?php if($prescription_medicine): ?>
     <table>
-        <tr><th>Item</th><th>Frequency</th><th>Amount per Dose</th><th>Dispense</th><th>Route</th></tr>
+        <tr><th>Item</th><th>Frequency</th><th>Amount per Dose</th><th>Dispense</th></tr>
         <?php foreach($prescription_medicine as $med): ?>
-            <tr>
-                <td><?=$med['name']."-".$med['strength'] ?></td>
+            <tr class="medicine-item">
+                <td align='center'><?=$med['name']."-".$med['strength'] ?></td>
                 <td><?=$med['frequency'] ?></td>
                 <td><?=$med['med_amount'] ?></td>
                 <td><?=$med['dispense_count']." ".$med['dispense_type'] ?></td>
-                <td><?=$med['route'] ?></td>
+                
         
             </tr>
         <?php endforeach; ?>
@@ -82,27 +83,23 @@ use app\core\form\Form;
 
     //change on select
     const clsname=document.querySelector(".cls-name");
-    
+    const clsdamount=document.querySelector(".cls-dev-amount");
     const clsfrequency=document.querySelector(".cls-frequency");
     const clsdispense=document.querySelector(".cls-dispense");
-    const clsroute=document.querySelector(".cls-route");
+    const clsamount=document.querySelector(".cls-amount");
     const mainaddbtn=document.getElementById('add-button');
     const selectItems=document.querySelectorAll('.ed-se-item-name');
-    var allshow=[clsname,clsfrequency,clsroute,clsdispense];
-    var arrayshow={'device':[clsname,clsfrequency,clsdispense],'tablet':[clsname,clsfrequency,clsdispense,clsroute],'bottle':[clsname,clsfrequency,clsdispense]};
+    var allshow=[clsname,clsfrequency,clsdispense,clsdamount,clsamount];
+    var arrayshow={'device':[clsname,clsfrequency,clsdispense,clsdamount],'tablet':[clsname,clsfrequency,clsdispense,clsamount],'bottle':[clsname,clsfrequency,clsdispense,clsamount]};
     selectItems.forEach((el)=>{
         el.addEventListener('click',()=>{
             comp=(""+el.id).split("_");
             allshow.forEach(elem=>{
-            
                 if(arrayshow[comp[1]].includes(elem)){
                     elem.classList.remove('hide');
-
                 }
-
                 else {
                     elem.classList.add('hide');
-
                 }
             
             })

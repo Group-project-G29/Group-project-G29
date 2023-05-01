@@ -31,7 +31,17 @@ class PatientNotification extends DbModel{
 
         ];
     }
-
+    public function channelingCancelNoti($openedchanneling){
+        $results=$this->customFetchAll("select * from opened_channeling left join appointment on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID where appointment.opened_channeling_ID=".$openedchanneling);
+        $doctor=$this->customFetchAll("select employee.name from channeling left join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join employee on employee.nic=channeling.doctor where opened_channeling.opened_channeling_ID=".$openedchanneling)[0]['name'];
+        foreach($results as $result){
+            $this->type="channeling cancellation";
+            $this->text="Sorry,Dr.".$doctor." channeling session on ".$result['channeling_date']." has been cancelled";
+            $this->patient_ID=$result['patient_ID'];
+            $this->order_ID=null;
+            $this->savenofiles();
+        }
+    }
     public function getNotification($type){
         return $this->fetchAssocAll(['type'=>$type]);
     }

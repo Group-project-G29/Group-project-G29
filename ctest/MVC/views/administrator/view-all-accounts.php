@@ -22,6 +22,13 @@ use app\models\Employee;
        
         <td><?=$account['name']?></td>
         <td><?=$account['role']?></td>  
+            <td>
+            
+                <div>
+                    <?php echo $account['employee_status']." account" ?>
+                </div>
+                
+            </td>
         <td><?php 
                 $able=true;
                 $employee=new Employee();
@@ -29,36 +36,42 @@ use app\models\Employee;
                     $res=$employee->customFetchAll("select * from channeling where doctor=".$account['nic']);
                     if($res){
                         $able=false;
-                        echo "Active Account";
                     }
                     else{
-                        echo "Non Active Account";
+                        echo $component->button('update','','Update','button--class-2',$account['emp_ID']); 
+                        echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);
+                        
                     }
                 }
                 else if($account['role']=='nurse'){
                     if($employee->customFetchAll("select * from  nurse_channeling_allocataion where emp_ID=".$account['emp_ID'])){
                         $able=false;
-                        echo "Active Account";
                     }
                     else{
-                        echo "Non Active Account";
+                        echo $component->button('update','','Update','button--class-2',$account['emp_ID']); 
+                        if($account['employee_status'] == 'active'){
+                            echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);    
+                        }
+                        else{
+                            echo $component->button('delete',' ','Activate','button--class-3',$account['emp_ID']);    
+                        }
+                        
                     }
                     
                 }
                 else{
-                    echo "Non Active Account";
+                        echo $component->button('update','','Update','button--class-2',$account['emp_ID']); 
+                        if($account['employee_status'] == 'active'){
+                            echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);    
+                        }
+                        else{
+                            echo $component->button('delete',' ','Activate','button--class-3',$account['emp_ID']);    
+                        }
+                    
                 }
                 
         
             ?>
-        </td>
-        <td>
-            <?php if($able):?>
-            <div>
-                <?php echo $component->button('update','','Update','button--class-2',$account['emp_ID']) ?>
-                <?php echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']) ?>
-            </div>
-            <?php endif;?>
         </td>
     </tr>
     <?php endforeach; ?>
@@ -80,7 +93,7 @@ use app\models\Employee;
     elementsArray = document.querySelectorAll(".button--class-3");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='admin?cmd=delete&id='+elem.id;
+            location.href='admin?cmd=deactivate&id='+elem.id;
         });
     });
     const patients=document.querySelectorAll('.table-row');
@@ -89,7 +102,7 @@ use app\models\Employee;
     
         function checker(){
         
-        var re=new RegExp("^"+searchBar.value)
+        var re=new RegExp(("^"+searchBar.value).toLowerCase())
         patients.forEach((el)=>{
             comp=""+el.id;
             console.log(el.id);
@@ -98,7 +111,7 @@ use app\models\Employee;
             if(searchBar.value.length==0){
                 // el.classList.add("none")
             }
-            else if(re.test(comp[0]) || re.test(comp[1]) || re.test(comp[2])){
+            else if(re.test(comp[0].toLowerCase()) || re.test(comp[1].toLowerCase()) || re.test(comp[2].toLowerCase())){
                 el.classList.remove("none");
             }
             else{

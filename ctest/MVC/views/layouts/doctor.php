@@ -8,7 +8,9 @@ include "../views/layouts/navbar/doctor-navbar.php";
 ?>
 
     <div class="main-container">
-         <?php $sidebar=new Sidebar(['Today Channelings'=>'doctor','All Channelings'=>'doctor?spec=all','Patients'=>'recent-patients','Report'=>'#','My Detail'=>'#'],$select);?>
+
+         <?php $sidebar=new Sidebar(['Today Channelings'=>'doctor','All Channelings'=>'doctor?spec=all','Report'=>'summary-reports','My Detail'=>'doctor-my-detail?cmd=view'],$select);?>
+
          <?php echo $sidebar;  ?>
         
         
@@ -21,8 +23,10 @@ include "../views/layouts/navbar/doctor-navbar.php";
                 <?php endif;?>
             </div>
 
+            <div>
+                {{content}}
+            </div>
 
-            {{content}}
         </div>
     </div>
  

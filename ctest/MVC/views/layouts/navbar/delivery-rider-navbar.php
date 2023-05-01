@@ -33,25 +33,7 @@ use app\models\Employee;
         </div>
         <div class="nav_row--top_user flex">
 
-            <!-- switch begin -->
-            <div class="active-switch-container">
-                <label class="active-switch" >
-                    <?php
-                    if($availability==='AV'):
-                        ?>
-                        <input type="checkbox" id="activeCheckbox" onclick="is_checked()" checked>
-                        <?php
-                        else :
-                        ?>
-                        <input type="checkbox" id="activeCheckbox" onclick="is_checked()">
-                        <?php
-                        endif;
-                        ?>
-                <span class="slider"></span>
-                </label>
-            </div>
-
-            <!-- switch end -->
+            
 
             <div class="nav-box">
                 <div class="flex">
@@ -72,6 +54,18 @@ use app\models\Employee;
                 </ul>
             </div>
           
+            <!-- switch begin -->
+            <div class="active-switch-container">
+                <label class="active-switch" >
+                    <?php if($availability==='AV'): ?>
+                        <input type="checkbox" id="activeCheckbox" onclick="is_checked()" checked>
+                    <?php else: ?>
+                        <input type="checkbox" id="activeCheckbox" onclick="is_checked()">
+                    <?php endif; ?>
+                <span class="slider"></span>
+                </label>
+            </div>
+            <!-- switch end -->
         </div>
     </div>
     <div class="nav_row--bottom">
@@ -81,26 +75,27 @@ use app\models\Employee;
 </nav>
 <script>
     function is_checked() {
-        console.log("dis");
         if ( document.getElementById("activeCheckbox").checked ) {
             // location.href="/ctest/login";
             const online_path="/ctest/delivery-online";
             fetch(online_path,{
                 method:"GET"
-            }).then((res)=>res.text())
+            }).then((res)=>res.json())
             .then((data)=>{
                 console.log(data);
             })
-            console.log('checked');
+            // console.log('checked');
+            // console.log("ckeck");
         } else {
             const online_path="/ctest/delivery-offline";
             fetch(online_path,{
                 method:"GET"
-            }).then((res)=>res.text())
+            }).then((res)=>res.json())
             .then((data)=>{
                 console.log(data);
             })
-            console.log('Checkbox is not checked!');
+            // console.log('Checkbox is not checked!');
+            // alert("unckeck");
         }
     }
 

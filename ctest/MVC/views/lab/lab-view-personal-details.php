@@ -3,7 +3,7 @@
 use app\core\component\Component;
 
 $component = new Component();
-// var_dump($user);
+// var_dump($userinfo);
 // exit;
 ?>
 <!-- <div class="detail-container" style="margin-left: 35%;"> -->
@@ -11,12 +11,12 @@ $component = new Component();
 
 <section class="profile">
     <!-- <div class="img" style="margin-left:13%;">
-    <img style="width: 50%; height:auto;margin-left:5vw" src="./media/images/emp-profile-pictures/<?= $userinfo['img'] ?>">
+    <img style="width: 50%; height:auto;margin-left:5vw" src="./media/images/emp-profile-pictures/">
 
     </div> -->
     <div class="card-wrapper">
         <div class="card-1">
-            <img src="./media/images/patient/Hospital-2.jpg" class="card-img">
+            <img src="./media/images/lab/CBC-Blood-Test.jpg" class="card-img">
             <img src="./media/images/emp-profile-pictures/<?= $user['img'] ?>" class="pro-img">
             <div class="content">
                 <p>

@@ -6,7 +6,7 @@
 
 <p class="navigation-text-line-p"> 
     <a class="navigation-text-line-link" href="/ctest/pharmacy-orders-pending">orders</a>/
-    <a class="navigation-text-line-link">delivering orders</a> 
+    <a class="navigation-text-line-link">packed orders</a> 
 </p>
 
 <div class='upper-container'>
@@ -26,27 +26,29 @@
 </div>
    
 <div class="table-container">
-<table border="0">
-    <tr>
-        <th>Order ID</th>
-        <th>Name</th>
-        <th>Contact</th>
-        <th>Date</th>
-        <th>Time</th>
-    </tr>
     <?php if($orders): ?>
-        
-        <?php foreach($orders as $key=>$order): ?>
-            <tr class="table-row" id=<?=$order['order_ID']?> >
-                <td><?=$order['order_ID']?></td>
-                <td><?=$order['name']?></td> 
-                <td><?=$order['contact']?></td> 
-                <td><?=$order['created_date']?></td> 
-                <td><?=$order['created_time']?></td> 
+        <table border="0">
+            <tr>
+                <th>Order ID</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Date</th>
+                <th>Time</th>
             </tr>
-        <?php endforeach; ?>
-    </table>
+                
+            <?php foreach($orders as $key=>$order): ?>
+                <tr class="table-row" id=<?=$order['order_ID']?> >
+                    <td><?=$order['order_ID']?></td>
+                    <td><?=$order['name']?></td> 
+                    <td><?=$order['contact']?></td> 
+                    <td><?=$order['created_date']?></td> 
+                    <td><?=$order['created_time']?></td> 
+                </tr>
+            <?php endforeach; ?>
+        </table>
 
+    <?php else: ?>
+        <br><br><br><h2>No Current Packed Orders</h2>
     <?php endif; ?>
 </div>
 

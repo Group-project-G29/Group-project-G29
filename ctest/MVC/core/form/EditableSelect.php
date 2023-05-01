@@ -28,13 +28,13 @@
             $i=0;
         
             foreach($this->options as $name=>$value){
-                $str .= "<div class='ed-se-item-".$this->name." hide ' id='".$value."'>".$name."</div>";
+                $str .= "<div class='ed-se-item-".$this->name." hide edse' id='".$value."'>".$name."</div>";
                 
             }
 
-            $str='<div>
-                <label>%s</label><input type="text" name="%s" id="input-%s" class="sl-%s in">
-                <div class="ed-se-item-container-%s %s">
+            $str='<div class="edsecon">
+                <label>%s  </label><input type="text" name="%s" id="input-%s" class="sl-%s in">
+                <div class="ed-se-item-container-%s %s edse-container">
                     '.$str.'
                 </div>
             </div>
@@ -65,7 +65,7 @@
                             
                         });
                     });
-                    let %scarry="";
+                    %scarry="";
                     items%s.forEach(element=>{ 
                         element.addEventListener("click",()=>{
                         comp%s=(""+element.id).split("_");

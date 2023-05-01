@@ -14,17 +14,14 @@
 <table border="0">
     
     <?php foreach($advertisements as $key=>$advertisement): ?>
-    <tr class="table-row">
-        <td><img src=<?="./media/images/advertisements/".$advertisement['img']?> alt="No image"></td>
-        <td style="width: 8vw;"><?=$advertisement['title']?></td>
-        <td style="width: 20vw;"><?=$advertisement['description']?></td>  
-        <td style="width: 8vw;"><?=$advertisement['remark']?></td>
-        <td>
-            <div>
-                <?php echo $component->button('update','','Update','button--class-2',$advertisement['ad_ID']) ?>
-                <?php echo $component->button('delete',' ','Delete','button--class-3',$advertisement['ad_ID']) ?>
-            </div>
-        </td>
+    <tr class="table-row" style="width: 95vw;">
+        <td><img src=<?="./media/images/advertisements/".$advertisement["img"] ?> alt="Loading image" style="height: 250px; width: 300px;" ></td>
+        <td style="width: 40vw; text-align:start;"><b style="font-size: 1.2rem; line-height: 4vh;"><?=$advertisement['title']?></b><br>
+            <?=$advertisement['description']?></td>
+        <td><?php echo $component->button('update','','Update','button--class-2',$advertisement['ad_ID']) ?></td>
+        <td><?php echo $component->button('delete',' ','Delete','button--class-3',$advertisement['ad_ID']) ?></td>  
+        <td></td>    
+         
     </tr>
     <?php endforeach; ?>
     </table>

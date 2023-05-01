@@ -16,12 +16,14 @@ $component = new Component();
     <div class="main-detail-title">
         <h1><?=$channeling[0]['speciality']." - ".$channeling[0]['day']?></h1>
     </div>
-    <div class="number-content">
-        <h2>Patients</h2>
-        <div class="number-pad">
-            <div class="number-item--white fs-200"><?=$openedchanneling[0]['remaining_appointments']?></div>
-            <div class="number-item--blue fs-200"><?=$channeling[0]['total_patients']?></div>
+    <div class="patient-change-div">
+        <div class="number-content">
+            <h2>Patients</h2>
+            <div class="number-pad">
+                <div class="number-item fs-200"><?=$channeling[0]['total_patients']?></div>
+            </div>
         </div>
+
     </div>
     <div class="scheduled-info fs-100">
         <span>Room :<?=$channeling[0]['room']?></span>
@@ -51,26 +53,26 @@ $component = new Component();
     <table border="0">
         <thead>
             <tr>
-                <th>Day</th>
+                <th>Session</th>
                 <th>Date</th>
                 <th>Remaining Appointments</th>
-                <th>Remaining Free Appointments</th>
+                <!-- <th>Remaining Free Appointments</th> -->
                 <th>Status</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <?php $day = 1; ?>
+            <?php $session = 1; ?>
         <?php foreach($openedchanneling as $key=>$clinic): ?>
 
             <tr class="table-row row-height hover" id="<?= $clinic['opened_channeling_ID'] ?>">
-                <td><?php echo("Day - ".$day); ?></td>
+                <td><?php echo("Session - ".$session); ?></td>
                 <td><?= $clinic['channeling_date'] ?></td>
-                <td><?= $clinic['remaining_appointments'] ?></td>
-                <td><?= $clinic['remaining_free_appointments'] ?></td>
+                <td><?php if($clinic['remaining_appointments']== -1){echo("Unlimit");}else{echo($clinic['remaining_appointments']);} ?></td>
+                <!-- <td><?= $clinic['remaining_free_appointments'] ?></td> -->
                 <td><?= $clinic['status'] ?></td>
 
-                <?php $day = $day + 1; ?>
+                <?php $session = $session + 1; ?>
             </tr>
             
         <?php endforeach; ?>
@@ -79,16 +81,15 @@ $component = new Component();
             elementsArray = document.querySelectorAll(".table-row");
             elementsArray.forEach(function(elem) {
                 elem.addEventListener("click", function() {
-                    location.href='all-channeling-session?channeling='+elem.id;
+                    // location.href='all-channeling-session?channeling='+elem.id;
+                    location.href="nurse-list-patient?id="+elem.id+"&view=1";
                 });
             });
         </script>
     </table>
     </div>
 
-<?php } else{
-    echo("<center><br><br><div class='no-clinic-desc'>Channeling Sessions Are Not Created Yet</div></center>");
-} ?>
+<?php } ?>
 
 
 

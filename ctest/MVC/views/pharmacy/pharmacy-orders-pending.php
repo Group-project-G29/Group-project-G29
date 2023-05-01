@@ -1,11 +1,6 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
-// var_dump($orders);
-// var_dump($popup);
-// // var_dump($order_types);
-// exit;
-
 ?>
 
 <p class="navigation-text-line-p"> 
@@ -30,59 +25,56 @@
 </div>
    
 <div class="table-container">
-<table border="0">
-    <tr>
-        <th>Order ID</th>
-        <th>Order Type</th>
-        <th>Name</th>
-        <th>Contact</th>
-        <th>Date</th>
-        <th>Time</th>
-    </tr>
     <?php if($orders): ?>
+        <table border="0">
+            <tr>
+                <th>Order ID</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Date</th>
+                <th>Time</th>
+            </tr>
         
-        <?php foreach($orders as $key=>$order): ?>
-            <?php if($order['processing_status']=='pending'):?>
-                    <tr class="table-row" id=<?=$order['order_ID']?> >
-                        <td><?=$order['order_ID']?></td>
-                        <td><?=$order_types[$key]?></td>
-                        <td><?=$order['name']?></td> 
-                        <td><?=$order['contact']?></td> 
-                        <td><?=$order['created_date']?></td> 
-                        <td><?=$order['created_time']?></td> 
-                    </tr>
-            <?php elseif($order['processing_status']=='waiting'): ?> 
-                        <tr class="table-row_gray" id=<?=$order['order_ID']?> >
-                        <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['order_ID']?></td>
-                        <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order_types[$key]?></td>
-                        <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['name']?></td> 
-                        <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['contact']?></td> 
-                        <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['created_date']?></td> 
-                        <td><a class='delete-order' id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)">Delete Order</a></td>
-                    </tr>
-            <?php elseif($order['processing_status']=='accepted'): ?>  
-                    <tr class="table-row_green" id=<?=$order['order_ID']?> >
-                        <td><?=$order['order_ID']?></td>
-                        <td><?=$order_types[$key]?></td>
-                        <td><?=$order['name']?></td> 
-                        <td><?=$order['contact']?></td> 
-                        <td><?=$order['created_date']?></td> 
-                        <td><?=$order['created_time']?></td> 
-                    </tr>
-            <?php elseif($order['processing_status']=='rejected'): ?> 
-                    <tr class="table-row_red" id=<?=$order['order_ID']?> >
-                        <td><?=$order['order_ID']?></td>
-                        <td><?=$order_types[$key]?></td>
-                        <td><?=$order['name']?></td> 
-                        <td><?=$order['contact']?></td> 
-                        <td><?=$order['created_date']?></td> 
-                        <!-- <td><?=$order['created_time']?></td> -->
-                        <td><a class='delete-order' id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)">Delete Order</a></td>
-                    </tr>  
-            <?php endif; ?>    
-        <?php endforeach; ?>
-    </table>
+            <?php foreach($orders as $key=>$order): ?>
+                <?php if($order['processing_status']=='pending'):?>
+                        <tr class="table-row" id=<?=$order['order_ID']?> >
+                            <td><?=$order['order_ID']?></td>
+                            <td><?=$order['name']?></td> 
+                            <td><?=$order['contact']?></td> 
+                            <td><?=$order['created_date']?></td> 
+                            <td><?=$order['created_time']?></td> 
+                        </tr>
+                <?php elseif($order['processing_status']=='waiting'): ?> 
+                            <tr class="table-row_gray" id=<?=$order['order_ID']?> >
+                            <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['order_ID']?></td>
+                            <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['name']?></td> 
+                            <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['contact']?></td> 
+                            <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['created_date']?></td> 
+                            <td><a class='delete-order' id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)">Delete Order</a></td>
+                        </tr>
+                <?php elseif($order['processing_status']=='accepted'): ?>  
+                        <tr class="table-row_green" id=<?=$order['order_ID']?> >
+                            <td><?=$order['order_ID']?></td>
+                            <td><?=$order['name']?></td> 
+                            <td><?=$order['contact']?></td> 
+                            <td><?=$order['created_date']?></td> 
+                            <td><?=$order['created_time']?></td> 
+                        </tr>
+                <?php elseif($order['processing_status']=='rejected'): ?> 
+                        <tr class="table-row_red" id=<?=$order['order_ID']?> >
+                            <td><?=$order['order_ID']?></td>
+                            <td><?=$order['name']?></td> 
+                            <td><?=$order['contact']?></td> 
+                            <td><?=$order['created_date']?></td> 
+                            <!-- <td><?=$order['created_time']?></td> -->
+                            <td><a class='delete-order' id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)">Delete Order</a></td>
+                        </tr>  
+                <?php endif; ?>    
+            <?php endforeach; ?>
+        </table>
 
+    <?php else: ?>
+        <br><br><br><h2>No Current Pending Orders</h2>
     <?php endif; ?>
 </div>
 
@@ -100,14 +92,16 @@
             <button type="button" onclick="closePopup_deleted_order()" id="ok_deleted_order">OK</button>
     </div>
 
-    <div class="popup confirmation" id="popup_confirmation">
+    <!-- <div class="popup popup-background" > -->
+        <div class="popup confirmation" id="popup_confirmation">
             <h2>Delete this order.</h2>
             <h2>Are You Sure ?</h2>
-            <div>
-                <div><button type="button" onclick="closePopup_confirmation()" id="cancle_confirmation">CANCLE</button></div>
-                <div><button type="button" id="ok_confirmation">OK</button></div>
+            <div style="display: flex;">
+                <div style="width:50%; margin:10px;" ><button type="button" onclick="closePopup_confirmation()" id="cancle_confirmation">CANCLE</button></div>
+                <div style="width:50%; margin:10px;"><button type="button" id="ok_confirmation">OK</button></div>
             </div>
-    </div>
+        </div>
+    <!-- </div> -->
 <!-- =================================================== -->
 
 <script>

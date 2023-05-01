@@ -18,7 +18,7 @@ $appointmentModel=new Appointment();
     </div>
     <div class="scheduled-info fs-100">
         <span>Room :<?=$channeling->room?></span>
-        <span>Starts In:<?=$channeling->time?></span>
+        <span>Starts At:<?=($channeling->time>='12:00')?$channeling->time.' PM':$channeling->time.' AM'?></span>
 
     </div>
     <div>
@@ -32,14 +32,27 @@ $appointmentModel=new Appointment();
             <?php endforeach; ?>
         </div>
     </div>
-    <button class="start button--class-0 start_button" id=<?=$openedchanneling->opened_channeling_ID?>>Start</button>
+    <?php if($openedchanneling->status=='finished'): ?>
+        <button class="start2 button--class-0 start_button" id=<?=$openedchanneling->opened_channeling_ID?>>View</button>
+        <?php else:?>
+            <button class="start button--class-0 start_button" id=<?=$openedchanneling->opened_channeling_ID?>>Start</button>
 
+    <?php endif;?>
 
 </div>
 <script>
     const btn=document.querySelector(".start");
-    btn.addEventListener('click',()=>{
-        location.href="channeling-assistance?cmd=start&id="+btn.id;
-    })
+    if(btn){
+
+        btn.addEventListener('click',()=>{
+            location.href="channeling-assistance?cmd=start&id="+btn.id;
+        })
+    }
+    const btn2=document.querySelector(".start2");
+    if(btn2){
+        btn2.addEventListener('click',()=>{
+            location.href="channeling-assistance?cmd=start&id="+btn2.id;
+        })
+    }
 
 </script>
