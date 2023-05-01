@@ -13,6 +13,7 @@ use app\models\MedicalHistory;
 use app\models\OpenedChanneling;
 use app\models\Referral;
 use app\core\ReportModel;
+use app\models\AdminNotification;
 use app\models\Appointment;
 use app\models\LabReport;
 use app\models\LabTestRequest;
@@ -734,7 +735,11 @@ class DoctorController extends Controller{
         $presdevice=[]; 
         $parameters=$request->getParameters();
         //show the prescription
-
+        if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='delete'){
+            $pid=$prescriptionModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
+            $prescriptionModel->deleteRecordByName(['prescription_ID'=>$pid,'med_ID'=>$parameters[2]['id']],'prescription_medicine');
+            $response->redirect('doctor-prescription');
+        }
         if(isset($parameters[1]['mod']) && $parameters[1]['mod']=='view'){
                 $report=$prescriptionModel->fetchAssocAll(['prescription_ID'=>$parameters[2]['id']]);
                 // if($report[0]['type']=='softcopy'){
@@ -753,18 +758,54 @@ class DoctorController extends Controller{
         }
         
         if($request->isPost()){
-           //take current prescritption or create new one add medicine to it
-           $prescription=$prescriptionModel->addPrescriptionMedicine(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling')); 
-            Application::$app->response->redirect("/ctest/doctor-prescription");
+            //take current prescritption or create new one add medicine to it
+            $prescription=$prescriptionModel->addPrescriptionMedicine(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling')); 
+            $prescriptionModel->note=$prescription[0];
+            $prescriptionModel->refills=$prescription[1];
+           return $this->render('doctor/write-prescription',[
+            'medicines'=>$medicines,
+            'prescription_medicine'=>$presmeds,
+            'prescription_device'=>$presdevice,
+            'prescriptionModel'=>$prescriptionModel
+
+        ]);
         }
         
         return $this->render('doctor/write-prescription',[
             'medicines'=>$medicines,
             'prescription_medicine'=>$presmeds,
-            'prescription_device'=>$presdevice
+            'prescription_device'=>$presdevice,
+            'prescriptionModel'=>$prescriptionModel
 
         ]);
     }
+    public function handleNotis(Request $request,Response $response){
+        $parameters=$request->getParameters();
+        $this->setLayout('doctor',['select'=>'All Channelings']);
+        $Channeling=new Channeling();
+        $adminNotification=new AdminNotification();
+        if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='open'){
+            $adminNotification->chOpenNoti($parameters[1]['id']);
+        }
+        else if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='cancel'){
+            $adminNotification->chCancelNoti($parameters[1]['id']);
+        }
+        else if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='close'){
+            $adminNotification->chCloseNoti($parameters[1]['id']);
+            
+        }
+         
+        $ChannelingsM=$Channeling->getDocChannelings();
+        $testModel= new PreChannelingTest();
+        return $this->render('doctor/all-channelings',[
+            'channeling_model'=>$Channeling,
+            'channelings'=>$ChannelingsM,
+            'tests'=>$testModel->getAllTests()
+                
+        ]);
+    }
+
+
     public function summaryReports(){
         $employeeModel=new Employee();
         $this->setLayout('doctor',['select'=>'Report']);
@@ -786,7 +827,7 @@ class DoctorController extends Controller{
         $result=$model->customFetchAll("select * from employee left join doctor on doctor.nic=employee.nic where doctor.nic=".Application::$app->session->get('userObject')->nic)[0];
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='view'){
             return $this->render('doctor/mydetail',[
-                'me'=>$result
+                'user'=>$result
             ]);
         }
         if($request->isPost()){
@@ -799,4 +840,5 @@ class DoctorController extends Controller{
             
         }
     }
+    
 }

@@ -1,7 +1,10 @@
 <?php 
     use app\core\Application;
     use app\core\component\Component;
+use app\models\PatientNotification;
+
     $component=new Component();
+    $noti=new PatientNotification();
 ?>
 <head>
     <meta charset="UTF-8">
@@ -28,10 +31,23 @@
         </div>
         <div class="nav_row--top_user flex ">
         <?php if(Application::$app->session->get('user')) :?>
+            <div class="noti-container"> 
                 <div class="bell-container">
                     <img  src="./media/images/patient/notification bell.png">
+                    <div class="noti-counter">
+                        <?=$noti->getNotifcationCount(); ?>
+                    </div>
+                    
                 </div>
-                
+                <div class="noti-wrapper">
+                    <div class="noti-text">
+                        <?php $notifications=$noti->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user'),'is_read'=>0]); ?>
+                        <?php foreach($notifications as $notification):?>
+                                <?=$notification['text'] ?>
+                        <?php endforeach;?>
+                    </div>
+                </div>
+                </div>
                    
                     <div class="nav-box">
                         <h3><?php echo Application::$app->session->get('userObject')->name?></h3>
@@ -71,5 +87,19 @@
     const image=document.getElementById("logo");
     image.addEventListener('click',()=>{
         location.href="/ctest/patient-main"
+    })
+    isset=0;
+    const wrapper=document.querySelector(".noti-wrapper");
+    const bell=document.querySelector(".bell-container");
+    wrapper.style.display='none';
+    bell.addEventListener('click',()=>{
+        if(isset==0){
+            wrapper.style.display='block';
+            isset=1;
+        }
+        else{
+            wrapper.style.display='none';
+            isset=0; 
+        }
     })
 </script>

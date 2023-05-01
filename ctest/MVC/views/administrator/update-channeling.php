@@ -6,7 +6,7 @@ use app\core\form\Form;
 use app\models\Employee;
 
 $form=new Form();
-$form->begin('update-channeling?cmd=update&id='.Application::$app->session->get('selected_channelingh'),'post');
+$form->begin('update-channeling?cmd=update&id='.Application::$app->session->get('selected_channeling'),'post');
 $component=new Component();
 $employeemodel=new Employee();
 ?>

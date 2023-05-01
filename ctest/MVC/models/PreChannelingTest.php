@@ -39,7 +39,9 @@ use app\core\DbModel;
 
         }
         public function getAssistanceValue($patient,$openedchannelingID){
-            return $this->customFetchAll("select distinct test.name,tval.value,test.metric from appointment as a left join opened_channeling as o on a.opened_channeling_ID=o.opened_channeling_ID left join channeling as c on c.channeling_ID=o.channeling_ID left join pre_channeilng_test_aloc as aloc on aloc.channeling_ID=c.channeling_ID  left join pre_channeling_tests_values as tval on tval.test_ID=aloc.test_ID left join pre_channeling_tests as test on test.test_ID=aloc.test_ID where a.opened_channeling_ID=".$openedchannelingID." and tval.patient_ID=".$patient);
+            $appointmentModel=new Appointment();
+            $appointment_ID=$appointmentModel->fetchAssocAll(['patient_ID'=>$patient,'Opened_channeling_ID'=>$openedchannelingID])[0]['appointment_ID'];
+            return $this->customFetchAll("select distinct test.name,tval.value,test.metric from  pre_channeling_tests_values as tval  left join pre_channeling_tests as test on test.test_ID=tval.test_ID where tval.appointment_ID=".$appointment_ID);
         }
         //get all the test realted to opened to channeling
         public function getPatientTestResults($patient,$testID){

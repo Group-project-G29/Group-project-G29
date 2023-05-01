@@ -15,7 +15,9 @@ class PreChanneilngTestsValue extends DbModel{
         foreach($ids as $key=>$id):
             $test_ID = $id['test_ID'];
             $value = $values[$test_ID];
-            $this->customFetchAll("INSERT INTO pre_channeling_tests_values (value,test_ID,appointment_ID) VALUES('$value','$test_ID','$appointment_ID')");
+            $appointmentModel=new Appointment();
+            $patient=$appointmentModel->fetchAssocAll(['appointment_ID'=>$appointment_ID])[0]['patient_ID'];
+            $this->customFetchAll("INSERT INTO pre_channeling_tests_values (value,test_ID,appointment_ID,patient_ID) VALUES('$value','$test_ID','$appointment_ID',$patient)");
         endforeach;
         return 1;
     }

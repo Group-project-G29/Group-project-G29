@@ -419,4 +419,3 @@ class NurseController extends Controller{
     }
 
 }
-

@@ -17,8 +17,15 @@ class Form{
     public function field(Model $model,$attribute,$label,$class,$type,$id=""){
         return new Field($model,$attribute,$label,$class,$type,$id);
     } 
+    public function labfield(Model $model,$attribute,$label,$class,$type,$id=""){
+        return new LabField($model,$attribute,$label,$class,$type,$id);
+    } 
     public function select(Model $model,$name,$label,$class,$options,$id=""){
         return new Select($model,$name,$label,$class,$options,$id);
+    }
+
+    public function labselect(Model $model,$name,$label,$class,$options,$id=""){
+        return new LabSelect($model,$name,$label,$class,$options,$id);
     }
     // public function check(Model $model,$name,$label,$class,$options,$id=""){
     //     return new Check($model,$name,$label,$class,$options,$id);

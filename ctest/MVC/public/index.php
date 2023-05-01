@@ -111,7 +111,11 @@ $app->router->get('/ctest/doctor-labtest',[DoctorController::class,'labTestReque
 $app->router->post('/ctest/doctor-labtest',[DoctorController::class,'labTestRequestHandle']);
 $app->router->get('/ctest/summary-reports',[DoctorController::class,'summaryReports']);
 $app->router->post('/ctest/upload-reports',[DoctorController::class,'handleLabReports']);
+$app->router->get('/ctest/notification',[DoctorController::class,'handleNotis']);
+$app->router->post('/ctest/notification',[DoctorController::class,'handleNotis']);
 $app->router->get('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
+$app->router->post('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
+
 
 //-------------------pharmacy routers-----------------------------------------
 $app->router->post('/ctest/handle-medicine',[PharmacyController::class,'handleMedicine']);
@@ -286,6 +290,8 @@ $app->router->post('/ctest/lab-update-advertisement',[LabController::class,'hand
 $app->router->get('/ctest/lab-update-advertisement',[LabController::class,'handleAdvertisement']);
 $app->router->post('/ctest/lab-handle-advertisement',[LabController::class,'handleAdvertisement']);
 $app->router->get('/ctest/lab-handle-advertisement',[LabController::class,'handleAdvertisement']);
+$app->router->get('/ctest/lab-S-report-upload',[LabController::class,'uploadSReport']);
+$app->router->post('/ctest/lab-S-report-upload',[LabController::class,'uploadSReport']);
 
 
 $app->run();

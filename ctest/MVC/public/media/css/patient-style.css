@@ -275,8 +275,10 @@
 }
 /* notification bell */
 .bell-container img{
-    height:4vh;
+    height:4.5vh;
     width: 2.5vw;
+    margin-top: 5vh;
+    margin-left:38vw;
 } 
 /* styles for channeling doctor list on speciality */
 
@@ -1182,4 +1184,33 @@
     align-items: center;
     gap:1vw;
 }
+.noti-counter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    height:23px;
+    width:23px;
+    font-size:13;
+    color: white;
+    border-radius: 100%;
+    position:relative;
+    top:-2vh;
+    left:39.5vw;
+}
+.noti-text{
+    background-color: white;
+    border-radius:10px;
+    min-height:15vh;
+    max-width:30vw;
+    padding:20px;
+    position: relative;
+    left:10vw;
+    top:1,5vh;
+}
 
+.noti-container{
+    position: absolute;
+    top: -3vh;
+    right:14vw;
+}
