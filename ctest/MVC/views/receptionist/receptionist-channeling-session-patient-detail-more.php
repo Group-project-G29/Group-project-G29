@@ -5,7 +5,7 @@ use app\models\Employee;
 
 $component = new Component();
 ?>
-<div class="header-container"style="padding-top:5vh">
+<div class="header-container"style="padding-top:2vh">
     
 <div class="semi-header-container">
         <h2>Patient Detail</h2>
@@ -26,7 +26,7 @@ $component = new Component();
 
     </div>
 </div>
-<div class="table-container">
+<div class="table-container" style="padding-bottom:0px;height:35vh">
     <table border="0" style="margin-left:0px">
 
         <tr class="row-height header-underline">
@@ -49,7 +49,7 @@ $component = new Component();
                 <td><?= $channeling['fee'] ?></td>
                
                 <!-- <td class='table-row-0  row-height hover' style="padding-left: 1px;">Cancel</td> -->
-                <td><?php echo $component->button('cancel', '', 'Cancel', 'button-3 table-row-0 row-height hover', $channeling['patient_ID']); ?></td>
+                <!-- <td><?php echo $component->button('cancel', '', 'Cancel', 'button-3 table-row-0 row-height hover', $channeling['patient_ID']); ?></td> -->
                
             </tr>
 
@@ -61,14 +61,14 @@ $component = new Component();
     </table>
 
 </div>
-<div class="button-1" id=<?= $channeling['patient_ID'] ?>>
+<div class="button-1" style="padding-top: 0;" id=<?= $channeling['patient_ID'] ?>>
     <?php echo $component->button('Set Appoinment', '', 'Set Appoinment', 'button--class-0  width-10', 'edit-details'); ?>
     
 </div>
 
-<div class="button-0" id=<?= $channeling['patient_ID'] ?>>
+<!-- <div class="button-0" id=<?= $channeling['patient_ID'] ?>>
     <?php echo $component->button('edit-details', '', 'Payments', 'button--class-0  width-10', 'edit-details'); ?>
-</div>
+</div> -->
 
 
 <br>

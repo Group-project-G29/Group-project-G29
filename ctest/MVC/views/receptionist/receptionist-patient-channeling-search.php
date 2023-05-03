@@ -1,20 +1,26 @@
-
-<div class="patient-detail">
-    <h3>Patient Name : <?=$patient[0]['name']?></h3>
-    <h3>NIC :<?=$patient[0]['nic'] ?></h3>
-    <h3>Age :<?$patient[0]['age']?></h3>
-</div>
-<div class="search-bar-container">
     <?php
+    use app\core\Application;
+        Application::$app->session->set('patient',$patient[0]['patient_ID']);
         use app\models\OpenedChanneling;
+        use app\models\Appointment;
         $openedChanneling=new OpenedChanneling();
         use app\core\component\Component;
 
 
         $component=new Component();
+        $appoinment = new Appointment();
         
-        echo $component->searchbar('','search','search-bar--class2','Search by name,specilaity','searchbar');
-    ?>
+        ?>
+
+<div class="patient-detail"style=" padding:2vw;height:5vw" >
+    <h3>Patient Name : <?=$patient[0]['name']?></h3>
+    <h3>NIC :<?=$patient[0]['nic'] ?></h3>
+    <h3>Age :<?=$patient[0]['age'] ?></h3>
+    
+    
+</div>
+<div class="search-bar-container" style="margin-left:25vw">
+    <?php echo $component->searchbar('','search','search-bar--class2','Search by name,specilaity','searchbar');?>
 </div>
   
 <div class="table-container">
@@ -38,9 +44,13 @@
             <td>
                 <div>
                     <?php if($openedChanneling->isPatientIn($patient[0]['patient_ID'],$channeling['opened_channeling_ID'])):?>
-                    <?php echo "Already have an appointment" ?>
+                    <div style="color:green"><?php echo "Already have an appointment" ?></div>
                     <?php else: ?>
-                    <?php echo $component->button('update',' ','Add New Appointment','button--class-0 new-app',$channeling['opened_channeling_ID']) ?>
+                        <?php if($appoinment->labReportEligibility($patient[0]['patient_ID'],$channeling['nic'],$channeling['opened_channeling_ID'])):?>
+                            <?php echo $component->button('update',' ','Add Lab Report Appointment','button--class-0 new-lab',$channeling['opened_channeling_ID']) ?>
+                        <?php else:?>
+                            <?php echo $component->button('update',' ','Add Ordinary Appointment','button--class-0 new-app',$channeling['opened_channeling_ID']) ?>
+                            <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </td>
@@ -59,9 +69,17 @@
         elementsArray = document.querySelectorAll(".new-app");
         elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href="/ctest/receptionist-patient-appointment?cmd=add&id="+elem.id;
+            location.href="/ctest/receptionist-patient-appointment?cmd=add&id="+elem.id+'&type=consultation';
         });
     });
+
+    elementsArray = document.querySelectorAll(".new-lab");
+        elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href="/ctest/receptionist-patient-appointment?cmd=add&id="+elem.id+'&type=labtest';
+        });
+    });
+
     
 
     </script>

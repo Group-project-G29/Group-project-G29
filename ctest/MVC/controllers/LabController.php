@@ -261,7 +261,7 @@ class LabController extends Controller
         $labtest = new LabTest();
 
         $this->setLayout("lab", ['select' => 'Requests']);
-        $contents = $contentModel->customFetchAll("SELECT lab_request.request_ID,lab_report_content.content_ID,patient.name as pname,patient.age,patient.gender,patient.patient_ID,lab_report_content.name as cname,lab_report_content.type from patient join lab_request on patient.patient_ID=lab_request.patient_ID
+        $contents = $contentModel->customFetchAll("SELECT lab_request.request_ID,lab_report_content.metric,lab_report_content.content_ID,patient.name as pname,patient.age,patient.gender,patient.patient_ID,lab_report_content.name as cname,lab_report_content.type from patient join lab_request on patient.patient_ID=lab_request.patient_ID
         join lab_tests on lab_tests.name=lab_request.name
         join lab_report_content on lab_report_content.template_ID=lab_tests.template_ID where lab_request.request_ID=" . $parameters[0]['id']);
         $reports = $labtest->customFetchAll("SELECT sum(lab_tests.hospital_fee+lab_tests.test_fee)as fee,lab_tests.template_ID,lab_request.request_ID from lab_tests join lab_request on lab_tests.name=lab_request.name

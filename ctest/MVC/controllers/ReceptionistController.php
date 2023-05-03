@@ -12,6 +12,7 @@ use app\models\Appointment;
 use app\models\Channeling;
 use app\models\Employee;
 use app\models\Patient;
+use app\models\Payment;
 use app\models\Referral;
 use app\models\OpenedChanneling;
 use app\models\Doctor;
@@ -85,6 +86,7 @@ class ReceptionistController extends Controller
         $ChannelingModel = new Channeling();
         $PatientModel = new Patient();
         $OpenedChannelingModel = new OpenedChanneling();
+        $PaymentModel = new Payment();
         $opened_channeling_id = $parameters[1]['id'] ?? '';
         $appointment_id = '';
         if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'view') {
@@ -99,10 +101,13 @@ class ReceptionistController extends Controller
         if ($parameters[0]['mod'] ?? '' == 'referral') {
 
             $ReferralModel = new Referral();
+            
             $channelings = $ChannelingModel->customFetchAll("Select * from appointment  left join opened_channeling on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on  doctor.nic=channeling.doctor left join employee on employee.nic=doctor.nic where appointment.appointment_ID=" . $parameters[1]['id']);
             if ($request->isPost()) {
                 $ReferralModel->loadFiles($_FILES);
-                $ReferralModel->setter($channelings[0]['nic'], Application::$app->session->get('patient'), $channelings[0]['speciality'], '', 'soft-copy', $channelings[0]['name'],$parameters[1]['id']);
+                $ReferralModel->type='softcopy';
+
+                $ReferralModel->setter($channelings[0]['nic'], Application::$app->session->get('patient'), $channelings[0]['speciality'], '', 'softcopy', $channelings[0]['name'],$parameters[1]['id']);
                 $ReferralModel->addReferral();
                 Application::$app->session->setFlash('success', "Appointment Successfuly Created");
                 Application::$app->response->redirect('/ctest/receptionist-patient-information?mod=view&id=' . Application::$app->session->get('patient'));
@@ -131,18 +136,47 @@ class ReceptionistController extends Controller
         }
         if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'add') {
 
-            $AppointmentModel = new Appointment();
-            $number = $AppointmentModel->customFetchAll("select max(queue_no) from appointment where opened_channeling_ID=" . $parameters[1]['id']);
-            if ($number[0]['max(queue_no)'] > 0) {
-                $number = $number[0]['max(queue_no)'] + 1;
-            } else {
-                $number = 1;
-            }
+            // $AppointmentModel = new Appointment();
+            // $number = $AppointmentModel->customFetchAll("select max(queue_no) from appointment where opened_channeling_ID=" . $parameters[1]['id']);
+            // if ($number[0]['max(queue_no)'] > 0) {
+            //     $number = $number[0]['max(queue_no)'] + 1;
+            // } else {
+            //     $number = 1;
+            // }
 
-            $appointment_id = $AppointmentModel->setAppointment([$parameters[1]['id'], Application::$app->session->get('patient'), $number, "Pending"]);
-            $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
-            Application::$app->response->redirect("receptionist-patient-appointment?mod=referral&id=" . $appointment_id[0]['last_insert_id()']);
+            // $appointment_id = $AppointmentModel->setAppointment([$parameters[1]['id'], Application::$app->session->get('patient'), $number, "Pending"]);
+            // $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
+            // Application::$app->response->redirect("receptionist-patient-appointment?mod=referral&id=" . $appointment_id[0]['last_insert_id()']);
+            if( isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='add'){
+            $patient=Application::$app->session->get('patient');
+                $AppointmentModel= new Appointment();
+                $number=$AppointmentModel->customFetchAll("select max(queue_no) from appointment where opened_channeling_ID=".$parameters[1]['id']);
+                if($number[0]['max(queue_no)']>0){
+                    $number=$number[0]['max(queue_no)']+1;
+                }
+                else{
+                    $number=1;
+                }
+                if(isSet($parameters[2]['type']) && $parameters[2]['type']=='consultation'){
+                    $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
+                    $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
+                    $PaymentModel->createAppointmenPay(Application::$app->session->get('patient'),'appointment',$AppointmentModel->getFee($appointment_id[0]['last_insert_id()']),$appointment_id[0]['last_insert_id()'],'pending');
+                    Application::$app->response->redirect("receptionist-patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
+                }
+                else if(isSet($parameters[2]['type']) && $parameters[2]['type']??''=='labtest'){
+                    $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'labtest']);
+                    $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
+                    Application::$app->response->redirect("receptionist-patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
+                }
+                else{
+                    $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
+                    $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
+                    $PaymentModel->createAppointmenPay(Application::$app->session->get('patient'),'appointment',$AppointmentModel->getFee($appointment_id[0]['last_insert_id()']),$appointment_id[0]['last_insert_id()'],'pending');
+                    Application::$app->response->redirect("receptionist-patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
+                }
+            }
         }
+
     }
 
     public function patientInformation(Request $request)
