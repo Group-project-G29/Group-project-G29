@@ -336,8 +336,8 @@ class Prescription extends DbModel{
     }
     // =========CREATE NEW ORDER===============
     
-    public function add_med_rec ($med_ID, $prescription_ID, $amount, $curr_price) {
-       return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price ); ");
+    public function add_med_rec ($med_ID, $prescription_ID, $amount, $curr_price, $status) {
+       return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, $status ); ");
     }
     
     public function get_curr_orders($prescription_ID) {
@@ -356,8 +356,12 @@ class Prescription extends DbModel{
         return $this->customFetchAll(" SELECT order_ID FROM prescription WHERE prescription_ID = $pres_ID ");
     }
 
-    public function new_prescription () {
-        
+    public function update_prescription_total ( $pres_ID, $med_total ){
+        return $this->customFetchAll(" UPDATE prescription SET total_price= (total_price+$med_total) WHERE prescription_ID = $pres_ID; ");
+    }
+
+    public function reset_total ( $pres_ID ) {
+        return $this->customFetchAll(" UPDATE prescription SET total_price=0 WHERE prescription_ID = $pres_ID; ");
     }
 
 }   

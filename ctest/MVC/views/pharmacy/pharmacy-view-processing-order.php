@@ -4,9 +4,6 @@
     $component=new Component();
     $total = 0;
     $NA_count =0;
-    // var_dump($prescriptionmodel);   
-    // var_dump($ordermodel);   
-    // exit;
 ?>
 
 <div class="detail">
@@ -32,7 +29,7 @@
                                 <th>Medicine ID</th><th>Medicine Name</th><th>Medicine Strength</th><th>Price per unit</th><th>Amount</th><th>Total Price</th>
                             </tr>
                             <?php foreach($online_orders as $key=>$order): ?>
-                                <?php if( (int)$order['order_amount'] < (int)$order['available_amount'] ): ?>
+                                <?php if( $order['status']=='include' ): ?>
                                     <tr class="table-row">
                                     <td><?=$order['med_ID']?></td>
                                     <td><?=$order['name']?></td> 
@@ -47,8 +44,18 @@
                                     <td><?=$order['name']?></td> 
                                     <td><?=$order['strength']?></td> 
                                     <td><?=$order['current_price']?></td> 
-                                    <td><?= "Out of Stock" ?></td> 
-                                    <td></td> 
+                                    <td style="color:red;"><?= "Out of Stock" ?></td> 
+                                    <td style="color:red;">
+                                        <?php 
+                                            if ( (int)$order['available_amount']==0 ){
+                                                echo 'No items available';
+                                            } elseif ( (int)$order['available_amount']==1 ){
+                                                echo '1 item available';
+                                            } else {
+                                                echo $order['available_amount'].' items available'; 
+                                            }
+                                        ?>
+                                    </td> 
                                     <?php $NA_count = $NA_count + 1 ?>
                                 <?php endif; ?>
                             <?php endforeach; ?>
@@ -79,7 +86,7 @@
                                 </tr>
                                 <?php $total_prescription=0 ?>
                                 <?php foreach($ep_pres_med[$ep_order['prescription_ID']] as $key=>$ep_pres_medicine): ?>
-                                    <?php if( (int)$ep_pres_medicine['order_amount'] < (int)$ep_pres_medicine['available_amount'] ): ?>
+                                    <?php if( $ep_pres_medicine['status']=='include' ): ?>
                                         <tr class="table-row">
                                         <td><?=$ep_pres_medicine['med_ID']?></td>
                                         <td><?=$ep_pres_medicine['name']?></td> 
@@ -94,8 +101,18 @@
                                         <td><?=$ep_pres_medicine['name']?></td> 
                                         <td><?=$ep_pres_medicine['strength']?></td> 
                                         <td><?=$ep_pres_medicine['current_price']?></td> 
-                                        <td><?= "Out of Stock" ?></td> 
-                                        <td></td>
+                                        <td style="color:red;"><?= "Out of Stock" ?></td> 
+                                        <td style="color:red;">
+                                            <?php 
+                                                if ( (int)$order['available_amount']==0 ){
+                                                    echo 'No items available';
+                                                } elseif ( (int)$order['available_amount']==1 ){
+                                                    echo '1 item available';
+                                                } else {
+                                                    echo $order['available_amount'].' items available'; 
+                                                }
+                                            ?>
+                                        </td>
                                         <?php $NA_count = $NA_count + 1 ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
@@ -155,7 +172,7 @@
                                 </tr>
                                 <?php $total_prescription=0 ?>
                                 <?php foreach($sf_pres_med[$sf_order['prescription_ID']] as $key=>$sf_pres_medicine): ?>
-                                    <?php if( (int)$sf_pres_medicine['order_amount'] < (int)$sf_pres_medicine['available_amount'] ): ?>
+                                    <?php if( $sf_pres_medicine['status']=='include' ): ?>
                                         <tr class="table-row">
                                         <td><?=$sf_pres_medicine['med_ID']?></td>
                                         <td><?=$sf_pres_medicine['name']?></td> 
@@ -170,8 +187,18 @@
                                         <td><?=$sf_pres_medicine['name']?></td> 
                                         <td><?=$sf_pres_medicine['strength']?></td> 
                                         <td><?=$sf_pres_medicine['current_price']?></td> 
-                                        <td><?= "Out of Stock" ?></td> 
-                                        <td></td>
+                                        <td style="color:red;"><?= "Out of Stock" ?></td> 
+                                        <td style="color:red;">
+                                            <?php 
+                                                if ( (int)$order['available_amount']==0 ){
+                                                    echo 'No items available';
+                                                } elseif ( (int)$order['available_amount']==1 ){
+                                                    echo '1 item available';
+                                                } else {
+                                                    echo $order['available_amount'].' items available'; 
+                                                }
+                                            ?>    
+                                        </td>
                                         <?php $NA_count = $NA_count + 1 ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
@@ -190,10 +217,6 @@
 
 <div class='upper-container'>
     <?php echo $component->button('cancle-process','','Cancle Process','button--class-3  width-10','cancle-process');?>
-
-    <!-- <?php if( $order_type=='Softcopy-prescription' ): ?>
-    <?php echo $component->button('add-more-medicine','','Add More Medicine','button--class-0  width-10','add-more-medicine');?>
-    <?php endif; ?> -->
 
     <?php if( $NA_count>0 ): ?>
     <?php echo $component->button('notify-availability','','Send Notification','button--class-0  width-10','notify-availability');?>
@@ -219,7 +242,7 @@
     
     const btn2=document.getElementById("finish-process");
     btn2.addEventListener('click',function(){
-        location.href="pharmacy-finish-processing-order?id="+<?=$order_details[0]['order_ID']?>; //get
+        location.href="pharmacy-finish-processing-order?id="+<?=$order_details[0]['order_ID']?>+'&total='+<?=$total?>; //get
     })
     
     const btn3=document.getElementById("notify-availability");

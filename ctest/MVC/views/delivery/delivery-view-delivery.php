@@ -40,7 +40,7 @@ $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID'],'post'
             ?>
         </div>
     <?php elseif ( $delivery['payment_status'] === 'done' ) : ?>
-        <p>payment successful</p>
+        <p>Payment has been done.</p>
     <?php endif; ?>
 
     <div class="main_title">

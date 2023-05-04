@@ -49,12 +49,26 @@ class Medicine extends DbModel{
         $cur_amount=$this->fetchAssocAll(['med_ID'=>$id])[0]['amount'];
         //reduce amount
         $cur_amount-=$amount;
-        //if reduce amount is negative return false
+        //if reduced amount is negative return false
         if($cur_amount<0){
             return false;
         }
         //else update table || return true;
         else if($updateDB){
+            $this->customFetchAll("update medical_products set amount=$cur_amount where med_ID=$id");
+            return true;
+        }
+        else{
+            return true;
+        }
+    }
+
+    public function increaseMedicine($id,$amount,$updateDB=false){
+        //get medicine amount
+        $cur_amount=$this->fetchAssocAll(['med_ID'=>$id])[0]['amount'];
+        //reduce amount
+        $cur_amount+=$amount;
+        if($updateDB){
             $this->customFetchAll("update medical_products set amount=$cur_amount where med_ID=$id");
             return true;
         }

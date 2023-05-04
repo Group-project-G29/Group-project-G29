@@ -688,6 +688,7 @@ select {
     color: var(--clr-white);
     background-color: var(--clr-light);
 }
+
 .button--class-2{
     color:var(--clr-white);
     background-color:var(--clr-button-green);
@@ -696,15 +697,6 @@ select {
     height:3vh;
     padding-inline:2vw;
 
-}
-
-.button--class-3{
-    color:var(--clr-white);
-    background-color:red;
-    border:none;
-    border-radius: 0px;
-    height:3vh;
-    padding-inline:2vw;
 }
 
 
@@ -1064,10 +1056,11 @@ select {
 .button--class-3 {
     color: var(--clr-white);
     background-color: red;
-    border: none;
-    border-radius: 0px;
-    height: 3vh;
-    padding-inline: 2vw;
+    height:4vh;
+    font-size: 0.9em;
+    color: var(--clr-white);
+    border:none;
+    border-radius:5px;
 }
 .button--class-4 {
   height: 6vh;
@@ -1343,6 +1336,10 @@ select {
 .detail-container {
     width: 50%;
     align-content: center;
+}
+
+.warning {
+    color: red;
 }
 
 

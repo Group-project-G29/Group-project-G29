@@ -133,6 +133,10 @@ $app->router->get('/ctest/pharmacy-handle-advertisement',[PharmacyController::cl
 
 $app->router->get('/ctest/pharmacy-orders-previous',[PharmacyController::class,'viewPreviousOrder']);
 $app->router->get('/ctest/pharmacy-view-previous-order',[PharmacyController::class,'DetailsPreviousOrder']);
+$app->router->get('/ctest/pharmacy-front-orders-pending',[PharmacyController::class,'viewFrontdeskPendingOrder']);
+$app->router->get('/ctest/pharmacy-front-orders-finished',[PharmacyController::class,'viewFrontdeskFinishedOrder']);
+$app->router->get('/ctest/pharmacy-view-front-orders-pending',[PharmacyController::class,'detailsFrontdeskPending']);
+$app->router->get('/ctest/pharmacy-view-front-orders-finished',[PharmacyController::class,'detailsFrontdeskFinished']);
 $app->router->get('/ctest/pharmacy-orders-pending',[PharmacyController::class,'viewPendingOrder']);
 $app->router->get('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'DetailsPendingOrder']);
 $app->router->get('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
@@ -148,6 +152,7 @@ $app->router->get('/ctest/pharmacy-cancle-processing-order',[PharmacyController:
 $app->router->get('/ctest/pharmacy-add-medicine-processing-order',[PharmacyController::class,'addMedicineProcessingOrder']);
 $app->router->get('/ctest/pharmacy-orders-delivering',[PharmacyController::class,'viewDeliveringOrder']);
 $app->router->get('/ctest/pharmacy-track-order',[PharmacyController::class,'trackOrder']);
+$app->router->post('/ctest/pharmacy-track-order',[PharmacyController::class,'trackOrder']);
 $app->router->get('/ctest/pharmacy-go-to-process-order',[PharmacyController::class,'processOrderAgain']);
 $app->router->get('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
 $app->router->post('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);

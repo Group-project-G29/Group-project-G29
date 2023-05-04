@@ -11,7 +11,7 @@ include "../views/layouts/navbar/pharmacy-navbar.php";
     <div class="layout-div-row">
 
         <div class="layout-div-col" id="sidebar-col"> 
-            <?php $sidebar=new Sidebar(['Orders'=>'/ctest/pharmacy-orders-pending', 'Previous Orders'=>'/ctest/pharmacy-orders-previous', 'Medicines'=>'/ctest/pharmacy-view-medicine','Advertisement'=>'/ctest/pharmacy-view-advertisement','Report'=>'/ctest/pharmacy-view-report','My Detail'=>'/ctest/pharmacy-view-personal-details'],$select);?>
+            <?php $sidebar=new Sidebar(['Front Desk Orders'=>'/ctest/pharmacy-front-orders-pending','Orders'=>'/ctest/pharmacy-orders-pending', 'Previous Orders'=>'/ctest/pharmacy-orders-previous', 'Medicines'=>'/ctest/pharmacy-view-medicine','Advertisement'=>'/ctest/pharmacy-view-advertisement','Report'=>'/ctest/pharmacy-view-report','My Detail'=>'/ctest/pharmacy-view-personal-details'],$select);?>
             <?php echo $sidebar;  ?>
         </div>
 

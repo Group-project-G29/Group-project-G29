@@ -16,8 +16,7 @@
 <div class='upper-container'>
     <!-- implement this -->
     <?php echo $component->button('pending','','Pending Orders','button--class-0-active  width-10','pending');?>
-    <?php echo $component->button('processing','','Processing Orders','button--class-0-deactive  width-10','processing');?>
-    <?php echo $component->button('delivering','','Packed Orders','button--class-0-deactive  width-10','delivering');?>
+    <?php echo $component->button('finished','','Finished Orders','button--class-0-deactive  width-10','finished');?>
 </div>
 
 <div class='upper-container'>
@@ -34,51 +33,26 @@
     <tr>
         <th>Order ID</th>
         <th>Name</th>
+        <th>Age</th>
         <th>Contact</th>
+        <th>Doctor</th>
         <th>Date</th>
         <th>Time</th>
     </tr>
     <?php if($orders): ?>
-        
         <?php foreach($orders as $key=>$order): ?>
-            <?php if($order['processing_status']=='pending'):?>
-                    <tr class="table-row" id=<?=$order['order_ID']?> >
-                        <td><?=$order['order_ID']?></td>
-                        <td><?=$order['name']?></td> 
-                        <td><?=$order['contact']?></td> 
-                        <td><?=$order['created_date']?></td> 
-                        <td><?=$order['created_time']?></td> 
-                    </tr>
-            <?php elseif($order['processing_status']=='waiting'): ?> 
-                        <tr class="table-row_gray" id=<?=$order['order_ID']?> >
-                        <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['order_ID']?></td>
-                        <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['name']?></td> 
-                        <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['contact']?></td> 
-                        <td class="table-row_gray_view" id=<?=$order['order_ID']?>><?=$order['created_date']?></td> 
-                        <td><a class='delete-order' id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)">Delete Order</a></td>
-                    </tr>
-            <?php elseif($order['processing_status']=='accepted'): ?>  
-                    <tr class="table-row_green" id=<?=$order['order_ID']?> >
-                        <td><?=$order['order_ID']?></td>
-                        <td><?=$order['name']?></td> 
-                        <td><?=$order['contact']?></td> 
-                        <td><?=$order['created_date']?></td> 
-                        <td><?=$order['created_time']?></td> 
-                    </tr>
-            <?php elseif($order['processing_status']=='rejected'): ?> 
-                    <tr class="table-row_red" id=<?=$order['order_ID']?> >
-                        <td><?=$order['order_ID']?></td>
-                        <td><?=$order['name']?></td> 
-                        <td><?=$order['contact']?></td> 
-                        <td><?=$order['created_date']?></td> 
-                        <!-- <td><?=$order['created_time']?></td> -->
-                        <td><a class='delete-order' id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)">Delete Order</a></td>
-                    </tr>  
-            <?php endif; ?>    
+            <tr class="table-row" id=<?=$order['order_ID']?> >
+                <td><?=$order['order_ID']?></td>
+                <td><?=$order['name']?></td> 
+                <td><?=$order['age']?></td> 
+                <td><?=$order['contact']?></td> 
+                <td><?=$order['doctor']?></td> 
+                <td><?=$order['date']?></td> 
+                <td><?=$order['time']?></td> 
+            </tr>
         <?php endforeach; ?>
-    </table>
-
     <?php endif; ?>
+</table>
 </div>
 
 
@@ -109,40 +83,34 @@
     elementsArray1 = document.querySelectorAll(".table-row");
     elementsArray1.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='pharmacy-view-pending-order?id='+elem.id; 
+            location.href='pharmacy-view-front-orders-pending?id='+elem.id; 
         });
     });
 
-    elementsArray2 = document.querySelectorAll(".table-row_green");
-    elementsArray2.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href='pharmacy-view-pending-order?id='+elem.id; 
-        });
-    });
+    // elementsArray2 = document.querySelectorAll(".table-row_green");
+    // elementsArray2.forEach(function(elem) {
+    //     elem.addEventListener("click", function() {
+    //         location.href='pharmacy-view-pending-order?id='+elem.id; 
+    //     });
+    // });
 
-    elementsArray3 = document.querySelectorAll(".table-row_gray_view");
-    elementsArray3.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href='pharmacy-view-pending-order?id='+elem.id; 
-        });
-    });
-
+    // elementsArray3 = document.querySelectorAll(".table-row_gray_view");
+    // elementsArray3.forEach(function(elem) {
+    //     elem.addEventListener("click", function() {
+    //         location.href='pharmacy-view-pending-order?id='+elem.id; 
+    //     });
+    // });
     
     const btn1=document.getElementById("pending");
     btn1.addEventListener('click',function(){
-        location.href="pharmacy-orders-pending"; //get
+        location.href="pharmacy-front-orders-pending"; //get
     })
 
-    const btn2=document.getElementById("processing");
+    const btn2=document.getElementById("finished");
     btn2.addEventListener('click',function(){
-        location.href="pharmacy-orders-processing"; //get
+        location.href="pharmacy-front-orders-finished"; //get
     })
 
-    const btn3=document.getElementById("delivering");
-    btn3.addEventListener('click',function(){
-        location.href="pharmacy-orders-delivering"; //get
-    })
-    
     const btn4=document.getElementById("new-order");
     btn4.addEventListener('click',function(){
         location.href="pharmacy-new-order"; //get
