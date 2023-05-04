@@ -238,7 +238,11 @@ use app\core\DbModel;
         }
 
         public function reset_total ( $order_ID ) {
-            return $this->customFetchAll(" UPDATE order SET total_price=0 WHERE prescription_ID = $order_ID; ");
+            return $this->customFetchAll(" UPDATE order SET total_price=0 WHERE order_ID = $order_ID; ");
+        }
+
+        public function update_payment_status ( $order_ID ) {
+            return $this->customFetchAll(" UPDATE order SET payment_status='completed' WHERE order_ID = $order_ID; ");
         }
 
         // public function get_frontdesk_last_order ( $name ) {

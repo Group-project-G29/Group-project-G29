@@ -522,6 +522,7 @@ class PharmacyController extends Controller{
                     $curr_order=$orderModel->getOrderByID($parameters[0]['id']);
                     // set processing status from packed to pickedup
                     $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'pickedup');
+                    $updated_payment=$orderModel->update_payment_status($parameters[0]['id']);
                     $this->setLayout("pharmacy",['select'=>'Previous Orders']);
                     // get previous orders - pickedup|deleted
                     $orders=$orderModel->get_previous_orders(); 
