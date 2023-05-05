@@ -7,6 +7,7 @@ use app\core\Request;
 use app\models\LabTest;
 use app\models\User;
 use app\core\DbModel;
+use app\core\Email;
 use app\core\Response;
 use app\models\Advertisement;
 use app\models\Channeling;
@@ -19,6 +20,7 @@ use app\models\Cart;
 use app\models\ConsultationReport;
 use app\models\Delivery;
 use app\models\LabReport;
+use app\models\LabTestRequest;
 use app\models\MedicalHistory;
 use app\models\MedicalReport;
 use app\models\Medicine;
@@ -160,11 +162,12 @@ class PatientAuthController extends Controller{
     }
     public function getNIC(Request $request,Response $response){
         $this->setLayout('auth');
+        $emailModel=new Email();
         $patient=new Patient();
         if($request->isPost()){
             
             $patient->loadData($request->getBody());
-            $pat=$patient->fetchAssocAll(['nic'=>$patient->nic,'type'=>'adult']);
+            $pat=$patient->fetchAssocAll(['nic'=>$patient->nic,'type'=>'adult'])[0];
           
             if(!$pat){
                 $patient->customAddError('nic',"No Patient Exists with this NIC");
@@ -173,8 +176,17 @@ class PatientAuthController extends Controller{
                   ]);
             }
             else{
-                Application::$app->session->set('temp_user',$patient->patient_ID);
-                return $this->render('patient/set-otp');
+                $OTP=new OTP();
+                Application::$app->session->set('temp_user',$pat['patient_ID']);
+                $p=$patient->findOne(['patient_ID'=>$pat['patient_ID']]);
+                if($OTP->canSend($p->patient_ID)){
+                    $rint=$OTP->canSend($p->patient_ID);
+                }
+                else{
+                    $rint=$OTP->setOTP($p->patient_ID);
+                }
+                $emailModel->sendOTP($rint,$p->email);
+                return $this->render('patient/sent-email');
             }
         }
         return $this->render('patient/get-nic',[
@@ -182,22 +194,28 @@ class PatientAuthController extends Controller{
         ]);
     }
     public function OTP(Request $request,Response $response){
+        $patient=Application::$app->session->get('temp_user');
         $parameters=$request->getParameters();
         $this->setLayout('auth');
         $OTP=new OTP();
-        if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='send'){
-          //create otp
-          if($OTP->canSend(Application::$app->session->get('temp_user'))){
-              $OTP->createOTP();
-          }
+        if($OTP->canSend($patient)){
+            if($OTP->canSend($patient)[0]['OTP']==$parameters[0]['sec']){
+                if($request->isPost()){
+                    $result=$OTP->changePassword($response,'patient');
+                   
+                    return $this->render('change-password',[
+                        'model'=>$result
+                    ]);
+                }
             
-        }
-        if($request->isPost()){
-            if($OTP->checkOTP(Application::$app->session->get('temp_user'))){
-
+                return $this->render('change-password',[
+                    'model'=>new patient()
+                ]);
             }
         }
-        return $this->render('patient/set-otp');
+        else{
+            exit;
+        }
 
 
     }
@@ -212,7 +230,6 @@ class PatientAuthController extends Controller{
         $ChannelingModel=new Channeling();
         $OpenedChannelingModel=new OpenedChanneling();
         $Doctor=new Employee();
-        $patient_appointments=
         $Channeling=$Doctor->customFetchAll("Select * from opened_channeling left JOIN channeling on opened_channeling.channeling_ID=channeling.channeling_ID left join doctor on channeling.doctor=doctor.nic left join employee on doctor.nic=employee.nic where channeling.speciality="."'".$speciality."'");
         if($speciality){
             Application::$app->session->set('channelings',$Channeling);
@@ -529,6 +546,7 @@ class PatientAuthController extends Controller{
             $orderModel=new Order();
             $orderModel->loadData($request->getBody());            
             $deliveryModel->loadData($request->getBody());
+            //if there is a order
             if($orderModel->getPatientOrder()){
                 Application::$app->session->setFlash('error',"Please wait until next order get finished.");
                 $cartModel=new Cart();
@@ -564,6 +582,19 @@ class PatientAuthController extends Controller{
                         Application::$app->response->redirect('/ctest/patient-pharmacy?spec=main');
                     }
                     Application::$app->response->redirect("patient-pharmacy?cmd=search&value=".Application::$app->session->get('value')."&page=".Application::$app->session->get('page'));
+                }
+                $prescriptionModel=new Prescription();
+                $cart=$cartModel->getPatientCart(Application::$app->session->get('user'));
+                $result=$prescriptionModel->fetchAssocAll(['cart_ID'=>$cart[0]['cart_ID'],'type'=>'softcopy prescription']);
+                if(!$result){
+                    if($cartModel->getCartPrice()<1000){
+                        Application::$app->session->setFlash('error',"Order value should be more than LKR 1000.00");
+                         if(Application::$app->session->get('page') || Application::$app->session->get('value')){
+                            Application::$app->response->redirect('/ctest/patient-pharmacy?spec=main');
+                    }
+                    Application::$app->response->redirect("patient-pharmacy?cmd=search&value=".Application::$app->session->get('value')."&page=".Application::$app->session->get('page'));
+                    }
+
                 }
                 $patient=Application::$app->session->get('userObject');
                 $deliveryModel=new Delivery();
@@ -678,14 +709,34 @@ class PatientAuthController extends Controller{
         if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='payments'){
             $this->setLayout('patient',['select'=>'My Payments']);
             $paymentModel=new Payment();
+            $parameters=$request->getParameters();
             $payments=$paymentModel->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user')]);
+            if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='done' ){
+                $paymentModel->donePayment();
+            }
+            if($request->isPost()){
+                $total=$paymentModel->getCheckerPayments();
+                $hash = strtoupper(
+                    md5(
+                        '1223094'. 
+                        'Medicine Order-'.Application::$app->session->get('user'). 
+                        number_format($total, 2, '.', '') . 
+                        'LKR' .  
+                        strtoupper(md5('NDA0Mjc0OTcyMzQxOTM0OTkwMzIyMjQxMTI4NzEzNDAwNjY0MjQ0NQ==')) 
+                    ) 
+                );
+                 return $this->render('patient/dashboard-payment-pgw',[
+                    'payments'=>$payments,
+                    'hash'=>$hash,
+                    'amount'=>$total
+                    
+                ]);
+            }
             return $this->render('patient/dashboard-payment',[
                 'payments'=>$payments
             ]);
         }
-        if(isSet($parameters[0]['spec']) &&  $parameters[0]['spec']=='my-detail'){
-
-        }
+        
 
 
         
@@ -700,13 +751,14 @@ class PatientAuthController extends Controller{
         $this->setLayout("patient",['select'=>'My Payments']);
         if(isSet($parameters[0]['spec']) && $parameters[0]['spec']=='payment-gateway'){
             $amount=$cartModel->getCartPrice();
+     
             $hash = strtoupper(
                                 md5(
-                                    '1222960' . 
-                                    "Medicine Order-".Application::$app->session->get('user') . 
-                                    number_format($amount, 2, '.', '') . 
-                                    'LKR' .  
-                                    strtoupper(md5('MzAzOTcxMjc5NTIzODU1OTk5ODg3MTE2MTM1NDU0MDgxODMzNjk2')) 
+                                    '1223094' . 
+                                    "Medicine Order-".Application::$app->session->get('user'). 
+                                    number_format($amount, 2, '.', ''). 
+                                    'LKR'.  
+                                    strtoupper(md5('NDA0Mjc0OTcyMzQxOTM0OTkwMzIyMjQxMTI4NzEzNDAwNjY0MjQ0NQ==')) 
                                 )); 
                                 $cart=$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID'];
                                 
@@ -723,14 +775,6 @@ class PatientAuthController extends Controller{
                 $payment=new Payment();
                 $cart=new Cart();
                 $amount=$cart->getCartPrice();
-                
-                if(isset($parameters[2]['type']) && $parameters[2]['type']=='payon'){
-                    $payment->createOrderPay(Application::$app->session->get('user'),'order',$amount,'pending');
-                }
-                else{
-
-                    $payment->createOrderPay(Application::$app->session->get('user'),'order',$amount,'completed');
-                }
                 $order=Application::$app->session->get('order');
                 $delivery=Application::$app->session->get('delivery');
                 //---------------remove items from the session--------------------
@@ -740,8 +784,14 @@ class PatientAuthController extends Controller{
                 //get the patient cart
                 $user=$cartModel->getPatientCart(Application::$app->session->get('user'));
                 //call the transfer function
-                $cartModel->transferCartItem($user[0]['cart_ID'],$order->pickup_status,$delivery);
-                
+                $order_ID=$cartModel->transferCartItem($user[0]['cart_ID'],$order->pickup_status,$delivery);
+                if(isset($parameters[2]['type']) && $parameters[2]['type']=='payon'){
+                    $payment->createOrderPay(Application::$app->session->get('user'),'order',$amount,'pending',$order_ID);
+                }
+                else{
+
+                    $payment->createOrderPay(Application::$app->session->get('user'),'order',$amount,'done',$order_ID);
+                }
                 //redirect to patient dashboard
                 Application::$app->response->redirect("/ctest/patient-dashboard?spec=orders");
                 
@@ -750,9 +800,11 @@ class PatientAuthController extends Controller{
         }
 
         $cart=$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID'];
+        $prescriptionModel=new Prescription();
         return $this->render("patient/patient-payment-page",[
             'prescriptions'=>$orderModel->fetchAssocAllByName(['cart_ID'=>$cart],'prescription'),
-            'medicines'=>$orderModel->customFetchAll("select medical_products.name,medical_products.unit,medicine_in_cart.amount,medical_products.unit_price,medical_products.med_ID from medicine_in_cart left join medical_products on medical_products.med_ID=medicine_in_cart.med_ID where medicine_in_cart.cart_ID=".$cart)
+            'medicines'=>$orderModel->customFetchAll("select medical_products.name,medical_products.unit,medicine_in_cart.amount,medical_products.unit_price,medical_products.med_ID from medicine_in_cart left join medical_products on medical_products.med_ID=medicine_in_cart.med_ID where medicine_in_cart.cart_ID=".$cart),
+            'lacked'=>$prescriptionModel->getCartLackedItems()
         ]);
 
     }
@@ -768,6 +820,7 @@ class PatientAuthController extends Controller{
             if(isset($parameter[1]['cmd']) && $parameter[1]['cmd']=='add'){
                 $cart=$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID'];
                 $prescriptionModel->customFetchAll("update prescription set cart_ID=".$cart." where prescription_ID=".$parameter[2]['id']);
+                $prescriptionModel->sanitizePrescription($parameter[2]['id']);
                 $response->redirect('patient-dashboard?spec=documentation');
                 exit;
             }
@@ -920,19 +973,31 @@ class PatientAuthController extends Controller{
     public function labpage(Request $request,Response $response){
         // $this->setLayout("patient",['select'=>'Payments']);
         $this->setLayout('patient-lab');
+        $lab_request=new LabTestRequest();
         $lab_test = new LabTest();
         $tests = $lab_test->get_lab_tests();
         if($request->isPost()){
             $lab_test->loadData($request->getBody());
+            $requests=[];
+            if(Application::$app->session->get('user')){
+                $requests=$lab_request->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user')]);
+            }
             $sel=$lab_test->fetchAssocAll(['name'=>$lab_test->name]);
             return $this->render('patient/lab-page',[
                 'tests' => $tests,
-                'seltest'=>$sel
+                'seltest'=>$sel,
+                'requests'=>$requests
          ]);
         }
+        $requests=[];
+        if(Application::$app->session->get('user')){
+            $requests=$lab_request->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user')]);
+        }
+        $sel=$lab_test->fetchAssocAll(['name'=>$lab_test->name]);
         return $this->render('patient/lab-page',[
             'tests' => $tests,
-            'seltest'=>''
+            'seltest'=>'',
+            'requests'=>$requests
         ]);
     } 
 

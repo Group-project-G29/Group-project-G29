@@ -14,10 +14,11 @@ use app\models\PreChannelingTest;
     $preModel=new PreChanneilngTestsValue();
     $openeChanneling=new OpenedChanneling();
     $adminN=new AdminNotification();
+    $channelingModel=new Channeling();
     
 ?>
 
-<div class="background hide">
+<div style="margin-left:-18vw; width:105vw; margin-top:-5vh;" class="background hide">
 
 </div>
 <section class="doctor-channeling">
@@ -32,46 +33,73 @@ use app\models\PreChannelingTest;
                 <?=$form->editableselect("test_".$channeling['channeling_ID'],"Select Pre-channeling Test",'tinput_'.$channeling['channeling_ID'],['weight'=>'weight','height'=>'height','blood pressure'=>'blood pressure']); ?>
                 <?= $component->button('btn','','Add','add-btn button--class-0',$channeling['channeling_ID'] ); ?>
             </div>
-                <div >
+                <div>
                     <?php $tests=$preModel->getTestsByOp($channeling['channeling_ID']); ?>
-                    <?php $channelings=$openeChanneling->getOpenedChannelings($channeling['channeling_ID']); ?>
+                    <?php $channelings=$channelingModel->getOpenedChannelings($channeling['channeling_ID']); ?>
                     <div class="test-names">
-                    <?php foreach($tests as $test):?>
                         <div class="popup-test">
-                            <?php echo '<br>'.$test['name']; ?>
+                    <?php foreach($tests as $test):?>
+                            <div class="test-it">
+                                 <?php echo $test['name']; ?>
+                            </div>
+                            <?php endforeach;?>
                         </div>
-                    <?php endforeach;?>
         
                     <div class="popup-channelings">
                     <h3>Currently Opened Channelings</h3>
+                    <br>
+                    
+                    <div class="noti-cont">
                     <?php foreach($channelings as $ch):?>
                            <?php $channelingModel=new  Channeling() ?>
                             <?php $time=$channelingModel->fetchAssocAll(['channeling_ID'=>$ch['channeling_ID']])[0]['time']; ?>
-                            <div>
-                                <?php echo '<br>'."Channeling On ".$ch['channeling_date']." at time ".substr($time,0,5).(($time>='12:00')?'PM':'AM'); ?>
-                                <?php if($ch['status']=='closed' || $ch['status']=='cancelled'): ?>
-                                    <?=$component->button('btn-op','','Request to Channeling','open',$ch['opened_channeling_ID']); ?>
-                                <?php else:?>
-                                    
-                                    <?php if($adminN->isThereNoti($ch['opened_channeling_ID'])!='close'): ?>
-                                    Cancellation Request has been sent
-                                    <?=$component->button('btn-close','','Request to Close Channeling','close',$ch['opened_channeling_ID']); ?>
-                                    <?php endif;?>
-                                    <?php if($adminN->isThereNoti($ch['opened_channeling_ID'])!='cancel'): ?>
-                                        <?=$component->button('btn-cancel','','Request to Cancel Channeling','cancel',$ch['opened_channeling_ID']); ?>
-                                        Closing Request had been sent
-                                    <?php endif;?>
+                            <div class="noti-config">
+                                <?php echo '<br>'."Channeling On ".$ch['channeling_date']." at time ".substr($time,0,5).(($time>='12:00')?'PM':'AM')."<br>"; ?>
+                                <?php if($ch['status']=='finished'): ?>
+                                    Finished
+                                <?php endif;?>
+                                <?php if($ch['status']=='closed'): ?>
+                                        <?php if($adminN->isThereNoti($ch['opened_channeling_ID'])!='open'): ?>
+                                            <?=$component->button('btn-op','','Request to Open Channeling','request-button open',$ch['opened_channeling_ID']); ?>
+                                        <?php else: ?>
+                                                <span class="noti-small"><img src="./media/anim_icons/sent.gif">Channeling Open Requested<a class="small-cancel" href=<?="notification?cmd=clear&id=".$ch['opened_channeling_ID']?>>X</a></span>
+                                        <?php endif;?>
+                                        <?php if($adminN->isThereNoti($ch['opened_channeling_ID'])=='cancel'): ?>
+                                            <span class="noti-small"><img src="./media/anim_icons/sent.gif">Channeling Cancellation Requested<a class="small-cancel" href=<?="notification?cmd=clear&id=".$ch['opened_channeling_ID']?>>X</a></span>
+                                        <?php else: ?>
+                                            <?=$component->button('btn-cancel','Request to Cancel Channeling','request-button cancel',$ch['opened_channeling_ID']); ?>  
+                                        <?php endif;?>
+                                <?php elseif($ch['status']=='cancelled'): ?>
+                                       <?php if($adminN->isThereNoti($ch['opened_channeling_ID'])!='open'): ?>
+                                            <?=$component->button('btn-op','','Request to Open Channeling','request-button open',$ch['opened_channeling_ID']); ?>
+                                        <?php else: ?>
+                                                <span class="noti-small"><img src="./media/anim_icons/sent.gif">Channeling Open Requested<a class="small-cancel" href=<?="notification?cmd=clear&id=".$ch['opened_channeling_ID']?>>X</a></span>
+                                        <?php endif;?>
+                                <?php elseif($ch['status']=='Opened'): ?>
+                                        <?php if($adminN->isThereNoti($ch['opened_channeling_ID'])=='cancel'): ?>
+                                            <span class="noti-small"><img src="./media/anim_icons/sent.gif">Channeling Cancellation Requested<a class="small-cancel" href=<?="notification?cmd=clear&id=".$ch['opened_channeling_ID']?>>X</a></span>
+                                        <?php else: ?>
+                                            <?=$component->button('btn-cancel','','Request to Cancel Channeling','request-button cancel',$ch['opened_channeling_ID']); ?>  
+                                        <?php endif;?>
+                                        <?php if($adminN->isThereNoti($ch['opened_channeling_ID'])!='close'): ?>
+                                            <?=$component->button('btn-close','','Request to Close Channeling','request-button close',$ch['opened_channeling_ID']); ?>  
+                                            <?php else: ?>
+                                                <span class="noti-small"><img src="./media/anim_icons/sent.gif">Channeling Close Requested<a class="small-cancel" href=<?="notification?cmd=clear&id=".$ch['opened_channeling_ID']?>>X</a></span>
+                                        <?php endif;?>
+                                      
+                                 <?php endif;?>
+                                   
             
-                                <?php endif;?>        
                             </div>
                             <?php endforeach;?>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="doctor-channeling-tile" id=<?="'".$channeling['channeling_ID']."'" ?>>
                 <div class=<?="'"."grid".rand(1,4)."'"?>>
-                    <h1><?=$channeling['day']?></h1>
+                    <h1><?=ucfirst($channeling['day'])?></h1>
                     <div class="img-setting-btn">
                         <img class="setting-img" id=<?=$channeling['channeling_ID'] ?> src="./media/images/channeling assistance/gear.png"?>
                     </div>

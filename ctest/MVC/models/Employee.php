@@ -40,6 +40,7 @@ class Employee extends DbModel{
         Application::$app->logout();
         return true;
     }
+    
 
     public function rules(): array
     {
@@ -245,8 +246,21 @@ class Employee extends DbModel{
     }
 
      public function updateAccounts($id){
-        echo "update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id;
-        $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id);
+        $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".Application::$app->session->get('userObject')->nic."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id);    
+        return true;
+    }
+     public function updateDoctorRecord($id){
+      
+        if($_FILES['img']['name']){
+            $this->fileStore(); 
+            $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".Application::$app->session->get('userObject')->nic."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."',img='".$this->img."' where nic=".$id);
+            $this->customFetchAll("update doctor set description='".$_POST['description']."' where nic=".$id);
+            return true;
+        }
+        $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".Application::$app->session->get('userObject')->nic."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where nic=".$id);
+      
+            $this->customFetchAll("update doctor set description='".$_POST['description']."' where nic=".$id);
+        
         
         return true;
     }

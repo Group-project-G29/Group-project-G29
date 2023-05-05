@@ -1,10 +1,18 @@
 
 <?php
 
-    use app\core\component\Component;
+use app\core\Application;
+use app\core\Calendar;
+use app\core\component\Component;
     use app\core\form\Form;
+use app\models\Appointment;
+use app\models\OpenedChanneling;
+
     $component=new Component();
-   
+    $openedChanneling=new OpenedChanneling();
+    $appointmentModel=new Appointment();
+    $calendarModel=new Calendar();
+     
 
 ?>
 <div class="bg">
@@ -27,6 +35,7 @@
 
 <div class="appointment-container ">
         <?php foreach($channelings as $key=>$value): ?>
+            <?php if($value['channeling_date']>=Date('Y-m-d') && $calendarModel->addDaysToDate(Date('Y-m-d'),$value['open_before'])>=$value['channeling_date'] &&  ($value['status']!='closed' || $value['status']!='cancelled')): ?>
             <div class="item">
                 <div class="item--left">
                     <div>
@@ -45,9 +54,25 @@
                         <h3>Date :<?=$value['channeling_date']?></h3>
                         <h3>Fee :LKR <?=$value['fee']?></h3>
                     </div>
-                    <?= $component->button('add-ppointment','submit','+ Add Appointment','button--class-1',$value['opened_channeling_ID']);?>
-                </div>
-            </div>
+                    <div>
+                       
+                       <?php if($openedChanneling->isPatientIn(Application::$app->session->get('user'),$value['opened_channeling_ID'])):?>
+                               <?php echo "Already have an appointment" ?>
+                       <?php elseif($value['total_patients']!=-1 && $value['remaining_appointments']<=0): ?>
+                               <?php echo "All appointments has been taken" ?>
+                       <?php elseif($value['status']!='Opened'): ?>
+                           <?php echo "Not taking any appointments" ?>
+                       <?php elseif(!$openedChanneling->isPatientIn(Application::$app->session->get('user'),$value['opened_channeling_ID'])):?>
+                           <?= $component->button('add-appointment','','+ Add Consultation Appointment','button--class-1 width-10',$value['opened_channeling_ID']);?>
+                       <?php if($appointmentModel->labReportEligibility(Application::$app->session->get('user'),$value['nic'],$value['opened_channeling_ID'])):?>
+                           <?= $component->button('add-appointment','','+ Add Medical Report Consultation','button--class-5 width-10',$value['opened_channeling_ID']);?>
+                       <?php endif; ?>
+                       <?php endif; ?>
+                   </div>
+               </div>
+           </div>
+           <?php endif; ?>
+            
             
         <?php endforeach; ?>
   

@@ -156,8 +156,7 @@ class Appointment extends DbModel{
         $day=$dateModel->get($today,'day');
         $lowdate=$dateModel->arrayToDate([$day,$month,$year]);
         $update=$dateModel->arrayToDate([01,$month,$dateModel->get($today,'year')]);
-
-        $result = $this->customFetchAll("SELECT MONTH(opened_channeling.channeling_date), COUNT(appointment.appointment_ID) FROM `appointment` LEFT JOIN `opened_channeling` ON appointment.opened_channeling_ID = opened_channeling.opened_channeling_ID WHERE opened_channeling.channeling_date>='$lowdate' and opened_channeling.channeling_date<'$update' AND appointment.status='used' GROUP by MONTH(opened_channeling.channeling_date);");
+        $result = $this->customFetchAll("SELECT MONTH(opened_channeling.channeling_date), COUNT(appointment.appointment_ID) FROM `appointment` LEFT JOIN `opened_channeling` ON appointment.opened_channeling_ID = opened_channeling.opened_channeling_ID WHERE opened_channeling.channeling_date>='$lowdate' and opened_channeling.channeling_date<='$update' AND appointment.status='used' GROUP by MONTH(opened_channeling.channeling_date);");
 
         $value=[0,0,0,0,0,0,0,0,0,0,0,0];
         foreach($result as $row){

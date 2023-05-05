@@ -52,7 +52,7 @@ use app\models\Payment;
     
 
 </section>
-<?php echo $paymentModel->payNow($amount,'Medicine Order-'.Application::$app->session->get('user'),Application::$app->session->get('userObject'),'',$hash,'patient-payment?spec=medicine-order&cmd=complete',''); ?>
+<?php echo $paymentModel->payNow($amount,'Medicine Order-'.Application::$app->session->get('user'),Application::$app->session->get('userObject'),'',$hash,'patient-dashboard?spec=payment&cmd=done',''); ?>
 
 <script>
    

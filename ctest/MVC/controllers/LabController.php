@@ -21,6 +21,7 @@ use app\models\TemplateContent;
 use app\models\LabAdvertisement;
 use app\models\LabContentAllocation;
 use app\models\LabReport;
+use app\models\LabTestRequest;
 
 class LabController extends Controller
 {
@@ -416,9 +417,17 @@ class LabController extends Controller
             // $createReport=$reportmodel->customFetchAll("SELECT report_ID from lab_report order by report_ID desc");
             // $createreportallocation = $reportmodel->create_report_allocation($createReport, $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);
 // var_dump($reportmodel->report_ID);
+            $report_ID=$reportmodel->save();
 
-            if ( $reportmodel->save()) {
-        
+            if ($report_ID) {
+                //create record in  test allocation table
+            $labRequestModel=new LabTestRequest();
+            //get information from lab request table
+            $request=$labRequestModel->fetchAssocAll(['request_ID'=>$parameters[0]['id']])[0];
+            $doctor=$request['doctor'];
+            $patient=$request['patient_ID'];
+            $report=$report_ID[0]['last_insert_id()'];
+            $reportmodel->customFetchAll("INSERT INTO lab_report_allocation (report_ID,patient_ID,doctor) values($report,$patient,'$doctor')");
                 Application::$app->session->setFlash('success', "Lab Report successfully added ");
                 Application::$app->response->redirect('/ctest/lab-test-request');
                 exit;
@@ -432,9 +441,6 @@ class LabController extends Controller
             ]);
 
 
-            //pass
-
-            //faill
 
 
         }

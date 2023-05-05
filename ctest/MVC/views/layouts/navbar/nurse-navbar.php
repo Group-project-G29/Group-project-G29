@@ -9,7 +9,6 @@
         PHP & MySql Blog Application with Admin
     </title> -->
     <link rel="stylesheet" href="./media/css/style.css">
-    <link rel="stylesheet" href="./media/css/pharmacy-style.css">
     <link rel="stylesheet" href="./media/css/doctor-style.css">
     <link rel="stylesheet" href="./media/css/nurse-style.css">
 

@@ -6,7 +6,6 @@ use app\core\Application;
 use app\core\UserModel;
 
 class Advertisement extends DbModel{
-    public string $ad_ID='';
     public string $title='';
     public string $description='';
     public string $remark='';
@@ -29,18 +28,17 @@ class Advertisement extends DbModel{
         return 'ad_ID';
     }
     public function tableRecords(): array{
-        return ['advertisement'=>['ad_ID','title','description','remark','img','type']];
+        return ['advertisement'=>['title','description','remark','img','type']];
     }
 
     public function attributes(): array
     {
-        return ['ad_ID','title','description','remark','img','type'];
+        return ['title','description','remark','img','type'];
     }
 
  
     
     public function addAdvertisement(){
-        // var_dump($this,"jhgoljh");exit;
         return parent::save();
     }
  
@@ -53,7 +51,7 @@ class Advertisement extends DbModel{
     }
 
     public function fileDestination(): array {
-        if($this->type='pharmacy'){
+        if($this->type=='pharmacy'){
             return ['img'=>"media/images/advertisements/pharmacy/".$this->img];
         }
         return ['img'=>"media/images/advertisements/".$this->img];

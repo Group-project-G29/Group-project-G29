@@ -44,10 +44,12 @@ Application::$app->session->set('popup','unset');
             <?php $labrequests=$labrequestModel->getLabTestRequests();?>
             <h3>Lab test requests </h3>
             <?php foreach($labrequests as $labrequest): ?>
-                <div class="flex">
-                    <h4><?=$labrequest['name']."  date :".$labrequest['requested_date_time']?></h4>
-                    <?=$component->button('btn','','Cancel','rqst-rmv',$labrequest['request_ID']); ?>
-                </div>
+                <?php if($labreportModel->isreport($labrequest['request_ID'])): ?>
+                    <div class="flex">
+                        <h4><?=$labrequest['name']."  date :".$labrequest['requested_date_time']?></h4>
+                        <?=$component->button('btn','','Cancel','rqst-rmv',$labrequest['request_ID']); ?>
+                    </div>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
 
@@ -154,6 +156,7 @@ Application::$app->session->set('popup','unset');
             <div>
                 <center>
                 <table>
+                    <tr><td>Quene No :</td><td class="Qno"><?=$appointment['queue_no']?></td></tr>
                     <tr><td>Age :</td><td><?=$appointment['age']." yrs"?></td></tr>
                     <tr><td>Gender :</td><td><?=$appointment['gender']?></td></tr>
                 </table>

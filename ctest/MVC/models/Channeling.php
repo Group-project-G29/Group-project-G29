@@ -4,6 +4,7 @@ namespace app\models;
 use app\core\DbModel;
 use app\core\Application;
 use app\core\Calendar;
+use app\core\Date;
 use app\core\UserModel;
 use app\core\Time;
 
@@ -45,7 +46,7 @@ class Channeling extends DbModel{
             'fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
             'room'=>[self::RULE_REQUIRED],      
             'day'=>[self::RULE_REQUIRED],
-            'time'=>[self::RULE_REQUIRED],
+            'time'=>[self::RULE_REQUIRED,self::RULE_TIME],
             'start_date'=>[self::RULE_REQUIRED,self::RULE_DATE_VALIDATION],
             'schedule_for'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
             'schedule_type'=>[self::RULE_REQUIRED],
@@ -109,7 +110,7 @@ class Channeling extends DbModel{
         if($array){
             var_dump($array[count($array)-1]['opened_channeling_ID']);
             if($array[0]['channeling_ID']==$array[count($array)-1]['channeling_ID']){
-                $this->customAddError('time',"Time overlap :".$array[0]['channeling_ID']." at ".$array[0]['time'].(($array[0]['time']>='12:00')?'PM':'AM'));
+                $this->customAddError('time',"<a class='sh-error' href=update-channeling?cmd=view&id=".$array[0]['channeling_ID'].">Time overlap with channeling:".$array[0]['channeling_ID']." at ".$array[0]['time'].(($array[0]['time']>='12:00')?'PM':'AM')."</a>");
                 return $array;
             }
             else{
@@ -276,12 +277,48 @@ class Channeling extends DbModel{
         $speciality=$_POST['speciality'];
         $fee=$_POST['fee'];
         $room=$_POST['room'];
-        $total_patients=$_POST['total_patients'];
+        if(isset($_POST['total_patients'])){
+
+            $total_patients=$_POST['total_patients'];
+        }
+        else{
+            $total_patients=-1;
+        }
+
         $percentage=$_POST['percentage'];
         $this->customFetchAll("update channeling set speciality='$speciality',fee=$fee,room='$room',total_patients=$total_patients,percentage=$percentage where channeling_ID=".$channeling);
         return true;
    }
 
+   public function patientCountbyChanneling(){
+        $doctor=Application::$app->session->get('userObject')->nic;
+        $calendarModel=new Calendar();
+        $last_day=$calendarModel->subDaysByDate(Date('Y-m-d'),30);
+        $results=$this->customFetchAll("select count(appointment.appointment_ID),channeling.time,channeling.day from appointment left join opened_channeling on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where appointment.status='used' and opened_channeling.channeling_date>='$last_day' and channeling.doctor='$doctor' GROUP by channeling.channeling_ID");
+        $data=[];
+        $label=[];
+        foreach($results as $result){
+            array_push($data,$result['count(appointment.appointment_ID)']);
+            array_push($label,$result['day']."-".$result['time']);
+        }
+        return ['label'=>$label,'data'=>$data];
+   }
+
+   public function appointmentComparison(){
+        $doctor=Application::$app->session->get('userObject')->nic;
+        $calendarModel=new Calendar();
+        $last_day=$calendarModel->subDaysByDate(Date('Y-m-d'),30);
+        $results=$this->customFetchAll("select count(appointment.appointment_ID),appointment.type from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID LEFT join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.doctor='$doctor' and opened_channeling.channeling_date>='$last_day' group by appointment.type ;");
+        $data=[];
+        $label=[];
+        foreach($results as $result){
+            array_push($data,$result['count(appointment.appointment_ID)']);
+            array_push($label,$result['type']);
+        }
+       
+        return ['label'=>$label,'data'=>$data];
+   }
+   
 }   
 
 

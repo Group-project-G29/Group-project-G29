@@ -13,6 +13,8 @@ class PastChanneling extends DbModel{
     public int $no_of_patient=0;
     public int $total_income=0;
     public int $free_appointments=0;
+    public int $doctor_income=0;
+    public int $center_income=0;
     
    
 
@@ -37,12 +39,12 @@ class PastChanneling extends DbModel{
         return 'past_channeling_ID';
     }
     public function tableRecords(): array{
-        return ['past_channeling'=>['free_appointments','opened_channeling_ID','no_of_patient','total_income']];
+        return ['past_channeling'=>['free_appointments','opened_channeling_ID','no_of_patient','total_income','doctor_income','center_income']];
     }
 
     public function attributes(): array
     {
-        return ['free_appointments','opened_channeling_ID','no_of_patient','total_income'];
+        return ['free_appointments','opened_channeling_ID','no_of_patient','total_income','doctor_income','center_income'];
     }
 
    

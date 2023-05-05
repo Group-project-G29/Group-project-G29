@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
+date_default_timezone_set("Asia/Colombo");
 require_once __DIR__.'/../vendor/autoload.php';
 
 
@@ -21,6 +21,8 @@ use app\controllers\Advertisement;
 use app\controllers\DeliveryController;
 use app\controllers\NurseController;
 use Dompdf\Dompdf;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 // Initialize application
 $app =new Application(dirname(__DIR__));
 
@@ -55,6 +57,7 @@ $app->router->post('/ctest/patient-pharmacy',[PatientAuthController::class,'medi
 $app->router->get('/ctest/patient-medicine-order',[PatientAuthController::class,'orderMedicine']);
 $app->router->post('/ctest/patient-medicine-order',[PatientAuthController::class,'orderMedicine']);
 $app->router->get('/ctest/patient-dashboard',[PatientAuthController::class,'patientDashboard']);
+$app->router->post('/ctest/patient-dashboard',[PatientAuthController::class,'patientDashboard']);
 $app->router->get('/ctest/patient-payment',[PatientAuthController::class,'patientPayment']);
 $app->router->post('/ctest/patient-payment',[PatientAuthController::class,'patientPayment']);
 $app->router->post('/ctest/doctor',[SiteController::class, 'doctor']);
@@ -66,6 +69,8 @@ $app->router->get('/ctest/patient-my-detail', [PatientAuthController::class,'acc
 $app->router->post('/ctest/patient-my-detail', [PatientAuthController::class,'accountHandle']);
 $app->router->get('/ctest/nic', [PatientAuthController::class,'getNIC']);
 $app->router->post('/ctest/nic', [PatientAuthController::class,'getNIC']);
+$app->router->get('/ctest/otp', [PatientAuthController::class,'OTP']);
+$app->router->post('/ctest/otp', [PatientAuthController::class,'OTP']);
 
 
 
@@ -75,6 +80,10 @@ $app->router->post('/ctest/login',[EmployeeAuthController::class, 'login']);
 $app->router->get('/ctest/login',[EmployeeAuthController::class, 'login']);
 $app->router->post('/ctest/login',[EmployeeAuthController::class, 'login']);
 $app->router->get('/ctest/employee-logout',[EmployeeAuthController::class,'logout']);
+$app->router->get('/ctest/employee-nic', [EmployeeAuthController::class,'getNIC']);
+$app->router->post('/ctest/employee-nic', [EmployeeAuthController::class,'getNIC']);
+$app->router->get('/ctest/employee-otp', [EmployeeAuthController::class,'OTP']);
+$app->router->post('/ctest/employee-otp', [EmployeeAuthController::class,'OTP']);
 
 // -----------------------nurse routers-------------------------------------
 // $app->router->get('/ctest/nurse',[SiteController::class, 'doctor']);

@@ -9,6 +9,9 @@
     use \app\core\form\Form;
     $form=Form::begin('','post');
     use app\core\Application;
+use app\models\Advertisement;
+
+    $ad=new Advertisement();
 ?>
 <?php
   
@@ -42,20 +45,15 @@
         </section>
     </div>
     <div class="slideshow-container">
+        <?php $advertisements=$ad->fetchAssocAll(['type'=>'main']); ?>
+        <?php foreach($advertisements as $advertisement): ?>
         <div class="mySlides fade">
-            <img src="./media/images/patient/main.jpg" style="width:100%">
+            <img src=<?="'"."media/images/advertisements/".$advertisement['img']."'"?> style="width:100%">
           
         </div>
+        <?php endforeach;?>
 
-        <!-- <div class="mySlides fade">
-            <img src="./media/images/patient/main2.jpg" style="width:100%">
-            
-        </div> -->
-
-        <div class="mySlides fade">
-            <img src="./media/images/patient/main3.jpg" style="width:100%">
-            
-        </div>
+    
 
     </div>
 </section>

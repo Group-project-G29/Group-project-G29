@@ -48,9 +48,7 @@
         </div>
         <div class="nav_row--top_user flex ">
         <?php if(Application::$app->session->get('user')) :?>
-                <div class="bell-container">
-                    <img  src="./media/images/patient/notification bell.png">
-                </div>
+             
                 
                    
                     <div class="nav-box">
@@ -90,4 +88,8 @@
             location.href="/ctest/";
         })
     }
+    const imag=document.querySelector(".nav_row--top_logo");
+    imag.addEventListener('click',()=>{
+        location.href="patient-pharmacy?spec=main";
+    })
 </script>

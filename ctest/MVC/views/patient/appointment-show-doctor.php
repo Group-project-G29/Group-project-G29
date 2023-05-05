@@ -11,7 +11,6 @@ use app\models\OpenedChanneling;
         $patientModel=new Patient();
         
         echo $component->searchbar('','search','search-bar--class2','Search by name,specilaity','searchbar');
-        echo $component->filtersortby('','',['Cardiologist'=>'cardiologist','Gastrologist'=>'gastrologist'],['Doctor Name Ascending'=>'doctor-name-asc']);
     ?>
 </div>
 <section class="doctor-container">

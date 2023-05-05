@@ -74,6 +74,11 @@ class Medicine extends DbModel{
         }
 
     }
+    public function isResctricted($medicine){
+        $result=$this->fetchAssocAll(['med_ID'=>$medicine,'restrict_status'=>0]);
+        if($result) return true;
+        else return false;
+    }
     public function getAllMedicine(){
         $medicines=$this->customFetchAll("select * from medical_products");
         $medarray=[];
