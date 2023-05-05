@@ -1,3 +1,7 @@
+<?php 
+    use app\models\Advertisement;
+    $ad=new Advertisement();
+?>
 <style>
     
     .fade{-webkit-animation-name:fade;-webkit-animation-duration:1.5s;animation-name:fade;animation-duration:1.5s}
@@ -8,28 +12,16 @@
 
 </style>
 <div class="slideshow-container">
-
-
-<div class="mySlides fade">
-    <img src="./media/images/patient/main.jpg" style="width:100%">
-    <div class="text">Caption Text</div>
-</div>
-
-<div class="mySlides fade">
-    <img src="./media/images/patient/main2.jpg" style="width:100%">
-    <div class="text">Caption Two</div>
-</div>
-
-<div class="mySlides fade">
-    <img src="./media/images/patient/main3.jpg" style="width:100%">
-    <div class="text ">Caption Three</div>
-</div>
-
-
-
+    <?php $advertisements=$ad->fetchAssocAll(['type'=>'main']); ?>
+        <?php foreach($advertisements as $advertisement): ?>
+        <div class="mySlides fade">
+            <img src=<?="'"."media/images/advertisements/".$advertisement['img']."'"?> style="width:100%">
+          
+        </div>
+        <?php endforeach;?>
 </div>
 <section class="homepage-main-container">
-     
+    <section class="homepage-main-container-sub">
         <div class="main-container-tile" id="doctor-patient-appointment?spec=doctor">
             <img src="./media/images/patient/Meet Doctor.png" id="">
             <h3 class="fs-100">Meet Doctor</h3>
@@ -51,6 +43,10 @@
             <h3>Contact Us</h3>
 
         </div>
+    </section>
+    <div style="font-size:32; letter-spacing:0.6vw; margin-top:2vh; ">
+        <h1 style="font-weight:900;"><span style="color:#38B6FF;">Healing Hand.</span><span style="color:#1746A2">Caring Heart!</span></h1>
+    </div>
         
 </section>
 <div>

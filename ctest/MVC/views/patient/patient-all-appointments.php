@@ -43,18 +43,20 @@ $component=new Component();
                         <h3><?='Speciality :'.$channeling['speciality']?></h3>
                         <t4><?='Channeling date :'.$channeling['channeling_date']?></t4>
                         <t4><?='Channeling time :'.$channeling['time']?></t4> 
-                        <div>
-                            <?php echo $component->button('referral',' ','Change Referrals','button--class-4',$channeling['appointment_ID']) ?>
-                        </div>
-                        
                     </div>
+                    <div>
+                        <?php echo $component->button('referral',' ','Change Referrals','button--class-app',$channeling['appointment_ID']) ?>
+                    </div>
+                    
                 </div>
                 <?php endif; ?>
                 <?php endif; ?>
         <?php endforeach; ?>
     <?php else: ?>
         <div class="empty-container">
-            Empty
+            
+            <h3>Looks like <br>You Have No Appointment</h3>
+            <img src="media/images/common/empty.jpg">
         </div>
         <?php endif; ?>
         <?php 

@@ -1,9 +1,15 @@
 <?php
 
 use app\core\component\Component;
+use app\core\Request;
 use app\models\LabReport;
 use app\models\Prescription;
-
+$request=new Request();
+$params=$request->getParameters();
+$search=0;
+if(isset($params[1]['search'])){
+    $search=$params[1]['search'];
+}
 $component=New Component();
 $labreportModel=new LabReport();
 $prescriptionModel=new Prescription();
@@ -68,12 +74,34 @@ $prescriptionModel=new Prescription();
                
             }
             })
+        
             if(searchBar.value.length==0){
                 documents.forEach((el)=>{
                     el.style.display='flex';
                 }) 
             }
-        }
+      }
+            <?php if($search):?>
+                var re=new RegExp("^"+<?="'".$search."'"?>)
+                searchBar.value=<?="'".$search."'\n"?>
+                documents.forEach((el)=>{
+              comp=""+el.id;
+              
+              if(searchBar.value.length==0){
+                  // el.classList.add("none")
+                }
+                else if(re.test(comp)){
+                    el.style.display='flex';
+                }
+                else{
+                el.style.display='none';
+               
+            }
+            })
+
+            <?php endif;?>
+            
+        
         searchBar.addEventListener('input',checker);
         const btns=document.querySelectorAll(".btn-presc");
         btns.forEach((elem)=>{

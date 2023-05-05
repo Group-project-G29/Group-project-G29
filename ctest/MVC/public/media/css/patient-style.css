@@ -92,19 +92,27 @@
 }
 
 .homepage-main-container{
-    position: absolute;
-    z-index: 100;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap:7vh;
+    position: absolute;
+    z-index: 98;
     padding-top: 7vh;
-    gap:7vw;
     background-color: rgba(255, 255, 255, 0.98);
     width: 100vw;
     height:70vh;
     margin-top: 47.5vh;
-   transition:transform 1.2s ease-out;
-  
+    transition:transform 1.2s ease-out;
+    
+}
+.homepage-main-container-sub{
+    display: flex;
+    width: 100vw;
+    flex-direction: row;
+    justify-content: center;
+    gap:7vw;
+
 }
 .pharmacy-main-container{
     position: absolute;
@@ -127,14 +135,19 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap:1vh;
+    gap:3vh;
 }
 .homepage-main-container:hover{
     transform:translateY(-3vw);
     
  }
 .prescription-popup{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:4vh;
     z-index: 100;
+    padding-block:7vh;
     position: fixed;
     left: 30vw;
     top:30vh;
@@ -143,9 +156,14 @@
     background-color: var(--clr-white);
     border-radius: 10px;
     padding-inline: 2vw;
-    padding-block:2vh ;
     
 
+}
+.file-upload{
+    background-color: azure;
+    padding-inline: 30px;
+    padding-block: 5    px;;
+    border-radius: 10px;
 }
 .patient-login-container{
     transition: transform 3s;
@@ -266,8 +284,10 @@
 }
 /* notification bell */
 .bell-container img{
-    height:4vh;
+    height:4.5vh;
     width: 2.5vw;
+    margin-top: 5vh;
+    margin-left:38vw;
 } 
 /* styles for channeling doctor list on speciality */
 
@@ -349,9 +369,7 @@
     background-color:white;
 
 }
-.variable-small-container{
-    overflow-y: scroll;
-}
+
 .referral-popup-wrapper [type='file']{
     width:15vw
 }
@@ -494,13 +512,24 @@
     background-color: var(--clr-white);
     padding-inline:1vw ;
     padding-block:2vh;
+    box-shadow:0px 0px 5px rgba(0, 0, 0, 0.1);
+    border-radius:20px;
 }
 .medicine-item h3{
     font-size: 1.1rem;
 }
+.amount-item [type='number']{
+    border: 1px solid gainsboro;
+}
+.button--class-add-cart{
+    background-color: var(--clr-dark);
+    border:none;
+    color:white;
+    border-radius: 5px;
+}
 .medicine-item img{
     height:15vh;
-    width:10vw;
+    width:12vw;
     border-radius: 5px;
 }
 .medicine-item [type='number']{
@@ -540,17 +569,25 @@
 .lacked-popup{
     display: flex;
     flex-direction: column;
-    gap:2vh;
+    gap:5vh;
     position: fixed;
     top:30vh;
-    left:27vw;
+    left:35vw;
     width:40vw;
-    height:30vh;
+    align-items: center;
     background-color:var(--clr-white);
     z-index: 99;
-    padding-block: 2vh;
-    padding-inline: 3vw;
+    padding-block: 5vh;
+    padding-inline: 2vw;
     border-radius:10px;
+}
+.lacked-popup table td{
+    width:10vw;
+    height:3vh;
+}
+.lacked-bu-container{
+    display: flex;
+    gap:3vw;
 }
 .pharmacy-order-container{
     background-color:var(--clr-white);
@@ -651,6 +688,7 @@
 
 .highlight-status{
     background-color: #38B6FF;
+    color: white;
 }
 .labreport-container{
     width:10vw;
@@ -698,8 +736,15 @@
 
 }
 .patient-appointment-tile--2{
-    background-image:url('images/notepad1.jpg');
+    background-image:url('images/notepad2.jpg');
     background-size: cover;
+     height:35vh;
+    width:15vw;
+    padding-inline:1vw;
+    padding-block: 1vh;
+    display: flex;
+    flex-direction: column;
+    gap:1vh;
 
 }
 .button--class-app{
@@ -737,6 +782,10 @@
     align-items: center;
     flex-wrap: wrap;
     gap:1vw;
+    
+}
+.docu-searchbar-container{
+    margin-left:13vw;
 }
 .document-container{
     display: flex;
@@ -765,8 +814,12 @@
 .track-order-status{
     display:flex;
     flex-direction: row;
-    gap:2vw;
-    align-items: center;
+    flex-wrap: wrap;
+    border-radius:10px;
+    border-color: gainsboro;
+    background-color: #EEF1FF;
+    
+    
 }
 .track-order-status img{
     width:7vw;
@@ -774,10 +827,18 @@
     border-radius:10px;
 }
 .status-box{
+    padding-block:10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width:8vw;
+}
+.status-box:last-child{
+    border-radius:0px 10px 10px 0px;
+}
+.status-box:first-child{
+    border-radius:10px 0px 0px 10px;
 }
 .track-order-section{
     display: flex;
@@ -805,8 +866,7 @@
     padding-top: 4vh;
     align-items: center;
     gap:7vh;
-    border-radius: 20px;
-    
+    border-radius: 20px; 
     width: 35vw;
     min-height:75vh;
 }
@@ -848,13 +908,27 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-y: scroll;
+    gap:2.5vh;
     
+}
+.prescription-table table td{
+    width:15vw;
+    text-align: center;
+    height:5vh;
 }
 .order-main{
     display: flex;
     
     
+}
+.image-pres{
+    display: flex;
+    gap:0.5vw;
+    
+}
+.h-container{
+    width: 2vw;
+    height:2vh;
 }
 .recepient-information table tr td h4{
     font-size:28;
@@ -869,6 +943,10 @@
     width: 7vh;
 }
 
+.pre img{
+    width:30px;
+    height:30px;
+}
 
 /* medical analysis part */
 
@@ -880,27 +958,25 @@
    gap:4vw;
    margin-top: 5vh;
    margin-left:5vw;
-   background-color: white;
-   min-height:70vh;
-   min-width:75vw;
-   border-radius:20px;
-
+   
    
 }
+.main-analysis-con{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:5vh;
+    padding:30px;
+    border-radius:20px;
+    max-height:70vh;
+    background-color: white;
+    min-width:75vw;
 
-.medical-analysis-types table{
-    border-collapse: separate;
-    border: 1px solid gainsboro;
-    border-radius: 10px;
-    width:19vw;
-    min-height:40vh;
-    padding: none;
-    
 }
+
 
 .medical-analysis-types table td:hover{
    background-color: var(--clr-light);
-   width:20vw;
 
 }
 .medical-analysis-types-select{
@@ -919,6 +995,9 @@
     border:1px solid gainsboro;
     background-color: white;
     border-radius: 10px;
+}
+.nothing{
+    gap:3vh;
 }
 .referral-name{
     display: flex;
@@ -999,7 +1078,16 @@
     border-radius: 10px;
     height:80vh;    
 }
-
+.why-body{
+    border-radius: 5px;
+    border:1px solid rgba(3, 167, 3, 0.486);
+    background-color: #d2f5db;
+    padding-block:5px;
+    padding-inline:5px;
+    color:rgb(3, 150, 3);
+    font-size:15;
+    
+}
 .payment-table {
    border-collapse: separate;
    border-spacing:2vw 3vh;
@@ -1123,4 +1211,171 @@
 
 .hide {
     display: none;
+}
+
+.backgroundp{
+    background-color:rgba(0,0,0,.75);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;    
+}
+.flex-gap{
+    display:flex;
+    flex-direction: column;
+    gap:5vh;
+
+}
+.blue-box{
+    background-color: var(--clr-dark);
+    color: white;
+    font-size:28;
+    
+}
+.recepient-information td{
+    font-size:19;
+    width:12vw;
+    height:3vh;
+}
+
+.lab-main{
+    background-image:url('images/labmain.jpg');
+    background-size: cover;
+    width:100vw;
+    height:100vh;
+    margin-top:-10vh;
+}
+
+.search-medicine{
+    position: relative;
+    top:20vh;
+    background-color: white;
+    border-radius: 10px;
+    width:25vw;
+    height:25vh;
+    padding:3vh;
+    margin-left: 70vw;
+    
+}
+.lab-test-search{
+    display: flex;
+    align-items: center;
+    gap:1vw;
+}
+.noti-counter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    height:23px;
+    width:23px;
+    font-size:13;
+    color: white;
+    border-radius: 100%;
+    position:relative;
+    top:-2vh;
+    left:39.5vw;
+}
+.noti-text{
+    background-color: white;
+    border-radius:10px;
+    min-height:40vh;
+    max-width:60vw;
+    padding-block:5vh;
+    padding-inline:5vw;
+
+    position: fixed;
+    z-index: 100;
+    left:30vw;
+    top:25vh;
+}
+.noti-item{
+    border:1px solid rgb(0, 204, 255);
+    background-color: #38b6ff4f;
+    padding-block:2vh;
+    padding-inline:2vw;
+    border-radius:5px;
+}
+.noti-container{
+    position: absolute;
+    top: -3vh;
+    right:14vw;
+}
+.noti-list{
+    display: flex;
+    flex-direction: column;
+    gap:1vh;
+    margin-top:3vh;
+}
+.blob{
+    text-decoration: none;
+   animation:large 1s infinite;
+
+}
+
+@keyframes large{
+    0%{opacity:0.5;}
+    50%{opacity:1;}
+    100%{opacity:0.5;}
+}
+.reg-body_fields{
+    gap:3vh;
+}
+.prescription-table{
+    margin-top:5vh;
+}
+/* patient medical analysis */
+.test-key{
+    width:7vw;
+    height:5vh;
+    border: 1px solid gainsboro;
+    
+}
+.noti-black{
+    background-color:rgba(0,0,0,.75);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top:14vh;
+    z-index: 99 ;
+
+}
+
+
+.search-medicine{
+    display: flex;
+    flex-direction: column;
+    gap:0.5vh;
+}
+.labtest-container{
+    border:1px solid gainsboro;
+    padding-inline:0.5vw;
+    padding-block:0.5vh;
+    border-radius:10px;
+}
+.request-big-container{
+    background-color: white;
+    height:60vh;
+    width:27vw;
+    border-radius:10px;
+    padding-inline:1vw;
+    padding-block:2vh;
+    margin-top:-7vh;
+    margin-left:5vw;
+}
+.request-list{
+    display: flex;
+    margin-top:2vh;
+    flex-direction: column;
+    gap:2vh;
+}
+.requests img{
+    width:2vw;
+    height:3vh;
+}
+.requests{
+    border:1px solid gainsboro;
+    padding:13px;
+    border-radius:10px;
+    background-color: aliceblue;
 }

@@ -3,6 +3,8 @@ use app\core\DbModel;
 use \app\core\form\Form;
 use app\core\Application;
 use app\core\component\Component;
+use app\models\Appointment;
+use app\models\OpenedChanneling;
 
 $component = new Component();
 ?>
@@ -11,6 +13,7 @@ $component = new Component();
 // var_dump($clinic);
 // echo("  <br> <br>");
 // var_dump($openClinic[0]);
+$appointmentModel=new Appointment();
 ?>
 <div class="column-flex">
     <div class="main-detail-title">
@@ -20,7 +23,7 @@ $component = new Component();
         <div class="number-content">
             <h2>Patients</h2>
             <div class="number-pad">
-                <div class="number-item fs-200"><?=$channeling[0]['total_patients']?></div>
+                <div class="number-item fs-200"><?=$appointmentModel->getTotoalPatient($channeling[0]['channeling_ID']);?></div>
             </div>
         </div>
 

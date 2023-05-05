@@ -24,9 +24,9 @@ use app\models\Medicine;
                 <label>Delivery</label><input type='radio' class="delivery-rbtn" id='delivery' name='pickup_status' value='delivery' checked>
             </div>
             <div class="nothing">
-                <?php echo $form->field($delivery,'address','Recipient Address*','field','text') ?>
-                <?php echo $form->spanselect($delivery,'city','City*','field',['select'=>'','Ciyathra'=>'Ciyathra','Howitz'=>'Howitz'],'')?>
-                <?php echo $form->spanselect($delivery,'postal_code','Postal Code*','field',['select'=>'','20290-D'=>'20290','40034-K'=>'40034'],'')?>
+                <?php echo $form->field($delivery,'address','Recipient Address*','field','text') ?><br>
+                <?php echo $form->spanselect($delivery,'postal_code','Postal Code*','field',['select'=>'','20290-D'=>'20290','40034-K'=>'40034'],'')?><br>
+                <?php echo $form->spanselect($delivery,'city','City*','field',['select'=>'','Ciyathra'=>'Ciyathra','Howitz'=>'Howitz'],'')?><br>
                 <?php echo $form->textarea($delivery,'comment','comment','Any Delivery Instruction',4,50,''); ?>
             </div>
             <div class="button-container"><input class="button--class-1" style="margin-bottom:3vh;" type="submit" value="Complete Order"></div>

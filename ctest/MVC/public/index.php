@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
+date_default_timezone_set("Asia/Colombo");
 require_once __DIR__.'/../vendor/autoload.php';
 
 
@@ -21,6 +21,8 @@ use app\controllers\Advertisement;
 use app\controllers\DeliveryController;
 use app\controllers\NurseController;
 use Dompdf\Dompdf;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 // Initialize application
 $app =new Application(dirname(__DIR__));
 
@@ -29,6 +31,7 @@ $app =new Application(dirname(__DIR__));
 
 $app->router->get('/ctest/contact-us',[PatientAuthController::class,'contact_us']);
 $app->router->get('/ctest/patient-lab-main',[PatientAuthController::class,'labPage']);
+$app->router->post('/ctest/patient-lab-main',[PatientAuthController::class,'labPage']);
 
 
 
@@ -54,6 +57,7 @@ $app->router->post('/ctest/patient-pharmacy',[PatientAuthController::class,'medi
 $app->router->get('/ctest/patient-medicine-order',[PatientAuthController::class,'orderMedicine']);
 $app->router->post('/ctest/patient-medicine-order',[PatientAuthController::class,'orderMedicine']);
 $app->router->get('/ctest/patient-dashboard',[PatientAuthController::class,'patientDashboard']);
+$app->router->post('/ctest/patient-dashboard',[PatientAuthController::class,'patientDashboard']);
 $app->router->get('/ctest/patient-payment',[PatientAuthController::class,'patientPayment']);
 $app->router->post('/ctest/patient-payment',[PatientAuthController::class,'patientPayment']);
 $app->router->post('/ctest/doctor',[SiteController::class, 'doctor']);
@@ -65,6 +69,8 @@ $app->router->get('/ctest/patient-my-detail', [PatientAuthController::class,'acc
 $app->router->post('/ctest/patient-my-detail', [PatientAuthController::class,'accountHandle']);
 $app->router->get('/ctest/nic', [PatientAuthController::class,'getNIC']);
 $app->router->post('/ctest/nic', [PatientAuthController::class,'getNIC']);
+$app->router->get('/ctest/otp', [PatientAuthController::class,'OTP']);
+$app->router->post('/ctest/otp', [PatientAuthController::class,'OTP']);
 
 
 
@@ -74,6 +80,10 @@ $app->router->post('/ctest/login',[EmployeeAuthController::class, 'login']);
 $app->router->get('/ctest/login',[EmployeeAuthController::class, 'login']);
 $app->router->post('/ctest/login',[EmployeeAuthController::class, 'login']);
 $app->router->get('/ctest/employee-logout',[EmployeeAuthController::class,'logout']);
+$app->router->get('/ctest/employee-nic', [EmployeeAuthController::class,'getNIC']);
+$app->router->post('/ctest/employee-nic', [EmployeeAuthController::class,'getNIC']);
+$app->router->get('/ctest/employee-otp', [EmployeeAuthController::class,'OTP']);
+$app->router->post('/ctest/employee-otp', [EmployeeAuthController::class,'OTP']);
 
 // -----------------------nurse routers-------------------------------------
 // $app->router->get('/ctest/nurse',[SiteController::class, 'doctor']);
@@ -110,7 +120,11 @@ $app->router->get('/ctest/doctor-labtest',[DoctorController::class,'labTestReque
 $app->router->post('/ctest/doctor-labtest',[DoctorController::class,'labTestRequestHandle']);
 $app->router->get('/ctest/summary-reports',[DoctorController::class,'summaryReports']);
 $app->router->post('/ctest/upload-reports',[DoctorController::class,'handleLabReports']);
+$app->router->get('/ctest/notification',[DoctorController::class,'handleNotis']);
+$app->router->post('/ctest/notification',[DoctorController::class,'handleNotis']);
 $app->router->get('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
+$app->router->post('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
+
 
 //-------------------pharmacy routers-----------------------------------------
 $app->router->post('/ctest/handle-medicine',[PharmacyController::class,'handleMedicine']);
@@ -184,7 +198,6 @@ $app->router->post('/ctest/delivery-update-personal-details',[DeliveryController
 // active status
 $app->router->get('/ctest/delivery-online',[DeliveryController::class,'makeOnline']);
 $app->router->get('/ctest/delivery-offline',[DeliveryController::class,'makeOffline']);
-
 
 
 
@@ -294,6 +307,8 @@ $app->router->post('/ctest/lab-update-advertisement',[LabController::class,'hand
 $app->router->get('/ctest/lab-update-advertisement',[LabController::class,'handleAdvertisement']);
 $app->router->post('/ctest/lab-handle-advertisement',[LabController::class,'handleAdvertisement']);
 $app->router->get('/ctest/lab-handle-advertisement',[LabController::class,'handleAdvertisement']);
+$app->router->get('/ctest/lab-S-report-upload',[LabController::class,'uploadSReport']);
+$app->router->post('/ctest/lab-S-report-upload',[LabController::class,'uploadSReport']);
 
 
 $app->run();

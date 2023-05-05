@@ -90,7 +90,21 @@ use app\core\DbModel;
             return $this->customFetchAll("SELECT * FROM medicine_in_order LEFT JOIN _order ON _order.order_ID=medicine_in_order.order_ID RIGHT JOIN medical_products ON medical_products.med_ID=medicine_in_order.med_ID WHERE medicine_in_order.order_ID=$orderID")??'';
         }
 
-     
+        public function isAllPriceSet($order_ID){
+            $orderModel=new Order();
+            $prescriptoinModel=new Prescription();
+            $prescriptions=$orderModel->getPrescriptionsInOrder($order_ID);
+            foreach($prescriptions as $prescription){
+                $pres=$prescriptoinModel->fetchAssocAll(['prescription_ID'=>$prescription['prescription_ID']])[0]['total_price'];
+                if($pres){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+            
+        }
         //functions for orders
 
         public function get_previous_orders() {
@@ -248,7 +262,6 @@ use app\core\DbModel;
         // public function get_frontdesk_last_order ( $name ) {
         //     return $this->customFetchAll(" SELECT * FROM _order WHERE patient_ID=$name ");
         // }
-        
     }
 
 ?>

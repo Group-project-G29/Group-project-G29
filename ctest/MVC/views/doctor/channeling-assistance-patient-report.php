@@ -150,6 +150,7 @@ Application::$app->session->set('popup','unset');
             <div>
                 <center>
                 <table>
+                     <tr><td>Quene No :</td><td class="Qnol"><?=$appointment['queue_no']?></td></tr>
                     <tr><td>Age :</td><td><?=$appointment['age']." yrs"?></td></tr>
                     <tr><td>Gender :</td><td><?=$appointment['gender']?></td></tr>
                 </table>
@@ -164,7 +165,7 @@ Application::$app->session->set('popup','unset');
                     <?php endforeach; ?>
                 </table>
                 <section class="graph">
-                    <div>
+                    <div class="editable-select">
                         <?=$form->editableselectversion2('tests_ed','','test_select',array_keys($alltests)) ?>
                     </div>
                     <?php foreach($alltests as $val=>$test):?>

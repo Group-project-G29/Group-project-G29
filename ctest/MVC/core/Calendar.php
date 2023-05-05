@@ -19,6 +19,9 @@ class Calendar{
         $year=$date->get($startdate,'year');
     
         //how many days should be added
+        if($array[$startday]==$array[$findday]){
+          return [(string)$day,$month,$year];
+        }
         if($array[$startday]<$array[$findday]){
           $day_gap=$array[$startday]-$array[$findday];
           

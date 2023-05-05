@@ -49,7 +49,7 @@ class Medicine extends DbModel{
         $cur_amount=$this->fetchAssocAll(['med_ID'=>$id])[0]['amount'];
         //reduce amount
         $cur_amount-=$amount;
-        //if reduced amount is negative return false
+        //if reduce amount is negative return false
         if($cur_amount<0){
             return false;
         }
@@ -66,7 +66,7 @@ class Medicine extends DbModel{
     public function increaseMedicine($id,$amount,$updateDB=false){
         //get medicine amount
         $cur_amount=$this->fetchAssocAll(['med_ID'=>$id])[0]['amount'];
-        //reduce amount
+        //increase amount
         $cur_amount+=$amount;
         if($updateDB){
             $this->customFetchAll("update medical_products set amount=$cur_amount where med_ID=$id");
@@ -76,6 +76,7 @@ class Medicine extends DbModel{
             return true;
         }
     }
+
 
     public function checkStock($medicine){
         //get medicine amount if  amount=0 return false else true
@@ -87,6 +88,11 @@ class Medicine extends DbModel{
             return false;
         }
 
+    }
+    public function isResctricted($medicine){
+        $result=$this->fetchAssocAll(['med_ID'=>$medicine,'restrict_status'=>0]);
+        if($result) return true;
+        else return false;
     }
     public function getAllMedicine(){
         $medicines=$this->customFetchAll("select * from medical_products");

@@ -6,9 +6,12 @@ use app\core\Controller;
 use app\core\Request;
 use app\models\User;
 use app\core\DbModel;
+use app\core\Email;
 use app\core\Response;
 use app\models\Employee;
 use app\models\EmployeeLoginForm;
+use app\models\OTP;
+use app\models\Patient;
 
 class EmployeeAuthController extends Controller{
     public function login(Request $request,Response $response){
@@ -60,4 +63,65 @@ class EmployeeAuthController extends Controller{
         }
     }
 
+
+
+    public function getNIC(Request $request,Response $response){
+            $this->setLayout('auth');
+            $emailModel=new Email();
+            $employee=new Employee();
+            if($request->isPost()){
+                
+                $employee->loadData($request->getBody());
+                $pat=$employee->fetchAssocAll(['email'=>$employee->email,'employee_status'=>'active'])[0];
+            
+                if(!$pat){
+                    $employee->customAddError('nic',"No  Exists with this Email");
+                    return $this->render('get-nic',[
+                        'patient'=>$employee
+                    ]);
+                }
+                else{
+                    $OTP=new OTP();
+                    Application::$app->session->set('temp_user',$pat['emp_ID']);
+                    $p=$employee->findOne(['emp_ID'=>$pat['emp_ID']]);
+                    if($OTP->canSend($p->emp_ID,'employee')){
+                        $rint=$OTP->canSend($p->emp_ID,'employee');
+                    }
+                    else{
+                        $rint=$OTP->setOTP($p->emp_ID,'employee');
+                    }
+                    $emailModel->sendOTP($rint,$p->email);
+                    return $this->render('sent-email');
+                }
+            }
+            return $this->render('get-nic',[
+                'patient'=>$employee
+            ]);
+        }
+        public function OTP(Request $request,Response $response){
+            $patient=Application::$app->session->get('temp_user');
+            $parameters=$request->getParameters();
+            $this->setLayout('auth');
+            $OTP=new OTP();
+            if($OTP->canSend($patient)){
+                if($OTP->canSend($patient)[0]['OTP']==$parameters[0]['sec']){
+                    if($request->isPost()){
+                        $result=$OTP->changePassword($response,'employee');
+                    
+                        return $this->render('change-password',[
+                            'model'=>$result
+                        ]);
+                    }
+                
+                    return $this->render('change-password',[
+                        'model'=>new patient()
+                    ]);
+                }
+            }
+            else{
+                exit;
+            }
+
+
+        }
 }

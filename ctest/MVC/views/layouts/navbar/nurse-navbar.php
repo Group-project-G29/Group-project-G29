@@ -9,7 +9,6 @@
         PHP & MySql Blog Application with Admin
     </title> -->
     <link rel="stylesheet" href="./media/css/style.css">
-    <link rel="stylesheet" href="./media/css/pharmacy-style.css">
     <link rel="stylesheet" href="./media/css/doctor-style.css">
     <link rel="stylesheet" href="./media/css/nurse-style.css">
 
@@ -35,11 +34,7 @@
                         <ul>
                             <div class="nav-box-item">
                                 <li>
-<<<<<<< HEAD
                                     <a href="/ctest/nurse">Dashboard</a>
-=======
-                                    <a href="/ctest/all-channelings">Dashboard</a>
->>>>>>> 20001843
                                 </li>
                             </div>
                             <div class="nav-box-item">

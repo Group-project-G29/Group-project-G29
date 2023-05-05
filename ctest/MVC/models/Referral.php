@@ -67,9 +67,10 @@ class Referral extends DbModel{
 
     }
     public function getReferrals($patient,$doctor){
-        $speciality=$this->customFetchAll("select channeling.speciality from  opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID=".Application::$app->session->get('channeling'))[0]['speciality'];
+        $appointmentModel=new Appointment();
+        $appointment=$appointmentModel->getAppointment($patient,Application::$app->session->get('channeling'));
         $referrals_written = $this->customFetchAll("select distinct * from referrel   where patient=".$patient." and (issued_doctor='".$doctor."') order by date desc");
-        $referrals_sent = $this->customFetchAll("select distinct * from referrel  where patient=".$patient." and (doctor='".$doctor."' or (doctor is null and speciality='".$speciality."')) order by date desc");
+        $referrals_sent = $this->customFetchAll("select distinct * from referrel  where patient=".$patient." and (doctor='".$doctor."') and appointment_ID=$appointment order by date desc");
         $ref['written']=$referrals_written;
         $ref['sent']=array_slice($referrals_sent,0,2);
         return $ref;

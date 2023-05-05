@@ -196,7 +196,8 @@ input [type="time"]::-webkit-time-picker-indicator{
 }
 .content{
     display: flex;
-    justify-content: flex-start;
+    
+    justify-content:right;
     margin-right: 2vw;
 }
 
@@ -217,6 +218,7 @@ input [type="time"]::-webkit-time-picker-indicator{
 .noti-icon img{
     border-radius: 0;
     width: 40px;
+    height:40px;
     display: flex!important;
     cursor: pointer;
 }

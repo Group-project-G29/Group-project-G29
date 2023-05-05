@@ -4,43 +4,52 @@ use app\core\component\Component;
 use app\core\form\Form;
     $form=new Form();
     $component=new Component();
+ 
 ?>
 
 <section>
     <?php $form->begin('','post');?>
-    <div class="prescription-field-container">
-        <div class="cls-name">
-        <?=$form->editableselect('name','Medical Product*','',$medicines);  ?>
-    </div>
-         <div class="cls-frequency">   
-        <?=$form->editableselect('frequency','Frequency*','',['Daily'=>'Daily','BID(twice a day)'=>'BID','TID(Thrice a day)'=>'TID','QID(Four times a day)'=>'QID','QHS(Every bedtime)'=>'QHS','QWK(every week)'=>'QWK']); ?>
+    <section class="flex">
+        <div class="prescription-field-container">
+            <div class="cls-name">
+            <?=$form->editableselect('name','Medical Product*','',$medicines);  ?>
+            </div>
+            <div class="cls-frequency">   
+            <?=$form->editableselect('frequency','Frequency*','',['Daily'=>'Daily','BID(twice a day)'=>'BID','TID(Thrice a day)'=>'TID','QID(Four times a day)'=>'QID','QHS(Every bedtime)'=>'QHS','QWK(every week)'=>'QWK']); ?>
+            </div>
+           
+            <div class="cls-amount">
+            <?=$form->editableselect('amount','Amount per Dose*','',[]); ?>
+            </div>
+            <div class="cls-dispense">
+            <?=$form->dispenseselect('dispense','Dispense','');?>
+            </div>
+            
+            <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
         </div>
-        <div class="cls-dev-amount hide">
-        <?=$form->editableselect('amount','Amount*','',[]); ?>
-        </div>  
-        <div class="cls-amount">
-        <?=$form->editableselect('amount','Amount per Dose*','',[]); ?>
+        <div class="flex refill-bg">
+            <div>
+                <?=$form->textarea($prescriptionModel,'note','note','Note',2,30,$prescriptionModel->note,''); ?>
+            </div>
+            <div class="refills">
+                <?=$form->spanfield($prescriptionModel,'refills','Refills','field','number',''); ?>
+            </div>
         </div>
-        <div class="cls-dispense">
-        <?=$form->dispenseselect('dispense','Dispense','');?>
-        </div>
-        
-        <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
-    </div>
+    </section>
     <?php $form->end(); ?>
 
 </section>
 <section class="medicine-table">
     <?php if($prescription_medicine): ?>
     <table>
-        <tr><th>Item</th><th>Frequency</th><th>Amount per Dose</th><th>Dispense</th></tr>
+        <tr><th>Item</th><th>Frequency</th><th>Amount per Dose</th><th>Dispense</th><th></th></tr>
         <?php foreach($prescription_medicine as $med): ?>
             <tr class="medicine-item">
                 <td align='center'><?=$med['name']."-".$med['strength'] ?></td>
                 <td><?=$med['frequency'] ?></td>
                 <td><?=$med['med_amount'] ?></td>
                 <td><?=$med['dispense_count']." ".$med['dispense_type'] ?></td>
-                
+                <td class="sub" style="font-size:42;" id=<?=$med['med_ID'] ?>><?="-" ?></td>
         
             </tr>
         <?php endforeach; ?>
@@ -95,14 +104,24 @@ use app\core\form\Form;
         el.addEventListener('click',()=>{
             comp=(""+el.id).split("_");
             allshow.forEach(elem=>{
-                if(arrayshow[comp[1]].includes(elem)){
-                    elem.classList.remove('hide');
-                }
-                else {
-                    elem.classList.add('hide');
+                if(elem){
+                    if(arrayshow[comp[1]].includes(elem)){
+                        elem.classList.remove('hide');
+                    }
+                    else {
+                        elem.classList.add('hide');
+                    }
                 }
             
             })
+        })
+    })
+
+    const remar=document.querySelectorAll('.sub');
+    remar.forEach((el)=>{
+        el.addEventListener('click',(event)=>{
+            event.preventDefault();
+            location.href="doctor-prescription?spec=prescription&cmd=delete&id="+el.id
         })
     })
 </script>

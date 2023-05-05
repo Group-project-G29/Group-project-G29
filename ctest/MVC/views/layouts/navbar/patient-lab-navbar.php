@@ -1,7 +1,10 @@
 <?php 
     use app\core\Application;
     use app\core\component\Component;
+use app\models\PatientNotification;
+
     $component=new Component();
+    $noti=new PatientNotification();
 ?>
 <head>
     <meta charset="UTF-8">
@@ -21,35 +24,28 @@
 
 </head>
 <body>
+<div class="bg">
+
+</div>
 <nav class="nav" >
     <div class="nav_row--top shadow">
         <div class="nav_row--top_logo">
-            <img src="./media/images/logo-1.png">
-        </div>
-        <div>
-            <div class="search-medicine-container">
-            <?php echo $component->searchbar('',"name","search-bar--class1","Search by test name","searchbar");?>
-            <script src="./media/js/main.js">
-
-            </script>
-            <script>
-                const searchbar=e('search');
-                const btn=e('bsearch');
-                btn.addEventListener("click",()=>{
-                    // location.href="patient-pharmacy?cmd=search&value="+searchbar.value+"&page=1";
-                });
-            </script>
-        </div>
+            <img src="./media/images/logo-1.png" id="logo">
         </div>
         <div class="nav_row--top_user flex ">
         <?php if(Application::$app->session->get('user')) :?>
+            <div class="noti-container"> 
                 <div class="bell-container">
                     <img  src="./media/images/patient/notification bell.png">
+                    <div class="noti-counter">
+                        <?=$noti->getNotifcationCount(); ?>
+                    </div>
+                    
                 </div>
-                
-                   
-                    <div class="nav-box">
-                        <h3><?php echo Application::$app->session->get('userObject')->name?></h3>
+            </div>
+            
+            <div class="nav-box">
+                <h3><?php echo Application::$app->session->get('userObject')->name?></h3>
                         <ul>
                             <div class="nav-box-item">
                                 <li>
@@ -62,28 +58,67 @@
                                 </li>
                             </div>
                         </ul>
-                </div>
-               
-                <?php else:?>
+                    </div>
+                    
+                    <?php else:?>
                         <?php echo $component->button('sign in','','Sign In','button--class-1','sign in') ?>
-                <?php endif ?>
-            
-        </div>
-    </div>
-    <div class="top-stripe">
-    <h2 class="uppercase">Anspaugh Care</h2>
-            <!-- <a href="#">Medication</a>
-            <a href="#">Wellness</a>
-            <a href="#">Personal Care</a>
-            <a href="#">Medical Devices</a> -->
-    </div>
-</nav>
-<script>
-    
-    const button=document.getElementById('sign in');
-    if(button){
-        button.addEventListener('click',()=>{
-            location.href="/ctest/";
-        })
-    }
+                        <?php endif ?>
+                        
+                    </div>
+                </div>
+                <div class="nav_row--bottom box-shadow">
+                    <h2 class="uppercase">Anspaugh Care</h2>
+                    
+                </div>
+            </nav>
+            <div class="noti-wrapper">
+                <div class="noti-text">
+                    <div class="flex">
+                        <h1>Your Notifications</h1>
+                        <img src="./media/anim_icons/noti.gif">
+                    </div>
+                    <div class="noti-list">
+                        <div class="noti-item">
+                            <?php $notifications=$noti->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user'),'is_read'=>0]); ?>
+                            <?php foreach($notifications as $notification):?>
+                                    <?=$notification['text'] ?>
+                            <?php endforeach;?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                const bg=document.querySelector(".bg");
+                
+                const button=document.getElementById('sign in');
+                if(button){
+                    button.addEventListener('click',()=>{
+                        location.href="/ctest/";
+                    })
+                }
+                const image=document.getElementById("logo");
+                image.addEventListener('click',()=>{
+                    location.href="/ctest/patient-main"
+                })
+                isset=0;
+                const wrapper=document.querySelector(".noti-wrapper");
+                const bell=document.querySelector(".bell-container");
+                wrapper.style.display='none';
+                bell.addEventListener('click',()=>{
+                    if(isset==0){
+                        wrapper.style.display='block';
+                        bg.classList.add('noti-black');
+                        isset=1;
+                    }
+                    else{
+                        wrapper.style.display='none';
+                        bg.classList.remove('noti-black');
+                        isset=0; 
+                    }
+                 })
+     bg.addEventListener('click',()=>{
+        wrapper.style.display='none';
+        bg.classList.remove('noti-black');
+            isset=0;
+     })
 </script>

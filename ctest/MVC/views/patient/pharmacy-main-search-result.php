@@ -23,30 +23,37 @@ use app\models\Medicine;
 
         $component=new Component();
         
-        ?>
-      
-        
-
-
-        
+        ?>        
         <div class="medicine-right-subcontainer">
             <?php foreach($medicines as $medicine):?>
                 <?php if($model->checkStock($medicine['med_ID'])): ?>  <!--check whether medicine in stock or out-->
                     <div class="medicine-item">
-                        <img src=<?="./media/images/medicine/".$medicine['img']?>>
-                        <h3><?=$medicine['name']." ".$medicine['strength'] ?></h3>
-                        <h2><?="Rs.".$medicine['unit_price'] ?></h2>
-                        <div>
+                        <?php if($medicine['img']): ?>
+                            <img src=<?="./media/images/medicine/".$medicine['img']?>>
+                        <?php else:?>
+                            <img src=<?="./media/images/medicine/"."default.jpg"?>>
+                        <?php endif;?>
+                        <h2><?=$medicine['name']." ".$medicine['strength'] ?></h2>
+                        <h3><?="LKR ".$medicine['unit_price'] ?></h3>
+                        <div class="amount-item">
                             <label>Amount :</label>
                             <input type="number" id=<?='"'."amount_".$medicine['med_ID'].'"'?>>
                         </div>
-                        <?= $component->button('','','add','button-class-3 add-medicine',$medicine['med_ID']); ?>
+                        <?php if($model->isResctricted($medicine['med_ID'])): ?>
+                            <?= $component->button('','','add','button--class-add-cart add-medicine',$medicine['med_ID']); ?>
+                        <?php else:?>
+                            <?="Needs Prescription to buy"?>
+                        <?php endif;?>
                     </div>
                 <?php else : ?>
                     <div class="medicine-item">
-                        <img src=<?="./media/images/medicine/".$medicine['img']?>>
-                        <h3><?=$medicine['name']." ".$medicine['strength'] ?></h3>
-                        <h2><?="Rs.".$medicine['unit_price'] ?></h2>
+                        <?php if($medicine['img']): ?>
+                            <img src=<?="./media/images/medicine/".$medicine['img']?>>
+                        <?php else:?>
+                            <img src=<?="./media/images/medicine/"."default.jpg"?>>
+                        <?php endif;?>
+                        <h2><?=$medicine['name']." ".$medicine['strength'] ?></h2>
+                        <h3><?="LKR ".$medicine['unit_price'] ?></h3>
                         <h3 color="red">Out of Stock</h3>
                     </div>
                 <?php endif; ?>

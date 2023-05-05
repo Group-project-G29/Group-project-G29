@@ -6,7 +6,7 @@ use app\core\form\Form;
 use app\models\Employee;
 
 $form=new Form();
-$form->begin('update-channeling?cmd=update&id='.Application::$app->session->get('selected_channelingh'),'post');
+$form->begin('update-channeling?cmd=update&id='.Application::$app->session->get('selected_channeling'),'post');
 $component=new Component();
 $employeemodel=new Employee();
 ?>
@@ -23,8 +23,16 @@ $employeemodel=new Employee();
                         </div>
                     <?php endif;?>
                     <?=$form->select($model,'room','Room','field',$rooms,'')?>
-                    <?=$form->spanfield($model,'total_patients','Total Patients','field','text',''); ?>
                     <?=$form->spanfield($model,'percentage',"Doctor's Income Percentage",'field','text',''); ?>
+                    <tr>
+                        <td>
+                            <label for="limitCheckbox">Limit Patients</label>
+                        </td>
+                        <td>
+                            <input type="checkbox" class="limitCheckbox" name="limitCheckbox" id="limitCheckbox">
+                        </td>
+                    </tr> 
+                    <span id="popLine"></span> 
             </div>
             <div>
                 <div class="nurse-assign-body">
@@ -155,5 +163,14 @@ $employeemodel=new Employee();
         })
     }
     searchBar.addEventListener('input',checker);
+      const checkActive = document.getElementById("limitCheckbox");
+    checkActive.addEventListener("click", ()=>{
+        if(checkActive.checked){
+            document.getElementById("popLine").innerHTML = `<?php echo $form->spanfield($model,'total_patients','','field','text') ?>`;
+        }
+        else{
+            document.getElementById("popLine").innerHTML = ``;
+        }
+    });
 
 </script>

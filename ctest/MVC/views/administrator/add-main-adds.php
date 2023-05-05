@@ -24,7 +24,7 @@ $form=Form::begin('','post');?>
     <?php echo $form->spanfield($model,'description','Description*','field','text') ?>
     <?php echo $form->spanfield($model,'remark','Remark*','field','text') ?>
     <?php echo $form->spanfield($model,'img','Advertisement Picture','field','file') ?>
-    <?php echo $form->spanselect($model,'type','Type','field',['Admin'=>'main','Pharmacy'=>'parmacy','Lab'=>'lab']) ?>
+    <?php echo $form->spanselect($model,'type','Type','field',['Admin'=>'main','Pharmacy'=>'pharmacy','Lab'=>'lab']) ?>
 
     </table>
     <div><?php echo $component->button("add-advertisement","submit","Add Advertisement","button--class-0","add-advertisement")?></div>

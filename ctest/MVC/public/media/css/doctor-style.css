@@ -170,7 +170,7 @@
     flex-direction: row;
     justify-content: space-around;
 
-    margin-left: -15vw;
+    margin-left: -7.5vw;
     width: 100vw;
  }
 
@@ -239,6 +239,9 @@
     align-items: left;
     border-radius: 10px;
 }
+.wrapper--reports{
+    overflow-y: scroll;
+}
 
 .variable-container{
     overflow-y: scroll;
@@ -252,12 +255,11 @@
 }
 .variable-container-item{
     overflow-y: scroll;
+    z-index: 100;
     height: 45vh;
     width:25vw;
     border:1px solid #e7e6e6;
-    overflow-x: scroll;
-    overflow-y: scroll;
-    justify-content: start;
+    padding-block:10vh;
     border-radius: 10px;
 }
 .variable-container-mu{
@@ -466,6 +468,22 @@
     padding: 2vw;
     background-color: var(--clr-white);
 }
+.test-names{
+    display: flex;
+    flex-direction: column;
+    gap:5vh;
+}
+.popup-test{
+    display: flex;
+    gap:1vw;
+    
+}
+.test-it{
+    padding:10px;
+    border-radius: 5px;
+    background-color: var(--clr-button-green);
+    color:white;
+}
 /* referral styles */
 .labreport-popup{
     position: fixed;
@@ -577,8 +595,8 @@
 
 .pops{
     position: fixed;
-    top:40vh;
-    left:45vw;
+    top:25vh;
+    left:40vw;
     z-index:99;
     margin-left:-7vw;
     background-color: var(--clr-white);
@@ -588,10 +606,7 @@
 
 }
 
-.popup-test{
-    display: flex;
-    gap:1vw;
-}
+
 .upper-boxes{
     background-color: var(--clr-white);
     width:18vw;
@@ -618,19 +633,38 @@
     background-color: white;
     justify-content: center;
     margin-top: 10vh;
-    width: 90vw;
-    gap:2vw;
+    gap:4vw;
     padding-inline: 100px;
+    width:80vw;
+    padding-block:50px;
+
+
+    
+}
+.l-lower-info-container{
+    display: flex;
+    background-color: white;
+    justify-content: center;
+    margin-top: 10vh;
+    gap:4vw;
+    padding-inline: 100px;
+    width:80vw;
+    padding-block:50px;
+
 
     
 }
 .fix-width{
-    width: 100vw;
-
+    width:20vw;
+    height:30vh;
 }
 .lower-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:4vh;   
     height:40vh;
-    width: 50vw;
+    width: 36vw;
 }
 #myChart-income,#myChart-patient{
     height:40vh;
@@ -710,15 +744,13 @@
 
 }
 .medicine-table table{
-    border-collapse: separate;
-    border-spacing:0 2vh;
-    margin-left: -15vw;
+    margin-left: -16vw;
 }
 .medicine-table td{
     border-bottom: 1px solid gainsboro;
    text-align: center;
   vertical-align: middle;
-    min-width: 23.5vw;
+    min-width: 18.5vw;
     
 }
 .medicine-item{
@@ -733,4 +765,113 @@
     display: flex;
     align-items: center;
     gap:3vw;
+}
+.edse{
+    color: red;
+    cursor:zoom-in;
+}
+
+.refills [type='number']{
+    width:5vw;
+}
+.refill-bg{
+    background-color: white;
+    padding:0.5vh;
+}
+.sub a{
+ text-decoration: none;
+}
+
+/* update page */
+.container{
+    display: flex;
+    margin-top: 2vh;
+    justify-content: center;
+}
+
+.detail-container-left{
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(213, 237, 243);
+    margin-right: 1vw;
+}
+.detail-container-left img{
+    width: 10vw;
+    height: 10vw;
+    margin: 0 0 5vh 0;
+    border-radius: 50%;
+}
+
+.detail-container-right{
+    line-height: 5vh;
+    font-size: 1.1rem;
+    background-color: rgb(213, 237, 243);
+    padding: 6vh 6vw;
+}
+.data-row{
+    display: flex;
+}
+.data-row-left{
+    width: 10vw;
+}
+.Qno{
+    background-color: var(--clr-dark);
+    display: flex;
+    justify-content: center;
+    color:white;
+}
+.Qnol{
+    background-color: var(--clr-light);
+    display: flex;
+    justify-content: center;
+    color:white;
+}
+.noti-config{
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+    border:1px solid gainsboro;
+    padding-block:10px;
+    padding-inline:10px;
+    border-radius: 10px;
+}
+.noti-small{
+    display: flex;
+    align-items: center;
+    border:1px solid gainsboro;
+    border-radius:5px;
+}
+.noti-small img{
+    width:30px;
+    height:30px;
+    
+}
+.noti-cont{
+    display: flex;
+    flex-direction: column;
+    gap:2vh;
+}
+.request-button{
+    border:none;
+    border-radius:5px ;
+}
+.small-cancel{
+    margin-left:200px;
+    background-color:red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding:5px;
+    text-decoration: none;
+    color: white;
+    border-radius: 100%;
+    width:20px;
+    height:20px;
+}
+.summary-link{
+    margin-top:5vh;
+    margin-left:26vw;
 }

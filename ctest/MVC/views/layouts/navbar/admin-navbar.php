@@ -4,7 +4,7 @@
     $notificationModel=new AdminNotification();
 
     
-    $count = count($notificationModel->customFetchAll("SELECT * FROM `admin_notification` WHERE is_read = 1;"));
+    $count = count($notificationModel->customFetchAll("SELECT * FROM `admin_notification` WHERE is_read = 0;"));
 
 ?>
 

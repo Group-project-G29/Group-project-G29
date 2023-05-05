@@ -14,7 +14,7 @@
         public string $id;
 
         public function __construct(string $name,string $label,string $class,array $options)
-        {
+        {//['A'=>'a','B'=>'b'] 
   
             $this->class=$class;
             $this->options=$options;   
@@ -28,7 +28,7 @@
             $i=0;
         
             foreach($this->options as $name=>$value){
-                $str .= "<div class='ed-se-item-".$this->name." hide edse' id='".$value."'>".$name."</div>";
+                $str .= "<div class='edse ed-se-item-".$this->name." hide ' id='".$value."'>".$name."</div>";
                 
             }
 
@@ -65,7 +65,7 @@
                             
                         });
                     });
-                    %scarry="";
+                    let %scarry="";
                     items%s.forEach(element=>{ 
                         element.addEventListener("click",()=>{
                         comp%s=(""+element.id).split("_");

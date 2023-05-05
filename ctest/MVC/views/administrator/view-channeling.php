@@ -24,7 +24,7 @@
             <td><?=$channeling['speciality']?></td>
             <td><?=$channeling['name']?></td>  
             <td><?=$channeling['day']?></td>
-            <td><?=$channeling['time']?></td>  
+            <td><?=substr($channeling['time'],0,5).(($channeling['time']>'12:00')?' PM':' AM')?></td>  
             
         </tr>
         <?php endforeach; ?>

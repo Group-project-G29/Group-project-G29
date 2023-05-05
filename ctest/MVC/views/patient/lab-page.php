@@ -1,81 +1,53 @@
 <?php
 
+use app\core\component\Component;
 use app\core\component\PopUp;
-use app\core\component\ScatterChart; 
-// var_dump($tests);
-// exit;
+use app\core\component\ScatterChart;
+use app\core\form\Form;
+use app\models\Employee;
+use app\models\LabReport;
+
+$form=new Form();
+$component=new Component();
+$employeeModel=new Employee();
+$labReportModel=new LabReport();
 ?>
 
 
-<section class="laboratory-body">
-    <div class="bg-image-div" id="lab-bg-image-div">
-        <p id="contact-topic">LABORATORY</p>
+<section class="lab-main">
+    <?php $form->begin('','post'); ?>
+    <div class="search-medicine">
+        Check Our Available Medical Tests
+        <div class="lab-test-search">
+            <?=$form->editableselect('name','','field',$tests); ?>
+            <?=$component->button('','submit','Search','button--class-0',''); ?>
+        </div>
+        <?php if($seltest): ?>
+        <div class="labtest-container">
+                <?="Test :".$seltest[0]['name']."<br> Hospital Fee :LKR ".$seltest[0]['hospital_fee'].".00 <br>Test Fee :LKR ".$seltest[0]['test_fee'].".00" ?>
+        </div>
+        <?php endif;?>
     </div>
-
-    <div class="channeling--main_tiles">
-         
-            <?php
-                
-                foreach($tests as $test){
-                    echo " <div class=\"channeling--main_tiles_tile\" id=\"{$test['name']}\">
-                        <p>{$test['name']}</p>
-                        <p>{$test['fee']}</p>
-                            </div>";
-                }
-            ?>
-         
+    <?php $form->end(); ?>
+    <div class="request-big-container">
+        <center><h2>Lab Requests</h2></center>
+        <div class="request-list">
+        <?php if($requests): ?>
+            <?php foreach($requests as $request):?>
+                <?php $doctor=$employeeModel->fetchAssocAll(['nic'=>$request['doctor']])[0]['name'] ?>
+                <div class="requests"> 
+                    <?="Dr. ".$doctor." ".$request['name']." Report Request" ?>
+                    <?php if($labReportModel->isreport($request['request_ID'])):?>
+                        <?php $report=$labReportModel->fetchAssocAll(['request_ID'=>$request['request_ID']]);?>
+                        <br><a href=<?="handle-labreports?spec=lab-report&cmd=view&id=".$report[0]['report_ID']?>>
+                            <?=$request['name']." Report-".$report[0]['upload_date']?>
+                        </a>
+                    <?php else:?>
+                       <div class="flex"><br> Request Pending <img src="./media/anim_icons/lab-report.gif"></div>
+                    <?php endif;?>
+                </div>
+            <?php endforeach;?>
+        <?php endif;?>
+        </div>
     </div>
-    
 </section>
-
-
-
-
-
-
-
-
-
-
-
-<script>
-    
-    document.querySelectorAll(".channeling--main_tiles_tile").forEach(function(el){
-            url="";
-            el.addEventListener("click" , function(){
-                location.href="/ctest/patient-channeling-category-view?spec="+el.id;
-                bg.classList.add("background");
-
-            }) 
-        })
-     
-
-
-        const tests=document.querySelectorAll('.channeling--main_tiles_tile');
-        const searchBar=document.getElementById('searchbar');
-        function checker(){
-            var re=new RegExp("^"+searchBar.value)
-            tests.forEach((el)=>{
-                comp=""+el.id;
-                console.log(el.id);
-                comp=comp.split("-");
-            ;
-            if(searchBar.value.length==0){
-                // el.classList.add("none")
-            }
-            else if(re.test(comp[0]) || re.test(comp[1]) || re.test(comp[2])){
-                el.classList.remove("none");
-            }
-            else{
-                el.classList.add("none");
-            }
-            })
-            if(searchBar.value.length==0){
-                tests.forEach((el)=>{
-                    el.classList.remove("none");
-                }) 
-            }
-        }
-        searchBar.addEventListener('input',checker);
-    
-</script>

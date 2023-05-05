@@ -8,7 +8,7 @@ use app\models\Appointment;
     echo $popup;
     $appointmentModel=new Appointment();
 ?>
-<div class="background">
+<div class="background" style="margin-top:-3vh; margin-left:-34.8vh; width:120vw">
 
 </div>
 <div class="referral-popup" id="popup-main">
@@ -41,7 +41,6 @@ use app\models\Appointment;
 <?php if($channelings):?>
     
         <?php foreach($channelings as $key=>$channeling): ?>
-            <?php if($appointmentModel->isInPass($channeling['appointment_ID'])): ?>
                 <?php if($channeling['type']=='consultation'):?>
                 <div class="btn-content">
                 <div class="patient-appointment-tile--1">
@@ -71,7 +70,6 @@ use app\models\Appointment;
                 </div>
                 </div>
                 <?php endif; ?>
-            <?php endif; ?>
         <?php endforeach; ?>
     <?php else: ?>
         <div class="empty-container">

@@ -350,6 +350,8 @@ class AdminController extends Controller{
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
             $delRow= $advertisementModel->customFetchAll("Select * from advertisement where ad_ID = ".$parameters[1]['id']);
             $advertisementModel->deleteRecord(['ad_ID'=>$parameters[1]['id']]);
+            $response->redirect('main-adds');
+            exit;
         }
 
         //Go to update page of a advertisement
@@ -365,10 +367,10 @@ class AdminController extends Controller{
         if($request->isPost()){
             $advertisementModel->loadData($request->getBody());
             $advertisementModel->loadFiles($_FILES);
-            $ad_ID=(int)$parameters[1]['id'];
-
+            
             // update advertisement
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
+                $ad_ID=(int)$parameters[1]['id'];
                 // var_dump($parameters);exit;
                 if(!isset($_POST['img'])){
                     $imgName = $advertisementModel->customFetchAll("SELECT img FROM advertisement WHERE ad_ID=$ad_ID;");
@@ -385,6 +387,7 @@ class AdminController extends Controller{
             } 
             
             // add advertisement
+        
             if($advertisementModel->validate() && $advertisementModel->save()){
                 Application::$app->session->setFlash('success',"Advertisement successfully added ");
                 Application::$app->response->redirect('/ctest/main-adds'); 
@@ -415,7 +418,7 @@ class AdminController extends Controller{
         // var_dump($parameters);exit;
         // delete notification
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
-            $notificationModel->deleteRecord(['noti_ID'=>$parameters[1]['id']]);
+            $notificationModel->customFetchAll("update admin_notification set is_read=1 where noti_ID=".$parameters[1]['id']);
             Application::$app->session->setFlash('success',"Account successfully deleted ");
             $response->redirect('/ctest/admin-notification');
             return true;
@@ -431,7 +434,7 @@ class AdminController extends Controller{
             return true;
         }
 
-        $notifications=$notificationModel->customFetchAll("Select * from admin_notification order by created_date_time");
+        $notifications=$notificationModel->customFetchAll("Select * from admin_notification where is_read=0 order by created_date_time");
 
         return $this->render('administrator/view-notifications',[
             "notifications"=>$notifications,
