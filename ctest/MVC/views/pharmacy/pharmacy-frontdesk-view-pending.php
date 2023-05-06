@@ -12,13 +12,39 @@
 ?>
 
 <div class="detail">
-    <h3>Patient Name : <?=$order_details[0]['name']?></h3>
-    <h3>Contact Number : <?=$order_details[0]['contact']?></h3>
-    <h3>Order ID : <?=$order_details[0]['order_ID']?></h3>
-    <h3>Ordered Date & Time :<?=$order_details[0]['date']?> <?=$order_details[0]['time']?></h3>
-    <h3>Doctor : <?=$order_details[0]['doctor']?></h3>
+    <h3>Patient Name : <?=$order_details['name']?></h3>
+    <h3>Contact Number : <?=$order_details['contact']?></h3>
+    <h3>Order ID : <?=$order_details['order_ID']?></h3>
+    <h3>Ordered Date & Time :<?=$order_details['date']?> <?=$order_details['time']?></h3>
+    <h3>Doctor : <?=$order_details['doctor']?></h3>
 </div>
 
+<!-- Add medicines for softcopies -->
+<section>
+    <?php $form=new Form(); ?>
+
+    <?php $form->begin('pharmacy-new-front-items?id='.$order_details['order_ID'],'post');?>
+        <div class="prescription-field-container">
+            <table border=0>
+            <tr>
+                <td>
+                    <div class="cls-name">
+                        <?=$form->editableselect('name','Medical Product*','',$medicine_array);  ?>
+                    </div> 
+                </td>
+                <td>
+                    <div class="cls-amount">
+                        <?=$form->editableselect('amount','Amount*','',[]); ?>
+                    </div>
+                </td>
+                <td>
+                    <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
+                </td>
+            </tr>
+            </table>
+        </div>
+    <?php $form->end(); ?>
+</section>
 
 <div class="table-container">
     <table border="0">
@@ -62,6 +88,11 @@
 <h1>Total Price : <?=$total?></h1>
 
 
+<div class='upper-container'>
+    <?php echo $component->button('delete','','Delete Order','button--class-3  width-10','delete');?>
+    <?php echo $component->button('finished','','Process','button--class-0  width-10','finished');?>
+</div>
+
 <!-- <div class="popup" id="popup">
         <h2>Successful !!</h2>
         <p> Notification has been sent.. </p>
@@ -72,22 +103,14 @@
 
 <!-- ==================== -->
 <script>
-    
-    const btn1=document.getElementById("cancle-process");
+    const btn1=document.getElementById("delete");
     btn1.addEventListener('click',function(){
-        location.href="pharmacy-cancle-processing-order?id="+<?=$order_details[0]['order_ID']?>; //get
+        location.href="pharmacy-delete-front-processing-order?id="+<?=$order_details['order_ID']?>+'&total='+<?=$total?>; //get
     })
-    
-    const btn2=document.getElementById("finish-process");
+
+    const btn2=document.getElementById("finished");
     btn2.addEventListener('click',function(){
-        location.href="pharmacy-finish-processing-order?id="+<?=$order_details[0]['order_ID']?>+'&total='+<?=$total?>; //get
-    })
-    
-    const btn3=document.getElementById("notify-availability");
-    // btn3.onclick=openPopup();
-    btn3.addEventListener('click',function(){
-        // openPopup();
-        location.href="pharmacy-notify-processing-order?id="+<?=$order_details[0]['order_ID']?>; //get
+        location.href="pharmacy-finish-front-processing-order?id="+<?=$order_details['order_ID']?>+'&total='+<?=$total?>; //get
     })
 
     function show(day){

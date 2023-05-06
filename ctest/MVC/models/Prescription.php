@@ -576,7 +576,7 @@ class Prescription extends DbModel{
     // =========CREATE NEW ORDER===============
     
     public function add_med_rec ($med_ID, $prescription_ID, $amount, $curr_price, $status) {
-        return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, $status ); ");
+        return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, '$status' ); ");
      }
      
      public function get_curr_orders($prescription_ID) {

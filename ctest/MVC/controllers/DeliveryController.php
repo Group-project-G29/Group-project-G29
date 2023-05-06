@@ -14,6 +14,7 @@ use app\models\Advertisement;
 use app\models\Delivery;
 use app\models\Order;
 use app\models\deliveryAdvertisement;
+use app\models\Payment;
 use LogicException;
 
 class DeliveryController extends Controller{
@@ -168,6 +169,9 @@ class DeliveryController extends Controller{
             if ( $confirming_delivery[0]['PIN'] === $_POST['PIN'] ) {
                 $update_delivery_status = $deliveryModel->update_completed_date_time_delivery($parameters[0]['id']);
                 $update_order_status = $deliveryModel->update_processing_status_order($parameters[0]['id']);
+                // update payment status in payment table
+                $paymentModel = new Payment();
+                $updated_payment_status=$paymentModel->update_payment_status($parameters[0]['id']);
                 
                         // ==== pop up implement ===============>>>
                         // if ( $confirming_delivery[0]['payment_status'] == 'pending'){

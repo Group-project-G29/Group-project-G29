@@ -160,20 +160,22 @@
 <!-- ---------------------------------------------- -->
 
 <form action='pharmacy-track-order?id=<?= $order_details[0]['order_ID'] ?>' method="post">
-    <?php if ( $order_details[0]['payment_status'] === 'pending' ) :  ?>
-        <div>
-            <input type="checkbox" id="payment_status" name="payment_status" value="payment_done_now">
-            <label for="payment_status"> Payment Successful</label><br>
-            <?php
-                if (isset($err)){
-                    if($err === "pending_payment"){
-                        echo '<p class="err-msg"><em><b>*Payment has to be done</b></em></p>';
+    <?php if ( $order_details[0]['pickup_status'] === 'pickup' ) :  ?>                                 
+        <?php if ( $order_details[0]['payment_status'] === 'pending' ) :  ?>
+            <div>
+                <input type="checkbox" id="payment_status" name="payment_status" value="payment_done_now">
+                <label for="payment_status"> Payment Successful</label><br>
+                <?php
+                    if (isset($err)){
+                        if($err === "pending_payment"){
+                            echo '<p class="err-msg"><em><b>*Payment has to be done</b></em></p>';
+                        }
                     }
-                }
-                ?>
-        </div>
-    <?php elseif ( $order_details[0]['payment_status'] === 'completed' ) : ?>
-        <p>Payment has been done.</p>
+                    ?>
+            </div>
+        <?php elseif ( $order_details[0]['payment_status'] === 'completed' ) : ?>
+            <p>Payment has been done.</p>
+        <?php endif; ?>
     <?php endif; ?>
     
     <!-- ---------------------------------------------- -->

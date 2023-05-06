@@ -15,8 +15,8 @@
 
 <div class='upper-container'>
     <!-- implement this -->
-    <?php echo $component->button('pending','','Pending Orders','button--class-0-active  width-10','pending');?>
-    <?php echo $component->button('packed','','Packed Orders','button--class-0-deactive  width-10','packed');?>
+    <?php echo $component->button('pending','','Pending Orders','button--class-0-deactive  width-10','pending');?>
+    <?php echo $component->button('packed','','Packed Orders','button--class-0-active  width-10','packed');?>
     <?php echo $component->button('finished','','Finished Orders','button--class-0-deactive  width-10','finished');?>
 </div>
 
@@ -56,7 +56,6 @@
 </table>
 </div>
 
-
 <!-- ========================POPUP====================== -->
     <div class="popup notify-na-medicine" id="popup_notify_medicine">
             <h2>Successful !!</h2>
@@ -84,23 +83,9 @@
     elementsArray1 = document.querySelectorAll(".table-row");
     elementsArray1.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='pharmacy-view-front-orders-pending?id='+elem.id; 
+            location.href='pharmacy-view-front-orders-packed?id='+elem.id; 
         });
     });
-
-    // elementsArray2 = document.querySelectorAll(".table-row_green");
-    // elementsArray2.forEach(function(elem) {
-    //     elem.addEventListener("click", function() {
-    //         location.href='pharmacy-view-pending-order?id='+elem.id; 
-    //     });
-    // });
-
-    // elementsArray3 = document.querySelectorAll(".table-row_gray_view");
-    // elementsArray3.forEach(function(elem) {
-    //     elem.addEventListener("click", function() {
-    //         location.href='pharmacy-view-pending-order?id='+elem.id; 
-    //     });
-    // });
     
     const btn1=document.getElementById("pending");
     btn1.addEventListener('click',function(){
@@ -121,14 +106,6 @@
     btn4.addEventListener('click',function(){
         location.href="pharmacy-new-order"; //get
     })
-    
-    // elementsArray4 = document.querySelectorAll(".delete-order");
-    // elementsArray4.forEach(function(elem) {
-    //     elem.addEventListener("click", function() {
-    //         location.href='pharmacy-delete-rejected?id='+elem.id;
-    //         openPopup_confirmation(elem.id);
-    //     });
-    // });
 
 // ========================POPUP======================
     <?php if(isset($popup)): ?>

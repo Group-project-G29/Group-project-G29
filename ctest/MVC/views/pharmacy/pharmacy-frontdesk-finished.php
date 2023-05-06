@@ -16,7 +16,8 @@
 <div class='upper-container'>
     <!-- implement this -->
     <?php echo $component->button('pending','','Pending Orders','button--class-0-deactive  width-10','pending');?>
-    <?php echo $component->button('processing','','Finished Orders','button--class-0-active  width-10','finished');?>
+    <?php echo $component->button('packed','','Packed Orders','button--class-0-deactive  width-10','packed');?>
+    <?php echo $component->button('finished','','Finished Orders','button--class-0-active  width-10','finished');?>
 </div>
 
 <div class='upper-container'>
@@ -112,8 +113,13 @@
         location.href="pharmacy-front-orders-finished"; //get
     })
 
-    const btn3=document.getElementById("new-order");
+    const btn3=document.getElementById("packed");
     btn3.addEventListener('click',function(){
+        location.href="pharmacy-front-orders-packed"; //get
+    })
+
+    const btn4=document.getElementById("new-order");
+    btn4.addEventListener('click',function(){
         location.href="pharmacy-new-order"; //get
     })
     

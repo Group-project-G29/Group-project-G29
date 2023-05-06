@@ -1,21 +1,11 @@
 <?php
     use app\core\component\Component;
+    use \app\core\form\Form;
     $component=new Component();
     $total = 0;
-    // var_dump($online_orders);
-    // var_dump($sf_orders);
-    // var_dump($orders);
-    // var_dump($orders);
-    // var_dump($orders[0]['order_ID]);
-    // exit;
-
-    // var_dump($order_details);    //done
-    // var_dump($online_orders);    //done
-    // var_dump($sf_orders);
-    // var_dump($sf_pres_med);
-    // var_dump($ep_orders);
-    // var_dump($ep_pres_med);
-    // echo 'front finished';
+    $NA_count =0;
+    // var_dump($order_details);   
+    // var_dump($order_medicines);   
     // exit;
 ?>
 
@@ -69,15 +59,39 @@
 </div>
 <h1>Total Price : <?=$total?></h1>
 
-<!-- <div class='upper-container'>
-    <?php echo $component->button('take-order','','Process','button--class-0  width-10','take-order');?>
+<div class='upper-container'>
+    <?php echo $component->button('cancle-process','','Cancle Process','button--class-3  width-10','cancle-process');?>
+    <?php echo $component->button('pickup','','Pick Up','button--class-0  width-10','pickup');?>
+</div>
+
+
+<!-- <div class="popup" id="popup">
+        <h2>Successful !!</h2>
+        <p> Notification has been sent.. </p>
+        <button type="button" onclick="closePopup()" id="ok">OK</button>
 </div> -->
 
 
 <!-- ==================== -->
 <script>
-    const btn1=document.getElementById("take-order");
+    
+    const btn1=document.getElementById("cancle-process");
     btn1.addEventListener('click',function(){
-        location.href="pharmacy-take-pending-order?id="+<?=$order_details[0]['order_ID']?>; //get
+        location.href="pharmacy-frontdesk-cancle-order?id="+<?=$order_details[0]['order_ID']?>; //get
     })
+    
+    const btn2=document.getElementById("pickup");
+    btn2.addEventListener('click',function(){
+        location.href="pharmacy-frontdesk-pickup-order?id="+<?=$order_details[0]['order_ID']?>+'&total='+<?=$total?>; //get
+    })
+
+    function show(day){
+        var x = document.getElementById(day);
+        if (x.hidden === true) {
+            x.hidden = false;
+        } else {
+            x.hidden = true;
+        }
+    }
+
 </script>

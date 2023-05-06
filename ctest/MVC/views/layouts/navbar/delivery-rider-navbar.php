@@ -6,6 +6,8 @@ use app\models\Employee;
     $user=new Employee;
     $user_availability= $user->get_rider_availability(Application::$app->session->get('userObject')->emp_ID)[0];
     $availability=$user_availability['availability'];
+    // var_dump($user_availability);
+    // exit;
 
 ?>
 <head>
@@ -104,25 +106,6 @@ use app\models\Employee;
         }
     }
 
-    // const button=document.getElementById('sign in');
-    // if(button){
-    //     button.addEventListener('click',()=>{
-    //         location.href="/ctest/login";
-    //     })
-    // }
-
-    // const myCheckbox = document.getElementById('myCheckbox');
-
-    // const myCheckbox = document.getElementById('myCheckbox');
-
-    // myCheckbox.addEventListener('change', function() {
-    // if (myCheckbox.checked) {
-    //     // Execute code when checkbox is checked
-    //     console.log('Checkbox is checked!');
-    // } else {
-    //     // Execute code when checkbox is not checked
-    //     console.log('Checkbox is not checked!');
-    // }
-    // });
+  
 
 </script>
