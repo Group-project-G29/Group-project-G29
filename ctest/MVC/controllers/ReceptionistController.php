@@ -25,12 +25,39 @@ class ReceptionistController extends Controller
     {
         $parameters = $request->getParameters();
         $patientModel = new Patient();
+        $paymentModel= new Payment();
+        $appoinmentModel= new Appointment();
+        $referralModel= new Referral();
         $this->setLayout('receptionist', ['select' => 'Patients']);
         if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'view') {
             if (isset($parameters[1]['id'])) {
                 $patient = $patientModel->customFetchAll("Select * from patient where patient_ID=" . $parameters[1]['id']);
+                $paymentinfoArray=$paymentModel->customFetchAll("SELECT * from payment where patient_ID=" . $parameters[1]['id']);
+                $referrals= $referralModel->customFetchAll("SELECT * from referrel where patient=".$parameters[1]['id']);
+
+                $labPayment=[];
+                $appointmentPayment=[];
+
+                foreach ( $paymentinfoArray as $paymentinfo ){
+                    if($paymentinfo["request_ID"] !== NULL){
+                        $labPayment[$paymentinfo["payment_ID"]] =$paymentinfo=$paymentModel->customFetchAll("SELECT payment.amount,payment.payment_ID,employee.name as ename,payment.payment_ID,payment.generated_timestamp as date ,payment.generated_time as time,payment.payment_status,doctor.career_speciality as speciality from payment join lab_request on payment.request_ID=lab_request.request_ID
+                        join doctor on doctor.nic=lab_request.doctor 
+                        join employee on employee.nic=doctor.nic where payment_ID=".$paymentinfo["payment_ID"])[0]; 
+                         
+                    } elseif ($paymentinfo["appointment_ID"] !== NULL) {
+                        $appointmentPayment[$paymentinfo["payment_ID"]] = $paymentinfo=$paymentModel->customFetchAll("SELECT payment.amount,payment.payment_ID,employee.name as ename ,payment.generated_timestamp as date ,payment.generated_time as time,payment.payment_status,channeling.speciality from payment join appointment on payment.appointment_ID=appointment.appointment_ID
+                        join opened_channeling on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID
+                        join channeling on channeling.channeling_ID=opened_channeling.channeling_ID
+                        join employee on employee.nic=channeling.doctor where payment_ID=".$paymentinfo["payment_ID"])[0]; // inner join with appointment,doctor name, date
+                    }
+                }
+
+
                 return $this->render("receptionist/patient-detail", [
-                    'patient' => $patient
+                    'patient' => $patient[0],
+                    'labPayment' => $labPayment,
+                    'appointmentPayment' => $appointmentPayment,
+                    'referrals'=>$referrals
                 ]);
             }
             $patients = $patientModel->customFetchall("Select * from patient");
@@ -45,6 +72,22 @@ class ReceptionistController extends Controller
             $patientModel->password="DummyPassword1!";
             $patientModel->cpassword=$patientModel->password;
             $patientModel->loadFiles($_FILES);
+            // if(isset($_POST['Payment'])){
+            //     $Payment ="done";
+            //     $pay1=$paymentModel->customFetchAll("update payment set payment_status='done' ");   
+            // }
+            
+            // if(isset($_POST['APayment'])){
+            //     $APayment ="done";
+            //     $apay1=$appoinmentModel->customFetchAll("update appointment set payment_status='done' ");   
+
+            // }
+            // else{
+            //     $Payment ="pending";
+            //     $pay2=$appoinmentModel->customFetchAll("update appointment set payment_status='pending' ");   
+            //     $apay2=$appoinmentModel->customFetchAll("update payment set payment_status='pending' ");   
+
+            // }
             if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'update') {
                 if ($patientModel->updateRecord(['patient_ID' => $parameters[1]['id']])) {
                     Application::$app->session->setFlash('success', "Patient successfully updated ");
@@ -78,6 +121,21 @@ class ReceptionistController extends Controller
         }
     }
 
+
+    public function allPaymentDone(Request $request){
+        $paymentModel= new Payment();
+        $parameters = $request->getParameters();
+        $pay1=$paymentModel->customFetchAll("update payment set payment_status='done' where payment_ID=" . $parameters[0]['pay_ID'] );
+        return json_encode(['status'=>true,'message'=>'user online']);
+    }
+
+    public function allPaymentNotdone(Request $request){
+        $paymentModel= new Payment();
+        $parameters = $request->getParameters();
+        $pay1=$paymentModel->customFetchAll("update payment set payment_status='pending' where payment_ID=" . $parameters[0]['pay_ID'] );
+        return json_encode(['status'=>true,'message'=>'user online']);
+    }
+
     public function handleAppointments(Request $request, Response $response)
     {
         $this->setLayout('receptionist', ['select' => 'Patients']);
@@ -90,7 +148,7 @@ class ReceptionistController extends Controller
         $opened_channeling_id = $parameters[1]['id'] ?? '';
         $appointment_id = '';
         if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'view') {
-            $channelings = $ChannelingModel->customFetchAll("Select * from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on  doctor.nic=channeling.doctor left join employee on employee.nic=doctor.nic");
+            $channelings = $ChannelingModel->getRecentlyOpenedChanneling();
             Application::$app->session->set('patient', $parameters[1]['id']);
             $patient = $PatientModel->customFetchAll("Select * from patient where patient_ID=" . $parameters[1]['id']);
             return $this->render('receptionist/receptionist-patient-channeling-search', [
@@ -134,19 +192,6 @@ class ReceptionistController extends Controller
             $response->redirect('/ctest/receptionist-patient-information?mod=view&id=' . $parameters[2]['patient']);
             return true;
         }
-        if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'add') {
-
-            // $AppointmentModel = new Appointment();
-            // $number = $AppointmentModel->customFetchAll("select max(queue_no) from appointment where opened_channeling_ID=" . $parameters[1]['id']);
-            // if ($number[0]['max(queue_no)'] > 0) {
-            //     $number = $number[0]['max(queue_no)'] + 1;
-            // } else {
-            //     $number = 1;
-            // }
-
-            // $appointment_id = $AppointmentModel->setAppointment([$parameters[1]['id'], Application::$app->session->get('patient'), $number, "Pending"]);
-            // $OpenedChannelingModel->increasePatientNumber($opened_channeling_id);
-            // Application::$app->response->redirect("receptionist-patient-appointment?mod=referral&id=" . $appointment_id[0]['last_insert_id()']);
             if( isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='add'){
             $patient=Application::$app->session->get('patient');
                 $AppointmentModel= new Appointment();
@@ -175,7 +220,7 @@ class ReceptionistController extends Controller
                     Application::$app->response->redirect("receptionist-patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
                 }
             }
-        }
+        
 
     }
 
@@ -294,8 +339,8 @@ left join opened_channeling on channeling.channeling_ID=opened_channeling.channe
         $this->setLayout("receptionist", ['select' => 'All Channelings']);
 
 
-        $channelingSession = $channelingModel->customFetchAll("SELECT * from employee  inner join channeling on employee.nic = channeling.doctor inner join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where employee.emp_ID=" . $parameters[0]['id']);
-        $channelingPatient = $PatientModel->customFetchAll("SELECT patient.patient_ID,patient.name,patient.age,opened_channeling.remaining_free_appointments from employee
+        $channelingSession = $channelingModel->customFetchAll("SELECT * from employee  left join channeling on employee.nic = channeling.doctor left join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where employee.emp_ID=" . $parameters[0]['id']);
+        $channelingPatient = $PatientModel->customFetchAll("SELECT patient.patient_ID,patient.name,patient.age from employee
         join channeling on employee.nic=channeling.doctor
         join opened_channeling on opened_channeling.channeling_ID=channeling.channeling_ID
         join appointment on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID
@@ -335,7 +380,7 @@ left join opened_channeling on channeling.channeling_ID=opened_channeling.channe
 
         $channelingModel = new Channeling();
         $parameters = $request->getParameters();
-        $channelingmore = $channelingModel->customFetchAll("SELECT * from employee inner join doctor on employee.nic = doctor.nic inner join channeling on doctor.nic=channeling.doctor where employee.emp_ID=" . $parameters[0]['id']);        //pass the variable value
+        $channelingmore = $channelingModel->customFetchAll("SELECT * from employee left join doctor on employee.nic = doctor.nic left join channeling on doctor.nic=channeling.doctor where employee.emp_ID=" . $parameters[0]['id']);        //pass the variable value
         return $this->render('receptionist/receptionist-channeling-more', [
             'channelingmore' => $channelingmore
         ]);

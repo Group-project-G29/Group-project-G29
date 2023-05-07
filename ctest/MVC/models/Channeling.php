@@ -268,9 +268,28 @@ class Channeling extends DbModel{
         $channelings=$channelingModel->fetchAssocAll(['channeling_ID'=>$channeling])[0];
         $calendarModel=new Calendar();
         $end_date=$calendarModel->addDaysToDate(Date('Y-m-d'),$channelings['open_before']);
-        return $this->customFetchAll("select * from opened_channeling where channeling_date<='$end_date' and channeling_ID=$channeling and channeling_date>='".Date('Y-m-d')."'");
+        return $this->customFetchAll("select * from opened_channeling left join channeling on opened_channeling.channeling_ID=channeling.channeling_ID left join employee on employee.nic=channeling.doctor where opened_channeling.channeling_date<='$end_date' and channeling.channeling_ID=$channeling and opened_channeling.channeling_date>='".Date('Y-m-d')."'");
         
    }
+
+   //get all chnneling
+   //get opened channeling
+   //get loop
+   public function getRecentlyOpenedChanneling(){
+    $openedChanneling=new OpenedChanneling();
+    $channelingModel= new channeling();
+    $channelingArry=[];
+    $allChannelings=$channelingModel->customFetchAll("SELECT * from channeling ");
+    foreach($allChannelings as $allChanneling){
+        $openedChannelings=$this->getOpenedChannelings($allChanneling["channeling_ID"]);
+        array_push($channelingArry,$openedChannelings);
+        
+      
+    }
+
+return $channelingArry;
+   }
+
 
    public function updateChannelingRecord($channeling){
         $speciality=$_POST['speciality'];

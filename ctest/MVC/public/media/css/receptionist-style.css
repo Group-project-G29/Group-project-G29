@@ -305,6 +305,16 @@ select{
       width: 30vw;
   }
 
+  .more {
+    color: #bb1c1c;
+    width: fit-content;
+  }
+
+  .more :hover{
+    background-color: #A1E5B2;
+  }
+  
+
   /* border shadow */
 .flash-message--error{
     margin-top: 3vh;
@@ -517,6 +527,20 @@ select{
     margin-top: 4vh;
 
 
+}
+
+.patient-container-0{
+    background-color: white;
+    /* border:20vh 20vh 20vh 20vh; */
+    padding-top: 5vh;
+    padding-bottom: 4vh;
+    width: 50%;
+
+    position:relative;
+    left: 25vw;
+    border: 3px;
+    border-radius: 15px;
+    margin-top: 4vh;
 }
 .header-name{
     text-align: center;
@@ -1298,6 +1322,23 @@ select{
       background-color: var(--clr-light);
   }
 
+  .button--class-11 {
+    height: 4vh;
+    width: 100%;
+    font-size: 1.1em;
+    padding-inline: 40px;
+    color: var(--clr-dark);
+    background-color: var(--clr-white);
+    border: 1px solid var(--clr-card-blue);
+    border-radius: 2px;
+
+}
+
+.button--class-11:hover {
+    color: var(--clr-white);
+    background-color: var(--clr-card-blue);
+}
+
   .button--class-2 {
       color: var(--clr-white);
       background-color: var(--clr-button-green);
@@ -1347,6 +1388,9 @@ select{
     border-radius:2px;
 
 }
+
+
+
 
   /* scatter chart styles */
   .scatter-chart-table {
@@ -1934,6 +1978,16 @@ select{
   /* border-radius: 5px; */
 }
 
+.button--class-5{
+    height:4vh;
+    width: 100%;
+    font-size: 0.9em;
+    color: var(--clr-white);
+    background-color:var(--clr-card-blue);
+    border:none;
+    border-radius:8px;
+}
+
 /* .button--class-0:hover,
 .button--class-0-deactive:hover {
   scale: 1.05;
@@ -1976,6 +2030,21 @@ select{
 .width-30 {
     width: 30vw;
 }
+.more{
+    color: #311cbb;
+    border-radius: 5px;
+    text-align: center;
+  }
+.new-app{
+    background-color: var(--clr-dark);
+
+}  
+
+  .height-2{
+    height:2vw;
+    border-radius: 5px;
+    text-align: center;
+  }
 
 
 /*container in layouts  */
@@ -2047,6 +2116,7 @@ select{
 
 .none {
     display: none;
+    
 }
 
 .button--class-0{
@@ -2140,6 +2210,13 @@ select{
 }
 .field-container table{
     border-spacing: 1vh 2vh;
+}
+
+.semi-field-container{
+    /* text-align:center; */
+    padding-top:3vw;
+    font-size:large;
+    margin-left: 5vw;
 }
 
 .search-bar-container{
@@ -2399,7 +2476,7 @@ select{
     line-height: 5vh;
     font-size: 1.1rem;
     background-color: rgb(213, 237, 243);
-    padding: 6vh 6vw;
+    padding: 5vh 5vw;
 }
 
 .data-row{
@@ -2408,3 +2485,27 @@ select{
 .data-row-left{
     width: 10vw;
 }
+
+.slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+  }
+  .slider:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .container .slider:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);}

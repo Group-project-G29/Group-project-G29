@@ -34,7 +34,7 @@
             <div class="button holder">
                 <?php echo $component->button('update', ' ', 'Add New Appointment', 'button--class-0 new-app', $patient['patient_ID']) ?>
             </div>
-            <?php echo $component->button('view', ' ', 'View All Appointments', 'button--class-00', $patient['patient_ID']) ?>
+            <?php echo $component->button('view', ' ', 'View All Appointments', 'button--class-00 more', $patient['patient_ID']) ?>
 
 
 
@@ -51,26 +51,26 @@
         <th>Name</th> <th>NIC</th> <th>Contact Number</th><th></th><th></th><th></th>
             
         </tr>
-        <div class="patient-container">
+        <div class="patient-container" >
         <?php foreach ($patients as $key => $patient) : ?>
-        <tr class="table-row none" id=<?= '"' . $patient['name'] . "&" . $patient['patient_ID'] . '"' ?>>
+        <tr class="table-row  none " id=<?= '"' . $patient['name'] . "&" . $patient['patient_ID'] . '"' ?>>
             
             <td><?= $patient['name'] ?></td>
             <td><?= $patient['nic'] ?></td>  
             <td><?= $patient['contact'] ?></td>
-            <td>
-                <div>
-                    <?php echo $component->button('update', ' ', 'Update', 'button--class-2', $patient['patient_ID']) ?>
-                </div>
-            </td>
+            
             <td>
                 <div class="button holder">
-                    <?php echo $component->button('update', ' ', 'Add New Appointment', 'button--class-0 new-app', $patient['patient_ID']) ?>
+                    <?php echo $component->button('update', ' ', 'Add New Appointment', 'button--class-00 new-app', $patient['patient_ID']) ?>
                 </div>
 
             </td>
             <td>
                  <?php echo $component->button('view', ' ', 'View All Appointments', 'button--class-00 width ', $patient['patient_ID']) ?>
+
+            </td>
+            <td>
+                 <?php echo $component->button('view', ' ', 'More', 'button--class-5 more ', $patient['patient_ID']) ?>
 
             </td>
         </tr>
@@ -144,4 +144,12 @@
             console.log(elem.id);
         });
     });
+
+    elementsArray = document.querySelectorAll(".more");
+  console.log(elementsArray);
+  elementsArray.forEach(function(elem) {
+    elem.addEventListener("click", function() {
+      location.href = 'patient-detail?mod=view&id='+elem.id;  //pass the variable value
+    });
+  });
 </script>
