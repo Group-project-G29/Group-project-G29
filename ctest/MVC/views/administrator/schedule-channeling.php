@@ -7,7 +7,22 @@ $form=Form::begin('','post');
 
 // var_dump($doctors);
 ?> 
-
+<div class="instruction">
+    <h3>Channeling Scheduling Instruction</h3>
+    <ul>
+        <li>Day-The day channeling should be scheduled</li>
+        <li>Start Time-Channeling start Time</li>
+        <li>Session Duration-Estimated channeling session duration</li>
+        <li>Start Date-Channeling dates will be generated after this date</li>
+        <li>If channeling should be schduled for 1 month
+            <ul>
+                <li>Channeling for-1</li>
+                <li>Channeling Type-month</li>
+            </ul>
+        </li>
+        <li>Open Before-Number of Days before channeling opened</li>
+    </ul>
+</div>
 
 <section class="scheduling-container">
     
@@ -34,7 +49,7 @@ $form=Form::begin('','post');
                 <!-- <div><?php //echo $form->spanfield($channelingmodel,'total_patients','Limit Patient Count','field','text') ?></div> -->
             </table>
 
-            <center><h2 style="margin-top: 5vh;">Set Date Time</h2></center>
+            <center><div  style="display:flex; align-items:center; justify-content:center;margin-top: 5vh; gap:1vw"><h2 >Set Date Time</h2><img src="./media/images/common/info.png" id="info-btn"></div></center>
             <table style="margin-top:-15vh;">    
                 <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Select'=>'','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday'])?>
                 <?php echo $form->spanfield($channelingmodel,'time','Starting Time*','field','time') ?>
@@ -42,14 +57,15 @@ $form=Form::begin('','post');
                 <?php echo $form->spanfield($channelingmodel,'session_duration','Session Duration*','field','time') ?>
                 <?php echo $form->spanfield($channelingmodel,'start_date','Starting Date*','field','date') ?>
 
-                <?php echo $form->spanfield($channelingmodel,'schedule_for','Schedule For*','field','text') ?>
-                <?php echo $form->spanselect($channelingmodel,'schedule_type','Schedule Type','field',['Select'=>'','Week'=>'weeks','Month'=>'months','Year'=>'years'])?>
-                
-
                 <?php echo $form->spanfield($channelingmodel,'open_before','Open before','field','text') ?>
 
+                <?php echo $form->spanfield($channelingmodel,'schedule_for','Schedule For*','field','text') ?>
+                <?php echo $form->spanselect($channelingmodel,'schedule_type','','field',['Select'=>'','Week'=>'weeks','Month'=>'months','Year'=>'years'])?>
+                
+
+
                 <?php echo $form->spanfield($channelingmodel,'frequency','Frequency*','field','text') ?>
-                <?php echo $form->spanselect($channelingmodel,'frequency_type','Frequency Type','field',['Select'=>'','Week'=>'weeks','Month'=>'months'])?>
+                <?php echo $form->spanselect($channelingmodel,'frequency_type','','field',['Select'=>'','Week'=>'weeks','Month'=>'months'])?>
 
             </table>    
             
@@ -161,7 +177,7 @@ $form=Form::begin('','post');
             
         });
     });
-   
+    
     function hide(element,hideClass='hide',visibleClass='field'){
         element.classList.remove(visibleClass);
         element.classList.add(hideClass);
@@ -214,5 +230,27 @@ $form=Form::begin('','post');
         }
     });
 
-
+    //instruction
+    const instruction=document.querySelector('.instruction');
+    const inbtn=document.getElementById('info-btn');
+    $set=0;
+    instruction.style.display='none';
+    inbtn.addEventListener('click',()=>{
+        if($set==0){
+            instruction.style.display='block';
+            $set=1;
+        }
+        else{
+            instruction.style.display='none';
+            $set=0;
+        }
+    })
+    window.addEventListener('scroll',()=>{
+        instruction.style.display='none';
+        $set=0;    
+    })
+    instruction.addEventListener('click',()=>{
+        instruction.style.display='none';
+        $set=0;    
+    })
 </script>

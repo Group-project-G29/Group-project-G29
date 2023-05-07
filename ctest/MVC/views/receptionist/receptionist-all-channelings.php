@@ -14,10 +14,10 @@ $component = new Component();
 
 
 </div>
-<div class="main-card ">
+<!-- <div class="main-card ">
   <?php foreach ($channelingmore as $key => $channeling) : ?>
 
-      <div class="card-0" id=<?= $channeling['career_speciality'] ?>>
+      <div class="card-3" id=<?= $channeling['career_speciality'] ?>>
          
           <div class="card-header-3 " style="padding-top: 10vh;">
 
@@ -30,39 +30,23 @@ $component = new Component();
     
   <?php endforeach; ?>
 
-</div>
-
-<!-- <div class="table-container">
-
-
-  <table border="0">
-
-      <div class="card-0" id=<?= $channeling['career_speciality'] ?>>
-         
-          <div class="card-header-1 " style="padding-top: 15vh;">
-
-            <h1><?= $channeling['career_speciality'] ?> </h1>
-          </div>
-
-       
-
-    <?php foreach ($channelings as $key => $channeling) : ?>
-      
-      
-      <tr class='table-row  row-height hover' id=<?= $channeling['emp_ID'] ?>>
-        <td><?= $channeling['name'] ?></td>
-        <td><?= $channeling['speciality'] ?> </td>
-      </tr>
-    <?php endforeach; ?>
-
-
-</div>
-
-
-  </table>
 </div> -->
+
+<?php foreach ($channelingmore as $key => $channeling) : ?>
+<div class="card-new" id=<?= $channeling['career_speciality'] ?>>
+
+  <div class="card-details">
+    <!-- <p class="text-body"> <img src="./media/images/logo-1.png" >  </p> -->
+    <p class="text-title" style="color:#2c4666"><?= $channeling['career_speciality'] ?></p>
+   
+  </div>
+  
+</div>
+<?php endforeach; ?>
+
+
 <script>
-  elementsArray = document.querySelectorAll(".card-3");
+  elementsArray = document.querySelectorAll(".card-new");
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {
       location.href = 'receptionist-all-channeling-type?id=' + elem.id; //pass the variable value

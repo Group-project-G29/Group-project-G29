@@ -24,7 +24,13 @@ $form=Form::begin('/ctest/admin-update-advertisement?cmd=update&id='.Application
         <?php echo $form->spanfield($model,'description','Description*','field','text') ?>
         <?php echo $form->spanfield($model,'remark','Remark*','field','text') ?>
         <div class="ad-update-container">
-            <img src=<?="./media/images/advertisements/".$model->img?>>
+            <?php if($model->type=='pharmacy'):?>
+                <img src=<?='"'."./media/images/advertisements/pharmacy/".$model->img.'"' ?> alt="Loading image" style="height: 250px; width:900px;" >
+            <?php elseif($model->type=='lab'):?>
+                <img src=<?='"'."./media/images/advertisements/lab/".$model->img.'"' ?> alt="Loading image" style="height: 250px; width:900px;" >
+            <?php else:?>
+                <img src=<?='"'."./media/images/advertisements/".$model->img.'"' ?> alt="Loading image" style="height: 250px; width:900px;" >
+            <?php endif?>
         </div>
         <?php echo $form->spanfield($model,'img','Advertisement Picture','field','file') ?>
         </table>

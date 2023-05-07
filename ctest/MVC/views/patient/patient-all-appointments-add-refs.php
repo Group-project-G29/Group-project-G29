@@ -8,13 +8,19 @@ use app\models\Appointment;
     echo $popup;
     $appointmentModel=new Appointment();
 ?>
-<div class="background" style="margin-top:-3vh; margin-left:-34.8vh; width:120vw">
+<div class="background" style="margin-top:-3vh; margin-left:-36.2vh; width:120vw">
 
 </div>
 <div class="referral-popup" id="popup-main">
     <div class="referral-popup-wrapper">
        
-        <h3 class="fs-50">Add any soft copy referal here. Please consider that referal should be clear and valid.</h3>
+        <h3>Add any softcopy referral here.</h3>
+        <div>
+            <ul>
+                <li>Referral should be signed by a physician.</li>
+                <li>Make sure that referral is readale and signature is visible.</li>
+            </ul>
+        </div>
         <?php $form=Form::begin("handle-referral?cmd=add&id=".$appointment->appointment_ID,'post');?>
         <div class="small-column">
         <div class="flex">
@@ -24,8 +30,10 @@ use app\models\Appointment;
         <div>
         <?php $form=Form::end();?>
         <?php foreach($referrals as $referral): ?>
-            <div class="flex variable-small-container">
-                <a href=<?="'"."handle-documentation?spec=referral"."&mod=view&id=".$referral['ref_ID']."'" ?>><?="Referral-.".$referral['ref_ID']?></a><a href=<?="handle-documentation?spec=referral&cmd=delete&id=".$referral['ref_ID']?>>X</a>
+            <div class="ref-item ">
+                <div class="flex variable-small-container">
+                    <a href=<?="'"."handle-documentation?spec=referral"."&mod=view&id=".$referral['ref_ID']."'" ?>><?="Referral-".$referral['ref_ID']?></a><div class="small-close"><a href=<?="handle-documentation?spec=referral&cmd=delete&id=".$referral['ref_ID']?>>X</a></div>
+                </div>
             </div>
         <?php endforeach; ?>
         </div>
@@ -89,7 +97,7 @@ use app\models\Appointment;
         elem.addEventListener("click", function() {
             url='handle-appointment?cmd=delete&id='+elem.id;
             div.style.display="flex";
-            bg.classList.add("background");
+            bgo.classList.add("background");
         });
     });
     yes.addEventListener("click",()=>{

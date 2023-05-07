@@ -3,6 +3,7 @@ namespace app\models;
 
 use app\core\DbModel;
 use app\core\Application;
+use app\core\Email;
 use app\core\UserModel;
 
 class PatientNotification extends DbModel{
@@ -34,10 +35,22 @@ class PatientNotification extends DbModel{
     public function channelingCancelNoti($openedchanneling){
         $results=$this->customFetchAll("select * from opened_channeling left join appointment on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID where appointment.opened_channeling_ID=".$openedchanneling);
         $doctor=$this->customFetchAll("select employee.name from channeling left join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join employee on employee.nic=channeling.doctor where opened_channeling.opened_channeling_ID=".$openedchanneling)[0]['name'];
+
         foreach($results as $result){
+            $emailModel=new Email();
             $this->type="channeling cancellation";
             $this->text="Sorry,Dr.".$doctor." channeling session on ".$result['channeling_date']." has been cancelled";
             $this->patient_ID=$result['patient_ID'];
+            // $email=$this->customFetchAll("select email from patient where patient_ID=".$result['patient_ID'])[0]['email'];
+            // $str="
+            //     <section>
+            //         ".$this->text."
+            //     </section>
+            // ";
+            // $emailModel->sendemail=$email;
+            // $emailModel->subject="Cancelled Channeling Session";
+            // $emailModel->body=$str;
+            // $emailModel->sendEmail();
             $this->order_ID=null;
             $this->savenofiles();
         }
@@ -85,7 +98,7 @@ class PatientNotification extends DbModel{
     }
 
     public function removeNotifications ( $notificationID ) {
-        return $this->customFetchAll("DELETE FROM patient_notification WHERE noti_ID = $notificationID");
+        return $this->customFetchAll("update patient_notification set is_read=1 WHERE noti_ID = $notificationID");
     }
     public function getNotifcationCount(){
         $result=$this->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user'),'is_read'=>0]);

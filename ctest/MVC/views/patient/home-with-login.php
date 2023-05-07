@@ -84,8 +84,11 @@ use app\models\Advertisement;
     <div style="font-size:32; letter-spacing:0.6vw; margin-top:2vh; ">
         <h1 style="font-weight:900;"><span style="color:#38B6FF;">Healing Hand.</span><span style="color:#1746A2">Caring Heart!</span></h1>
     </div>
+    <section>
         
+    </section>
 </section>
+
 <div>
 
      

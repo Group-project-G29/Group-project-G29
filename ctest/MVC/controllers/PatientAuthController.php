@@ -26,6 +26,7 @@ use app\models\MedicalReport;
 use app\models\Medicine;
 use app\models\Order;
 use app\models\OTP;
+use app\models\PatientNotification;
 use app\models\Payment;
 use app\models\Prescription;
 use app\models\Referral;
@@ -167,15 +168,16 @@ class PatientAuthController extends Controller{
         if($request->isPost()){
             
             $patient->loadData($request->getBody());
-            $pat=$patient->fetchAssocAll(['nic'=>$patient->nic,'type'=>'adult'])[0];
+            $pat=$patient->fetchAssocAll(['nic'=>$patient->nic,'type'=>'adult']);
           
             if(!$pat){
                 $patient->customAddError('nic',"No Patient Exists with this NIC");
-                  return $this->render('patient/get-nic',[
-                     'patient'=>$patient
-                  ]);
+                return $this->render('patient/get-nic',[
+                    'patient'=>$patient
+                ]);
             }
             else{
+                $pat=$pat[0];
                 $OTP=new OTP();
                 Application::$app->session->set('temp_user',$pat['patient_ID']);
                 $p=$patient->findOne(['patient_ID'=>$pat['patient_ID']]);
@@ -186,7 +188,9 @@ class PatientAuthController extends Controller{
                     $rint=$OTP->setOTP($p->patient_ID);
                 }
                 $emailModel->sendOTP($rint,$p->email);
-                return $this->render('patient/sent-email');
+                Application::$app->session->setFlash('success',"Email sent your account");
+                Application::$app->response->redirect("/ctest/");
+                exit;
             }
         }
         return $this->render('patient/get-nic',[
@@ -405,7 +409,7 @@ class PatientAuthController extends Controller{
             $channelings=$employee->getChannelings($parameters[1]['id']);
             return $this->render('patient/patient-appointment-doctor',[
                 'channelings'=>$channelings
-                
+         
             ]);
             
 
@@ -698,12 +702,27 @@ class PatientAuthController extends Controller{
         }
        
         if(isSet($parameters[0]['spec']) &&  $parameters[0]['spec']=='medical-analysis'){
-            $this->setLayout('patient',['select'=>"Medical Analysis"]);
             $testModel=new LabReport();
-            $values=$testModel->getAllParameterValue(Application::$app->session->get('user'));
-            return $this->render('patient/medical-analysis',[
-                'mainArray'=>$values
-            ]);
+            $this->setLayout('patient',['select'=>"Medical Analysis"]);
+            $array['Choose']='choose';
+            $reports=$testModel->customFetchAll("Select distinct lab_tests.name,lab_report_template.template_ID from lab_report_allocation left join lab_report on lab_report.report_ID=lab_report_allocation.report_ID left join lab_report_template on lab_report_template.template_ID=lab_report.template_ID left join lab_tests on lab_tests.template_ID=lab_report_template.template_ID where lab_report_allocation.patient_ID=".Application::$app->session->get('user'));
+            foreach($reports as $report){
+                $array[$report['name']]=$report['template_ID'];
+            }
+            if(isset($parameters[1]['id'])){
+                $values=$testModel->getAllParameterValue(Application::$app->session->get('user'),$parameters[1]['id']);
+                return $this->render('patient/medical-analysis',[
+                    'mainArray'=>$values,
+                    'reports'=>$array
+                ]);
+
+            }
+            else{
+                return $this->render('patient/medical-analysis',[
+                    'mainArray'=>[],
+                    'reports'=>$array
+                ]);
+            }
 
         }
         if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='payments'){
@@ -732,8 +751,15 @@ class PatientAuthController extends Controller{
                     
                 ]);
             }
+            $id="";
+            if(isset($parameters[1]['sel_payment'])){
+                $id=$paymentModel->fetchAssocAll(['appointment_ID'=>$parameters[1]['sel_payment']]);
+                $id=$id[0]['payment_ID']??"";
+            }
+    
             return $this->render('patient/dashboard-payment',[
-                'payments'=>$payments
+                'payments'=>$payments,
+                'sel_payment'=>$id
             ]);
         }
         
@@ -929,6 +955,13 @@ class PatientAuthController extends Controller{
         $parameters=$request->getParameters();
         $this->setLayout('patient',['select'=>'My Detail']);
         $patientModel=new Patient();
+        if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='notification-rem'){
+           $notification=new PatientNotification();
+           $notification->removeNotifications($parameters[1]['id']);
+           Application::$app->session->set('shownoti',true);
+           $response->redirect(Application::$app->session->get('notiurl'));
+           exit;
+        }
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='view'){
             $patient=$patientModel->fetchAssocAll(['patient_ID'=>Application::$app->session->get('user')]);
             array_pop($patient[0]);

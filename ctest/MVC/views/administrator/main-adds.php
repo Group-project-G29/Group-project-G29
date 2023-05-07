@@ -15,7 +15,15 @@
     
     <?php foreach($advertisements as $key=>$advertisement): ?>
     <tr class="table-row" style="width: 95vw;">
-        <td><img src=<?="./media/images/advertisements/".$advertisement["img"] ?> alt="Loading image" style="height: 250px; width: 300px;" ></td>
+        <td>
+            <?php if($advertisement['type']=='pharmacy'):?>
+                <img src=<?='"'."./media/images/advertisements/pharmacy/".$advertisement["img"].'"' ?> alt="Loading image" style="height: 250px; width:900px;" >
+            <?php elseif($advertisement['type']=='lab'):?>
+                <img src=<?='"'."./media/images/advertisements/lab/".$advertisement["img"].'"' ?> alt="Loading image" style="height: 250px; width:900px;" >
+            <?php else:?>
+                <img src=<?='"'."./media/images/advertisements/".$advertisement["img"].'"' ?> alt="Loading image" style="height: 250px; width:900px;" >
+            <?php endif?>
+        </td>
         <td style="width: 40vw; text-align:start;"><b style="font-size: 1.2rem; line-height: 4vh;"><?=$advertisement['title']?></b><br>
             <?=$advertisement['description']?></td>
         <td><?php echo $component->button('update','','Update','button--class-2',$advertisement['ad_ID']) ?></td>

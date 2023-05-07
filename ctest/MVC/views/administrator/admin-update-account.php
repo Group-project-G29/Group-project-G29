@@ -22,8 +22,7 @@ $form=Form::begin('','post');?>
     <?php echo $form->field($model,'email','Email*','field','text') ?>
     <?php echo $form->field($model,'address','Address','field ','text') ?>
    
-   
-    <?php echo $form->field($model,'img','Profile Picture','field','file') ?>
+  
 
     
 

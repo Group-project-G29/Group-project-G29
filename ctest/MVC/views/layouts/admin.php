@@ -9,14 +9,14 @@ include "../views/layouts/navbar/admin-navbar.php";
 <body>
     
     <div class="main-container">
-         <?php $sidebar=new Sidebar(['Reports'=>'/ctest/admin-reports','Channelings Sessions'=>'/ctest/schedule-channeling','Schedule Channelings'=>'/ctest/schedule-channeling?mod=add','Manage Users'=>'/ctest/admin','Advertisement'=>'/ctest/main-adds'],$select);?>
+         <?php $sidebar=new Sidebar(['Reports'=>'/ctest/admin-reports','Channelings Sessions'=>'/ctest/schedule-channeling','Schedule Channelings'=>'/ctest/schedule-channeling?mod=add','Manage Users'=>'/ctest/admin','Advertisement'=>'/ctest/main-adds','Notifications'=>'/ctest/admin-notification'],$select);?>
          <?php echo $sidebar;  ?>
         
         
         <div class="sub-container">
             <div>
                 <?php if(Application::$app->session->getFlash('success')):?>
-                 <div class="flash-message">
+                 <div class="flash-message disap">
                      <?php echo Application::$app->session->getFlash('success');?>
                  </div>
                 <?php endif;?>

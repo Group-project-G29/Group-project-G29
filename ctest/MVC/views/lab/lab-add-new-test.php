@@ -17,32 +17,34 @@ use \app\core\form\Form; ?>
 <!-- </div> -->
 
 
-<div class="semi-header-container">
+<div class="semi-header-container" style="margin-left:-8vw"> 
     <div class="field-container">
         <div class="header-container" style=" padding-top:0vh;">
 
             <?php $form = Form::begin('', 'post'); ?>
             <section class="reg_body-spec" style="padding:5vw;">
                 <!-- <div class="reg-body-spec fields" style="padding-left:15vw"> -->
-                <table>
+                <table class="field-tab">
                     <?php $template_types = array(); ?>
 
 
                     <?php $template_ID = []; ?>
 
 
-                    <h1 class="fs-200 fc-color--dark" style="padding-bottom: 2vh;">Add Test</h1>
+                    <h1 class="fs-200 fc-color--dark" style="padding-bottom: 2vh;">Add New Laboratory Test</h1>
 
-                    <?php
-
-                    echo $form->spanfield($labtestmodel, 'name', 'Name*', 'field', 'text', 'name');
-                    echo $form->spanfield($labtestmodel, 'test_fee', 'Fee*', 'field', 'text', 'test_fee');
-                    echo $form->spanfield($labtestmodel, 'hospital_fee', 'Hospital Fee (15%)*', 'field', 'text', 'hospital_fee');
-
-                    ?>
+                   
+                   
+                        <?php echo $form->spanfield($labtestmodel, 'name', 'Name*', 'field', 'text', 'name'); ?>
+                        
+                        <?php echo $form->spanfield($labtestmodel, 'test_fee', 'Fee*', 'field', 'text', 'test_fee');?>
+                    
+                        <?php echo $form->spanfield($labtestmodel, 'hospital_fee', 'Hospital Fee', 'field', 'text', 'hospital_fee');?>
+                    
+                    
                 </table>
-                <div class="button" style="margin-top: 2vh;padding-left:15vw" id=<?= $labtestmodel->name?>>
-                    <?= $component->button('btn-0', '', 'Submit', 'button--class-0', 'btn-1'); ?>
+                <div class="button" style=" margin-top: 2vh;padding-left:15vw; margin-left:4.7vw;" id=<?= $labtestmodel->name?>>
+                    <?= $component->button('btn-0', '', 'Submit', 'button--class-0 width-10', 'btn-1'); ?>
                 </div>
                 <?php Form::end() ?>
                

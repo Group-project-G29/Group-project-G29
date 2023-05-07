@@ -729,9 +729,7 @@
     border:1px solid #cfcfcf;
     border-radius: 5px;
 }
-.scrollable-labtest-container{
-    overflow-y: scroll;
-}
+
 .button-plus{
     border-radius: 100%;
     border:none;

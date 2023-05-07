@@ -309,18 +309,18 @@
     flex-direction:column;
 }
 .width-10{
-    width:20vw;
+    width:25vw; 
+    height:7vh;
 }
 .item{
     font-size: 0.8em;
     padding-inline: 2vh;
     display: flex;
-    justify-content: space-between;
     width:40vw;
     background-color: var(--clr-white);
     height: 27vh;
     border-radius: 5px;
-    gap:3.5vw;
+    gap:2vw;
     border:1px solid var(--clr-borders);
 
 }
@@ -351,12 +351,29 @@
 }
 
   
+.queue_no{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--clr-dark);
+    color:white;
+    font-size:28;
+    width:2vw;
+    height:4vh;
+    border-radius: 5px;
+    
+}
+.shake-container{
+    width:2.5vw;
+    height:4.5vh;
+    
+}
 
 .referral-popup-wrapper{
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap:5vh;
+    gap:2vh;
     padding-top:4vh ;
     padding-inline: 1vw;
     border-radius: 5px;
@@ -364,12 +381,47 @@
     top:30vh;
     left:35vw;
     width: 30vw;
-    height: 40vh;
+    min-height:60vh;
     z-index: 100;
     background-color:white;
 
 }
-
+.ref-item{
+    border:1px solid rgb(0, 204, 255);
+    background-color: #38b6ff4f;
+    padding:5px;
+    border-radius: 5px;
+    margin-top:10px;
+}
+.ref-item a{
+    color:var(--clr-dark);
+}
+.small-link-w{
+    background-color: var(--clr-dark);
+    padding:5px;
+    border-radius:5px;
+}
+.small-link-w a{
+    text-decoration:none;
+    color: white;
+}
+.small-close{
+    display: flex;
+    padding:3px;
+    width:1.2vw;
+    height:2.5vh;
+    align-items: center;
+    justify-content: center;
+    background-color: red;
+    text-decoration:none;
+    border-radius: 100%;
+    color:white;
+    font-size:14;
+}
+.small-close a{
+    color:white;
+    text-decoration:none;
+}
 .referral-popup-wrapper [type='file']{
     width:15vw
 }
@@ -785,7 +837,18 @@
     
 }
 .docu-searchbar-container{
-    margin-left:13vw;
+    margin-left:3vw;
+    display: flex;
+    justify-content: center;
+    align-items: center ;
+    
+}
+.filter{
+    display: flex;
+    width:10vw;
+    align-items: center;
+    gap:10px;
+    margin-left: -25vw;
 }
 .document-container{
     display: flex;
@@ -1067,12 +1130,12 @@
     margin-left: 2vw;
 }
 .payment-lslip{
-    margin-left:15vw;
+    margin-left:11vw;
     display: flex;
     align-items: center;
     flex-direction: column;
     background-color: white;
-    width:50vw;
+    width:60vw;
     padding-block:5vh;
     padding-inline:2vw;
     border-radius: 10px;
@@ -1088,16 +1151,12 @@
     font-size:15;
     
 }
-.payment-table {
-   border-collapse: separate;
-   border-spacing:2vw 3vh;
-}
 
-.payment-lslip-tr>td{
-    width:10vw;
-}
+
+
 .total-payment{
-    margin-left:24vw;
+    margin-left:30vw;
+    margin-top:5vh;
 }
 /* ====================================== */
 /* =============contact us=============== */
@@ -1141,8 +1200,8 @@
     color: var(--clr-white);
     font-size: 80px;
     font-weight: bold;
-}
 
+}
 .contact-row {
     display: flex; 
     flex-direction: row;
@@ -1286,8 +1345,31 @@
 
     position: fixed;
     z-index: 100;
-    left:30vw;
+    left:23vw;
     top:25vh;
+}
+.noti-text-l{
+    background-color: white;
+    border-radius:10px;
+    min-height:40vh;
+    max-width:60vw;
+    padding-block:5vh;
+    padding-inline:5vw;
+
+    position: fixed;
+    z-index: 100;
+    left:33vw;
+    top:25vh;
+}
+.about-info{
+    max-width:9vw;
+}
+.mark-as-read-btn{
+    border:none;
+    margin-left:1vw;
+    padding:5px;
+    border:5px;
+    color:var(--clr-dark)
 }
 .noti-item{
     border:1px solid rgb(0, 204, 255);
@@ -1306,6 +1388,11 @@
     flex-direction: column;
     gap:1vh;
     margin-top:3vh;
+}
+.noti-list img{
+    width:10vw;
+    height: 20vh;
+    margin-left:4vw;
 }
 .blob{
     text-decoration: none;
@@ -1378,4 +1465,20 @@
     padding:13px;
     border-radius:10px;
     background-color: aliceblue;
+}
+.OTP-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:3vh;
+}
+.get-nic-content{
+    display: flex;
+    flex-direction: column;
+    gap:2vh;
+    align-items: center;
+}
+.NIC img{
+    width:5vw;
+    height:10vh;
 }

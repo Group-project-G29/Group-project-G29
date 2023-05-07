@@ -63,6 +63,21 @@ class Medicine extends DbModel{
         }
     }
 
+    public function increaseMedicine($id,$amount,$updateDB=false){
+        //get medicine amount
+        $cur_amount=$this->fetchAssocAll(['med_ID'=>$id])[0]['amount'];
+        //increase amount
+        $cur_amount+=$amount;
+        if($updateDB){
+            $this->customFetchAll("update medical_products set amount=$cur_amount where med_ID=$id");
+            return true;
+        }
+        else{
+            return true;
+        }
+    }
+
+
     public function checkStock($medicine){
         //get medicine amount if  amount=0 return false else true
         $amount=$this->getMedicineAmount($medicine);

@@ -19,7 +19,7 @@ use app\models\Payment;
 <section class="payment-lslip">
     <div class="all-payment-holder">
         <table border='0' class="payment-table">
-            <tr class="payment-lslip-header"><th class="width-10">Payment</th><th class="width-10">Created Date</th><th>Price</th><th class="width-10">Status</th><th>Select All<input type="checkbox" id="sel"><th></tr>
+            <tr class="payment-lslip-header"><th class="width-10">Payment</th><th class="width-10">Created Date</th><th>Price</th><th class="width-10">Status</th><th class="width-10">Select All<input type="checkbox" id="sel"><th></tr>
             <?php foreach($payments as $payment):?>
                 <?php
 
@@ -30,7 +30,7 @@ use app\models\Payment;
                             break;
                         case 'appointment':
                             $appointmentDetail=($appointmentModel->getAppointmentDetail($payment['appointment_ID']))?$appointmentModel->getAppointmentDetail($payment['appointment_ID'])[0]:[];
-                            $name="Dr.".$appointmentDetail['name']??''." channeling appointment";
+                            $name="Dr.".($appointmentDetail['name']??'')." channeling appointment";
                             break;
                         case 'labreport':
                             $labreportDetail=$labreport->getReport($payment['name']);
@@ -41,16 +41,20 @@ use app\models\Payment;
                     
                     
                 ?>
-                <tr class="payment-lslip-tr">
+                <tr>
                     <td class="width-10" align='left'><?="$name"?></td>
                     <td class="width-10" align='center'><?=$payment['generated_timestamp']?></td>
                     <td class="width-10" align='center'><?="LKR ".number_format($payment['amount'], 2, '.', '')?></td>
                     <td class="width-10" align='center'><?=ucfirst($payment['payment_status']) ?></td>
-                    <td>
+                    <td class="width-10" align='center'>
                     <?php if($payment['payment_status']!='done'): ?>
-                        <input type="checkbox" class="checks" name="sel_pays[]" value=<?="'".$payment['payment_ID']."'" ?>
+                        <?php if($sel_payment==$payment['payment_ID']):?>
+                            <input type="checkbox" class="checks" name="sel_pays[]" value=<?="'".$payment['payment_ID']."'" ?> checked>
+                        <?php else:?>
+                            <input type="checkbox" class="checks" name="sel_pays[]" value=<?="'".$payment['payment_ID']."'" ?> >
+                        <?php endif;?>
                     <?php else:?>
-                        <img src="./media/anim-icons/animcompleted.gif">
+                        <img src="./media/anim_icons/animcompleted.gif">
                     <?php endif;?>
                     </td>
                 </tr>

@@ -15,21 +15,32 @@ use app\models\OpenedChanneling;
      
 
 ?>
-<div class="bg">
+<div class="bgo">
 
 </div>
 <div class="referral-popup" id="popup-main">
     <div class="referral-popup-wrapper">
-        <h3>Your Queue No :<?=$appointment->queue_no?></h3>
-        <div class="flex">
-            <h4>Date:<?=$channeling['channeling_date']?></h4>
-            <h4>Time:<?=$channeling['time']?></h4>
+        <div class="flex" ><h3>Your Queue No :</h3><div class="shake-container"><div class="queue_no shake"><?=$appointment->queue_no?></div></div></div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+            <h3>Channeling Shedule</h3>
+            <div class="flex">
+                <h4>Date:<?=$channeling['channeling_date']?></h4>
+                <h4>Time:<?=$channeling['time']?></h4>
+            </div>
         </div>
-        <h3 class="fs-50">Add any soft copy referal here. Please consider that referal should be clear and valid.</h3>
+        <h3 class="fs-50"><h3>Add any soft copy referal here</h3>.<br> Please consider that referal should be clear and valid.</h3>
         <?php $form=Form::begin("handle-referral?cmd=add&id=".$appointment->appointment_ID,'post');?>
-        <?= $form->field($model,'name','Refarrel','field-input--class1 flex','file');?>
-        <?=$component->button("Done","submit","Done","button--class-0",$appointment->appointment_ID);?>
-        <?php $form=Form::end();?>
+        <div class="flex">
+            <?= $form->field($model,'name','Refarrel','field-input--class1 flex','file');?>
+            <?=$component->button("Done","submit","Done","button--class-0",$appointment->appointment_ID);?>
+            <?php $form=Form::end();?>
+        </div>
+        <div>
+            <ul>
+                <li>Referral should be signed by a physician.</li>
+                <li>Make sure that referral is readale and signature is visible.</li>
+            </ul>
+        </div>
     </div>        
 </div>
 
@@ -80,9 +91,9 @@ use app\models\OpenedChanneling;
 
 <script>
        
-        const bg=document.querySelector(".bg");
+        const bgo=document.querySelector(".bgo");
         popup_button=document.getElementById("done");
-        bg.classList.add("background");
+        bgo.classList.add("background");
         popup.style.display="flex";
         url="";
         elementsArray = document.querySelectorAll(".button--class-1");
@@ -91,7 +102,7 @@ use app\models\OpenedChanneling;
             elem.addEventListener("click", function() {
                 url='patient-appointment?mod=add&id='+elem.id;
                 div.style.display="flex";
-                bg.classList.add("background");
+                bgo.classList.add("background");
             });
         });
      

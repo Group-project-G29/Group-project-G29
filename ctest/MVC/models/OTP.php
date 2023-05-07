@@ -90,7 +90,7 @@ class OTP extends DbModel{
     }
 
     public function canSend($entity,$type='patient'){
-        if($type='employee'){
+        if($type=='employee'){
            $time=new Time();
             date_default_timezone_set("Asia/Colombo");
             $otp=$this->customFetchAll("select OTP from OTP where emp_ID=$entity and created_date='".Date('Y-m-d')."' and expire_time>='".Date("H:i:s")."'");   

@@ -356,8 +356,7 @@ class AdminController extends Controller{
 
         //Go to update page of a advertisement
         if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
-            $advertisement=$advertisementModel->customFetchAll("Select * from advertisement where ad_ID=".$parameters[1]['id']);
-            $advertisementModel->updateData($advertisement,$advertisementModel->fileDestination());
+            $advertisementModel=$advertisementModel->findOne(['ad_ID'=>$parameters[1]['id']]);
             Application::$app->session->set('advertisement',$parameters[1]['id']);
             return $this->render('administrator/main-adds-update',[
                 'model'=>$advertisementModel,
@@ -374,7 +373,9 @@ class AdminController extends Controller{
                 // var_dump($parameters);exit;
                 if(!isset($_POST['img'])){
                     $imgName = $advertisementModel->customFetchAll("SELECT img FROM advertisement WHERE ad_ID=$ad_ID;");
+                    $type= $advertisementModel->customFetchAll("SELECT type FROM advertisement WHERE ad_ID=$ad_ID;");
                     $advertisementModel->img = $imgName[0]['img'];
+                    $advertisementModel->type=$type[0]['type'];
                     // var_dump($advertisementModel);exit;
                 }
                 if($advertisementModel->validate() && $advertisementModel->updateRecord(['ad_ID'=>$ad_ID])){
@@ -411,7 +412,7 @@ class AdminController extends Controller{
 
     public function handleNotifications(Request $request,Response $response){
         $parameters=$request->getParameters();
-        $this->setLayout('admin',['select'=>""]);
+        $this->setLayout('admin',['select'=>"Notifications"]);
         $notificationModel=new AdminNotification();
         
 

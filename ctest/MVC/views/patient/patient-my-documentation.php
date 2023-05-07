@@ -1,6 +1,7 @@
 <?php
 
 use app\core\component\Component;
+use app\core\form\Form;
 use app\core\Request;
 use app\models\LabReport;
 use app\models\Prescription;
@@ -13,11 +14,13 @@ if(isset($params[1]['search'])){
 $component=New Component();
 $labreportModel=new LabReport();
 $prescriptionModel=new Prescription();
+$form=new Form();
 
 ?>
 <section class="document-section">
 <section class="docu-searchbar-container">
     <?=$component->searchbar($component,'','search-bar--class1','Search by report type','search-bar'); ?>
+    <?=$form->spanselect($labreportModel,'type','Filter ','filter',['All'=>'all','Lab Reports'=>'labreports','Consultation Reports'=>'consultation','Medical History'=>'medical-history','Prescriptions'=>'prescription'],'filter')?>
 </section>
 <section class="document-main-container">
     <?php  foreach($labreports as $labreport): ?>
@@ -80,7 +83,39 @@ $prescriptionModel=new Prescription();
                     el.style.display='flex';
                 }) 
             }
+            
       }
+      const filter1=document.getElementById('filter');
+      function filter(){
+        
+      
+          documents.forEach((el)=>{
+              comp=""+el.id;
+              
+                console.log(el.id);
+                if(comp==filter1.value){
+                    el.style.display='flex';
+                }
+                else{
+                    el.style.display='none';
+               
+                 }
+            })
+        
+            if(filter1.value=='all'){
+                documents.forEach((el)=>{
+                    el.style.display='flex';
+                }) 
+            }
+            if(filter1.value=='labreports'){
+                documents.forEach((el)=>{
+                    if(el.id!='prescription' || el.id!='consultation' || el.id!='soap-report' || el.id!='medical-history'){
+                        el.style.display='flex';
+                    }
+                }) 
+            }
+      }
+        filter1.addEventListener('change',filter);
             <?php if($search):?>
                 var re=new RegExp("^"+<?="'".$search."'"?>)
                 searchBar.value=<?="'".$search."'\n"?>

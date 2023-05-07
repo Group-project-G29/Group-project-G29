@@ -1,12 +1,13 @@
 <?php
 
+use app\core\form\Form;
 use app\models\ChartModel;
 use app\models\LabReport;
 
     $keys=array_keys($mainArray);
     $labreports=new LabReport();
     $chartModel=new ChartModel();
-    
+    $form=new Form();
 
 ?>
 
@@ -17,6 +18,7 @@ use app\models\LabReport;
     <div class="medical-analysis-section">
         <section class="medical-analysis-types">
             <table>
+                <tr><td><?=$form->spanselect($labreports,'type','Choose Report To Analyse','',$reports,'choose')?></td><tr>
                 <?php foreach($keys as $key): ?>
                     <tr>
                         <td class="test-key" id=<?="'".join('-',explode(' ',$key))."'" ?>>
@@ -48,10 +50,12 @@ use app\models\LabReport;
     const testItems=document.querySelectorAll(".test-key");
     const testCharts=document.querySelectorAll(".test-chart");
     
-    (testCharts.slice(1,testCharts.length-1)).forEach((elem)=>{
-        
-        elem.style.display='none';
-    })
+        i=0;
+        testCharts.forEach((elem)=>{
+            if(i!=0) elem.style.display='none';
+            i=i+1;
+        })
+    
     
     testItems.forEach((elemq)=>{
         elemq.addEventListener('click',()=>{
@@ -73,5 +77,12 @@ use app\models\LabReport;
             })
         })
         
+    })
+    //choose
+    const choose=document.getElementById('choose');
+    choose.addEventListener('change',()=>{
+        if(choose.value!='choose'){
+            location.href="patient-dashboard?spec=medical-analysis&id="+choose.value;
+        }
     })
 </script>

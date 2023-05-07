@@ -36,7 +36,11 @@ class OpenedChanneling extends DbModel{
     }
     //cancel a opened channeling session
     public function cancelChanneling($id){
+        $patientNoti=new PatientNotification();
         $this->customFetchAll("update opened_channeling set status='cancelled' where opened_channeling_ID=".$id);
+        $this->customFetchAll("update appointment set status='cancelled' where opened_channeling_ID=".$id);
+        $patientNoti->channelingCancelNoti($id);
+        
     }
     public function isShow($opened_channeling_ID){
         

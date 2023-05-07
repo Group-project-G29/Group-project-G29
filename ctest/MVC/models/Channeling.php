@@ -46,7 +46,7 @@ class Channeling extends DbModel{
             'fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
             'room'=>[self::RULE_REQUIRED],      
             'day'=>[self::RULE_REQUIRED],
-            'time'=>[self::RULE_REQUIRED,self::RULE_TIME],
+            'time'=>[self::RULE_REQUIRED,[self::RULE_TIME,'start_date'=>$this->start_date,'date'=>$this->day]],
             'start_date'=>[self::RULE_REQUIRED,self::RULE_DATE_VALIDATION],
             'schedule_for'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
             'schedule_type'=>[self::RULE_REQUIRED],
@@ -240,8 +240,9 @@ class Channeling extends DbModel{
         $appointmentModel=new Appointment();
         $channelingModel->customFetchAll("update opened_channeling set status='cancelled' where opened_channeling_ID=".$openedChanneling);    
         $patientNotificationModel->channelingCancelNoti($openedChanneling);
-        //delete all the appointment
-        $appointmentModel->deleteRecord(['opened_channeling_ID'=>$openedChanneling]);
+        //update all the appointment
+        $this->customFetchAll("update appointment set status='cancelled' where opened_channeling_ID=".$openedChanneling);
+       
         
    }
     public function closeOpenedChanneling($openedChanneling){
@@ -263,14 +264,32 @@ class Channeling extends DbModel{
         }
 
    }
-   //get opened channeling session when the channeling is given
+ //get opened channeling session when the channeling is given
    public function getOpenedChannelings($channeling){
         $channelingModel=new Channeling();
         $channelings=$channelingModel->fetchAssocAll(['channeling_ID'=>$channeling])[0];
         $calendarModel=new Calendar();
         $end_date=$calendarModel->addDaysToDate(Date('Y-m-d'),$channelings['open_before']);
-        return $this->customFetchAll("select * from opened_channeling where channeling_date<='$end_date' and channeling_ID=$channeling and channeling_date>='".Date('Y-m-d')."'");
+        return $this->customFetchAll("select * from opened_channeling left join channeling on opened_channeling.channeling_ID=channeling.channeling_ID left join employee on employee.nic=channeling.doctor where opened_channeling.channeling_date<='$end_date' and channeling.channeling_ID=$channeling and opened_channeling.channeling_date>='".Date('Y-m-d')."'");
         
+   }
+
+   //get all chnneling
+   //get opened channeling
+   //get loop
+   public function getRecentlyOpenedChanneling(){
+    $openedChanneling=new OpenedChanneling();
+    $channelingModel= new channeling();
+    $channelingArry=[];
+    $allChannelings=$channelingModel->customFetchAll("SELECT * from channeling ");
+    foreach($allChannelings as $allChanneling){
+        $openedChannelings=$this->getOpenedChannelings($allChanneling["channeling_ID"]);
+        array_push($channelingArry,$openedChannelings);
+        
+      
+    }
+
+return $channelingArry;
    }
 
    public function updateChannelingRecord($channeling){
@@ -282,11 +301,17 @@ class Channeling extends DbModel{
             $total_patients=$_POST['total_patients'];
         }
         else{
-            $total_patients=-1;
+            $total_patients=0;
         }
 
         $percentage=$_POST['percentage'];
         $this->customFetchAll("update channeling set speciality='$speciality',fee=$fee,room='$room',total_patients=$total_patients,percentage=$percentage where channeling_ID=".$channeling);
+        if($total_patients!=0){
+            $this->customFetchAll("update opened_channeling set remaining_appointments=$total_patients where channeling_ID=".$channeling);
+        }
+        else{
+            $this->customFetchAll("update opened_channeling set remaining_appointments=-1 where channeling_ID=".$channeling);
+        }
         return true;
    }
 

@@ -51,27 +51,30 @@ use app\core\PDF;
         public function getReport($reportID){
             return $this->customFetchAll("select * from  lab_report_content left join lab_report_template on lab_report_content.template_ID=lab_report_template.template_ID left join  lab_report_content_allocation as l on l.content_ID=lab_report_content.content_ID where l.report_ID=".$reportID." order by lab_report_content.position asc");
         }
-        public function distinctPatientTests($patient){
-            return $this->customFetchAll("SELECT distinct(l.content_ID),c.name FROM  lab_report_content_allocation  as l left join lab_report_content as c  on c.content_ID=l.content_ID left join lab_report_allocation as a on a.report_ID=l.report_ID left join lab_report as r on  r.report_ID=l.report_ID where a.patient_ID=".$patient);
+        public function distinctPatientTests($patient,$template_ID){
+            return $this->customFetchAll("SELECT distinct(l.content_ID),c.name FROM  lab_report_content_allocation  as l left join lab_report_content as c  on c.content_ID=l.content_ID left join lab_report_allocation as a on a.report_ID=l.report_ID left join lab_report as r on  r.report_ID=l.report_ID where a.patient_ID=".$patient." and r.template_ID=".$template_ID);
         }
         public function getTestValue($patient,$testID){
             return $this->customFetchAll("SELECT * FROM  lab_report_content_allocation  as l left join lab_report_content as c  on c.content_ID=l.content_ID left join lab_report_allocation as a on a.report_ID=l.report_ID left join lab_report as r on  r.report_ID=l.report_ID where a.patient_id=".$patient." and l.content_ID=".$testID);
         }
-        public function getAllParameterValue($patient){
-            $contents=$this->distinctPatientTests($patient);
+        //changed
+        public function getAllParameterValue($patient,$template_ID){
+            $contents=$this->distinctPatientTests($patient,$template_ID);
             $contentArray=[];
             foreach($contents as $content){
-                $contentArray[$content['name']]=$this->getTestValue($patient,$content['content_ID']);
+                $contentArray[$content['name']]=[$this->getTestValue($patient,$content['content_ID'])];
             }
+        
             return $contentArray;
         }
         public function makeChartInputs($array){
             $labels=[];
             $values=[];
             $mainarray=[];
-            foreach($array as $element){
+            foreach($array[0] as $element){
                 array_push($labels,$element['upload_date']);
                 array_push($values,$element['int_value']);
+                
             }
             $mainarray['labels']=$labels;
             $mainarray['values']=$values;
@@ -129,7 +132,13 @@ use app\core\PDF;
         public function isreport($request_ID){
             return $this->customFetchAll("SELECT report_ID from lab_report where request_ID=$request_ID");
         }
-
+        public function isAParameter($template_ID,$content_ID){
+            $result=$this->fetchAssocAllByName(['template_ID'=>$template_ID,'content_ID'=>$content_ID],' lab_report_content_allocation ');
+            if($result){
+                return true;
+            }
+            else return false;
+        }
         public function labreporttoPDF($reportID){
             $valuerows=$this->getReport($reportID);
             $addstr='<tr><td>Parameter</td><td>Test Value</td><td>Reference Range</td></tr>';
