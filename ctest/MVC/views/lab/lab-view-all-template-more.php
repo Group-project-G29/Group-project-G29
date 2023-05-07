@@ -8,15 +8,13 @@ use app\core\Application;
 // $curr_ID =$model->content_ID;
 ?>
 
-<div class="search-bar-container" style="padding-left:19vw">
-  <?php echo $component->searchbar('', 'search', 'search-bar--class2', 'Search by name,specilaity', 'searchbar'); ?>
-</div>
+
 <div class="semi-header-container-1">
-    <div class="semi-field-container" style="margin-top:5vw">
-        <tr>
-            <td><b>Title   :</b><?= $detail["title"] ?></td><br>
-            <td><b>Subtitle   :</b><?= $detail["subtitle"] ?></td><br><br>
-        </tr>
+    <div class="flex" style="margin-top:2vh; margin-left:4vw;">
+        
+            <h1><?= $detail["title"] ?><h1>
+            <h2><?= $detail["subtitle"] ?></h2>
+        
     </div>
 <div class="table-container">
     <table border="0">
@@ -30,8 +28,8 @@ use app\core\Application;
                                 <td><b>Reference Ranges :</b><?= $template['reference_ranges'] ?> </td>
                                
                                 <!-- <td> <i class="fa fa-trash" aria-hidden="true"></i> -->
-                                <td><?= $component->button('btn', '', 'X', 'btn-1', $template["content_ID"]); ?></td>
-                                <td><?= $component->button('btn', '', 'Edit', 'btn-2', $template["content_ID"]); ?></td>
+                                <td><?= $component->button('btn', '', 'Remove Content', 'btn-1', $template["content_ID"]); ?></td>
+                                <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $template["content_ID"]); ?></td> -->
 
 
                             <?php endif; ?>

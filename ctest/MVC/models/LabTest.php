@@ -15,13 +15,14 @@ class LabTest extends DbModel{
    
 
     public function addTest(){
+        $this->name=join("-",explode(' ',$this->name));
         return parent::save();
     }
  
     public function rules(): array
     {
         return [
-            'name'=>[self::RULE_REQUIRED,[self::RULE_UNIQUE,'attribute'=>'name','tablename'=>'lab_tests']],
+            'name'=>[self::RULE_REQUIRED],
             'test_fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>100000000000]],
             'hospital_fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>100000000000]],
             'template_ID'=>[],
@@ -74,6 +75,7 @@ class LabTest extends DbModel{
  
 
     public function updateLabtest($prev_name){
+        $this->name=join("-",explode(' ',$this->name));
         $name = $this->name;
         $test_fee = $this->test_fee;
         $hospital_fee = $this->hospital_fee;

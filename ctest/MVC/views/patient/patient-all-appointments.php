@@ -4,11 +4,12 @@ use app\core\Application;
 use app\core\component\Component;
     use app\core\form\Form;
 use app\models\Appointment;
-
+use app\models\Payment;
 $component=new Component();
     $popup=$component->popup("Are you sure you want to delete the channeling session","popup-value","popup--class-1","yes");
     echo $popup;
     $appointmentModel=new Appointment();
+    $paymentModel=new Payment();
     ?>
 <!-- 
     <div class="filter-holder">
@@ -28,7 +29,14 @@ $component=new Component();
                     <h3><?='Doctor :'.$channeling['name']?></h3>  
                     <h3><?='Speciality :'.$channeling['speciality']?></h3>
                     <h4><?='Channeling date :'.$channeling['channeling_date']?></h4>
-                    <h4><?='Channeling time :'.$channeling['time']?></h4> 
+                    <h4><?='Channeling time :'.$channeling['time'].(($channeling['time']>'12:00')?' PM':' AM')?></h4> 
+                    <div class="flex"><h4><?='Fee :LKR '.number_format($channeling['fee'],2,'.','')." "?></h4>
+                    <?php $status=$paymentModel->fetchAssocAll(['appointment_ID'=>$channeling['appointment_ID']])[0]['payment_status']?>
+                    <?php if($status!='done'):?>
+                        <div class="small-link-w"><a href=<?="patient-dashboard?spec=payments&sel_payment=".$channeling['appointment_ID'] ?>>Pay Now</a></div></div>
+                    <?php else:?>
+                        </div>
+                    <?php endif;?>
                     
                 </div>
                 <div>
@@ -39,10 +47,11 @@ $component=new Component();
                 <div class="btn-content">
                     <div class="patient-appointment-tile--2">
                         <img src="media/images/common/delete.png" id=<?='"'.$channeling['appointment_ID'].'"'?>  class="image">
-                        <h3><?='Time :'.$channeling['name']?></h3>  
+                        <h3><?='Doctor :'.$channeling['name']?></h3>  
                         <h3><?='Speciality :'.$channeling['speciality']?></h3>
-                        <t4><?='Channeling date :'.$channeling['channeling_date']?></t4>
-                        <t4><?='Channeling time :'.$channeling['time']?></t4> 
+                        <h4><?='Channeling date :'.$channeling['channeling_date']?></h4>
+                        <h4><?='Channeling time :'.$channeling['time'].(($channeling['time']>'12:00')?' PM':' AM')?></h4> 
+                        <h5>*This appointment is free of charge and can only be used to show lab reports to doctor.</h5>
                     </div>
                     <div>
                         <?php echo $component->button('referral',' ','Change Referrals','button--class-app',$channeling['appointment_ID']) ?>
@@ -60,7 +69,6 @@ $component=new Component();
         </div>
         <?php endif; ?>
         <?php 
-        use app\models\Payment;
     $paymentModel=new Payment();
    // echo $paymentModel->payNow(100,'noth',Application::$app->session->get('userObject'),'345'); ?>
 </div>

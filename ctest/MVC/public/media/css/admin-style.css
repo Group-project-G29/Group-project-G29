@@ -24,6 +24,7 @@ input [type="time"]::-webkit-time-picker-indicator{
   transform: scale(12)
 }
 
+
 .input-container{
     display: flex;
     flex-direction: column;
@@ -197,7 +198,7 @@ input [type="time"]::-webkit-time-picker-indicator{
 .content{
     display: flex;
     
-    justify-content:right;
+    justify-content:left;
     margin-right: 2vw;
 }
 
@@ -258,6 +259,10 @@ input [type="time"]::-webkit-time-picker-indicator{
     grid-gap: 20px;
 }
 
+.add-dec{
+    display: flex;
+    gap:7vw;   
+}
 .cards .card{
     padding: 35px 20px;
     display: flex;
@@ -367,7 +372,7 @@ button:hover{
 }
 
 .open-channeling-date{
-    width: 16vw;
+    width: 20vw;
 }
 .open-channeling-date span{
     margin-left: 1vw;
@@ -382,4 +387,22 @@ button:hover{
     color:red;
     display: flex;
     gap:1vw;
+}
+
+.instruction{
+    position: fixed;
+    left:22vw;
+    top:20vh;
+    background-color:rgb(208, 240, 208);
+    border:1px solid rgb(3, 175, 3);
+    padding-inline:2vw;
+    padding-block:3vh;
+    color:rgb(3, 175, 3);
+    border-radius:15px;
+    z-index:100;
+}
+.instruction ul{
+     display: flex;
+    flex-direction: column;
+    gap: 10px;
 }

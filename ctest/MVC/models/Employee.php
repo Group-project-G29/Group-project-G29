@@ -6,6 +6,7 @@ use app\core\Application;
 use app\core\Date;
 use app\core\UserModel;
 use app\models\Patient;
+use JetBrains\PhpStorm\Internal\ReturnTypeContract;
 
 class Employee extends DbModel{
     
@@ -32,7 +33,11 @@ class Employee extends DbModel{
     public function register(){
        
         $this->password=password_hash($this->password,PASSWORD_DEFAULT);
-        return parent::save(); //save data in the database
+        $id=parent::save();
+        if($this->role=='delivery'){
+            $this->customFetchAll("insert into delivery_rider values(".$id[0]['last_insert_id()'].",'NA') ");
+        }   $this->enqueue_rider($id[0]['last_insert_id()']);
+        return $id; //save data in the database
         
     }
 
@@ -247,6 +252,10 @@ class Employee extends DbModel{
 
 
      public function updateAccounts($id){
+        if(Application::$app->session->get('userObject')->role=='admin'){
+            $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id);    
+            return true;
+        }
         $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".Application::$app->session->get('userObject')->nic."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id);    
         return true;
     }

@@ -7,32 +7,27 @@ $component = new Component();
 
 ?>
 <div class="semi-header-container">
-    <div class="field-container">
-        <div class="header-container" style=" padding-top:0vh;">
+<div class="field-container" style="margin-left: 5vw;">
+        <h1 class="fs-200 fc-color--dark">Upload Report</h1>
+        <h4><b>Request No :</b><?= $tests[0]['request_ID'] ?> </h4>
+        <h4><b>Doctor = Dr.</b><?= $tests[0]['ename'] ?></h4>
+        <h4><b>patient :</b> <?= $tests[0]['pname'] ?></h4>
+        <h4><b>Requested date & Time :</b> <?= $tests[0]['requested_date_time'] ?></h4>
+</div>
+<hr>
+<div class="field-container" style="margin-left: 5vw;">
 
-            <h1 class="fs-200 fc-color--dark">Upload Report</h1>
-
-
-
-            <h5>Request No =<?= $tests[0]['request_ID'] ?> </h5>
-            <h5>Doctor = Dr.<?= $tests[0]['ename'] ?></h5>
-            <h5>patient = <?= $tests[0]['pname'] ?></h5>
-            <h5>Requested date & Time = <?= $tests[0]['requested_date_time'] ?></h5>
-
-
-        </div>
         <?php $form = Form::begin('lab-S-report-upload?id='.$tests[0]['request_ID'], 'post'); ?>
-        <div class="reg-body-spec fields" style="padding-left:8vw">
+        
+        <div class="button" style="margin-left:20vw">
+
+            <?php echo $component->button('submit', 'submit', 'Submit', 'button--class-0  width-10 curser', 'add'); ?>
+        </div>
         <div class="inputbox">
             <label for="image"> </label><br>
-           
             <input type='file' name="location"><br>
             </div>
-        </div>
-            <div class="button" style="padding-left:25vw;margin-top:5vh">
-
-                <?php echo $component->button('submit', 'submit', 'Submit', 'button--class-0  width-10 curser', 'add'); ?>
-            </div>
+       
 
             <?php Form::end() ?>
 

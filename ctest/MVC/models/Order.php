@@ -76,7 +76,7 @@ use app\core\DbModel;
         }
 
         public function addItem($order,$item,$amount,$unit_price){
-            return $this->saveByName(['medicine_in_order'=>['order_ID'=>$order,'med_ID'=>$item,'amount'=>$amount,'order_current_price'=>$unit_price]]);
+            return $this->saveByName(['medicine_in_order'=>['order_ID'=>$order,'med_ID'=>$item,'amount'=>$amount,'order_current_price'=>$unit_price,'status'=>'include']]);
         }
 
         public function getPrescriptionsInOrder($order){

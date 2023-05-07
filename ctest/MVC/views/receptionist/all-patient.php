@@ -14,35 +14,7 @@
         <?= $component->button('btn', '', 'Add New Patient', 'button--class-0 exbutton', "new"); ?>
     </div>
 </div>
-<!-- <div class="main-card ">
-    <?php foreach ($patients as $key => $patient) : ?>
 
-        <div class="card " id=<?= '"' . $patient['name'] . "&" . $patient['patient_ID'] . '"' ?>>
-
-            <div class="card-header-1 ">
-
-                <h4><b>Patient Name</b></h4>
-                <h5><?= $patient['name'] ?></h5>
-                <h4><b>NIC</b></h4>
-                <h5><?= $patient['nic'] ?></h5>
-                <h4><b>Contact</b></h4>
-                <h5><?= $patient['contact'] ?></h5>
-            </div>
-            <div>
-                <?php echo $component->button('update', ' ', 'Update', 'button--class-01', $patient['patient_ID']) ?>
-            </div>
-            <div class="button holder">
-                <?php echo $component->button('update', ' ', 'Add New Appointment', 'button--class-0 new-app', $patient['patient_ID']) ?>
-            </div>
-            <?php echo $component->button('view', ' ', 'View All Appointments', 'button--class-00', $patient['patient_ID']) ?>
-
-
-
-        </div>
-
-    <?php endforeach; ?>
-
-</div> -->
 
 <div class="table-container">
 
@@ -51,26 +23,26 @@
         <th>Name</th> <th>NIC</th> <th>Contact Number</th><th></th><th></th><th></th>
             
         </tr>
-        <div class="patient-container">
+        <div class="patient-container" >
         <?php foreach ($patients as $key => $patient) : ?>
-        <tr class="table-row none" id=<?= '"' . $patient['name'] . "&" . $patient['patient_ID'] . '"' ?>>
+        <tr class="table-row  none " id=<?= '"' . $patient['name'] . "&" . $patient['patient_ID'] . '"' ?>>
             
             <td><?= $patient['name'] ?></td>
             <td><?= $patient['nic'] ?></td>  
             <td><?= $patient['contact'] ?></td>
-            <td>
-                <div>
-                    <?php echo $component->button('update', ' ', 'Update', 'button--class-2', $patient['patient_ID']) ?>
-                </div>
-            </td>
+            
             <td>
                 <div class="button holder">
-                    <?php echo $component->button('update', ' ', 'Add New Appointment', 'button--class-0 new-app', $patient['patient_ID']) ?>
+                    <?php echo $component->button('update', ' ', 'Add New Appointment', 'button--class-00 new-app', $patient['patient_ID']) ?>
                 </div>
 
             </td>
             <td>
-                 <?php echo $component->button('view', ' ', 'View All Appointments', 'button--class-00', $patient['patient_ID']) ?>
+                 <?php echo $component->button('view', ' ', 'View All Appointments', 'button--class-00 width all', $patient['patient_ID']) ?>
+
+            </td>
+            <td>
+                 <?php echo $component->button('view', ' ', 'More', 'button--class-5 more ', $patient['patient_ID']) ?>
 
             </td>
         </tr>
@@ -137,11 +109,19 @@
 </script>
 
 <script>
-    elementsArray = document.querySelectorAll(".button--class-00");
+    elementsArray = document.querySelectorAll(".all");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href = 'receptionist-patient-information?mod=view&id=' + elem.id;
             console.log(elem.id);
         });
     });
+
+    elementsArray = document.querySelectorAll(".more");
+  console.log(elementsArray);
+  elementsArray.forEach(function(elem) {
+    elem.addEventListener("click", function() {
+      location.href = 'patient-detail?mod=view&id='+elem.id;  //pass the variable value
+    });
+  });
 </script>

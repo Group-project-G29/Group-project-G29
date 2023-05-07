@@ -1,17 +1,6 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
-// var_dump($orders);
-// var_dump($order_types);
-// exit;
-// var_dump($order_details);    //done
-//     var_dump($online_orders);    //done
-//     var_dump($sf_orders);
-//     var_dump($sf_pres_med);
-//     var_dump($ep_orders);
-//     var_dump($ep_pres_med);
-//     exit;
-
 ?>
 
 <p class="navigation-text-line-p"> 
@@ -33,6 +22,10 @@
                 <th>Order ID</th>
                 <th>Name</th>
                 <th>Contact</th>
+                <th>Address</th>
+                <th>Total Price</th>
+                <th>Note</th>
+                <th>PickUp Status</th>
                 <th>Date</th>
                 <th>Time</th>
             </tr>
@@ -43,6 +36,17 @@
                             <td><?=$order['order_ID']?></td>
                             <td><?=$order['name']?></td> 
                             <td><?=$order['contact']?></td> 
+                            <td><?=$order['address']?></td> 
+                            <td><?=$order['total_price']?></td> 
+                            <td>
+                                <?php if($order['text']!=NULL): ?>
+                                    <?=$order['text']?>
+                                <?php else: ?>
+                                    <?= 'NA' ?>
+                                <?php endif; ?>
+                            </td> 
+                            <td><?=$order['pickup_status']?></td> 
+                            <!-- deliveryd by -> delivery rider -->
                             <td><?=$order['created_date']?></td> 
                             <td><?=$order['created_time']?></td> 
                         </tr>
@@ -51,6 +55,16 @@
                             <td><?=$order['order_ID']?></td>
                             <td><?=$order['name']?></td> 
                             <td><?=$order['contact']?></td> 
+                            <td><?=$order['address']?></td> 
+                            <td><?=$order['total_price']?></td> 
+                            <td>
+                                <?php if($order['text']!=NULL): ?>
+                                    <?=$order['text']?>
+                                <?php else: ?>
+                                    <?= 'NA' ?>
+                                <?php endif; ?>
+                            </td> 
+                            <td><?=$order['pickup_status']?></td> 
                             <td><?=$order['created_date']?></td> 
                             <td><?=$order['created_time']?></td> 
                         </tr>  

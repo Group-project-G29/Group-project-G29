@@ -218,6 +218,10 @@ $app->router->get('/ctest/test',[LabController::class,'viewTest']);
 
 
 //--------------------receptionist routers----------------------------------------
+$app->router->get('/ctest/patient-detail',[ReceptionistController::class,'handlePatient']);
+$app->router->post('/ctest/patient-detail',[ReceptionistController::class,'handlePatient']);
+
+
 $app->router->get('/ctest/receptionist-handle-patient',[ReceptionistController::class,'handlePatient']);
 $app->router->post('/ctest/receptionist-handle-patient',[ReceptionistController::class,'handlePatient']);
 $app->router->get('/ctest/receptionist-patient-appointment',[ReceptionistController::class,'handleAppointments']);
@@ -252,6 +256,9 @@ $app->router->post('/ctest/receptionist-channeling-todays-session-patient-detail
 $app->router->get('/ctest/receptionist-channeling-set-appointment',[ReceptionistController::class,'setAppointment']);
 $app->router->get('/ctest/receptionist-channeling-payment',[ReceptionistController::class,'handlePayment']);
 $app->router->get('/ctest/receptionist-today-channelings',[ReceptionistController::class,'todayChannelings']);
+
+$app->router->get('/ctest/receptionist-all-payment-done',[ReceptionistController::class,'allPaymentDone']);
+$app->router->get('/ctest/receptionist-all-payment-notdone',[ReceptionistController::class,'allPaymentNotdone']);
 
 // --------------------------------administrator controllers-----------------------------------------
 $app->router->get('/ctest/main-adds', [AdminController::class, 'viewAdvertisement']);

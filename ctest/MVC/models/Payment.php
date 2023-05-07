@@ -191,6 +191,8 @@ class Payment extends DbModel{
     public function update_payment_status ($order_ID) {
         return $this->customFetchAll("UPDATE _order SET payment_status = 'done' WHERE order_ID = $order_ID;");
     }
+
+    
 }   
 
 

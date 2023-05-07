@@ -916,6 +916,7 @@ select{
     margin-top: 3vh;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
 .table-container>table{
@@ -1253,7 +1254,7 @@ select{
 
   .button--class-00 {
       height: 5.5vh;
-      width: 17vw;
+      width: 10vw;
       font-size: 0.9em;
       color: var(--clr-white);
       background-color: var(--clr-light);
@@ -1854,7 +1855,7 @@ select{
 
 .button--class-00 {
     height: 5.5vh;
-    width: 17vw;
+    width: 10vw;
     font-size: 0.9em;
     color: var(--clr-white);
     background-color: var(--clr-light);
@@ -2142,22 +2143,24 @@ select{
 .semi-header-container-1{
     background-color: white;
     /* border:20vh 20vh 20vh 20vh; */
-    padding-top: 0vh;
+    padding-top: 5vh;
     padding-bottom: 4vh;
-    width: 70%;
+    width:70vw;
     /* position:absolute; */
     left: 25vw;
     border: 3px;
     border-radius: 15px;
-    margin-left:12vw;
+    margin-left:6vw;
+    min-height:80vh;
     
     
 
 }
 .semi-field-container{
-    text-align:center;
+    /* text-align:center; */
     padding-top:3vw;
     font-size:large;
+    margin-left: 5vw;
 }
 /* input field */
 
@@ -2309,6 +2312,7 @@ select{
     width: 100%;
     top:0;
     left: 0;
+    border-radius:10px;
     background-color: rgb(0, 0, 0,0.8); 
     /* display: none; */
     /* visibility: hidden; */
@@ -2376,6 +2380,10 @@ select{
     background-color: red;
     border: red;
     color : white;
+    padding-inline:10px;
+    border-radius:5px;
+    height:4vh;
+    width:10vw;
 }
 
 /* card */
@@ -2568,3 +2576,66 @@ select{
     opacity: 1;
    }
 
+
+   /*mydetail container */
+
+   .container{
+    display: flex;
+    margin-top: 2vh;
+    justify-content: center;
+}
+   .detail-container-left{
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(213, 237, 243);
+    margin-right: 1vw;
+}
+.detail-container-left img{
+    width: 10vw;
+    height: 10vw;
+    margin: 0 0 5vh 0;
+    border-radius: 50%;
+}
+
+.detail-container-right{
+    line-height: 5vh;
+    font-size: 1.1rem;
+    background-color: rgb(213, 237, 243);
+    padding: 6vh 6vw;
+}
+
+.data-row{
+    display: flex;
+}
+.data-row-left{
+    width: 10vw;
+}
+
+
+
+
+
+
+
+
+
+/* extra */
+.field-tab td{
+    height:7vh;
+}
+.template{
+    border-collapse: collapse;
+    margin-left: -5vw;
+}
+.template td{
+    width:15vw;
+    padding-block:10px;
+    padding-inline:10px;
+    border:0.5px solid gainsboro;
+    
+
+    
+}

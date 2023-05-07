@@ -24,7 +24,6 @@
 
     public function sendEmail(){
         $mail = new PHPMailer(true);
-        try {
             $mail->SMTPDebug = 2;                                      
             $mail->isSMTP();                                           
             $mail->Host       = 'smtp.gmail.com;';                   
@@ -42,9 +41,7 @@
             $mail->AltBody = $this->altbody;
             $mail->send();
             
-        } catch (Exception $e) {
             
-        }
     }
 }
  

@@ -11,6 +11,7 @@
     <!-- <title>
         PHP & MySql Blog Application with Admin
     </title> -->
+    <link rel="stylesheet" href="./media/css/patient-style.css">
     <link rel="stylesheet" href="./media/css/style.css">
     <link rel="stylesheet" href="./media/css/spec-style.css">
     <!-- <link rel="stylesheet" href="./media/header-footer.css"> -->

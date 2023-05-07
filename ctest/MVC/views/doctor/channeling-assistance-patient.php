@@ -44,8 +44,8 @@ Application::$app->session->set('popup','unset');
             <?php $labrequests=$labrequestModel->getLabTestRequests();?>
             <h3>Lab test requests </h3>
             <?php foreach($labrequests as $labrequest): ?>
-                <?php if($labreportModel->isreport($labrequest['request_ID'])): ?>
-                    <div class="flex">
+                <?php if(!$labreportModel->isreport($labrequest['request_ID'])): ?>
+                    <div>
                         <h4><?=$labrequest['name']."  date :".$labrequest['requested_date_time']?></h4>
                         <?=$component->button('btn','','Cancel','rqst-rmv',$labrequest['request_ID']); ?>
                     </div>

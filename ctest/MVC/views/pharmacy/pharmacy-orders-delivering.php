@@ -29,18 +29,33 @@
                 <th>Order ID</th>
                 <th>Name</th>
                 <th>Contact</th>
+                <th>Address</th>
+                <th>Total Price</th>
+                <th>Note</th>
+                <th>PickUp Status</th>
                 <th>Date</th>
                 <th>Time</th>
             </tr>
-                
+        
             <?php foreach($orders as $key=>$order): ?>
-                <tr class="table-row" id=<?=$order['order_ID']?> >
-                    <td><?=$order['order_ID']?></td>
-                    <td><?=$order['name']?></td> 
-                    <td><?=$order['contact']?></td> 
-                    <td><?=$order['created_date']?></td> 
-                    <td><?=$order['created_time']?></td> 
-                </tr>
+                    <tr class="table-row" id=<?=$order['order_ID']?> >
+                        <td><?=$order['order_ID']?></td>
+                        <td><?=$order['name']?></td> 
+                        <td><?=$order['contact']?></td> 
+                        <td><?=$order['address']?></td> 
+                        <td><?=$order['total_price']?></td> 
+                        <td>
+                            <?php if($order['text']!=NULL): ?>
+                                <?=$order['text']?>
+                            <?php else: ?>
+                                <?= 'NA' ?>
+                            <?php endif; ?>
+                        </td> 
+                        <td><?=$order['pickup_status']?></td> 
+                        <!-- deliveryd by -> delivery rider -->
+                        <td><?=$order['created_date']?></td> 
+                        <td><?=$order['created_time']?></td> 
+                    </tr>
             <?php endforeach; ?>
         </table>
 

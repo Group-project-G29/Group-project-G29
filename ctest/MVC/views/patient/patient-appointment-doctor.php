@@ -36,7 +36,7 @@ use app\models\Patient;
                     <div class="channeling-vital-info">
                         <h3>Time :<?=$value['time']?></h3>
                         <h3>Date :<?=$value['channeling_date']?></h3>
-                        <h3>Fee :LKR <?=$value['fee']?></h3>
+                        <h3>Fee :LKR <?=number_format($value['fee'],2,'.','')?></h3>
                     </div>
                     <div>
                     <?php if($openedChanneling->isPatientIn(Application::$app->session->get('user'),$value['opened_channeling_ID'])):?>

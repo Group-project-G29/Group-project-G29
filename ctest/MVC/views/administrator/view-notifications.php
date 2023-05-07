@@ -24,7 +24,8 @@
     <tr class="table-row <?=$isRead?>">
         <td class="add-dec">
            
-            <div class="content" style="display:flex; flex-direction:column; align-items:left; justify-content:left;"><div ><?=$notification['content']?></div><font color="grey"><?=$notification['created_date_time']." ".substr($notification['created_time'],0,5).(($notification['created_time']>'12:00')?'PM':'AM')?></font></div><br>
+            <div class="content" ><div><?=$notification['content']?></div></div>
+            <div><font color="grey"><?=$notification['created_date_time']." ".substr($notification['created_time'],0,5).(($notification['created_time']>'12:00')?'PM':'AM')?></font><br></div>
             <div class="notification-btn">
 
                 <?php if($notification['is_read']==1){ ?>

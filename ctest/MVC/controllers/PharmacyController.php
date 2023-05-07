@@ -849,7 +849,7 @@ class PharmacyController extends Controller{
     //         'model'=>$orderModel,
     //     ]);
     // }
-
+    
     public function addNewOrderItem(Request $request) {
         $parameters=$request->getParameters();
         $pres_ID = 0;

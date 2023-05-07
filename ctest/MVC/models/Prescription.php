@@ -102,7 +102,7 @@ class Prescription extends DbModel{
         else return $result[0]['prescription_ID'];
     }
     public function updateLastProcessed($pres){
-        $this->customFetchAll("update prescription set last_processed_date=".Date('Y-m-d')." where prescription_ID=".$pres);
+        $this->customFetchAll("update prescription set last_processed_timestamp='".Date('Y-m-d')."' where prescription_ID=".$pres);
     }
     //create new prescription for a patient
     public function createNewPrescription($patientID){
@@ -432,7 +432,7 @@ class Prescription extends DbModel{
         $total=0;
         $prescription=$this->fetchAssocAll(['prescription_ID'=>$presID]);
         if($prescription[0]['type']!='E-prescription'){
-            return '';
+            return [];
         }
         $medicines=$this->fetchAssocAllByName(['prescription_ID'=>$presID],'prescription_medicine');
         $array=[];
@@ -487,7 +487,7 @@ class Prescription extends DbModel{
             }
             $array[$medicine['med_ID']]=$total;
         }
-        return $total;
+        return $array;
         
 
     }
@@ -576,7 +576,7 @@ class Prescription extends DbModel{
     // =========CREATE NEW ORDER===============
     
     public function add_med_rec ($med_ID, $prescription_ID, $amount, $curr_price, $status) {
-        return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, '$status' ); ");
+        return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, $status ); ");
      }
      
      public function get_curr_orders($prescription_ID) {

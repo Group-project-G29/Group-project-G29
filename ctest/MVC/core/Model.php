@@ -129,7 +129,7 @@ abstract class Model{
                 if($ruleName==self::RULE_PIN_VALIDATION ){
 
                 }
-                if($ruleName==self::RULE_TIME && $value<$time->addTime(Date('H:i'),'00:30')){
+                if($ruleName==self::RULE_TIME && $rule['start_date'] && $rule['date'] && ($rule['start_date']==Date('Y-m-d') && $rule['today']==date('l',strtotime(Date('Y-m-d'))) )  && $value<$time->addTime(Date('H:i'),'00:30')){
                     $this->addError($attribute,self::RULE_TIME);
                     
                     
