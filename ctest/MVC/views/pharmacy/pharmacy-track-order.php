@@ -8,14 +8,16 @@
 
 ?>
    
-<div class="detail">
+   <div class="detail">
+    <h3>Order ID : <?=$order_details[0]['order_ID']?></h3>
+    <h3>Date :<?=$order_details[0]['created_date']?></h3>
+    <h3>Time :<?=$order_details[0]['created_time']?></h3>
+    <h3>Pickup Status : <?=$order_details[0]['pickup_status']?></h3>
+    <h3>Payment Status : <?=$order_details[0]['payment_status']?></h3>
+    <hr>
     <h3>Patient Name : <?=$order_details[0]['name']?></h3>
     <h3>Contact Number : <?=$order_details[0]['contact']?></h3>
     <h3>Address : <?=$order_details[0]['address']?></h3>
-    <hr>
-    <h3>Order ID : <?=$order_details[0]['order_ID']?></h3>
-    <h3>Ordered Date & Time :<?=$order_details[0]['created_date']?> <?=$order_details[0]['created_time']?></h3>
-    <h3>Pickup Status : <?=$order_details[0]['pickup_status']?></h3>
 </div>
 
 <div class="order-type-view">
@@ -160,20 +162,22 @@
 <!-- ---------------------------------------------- -->
 
 <form action='pharmacy-track-order?id=<?= $order_details[0]['order_ID'] ?>' method="post">
-    <?php if ( $order_details[0]['payment_status'] === 'pending' ) :  ?>
-        <div>
-            <input type="checkbox" id="payment_status" name="payment_status" value="payment_done_now">
-            <label for="payment_status"> Payment Successful</label><br>
-            <?php
-                if (isset($err)){
-                    if($err === "pending_payment"){
-                        echo '<p class="err-msg"><em><b>*Payment has to be done</b></em></p>';
+    <?php if ( $order_details[0]['pickup_status'] === 'pickup' ) :  ?>                                 
+        <?php if ( $order_details[0]['payment_status'] === 'pending' ) :  ?>
+            <div>
+                <input type="checkbox" id="payment_status" name="payment_status" value="payment_done_now">
+                <label for="payment_status"> Payment Successful</label><br>
+                <?php
+                    if (isset($err)){
+                        if($err === "pending_payment"){
+                            echo '<p class="err-msg"><em><b>*Payment has to be done</b></em></p>';
+                        }
                     }
-                }
-                ?>
-        </div>
-    <?php elseif ( $order_details[0]['payment_status'] === 'completed' ) : ?>
-        <p>Payment has been done.</p>
+                    ?>
+            </div>
+        <?php elseif ( $order_details[0]['payment_status'] === 'completed' ) : ?>
+            <p>Payment has been done.</p>
+        <?php endif; ?>
     <?php endif; ?>
     
     <!-- ---------------------------------------------- -->

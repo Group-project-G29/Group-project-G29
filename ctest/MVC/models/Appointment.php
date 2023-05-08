@@ -86,7 +86,7 @@ class Appointment extends DbModel{
     }
     //check whether the appointment is valid
     public function isInPass($appointment){
-        $result=$this->customFetchAll("Select * from opened_channeling left join appointment on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID where  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and appointment.status='unused' and appointment.appointment_ID=".$appointment);
+        $result=$this->customFetchAll("Select * from opened_channeling left join appointment on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID where  (opened_channeling.status='Opened' or opened_channeling.status='started' or opened_channeling.status='closed' ) and appointment.status='unused' and appointment.appointment_ID=".$appointment);
         if($result) return true;
         else return false;
     } 
@@ -130,7 +130,7 @@ class Appointment extends DbModel{
     }
      public function getTotoalPatient($channelingID){
         //take count in the database on appointment
-        return $this->customFetchAll("select count(*) from appointment where opened_channeling_ID=".$channelingID)[0]['count(*)'];
+        return $this->customFetchAll("select count(*) from appointment where (payment_status='done' || type='labtest') && opened_channeling_ID=".$channelingID)[0]['count(*)'];
     }
     public function getUsedPatient($channelingID){
         //take count in the database on appointment where status is not used

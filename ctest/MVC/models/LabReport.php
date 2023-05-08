@@ -21,13 +21,19 @@ use app\core\PDF;
         {
             return [
                 
-                'location'=>[self::RULE_REQUIRED]
+          
+            'fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>100000000000]],
+
+
+
+        
     
             ];
         }
         public function fileDestination(): array
         {
-            return ['location'=>'/media/patient/labreports'];
+        
+            return ['location'=>'media/patient/labreports/'.$this->location];
         }
         public function tableName(): string
         {
@@ -57,6 +63,7 @@ use app\core\PDF;
         public function getTestValue($patient,$testID){
             return $this->customFetchAll("SELECT * FROM  lab_report_content_allocation  as l left join lab_report_content as c  on c.content_ID=l.content_ID left join lab_report_allocation as a on a.report_ID=l.report_ID left join lab_report as r on  r.report_ID=l.report_ID where a.patient_id=".$patient." and l.content_ID=".$testID);
         }
+  
         //changed
         public function getAllParameterValue($patient,$template_ID){
             $contents=$this->distinctPatientTests($patient,$template_ID);
@@ -141,16 +148,20 @@ use app\core\PDF;
         }
         public function labreporttoPDF($reportID){
             $valuerows=$this->getReport($reportID);
-            $addstr='<tr><td>Parameter</td><td>Test Value</td><td>Reference Range</td></tr>';
+            $addstr='<tr><td>Parameter</td><td>Test Value</td><td>Metric</td><td>Reference Range</td></tr>';
             $title='';
             $subtitle='';
             $date='';
             foreach($valuerows as $row){
                 $title=$row['title'];
-                $subtitle=$row['subtitle'];
+                $subtitle='';
+                if($row['subtitle']){
+
+                    $subtitle=$row['subtitle'];
+                }
                 $date=$row['created_date'];
                 if($row['type']=='field'){
-                    $addstr.="<tr><td>".$row['name']."</td><td>".$row['int_value']."</td><td> ".$row['metric']."</td></tr>";
+                    $addstr.="<tr><td>".$row['name']."</td><td>".$row['int_value']."</td><td> ".$row['metric']."</td><td> ".$row['reference_ranges']." ".$row['metric']."</td></tr>";
                 }
                 elseif($row['type']=='text'){
                     $addstr.="<tr colspan='3'><td>".$row['name']."<br>".$row['text_value']."</td></tr>";
@@ -168,6 +179,10 @@ use app\core\PDF;
                         .show{    
                         background-color:red;
                         }
+                        td{
+                            width:150px;
+                            height:30px;
+                        }
                     </style>
                     </head>
                     <body>
@@ -182,8 +197,7 @@ use app\core\PDF;
                         </section>
                         
                         <section  style='border:1px solid #38B6FF; padding:10px; border-radius:5px; '>
-                           <h1>".$title."</h1>
-                           <h2>".$subtitle."</h2>
+                           <h3>".$title." ".$subtitle."</h3>
                             
                         </section>
                         <section><br><br>

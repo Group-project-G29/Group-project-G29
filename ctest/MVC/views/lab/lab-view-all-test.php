@@ -3,7 +3,6 @@
 use app\core\component\Component;
 
 $component = new Component();
-// var_dump($user);
 ?>
 
 <div class="search-bar-container flex" style="padding-left:15vw">
@@ -18,8 +17,8 @@ $component = new Component();
 
   <div class="card-details">
     <p class="text-title"><?= $test['name'] ?></p>
-        <p class="text-body"><b>Test Fee :</b><?= $test['test_fee'] ?> </p>
-        <p class="text-body"><b>Hospital Fee :</b><?= $test['hospital_fee'] ?> </p>
+        <p class="text-body"><b>Test Fee :</b><?="LKR ".$test['test_fee'].".00" ?> </p>
+        <p class="text-body"><b>Hospital Fee :</b><?= "LKR".$test['hospital_fee'].".00" ?> </p>
   </div>
   <!-- <button class="card-button"> -->
   <?php echo $component->button('edit-details', '', 'Edit Details', 'button--class-7 ', $test['name']) ?>

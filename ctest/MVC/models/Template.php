@@ -25,7 +25,6 @@ class Template extends DbModel{
         return [
            
             'title'=>[self::RULE_REQUIRED],
-            'subtitle'=>[self::RULE_REQUIRED],
             'created_date'=>[],
             
         ];

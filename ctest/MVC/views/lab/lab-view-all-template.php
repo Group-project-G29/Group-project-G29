@@ -13,7 +13,6 @@ $component = new Component();
   </div>
 
   <b>
-    <h1 class="fs-200 fc-color--dark" style="padding-left: 60vh;padding-top: 10vh;">Templates</h1>
   </b>
 
 </div>

@@ -308,10 +308,7 @@
     gap:2vh;
     flex-direction:column;
 }
-.width-10{
-    width:25vw; 
-    height:7vh;
-}
+
 .item{
     font-size: 0.8em;
     padding-inline: 2vh;
@@ -724,6 +721,7 @@
     background-color: var(--clr-white);
     border: 1px solid var(--clr-button-green);
     border-radius: 2px;
+    width:10vw;
 }
 
 .button--class-5:hover{

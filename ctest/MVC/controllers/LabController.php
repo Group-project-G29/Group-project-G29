@@ -38,7 +38,7 @@ class LabController extends Controller
         $contents = '';
         //show add labtest after test is created
         if(isset($parameters[0]['spec']) && $parameters[0]['spec']=='lab-test-template'){
-                    Application::$app->session->set('testname', $parameters[1]['id']);
+                    Application::$app->session->set('testname',urldecode($parameters[1]['id']));
                     $this->setLayout("lab", ['select' => 'Tests']);
                     $labtest = $LabTestModel->customFetchAll("SELECT * FROM lab_report_template join lab_tests on lab_report_template.template_ID=lab_tests.template_ID");
                     $testDetail = $LabTestModel->customFetchAll("SELECT * from lab_tests where name=" . "'" . Application::$app->session->get('testname') . "'");
@@ -63,10 +63,9 @@ class LabController extends Controller
         if (isset($parameters[0]['mod']) && $parameters[0]['mod'] == 'update') {
             $this->setLayout("lab", ['select' => 'Tests']);
 
-            $labtest = $LabTestModel->customFetchAll("Select * from lab_tests where name=" . "'" . $parameters[1]['id'] . "'");
+            $LabTestModel = $LabTestModel->findOne( ['name'=>urldecode($parameters[1]['id'])]);
 
-            $LabTestModel->updateData($labtest, $LabTestModel->fileDestination());
-            Application::$app->session->set('labtest', $parameters[1]['id']);
+            Application::$app->session->set('labtest', urldecode($parameters[1]['id']));
             return $this->render('lab/lab-test-update', [
                 'model' => $LabTestModel,
                 // 'labtest'=>$labtest
@@ -90,7 +89,7 @@ class LabController extends Controller
             // var_dump($curr_template_ID);
             // exit;
             if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'update') {
-                $curr_template_ID = $LabTestModel->customFetchAll("SELECT * FROM lab_tests WHERE name=" . "'" . $parameters[1]['id'] . "'");
+                $curr_template_ID = $LabTestModel->customFetchAll("SELECT * FROM lab_tests WHERE name=" . "'" . urldecode($parameters[1]['id']) . "'");
                 $LabTestModel->template_ID = $curr_template_ID[0]["template_ID"];
                 // exit;
             
@@ -190,15 +189,14 @@ class LabController extends Controller
             $TemplateModel->validate();
             var_dump($TemplateModel->errors);
 
-            if ($TemplateModel->validate() && $TemplateModel->addTemplate()) {
+            if ($TemplateModel->validate()) {
 
                 $template = '';
                 $this->setLayout("lab", ['select' => 'Tests']);
                 $template = $TemplateModel->addTemplate()[0]['last_insert_id()'];
                 $prev_template = $LabTestModel->get_prev_temp_ID();
-                $update_temp_ID = $LabTestModel->update_temp_ID_on_test($parameters[1]['id'], $prev_template[0]["template_ID"]);
+                $update_temp_ID = $LabTestModel->update_temp_ID_on_test(urldecode($parameters[1]['id']), $prev_template[0]["template_ID"]);
                 Application::$app->session->set('template', $template);
-
                 Application::$app->session->setFlash('success', "new template created ");
                 Application::$app->response->redirect('/ctest/lab-test-template');
                 exit;
@@ -278,7 +276,6 @@ class LabController extends Controller
             foreach ($_POST as $content_ID => $value) {
                 if ($content_ID != "Add") {
                     if ($AllocationModel->get_types($content_ID)[0]['type'] === 'field') {
-                        var_dump("count");
                         $AllocationModel->add_field_allocation($setreport[0]['report_ID'], $content_ID, $value);
                     } elseif ($AllocationModel->get_types($content_ID)[0]['type'] === 'text') {
                         $AllocationModel->add_text_allocation($setreport[0]['report_ID'], $content_ID, $value);
@@ -289,6 +286,7 @@ class LabController extends Controller
                     
                 }
             }
+          
             echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
 
             Application::$app->session->setFlash('success', "Lab Report successfully added ");
@@ -322,11 +320,16 @@ class LabController extends Controller
         $reportmodel = new LabReport();
         $parameters = $request->getParameters();
         $this->setLayout("lab", ['select' => 'Lab Reports']);
-        $reports = $reportmodel->customFetchAll("SELECT * from lab_report_content_allocation join lab_report on lab_report_content_allocation.report_ID=lab_report.report_ID join lab_report_content on lab_report_content.content_ID=lab_report_content_allocation.content_ID where lab_report_content_allocation.report_ID=" . $parameters[0]['id']);
+        $report=$reportmodel->customFetchAll("Select * from lab_report where report_ID=".$parameters[0]['id']);
+        if($report[0]['type']=='softcopy'){
+                    $response->redirect('/ctest/MVC/public/media/patient/labreports/'.$report[0]['location']);   
+
+        }
+        $reports = $reportmodel->customFetchAll("SELECT * from lab_report left join lab_report_content_allocation   on lab_report_content_allocation.report_ID=lab_report.report_ID join lab_report_content on lab_report_content.content_ID=lab_report_content_allocation.content_ID where lab_report.report_ID=" . $parameters[0]['id']);
         // $requst_reports = $reportmodel->get_report_by_ID($parameters[0]['id']);
         // $reportmodel->labreporttoPDF($requst_reports[0]['report_ID']);
+     
         echo $reportmodel->labreporttoPDF($reports[0]['report_ID']);
-
         return $this->render('lab/lab-view-report-detail', [
             'reports' => $reports
         ]);
@@ -538,7 +541,7 @@ class LabController extends Controller
             $newly_created_temp_ID = $contentModel->select_last_ID();
             $last_position = $contentModel->select_last_content_ID($newly_created_temp_ID[0]['template_ID']);
             $new_position = 1;
-
+            
             //update template content
             if (isset($parameters[0]['cmd']) && $parameters[0]['cmd'] == 'update') {
                 if ($contentModel->validate() && $contentModel->updateRecord(['content_ID' => $parameters[1]['id']])) {

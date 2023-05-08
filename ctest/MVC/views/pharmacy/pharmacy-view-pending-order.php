@@ -2,11 +2,10 @@
     use app\core\component\Component;
     $component=new Component();
     $total = 0;
+
     // var_dump($online_orders);
     // var_dump($sf_orders);
     // var_dump($orders);
-    // var_dump($orders);
-    // var_dump($orders[0]['order_ID]);
     // exit;
 
     // var_dump($order_details);    //done
@@ -19,13 +18,15 @@
 ?>
 
 <div class="detail">
+    <h3>Order ID : <?=$order_details[0]['order_ID']?></h3>
+    <h3>Date :<?=$order_details[0]['created_date']?></h3>
+    <h3>Time :<?=$order_details[0]['created_time']?></h3>
+    <h3>Pickup Status : <?=$order_details[0]['pickup_status']?></h3>
+    <h3>Payment Status : <?=$order_details[0]['payment_status']?></h3>
+    <hr>
     <h3>Patient Name : <?=$order_details[0]['name']?></h3>
     <h3>Contact Number : <?=$order_details[0]['contact']?></h3>
     <h3>Address : <?=$order_details[0]['address']?></h3>
-    <hr>
-    <h3>Order ID : <?=$order_details[0]['order_ID']?></h3>
-    <h3>Ordered Date & Time :<?=$order_details[0]['created_date']?> <?=$order_details[0]['created_time']?></h3>
-    <h3>Pickup Status : <?=$order_details[0]['pickup_status']?></h3>
 </div>
 
 <div class="order-type-view">

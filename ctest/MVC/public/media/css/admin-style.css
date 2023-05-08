@@ -406,3 +406,7 @@ button:hover{
     flex-direction: column;
     gap: 10px;
 }
+
+.notee::-webkit-datetime-edit-ampm-field {
+  display: none;
+}

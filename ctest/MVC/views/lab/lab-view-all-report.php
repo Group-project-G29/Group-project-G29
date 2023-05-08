@@ -12,7 +12,6 @@ $component = new Component();
     <?php echo $component->searchbar('', 'search', 'search-bar--class2', 'Search by name,specilaity', 'searchbar'); ?>
   </div>
 
-  <b><h1 class="fs-200 fc-color--dark" style="padding-left: 65vh;padding-top: 10vh;">Lab Reports</h1></b>
 
 </div>
 <!-- <div class="main-card-1 ">

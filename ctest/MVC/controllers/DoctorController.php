@@ -39,9 +39,9 @@ class DoctorController extends Controller{
 
         if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='pre-channeling-test'){
         
-            
+           
             if(isset($parameter[1]['cmd']) && $parameter[1]['cmd']=='add'){
-                $testID=$testModel->getIDbyName($parameter[2]['id']);
+                $testID=$testModel->getIDbyName(urldecode($parameter[2]['id']));
                 if($testID && !$testModel->isExist($parameter[3]['channeling'],$testID)){
                     $testModel->allocateChannelingTest($testID,$parameter[3]['channeling']);
                     Application::$app->session->set('popshow',$parameter[3]['channeling']);
@@ -171,6 +171,7 @@ class DoctorController extends Controller{
             $patient=$OpenedChanneling->getLastPatient("consultation",$id);
             if(!$patient){
                 $patient=$OpenedChanneling->getLastPatient("labtest",$id);
+              
             }   
             //get patient in the session
             
@@ -459,7 +460,7 @@ class DoctorController extends Controller{
 
         else if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='finish'){
             $openedChannelingModel=new OpenedChanneling();
-            $appointments=$openedChannelingModel->getAllAppointments(Application::$app->session->get('channeling'));
+            $appointments=$openedChannelingModel->getAllAppointmentsPatch(Application::$app->session->get('channeling'));
             return $this->render("doctor/channeling-finish",[
                 'appointments'=>$appointments
             ]);
@@ -706,6 +707,7 @@ class DoctorController extends Controller{
             //get the url in the session to reload
             Application::$app->session->set('popup','set');
             $response->redirect(Application::$app->session->get('churl'));
+            exit;
 
         }
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
@@ -713,6 +715,7 @@ class DoctorController extends Controller{
            $labTestRequestModel->deleteRecord(['request_ID'=>$parameters[1]['id']]);
            Application::$app->session->set('popup','set');
             $response->redirect(Application::$app->session->get('churl'));
+            exit;
         }
 
     }

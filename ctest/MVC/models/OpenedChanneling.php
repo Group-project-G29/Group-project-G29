@@ -57,7 +57,7 @@ class OpenedChanneling extends DbModel{
         return true;
     }
     public function getPatient($channeling,$current_patient,$type,$queuetype):array{
-        $patient_queue=$this->customFetchAll("select * from  patient right join appointment on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID =".$channeling." and appointment.type='$queuetype' order by appointment.queue_no");
+        $patient_queue=$this->customFetchAll("select * from  patient right join appointment on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID =".$channeling." and appointment.type='$queuetype' and (appointment.payment_status='done' ||  appointment.type='labtest') order by appointment.queue_no");
         $i=0;
       
         while(isSet($patient_queue[$i]['patient_ID']) && $patient_queue[$i]['patient_ID']!=$current_patient){
@@ -97,7 +97,9 @@ class OpenedChanneling extends DbModel{
         return $this->customFetchAll("select * from appointment left join patient on patient.patient_ID=appointment.patient_ID where appointment.opened_channeling_ID='$id'");
     }
 
-
+    public function getAllAppointmentsPatch($id){
+        return $this->customFetchAll("select * from appointment left join patient on patient.patient_ID=appointment.patient_ID where (appointment.payment_status='done' ||  appointment.type='labtest') and appointment.opened_channeling_ID='$id'");
+    }
     public function rules(): array
     {
         return [
@@ -154,7 +156,13 @@ class OpenedChanneling extends DbModel{
             return $patient[0]['patient_ID'];
         }
         else{
-            return $this->customFetchAll("select patient_ID from appointment where opened_channeling_ID=$channelingID and queue_no in (select min(queue_no) from appointment where opened_channeling_ID=$channelingID and type='$type') and type='$type'")[0]['patient_ID']??'';
+             if($type=='consultation'){
+
+                 return $this->customFetchAll("select patient_ID from appointment where opened_channeling_ID=$channelingID and queue_no in (select min(queue_no) from appointment where opened_channeling_ID=$channelingID and type='$type') and appointment.payment_status='done' and type='$type'")[0]['patient_ID']??'';
+             }
+             else{
+                return $this->customFetchAll("select patient_ID from appointment where opened_channeling_ID=$channelingID and queue_no in (select min(queue_no) from appointment where opened_channeling_ID=$channelingID and type='$type') and appointment.type='labtest' and type='$type'")[0]['patient_ID']??'';
+             }
         }
     }
 

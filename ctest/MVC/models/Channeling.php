@@ -47,7 +47,7 @@ class Channeling extends DbModel{
             'room'=>[self::RULE_REQUIRED],      
             'day'=>[self::RULE_REQUIRED],
             'time'=>[self::RULE_REQUIRED,[self::RULE_TIME,'start_date'=>$this->start_date,'date'=>$this->day]],
-            'start_date'=>[self::RULE_REQUIRED,self::RULE_DATE_VALIDATION],
+            'start_date'=>[self::RULE_REQUIRED],
             'schedule_for'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
             'schedule_type'=>[self::RULE_REQUIRED],
             'frequency'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],

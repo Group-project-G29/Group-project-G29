@@ -29,7 +29,7 @@ $contentM = new TemplateContent();
             <tr><th>Content Type</th><th>Parameter Name</th><th>Reference Range</th><th>Metric</th></tr>
             <tr>
 
-                <td> <?php echo $form->labselect($contentM, 'type', '', 'field-1', ['field', 'text','select'], 'picker'); ?></td>
+                <td> <?php echo $form->labselect($contentM, 'type', '', 'field-1', ['select', 'text','field'], 'picker'); ?></td>
                 <td> <?php echo $form->labfield($contentmodel, 'name', '', 'hide', 'text', 'name'); ?></td>
                 <td><?php echo $form->labfield($contentmodel, 'reference_ranges', '', 'hide', 'text', 'range'); ?></td>
                 <td> <?php echo $form->labselect($contentM, 'metric', '', 'hide', ['g/dl','IU/L', 'MIL/UL', 'G/UL', 'FL', 'select'], 'metric'); ?></td>
@@ -154,6 +154,9 @@ $contentM = new TemplateContent();
         element.classList.remove(hideClass);
         element.classList.add(visibleClass);
     }
+             visible(name);
+            visible(reference_ranges);
+            visible(metric);
     select.addEventListener('change', () => {
 
         if (select.value == 'field') {

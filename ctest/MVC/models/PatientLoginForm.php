@@ -35,7 +35,7 @@ use app\models\Patient;
             $name=explode(" ",$_POST['name']);
             $user=$patient->findOne(['nic'=>$this->username,'name'=>$name[0]." ".$name[1]]);
             if(!$user){
-                $this->customAddError('username','User does not exist with this email address or name');
+                $this->customAddError('username','User does not exist with this  NIC and name');
                 return false;
             }
             if(!password_verify($this->password,$user->password)){

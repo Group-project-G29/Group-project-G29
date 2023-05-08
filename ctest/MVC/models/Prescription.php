@@ -212,6 +212,12 @@ class Prescription extends DbModel{
              $this->updateLastProcessed($pres['prescription_ID']);
 
         }
+        $prescriptions=$this->customFetchAll("select prescription_ID from prescription where cart_ID=$cartID and type='softcopy prescription'");
+        foreach($prescriptions as $pres){
+             $this->customFetchAll("update prescription set order_ID='$orderID' ,cart_ID=null where cart_ID='$cartID'");
+             $this->updateLastProcessed($pres['prescription_ID']);
+
+        }
         return true;
     }
     public function getPatientPrescription($patient){

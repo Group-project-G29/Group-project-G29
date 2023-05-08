@@ -63,7 +63,7 @@ class PatientAuthController extends Controller{
 
         if($request->isPost()){
             $PatientLoginForm->loadData($request->getBody());
-            if($PatientLoginForm->validate() && $PatientLoginForm->login()){
+            if($PatientLoginForm->validate() && $PatientLoginForm->loginpediatric()){
                 Application::$app->session->setFlash('success',"Welcome ");
                 $response->redirect('/ctest/patient-main');
                 return true;
@@ -276,6 +276,12 @@ class PatientAuthController extends Controller{
         $ReferralModel=new Referral();
         $appointment=new Appointment();
         if($request->isPost()){
+           
+            if(!$_FILES['name']['size']){
+                Application::$app->session->setFlash('success',"Appointment successfully created");
+                Application::$app->response->redirect("/ctest/patient-all-appointment");
+                exit;
+            }
             $ReferralModel->loadData($request);
             $ReferralModel->loadFiles($_FILES);
             $appointment_detail=$appointment->customFetchAll("select * from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on doctor.nic=channeling.doctor where appointment_ID=".$parameter[1]['id'])[0];
@@ -350,18 +356,18 @@ class PatientAuthController extends Controller{
                 $number=1;
             }
             if(isSet($parameters[2]['type']) && $parameters[2]['type']=='consultation'){
-                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
+                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"pending",'consultation']);
                 $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
                 $PaymentModel->createAppointmenPay(Application::$app->session->get('user'),'appointment',$AppointmentModel->getFee($appointment_id[0]['last_insert_id()']),$appointment_id[0]['last_insert_id()'],'pending');
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
             else if(isSet($parameters[2]['type']) && $parameters[2]['type']??''=='labtest'){
-                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'labtest']);
+                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"pending",'labtest']);
                 $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
             else{
-                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
+                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"pending",'consultation']);
                 $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
                 $PaymentModel->createAppointmenPay(Application::$app->session->get('user'),'appointment',$AppointmentModel->getFee($appointment_id[0]['last_insert_id()']),$appointment_id[0]['last_insert_id()'],'pending');
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
@@ -941,7 +947,7 @@ class PatientAuthController extends Controller{
             if(isset($parameters[1]['cmd']) &&  $parameters[1]['cmd']=='view'){
                 $report=$labreportModel->fetchAssocAll(['report_ID'=>$parameters[2]['id']])[0];
                 if($report['type']=='softcopy'){
-                    $response->redirect('http://localhost/ctest/MVC/public/media/patient/labreports/'.$report['location']);   
+                    $response->redirect('/ctest/MVC/public/media/patient/labreports/'.$report['location']);   
                 }
                 else{
                     $labreportModel->labreporttoPDF($parameters[2]['id']);

@@ -69,9 +69,9 @@
 </div>
 <h1>Total Price : <?=$total?></h1>
 
-<div class='upper-container'>
+<!-- <div class='upper-container'>
     <?php echo $component->button('take-order','','Process','button--class-0  width-10','take-order');?>
-</div>
+</div> -->
 
 
 <!-- ==================== -->

@@ -7,6 +7,7 @@ use app\core\Request;
 use app\models\Delivery;
 use app\models\Patient;
 use app\models\PatientNotification;
+use app\models\Payment;
 use app\models\Prescription;
 use app\models\User;
 use app\core\DbModel;
@@ -20,6 +21,38 @@ use app\models\PharmacyAdvertisement;
 
 class PharmacyController extends Controller{
 
+//=======================CREATE NEW ORDERS===================================
+    public function createNewFrontdeskOrder(Request $request,Response $response){
+        $parameters=$request->getParameters();
+        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+        $orderModel=new FrontdeskOrder();
+
+        if($request->isPost()){
+
+            $orderModel->loadData($request->getBody());
+            $orderModel->pharmacist_ID = Application::$app->session->get('userObject')->emp_ID;
+            $orderModel->date = date("Y-m-d");
+            $orderModel->time = date("h:i:s");
+            $orderModel->addFrontdeskOrder();
+            $order_details = $orderModel->get_last_inserted_order($orderModel->contact)[0];
+            $order_medicines = $orderModel->get_order_medicines($order_details["order_ID"]);
+
+            //all medicine details
+            $medicineModel = new Medicine();
+            $medicine_array = $medicineModel->getAllMedicine();
+                
+            return $this->render('pharmacy/pharmacy-frontdesk-view-pending',[
+                'order_details'=>$order_details,
+                'order_medicines'=>$order_medicines,
+                'medicine_array' => $medicine_array
+            ]);
+        }
+
+        return $this->render('pharmacy/pharmacy-new-order-form',[
+            'ordermodel'=>$orderModel,
+        ]);
+    }
+
 //==========================FRONT DESK ORDERS=====================================
     public function viewFrontdeskPendingOrder(){
         $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
@@ -27,6 +60,157 @@ class PharmacyController extends Controller{
         //get frontdesk orders
         $orders=$orderModel->get_frontdesk_pending_orders(); 
         return $this->render('pharmacy/pharmacy-frontdesk-pending',[
+            'orders'=>$orders,
+            'model'=>$orderModel,
+        ]);
+    }
+
+    public function detailsFrontdeskPending(Request $request){
+        $parameters=$request->getParameters();
+        $orderModel = new FrontdeskOrder();
+        $order_details = $orderModel->get_order_details($parameters[0]['id'])[0];
+        $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
+        
+        //all medicine details
+        $medicineModel = new Medicine();
+        $medicine_array = $medicineModel->getAllMedicine();
+
+        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+        return $this->render('pharmacy/pharmacy-frontdesk-view-pending',[
+            'order_details'=>$order_details,
+            'order_medicines'=>$order_medicines,
+            'medicine_array' => $medicine_array
+        ]);
+    }
+
+    public function addNewFrontItem(Request $request){
+        $parameters=$request->getParameters();
+
+        // get the medicine name array
+        $medName = explode('-',$_POST['name']);
+        $medicineModel = new Medicine();
+        // get medicine id using the above array
+        $med_ID = $medicineModel->getMedicineID($medName[0],$medName[1]);
+        // get medicine details
+        $med_details = $medicineModel->get_medicine_details($med_ID);
+
+        $orderModel = new FrontdeskOrder();
+        if ( $med_details[0]["amount"]>=$_POST["amount"] ) { 
+            // if available reduce stocks
+            $reduce_med_amount = $medicineModel->reduceMedicine($med_ID, $_POST["amount"], true);
+            $frontdesk_medicine = $orderModel->add_new_front_item($parameters[0]['id'], $med_ID, $_POST["amount"], $med_details[0]["unit_price"],'include');
+        } else {
+            $frontdesk_medicine = $orderModel->add_new_front_item($parameters[0]['id'], $med_ID, $_POST["amount"], $med_details[0]["unit_price"],'exclude');
+        }
+
+        //all medicine details
+        $medicine_array = $medicineModel->getAllMedicine();
+
+        $order_details = $orderModel->get_order_details($parameters[0]['id'])[0];
+        $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
+
+        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+        return $this->render('pharmacy/pharmacy-frontdesk-view-pending',[
+            'order_details'=>$order_details,
+            'order_medicines'=>$order_medicines,
+            'medicine_array' => $medicine_array
+        ]);
+    }
+    
+    public function deleteFrontdeskOrder(Request $request){
+        $parameters=$request->getParameters();
+        $orderModel = new FrontdeskOrder();
+        $medicineModel=new Medicine();
+
+        $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
+        foreach($order_medicines as $order_medicine){
+            if($order_medicine["status"]=='include'){
+                $increase_med_stock = $medicineModel->increaseMedicine($order_medicine['med_ID'],$order_medicine['order_amount'],true);
+            }
+        }
+        $deleted_medicines = $orderModel->delete_med_record($parameters[0]['id']);
+        $deleted_order = $orderModel->delete_order($parameters[0]['id']);
+        
+        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+        //get frontdesk orders
+        $orders=$orderModel->get_frontdesk_pending_orders(); 
+        return $this->render('pharmacy/pharmacy-frontdesk-pending',[
+            'orders'=>$orders,
+            'model'=>$orderModel,
+        ]);
+    }
+
+    public function finishFrontdeskOrder(Request $request){
+        $parameters=$request->getParameters();
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+
+        $orderModel = new FrontdeskOrder();
+        $update_order_status = $orderModel->set_processing_status($parameters[0]['id'],'packed');
+        $update_total = $orderModel->write_total($parameters[0]['id'],$parameters[1]['total']);
+
+        $order_details = $orderModel->get_order_details($parameters[0]['id']);
+        $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
+        
+        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+        return $this->render('pharmacy/pharmacy-frontdesk-view-packed',[
+            'order_details'=>$order_details,
+            'order_medicines'=>$order_medicines,
+        ]);
+    }
+
+    public function viewFrontdeskPackedOrder(){
+        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+        $orderModel=new FrontdeskOrder();
+        //get frontdesk orders
+        $orders=$orderModel->get_frontdesk_packed_orders(); 
+        return $this->render('pharmacy/pharmacy-frontdesk-packed',[
+            'orders'=>$orders,
+            'model'=>$orderModel,
+        ]);
+    }
+
+    public function detailsFrontdeskPacked(Request $request){
+        $parameters=$request->getParameters();
+        $orderModel = new FrontdeskOrder();
+        $update_order_status = $orderModel->set_processing_status($parameters[0]['id'],'pending');
+        $order_details = $orderModel->get_order_details($parameters[0]['id']);
+        $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
+        
+        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+        return $this->render('pharmacy/pharmacy-frontdesk-view-packed',[
+            'order_details'=>$order_details,
+            'order_medicines'=>$order_medicines,
+        ]);
+    }
+
+    public function cancleFrontdeskOrder(Request $request) {
+        $parameters=$request->getParameters();
+        $orderModel = new FrontdeskOrder();
+        $order_details = $orderModel->get_order_details($parameters[0]['id'])[0];
+        $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
+        
+        //all medicine details
+        $medicineModel = new Medicine();
+        $medicine_array = $medicineModel->getAllMedicine();
+
+        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+        return $this->render('pharmacy/pharmacy-frontdesk-view-pending',[
+            'order_details'=>$order_details,
+            'order_medicines'=>$order_medicines,
+            'medicine_array' => $medicine_array
+        ]);
+    }
+
+    public function pickupFrontdeskOrder(Request $request) {
+        $parameters=$request->getParameters();
+        $orderModel = new FrontdeskOrder();
+        $update_order_status = $orderModel->set_processing_status($parameters[0]['id'],'pickedup');
+        $update_payment_status = $orderModel->set_payment_status($parameters[0]['id']);
+
+        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+        //get frontdesk orders
+        $orders=$orderModel->get_frontdesk_finished_orders(); 
+        return $this->render('pharmacy/pharmacy-frontdesk-finished',[
             'orders'=>$orders,
             'model'=>$orderModel,
         ]);
@@ -43,19 +227,6 @@ class PharmacyController extends Controller{
         ]);
     }
 
-    public function detailsFrontdeskPending(Request $request){
-        $parameters=$request->getParameters();
-        $orderModel = new FrontdeskOrder();
-        $order_details = $orderModel->get_order_details($parameters[0]['id']);
-        $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
-        
-        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
-        return $this->render('pharmacy/pharmacy-frontdesk-view-pending',[
-            'order_details'=>$order_details,
-            'order_medicines'=>$order_medicines,
-        ]);
-    }
-
     public function detailsFrontdeskFinished(Request $request){
         $parameters=$request->getParameters();
         $orderModel = new FrontdeskOrder();
@@ -68,7 +239,6 @@ class PharmacyController extends Controller{
             'order_medicines'=>$order_medicines,
         ]);
     }
-
 
 //==========================PREVIOUS ORDERS=====================================
     public function viewPreviousOrder(){
@@ -251,7 +421,6 @@ class PharmacyController extends Controller{
         // calculate total for online orderes medical products
         $online_total = 0;
         foreach ($online_orders as $key=>$online_order){
-            var_dump($online_order);
             if( $online_order["status"]=='include' ) {
                 $increase_med_amount = $medicineModel->increaseMedicine($online_order['med_ID'],$online_order['order_amount'],true);
             }
@@ -480,7 +649,7 @@ class PharmacyController extends Controller{
         }
 
         // store total value in the order table - better to pass the total as a parameter
-        $updated_total = $orderModel->write_total($parameters[0]['id'],$parameters[1]['total']);
+        $updated_total_order = $orderModel->write_total($parameters[0]['id'],$parameters[1]['total']);
         // set processing status from processing to packed
         $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'packed');
         // get packed orders
@@ -506,23 +675,27 @@ class PharmacyController extends Controller{
 
     public function trackOrder(Request $request){
         $parameters=$request->getParameters();
-
+        $orderModel=new Order();
+        // order details
+        $order_details = $orderModel->get_order_details($parameters[0]['id']);
+        
         if ($request->isPost()){
-            // var_dump($parameters);
-            // var_dump($_POST);
-            $this->setLayout("pharmacy",['select'=>'Orders']);
-            $orderModel=new Order();
-            // order details
-            $order_details = $orderModel->get_order_details($parameters[0]['id']);
             // var_dump($order_details);exit;
             
             if ( isset($_POST["picked-up"]) ) {
                 if ( $order_details[0]['payment_status']=='pending' && isset($_POST['payment_status']) ) {
-                    $orderModel=new Order();
-                    $curr_order=$orderModel->getOrderByID($parameters[0]['id']);
+                    // $curr_order=$orderModel->getOrderByID($parameters[0]['id']);
+                    
                     // set processing status from packed to pickedup
                     $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'pickedup');
-                    $updated_payment=$orderModel->update_payment_status($parameters[0]['id']);
+                    
+                    // update payment in order table
+                    $updated_payment_order=$orderModel->update_payment_status($parameters[0]['id']);
+                    
+                    // update payment status in payment table
+                    $paymentModel = new Payment();
+                    $updated_payment_status=$paymentModel->update_payment_status($parameters[0]['id']);
+                    
                     $this->setLayout("pharmacy",['select'=>'Previous Orders']);
                     // get previous orders - pickedup|deleted
                     $orders=$orderModel->get_previous_orders(); 
@@ -530,7 +703,7 @@ class PharmacyController extends Controller{
                         'orders'=>$orders,
                         'model'=>$orderModel,
                     ]);
-
+                    
                 } else {
                     // online medicine details
                     $online_orders = $orderModel->view_online_order_details($parameters[0]['id']);  
@@ -547,7 +720,8 @@ class PharmacyController extends Controller{
                     foreach ($ep_orders as $key=>$ep_order){
                         $ep_pres_med[$ep_order['prescription_ID']] = $orderModel->view_prescription_details($ep_order['prescription_ID']);
                     }
-
+                    
+                    $this->setLayout("pharmacy",['select'=>'Orders']);
                     return $this->render('pharmacy/pharmacy-track-order',[
                         'order_details'=>$order_details,
                         'online_orders'=>$online_orders,
@@ -580,7 +754,7 @@ class PharmacyController extends Controller{
                 foreach ($ep_orders as $key=>$ep_order){
                     $ep_pres_med[$ep_order['prescription_ID']] = $orderModel->view_prescription_details($ep_order['prescription_ID']);
                 }
-
+                $this->setLayout("pharmacy",['select'=>'Orders']);
                 return $this->render('pharmacy/pharmacy-view-processing-order',[
                     'order_details'=>$order_details,
                     'online_orders'=>$online_orders,
@@ -593,13 +767,6 @@ class PharmacyController extends Controller{
             }
 
         }
-        
-        $parameters=$request->getParameters();
-        $this->setLayout("pharmacy",['select'=>'Orders']);
-        $orderModel=new Order();
-
-        // order details
-        $order_details = $orderModel->get_order_details($parameters[0]['id']);
 
         // online medicine details
         $online_orders = $orderModel->view_online_order_details($parameters[0]['id']);  
@@ -617,6 +784,7 @@ class PharmacyController extends Controller{
             $ep_pres_med[$ep_order['prescription_ID']] = $orderModel->view_prescription_details($ep_order['prescription_ID']);
         }
 
+        $this->setLayout("pharmacy",['select'=>'Orders']);
         return $this->render('pharmacy/pharmacy-track-order',[
             'order_details'=>$order_details,
             'online_orders'=>$online_orders,
@@ -681,63 +849,7 @@ class PharmacyController extends Controller{
     //         'model'=>$orderModel,
     //     ]);
     // }
-
-//=======================CREATE NEW ORDERS===================================
-    // public function createNewOrder(Request $request,Response $response){
-    //     // echo 'create two tables for front desk';
-    //     // exit;
-    //     $parameters=$request->getParameters();
-    //     $this->setLayout("pharmacy",['select'=>'Orders']);
-    //     $orderModel=new Order();
-    //     $prescriptionModel=new Prescription();
-    //     // $orderModel->loadData($request->getBody());
-    //     // $orderModel->loadFiles($_FILES);
-    //     // var_dump($orderModel);
-    //     // echo "dfasd";
-    //     // exit;
-
-    //     if($request->isPost()){
-    //     // var_dump($_POST);
-    //     $orderModel->loadData($request->getBody());
-    //     $orderModel->patient_ID = 'NULL';
-    //     $prescriptionModel->loadData($request->getBody());
-    //     // $orderModel->loadFiles($_FILES);
-    //     $orderModel->addOrder();
-    //     // $prescriptionModel->
-    //     var_dump($orderModel);
-    //     var_dump($prescriptionModel);
-    //     // exit;
-    //     $last_order = $orderModel->get_frontdesk_last_order($orderModel->name);
-    //     if ( $last_order[0]['patient_ID'] ) {
-    //         $prescriptionModel->patient = $last_order[0]['patient_ID'];
-    //     }
-    //     $prescriptionModel->order_ID = $last_order[0]['order_ID'];
-    //     $prescriptionModel->type = 'softcopy prescription';
-
-
-    //         //enter to _order table
-    //         //get order id in last one where pid|contact
-    //         //same assf create order
-                
-    //             // $orders=$orderModel->get_prescription_location($parameters[0]['id']); //last order id
-    //             // var_dump($orderModel);
-    //             // exit;
-    //             return $this->render('pharmacy/pharmacy-view-pending-sf-order',[
-    //                 // 'orders'=>$orders,
-    //                 'model'=>$orderModel,
-    //             ]);
-    //     }
-
-    //     // var_dump($orderModel);
-    //     // exit;
-    //     return $this->render('pharmacy/pharmacy-new-order-form',[
-    //         'ordermodel'=>$orderModel,
-    //         'prescriptionmodel'=> $prescriptionModel
-    //     ]);
-    // }
-
-// =======================================
-
+    
     public function addNewOrderItem(Request $request) {
         $parameters=$request->getParameters();
         $pres_ID = 0;
@@ -761,9 +873,8 @@ class PharmacyController extends Controller{
         $prescriptionModel = new Prescription();
         $pres_order_ID = $prescriptionModel->get_order_ID_by_pres_ID($pres_ID);
 
-            
         // add medicine to the prescription
-        if ( $parameters[0]["amount"]>=$_POST["amount"] ) {
+        if ( $med_details[0]["amount"]>=$_POST["amount"] ) { 
         // if available reduce stocks
         $reduce_med_amount = $medicineModel->reduceMedicine($med_ID, $_POST["amount"], true);
         $prescreption_medicine = $prescriptionModel->add_med_rec($med_ID, $parameters[0]['presid'], $_POST["amount"], $med_details[0]["unit_price"],'include');

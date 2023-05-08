@@ -38,10 +38,11 @@ use app\models\Patient;
                         <h3>Date :<?=$value['channeling_date']?></h3>
                         <h3>Fee :LKR <?=number_format($value['fee'],2,'.','')?></h3>
                     </div>
+                    <?php if(Application::$app->session->get('user')): ?>
                     <div>
                     <?php if($openedChanneling->isPatientIn(Application::$app->session->get('user'),$value['opened_channeling_ID'])):?>
                                 <?php echo "Already have an appointment" ?>
-                        <?php elseif($value['total_patients']!=-1 && $value['remaining_appointments']<=0): ?>
+                        <?php elseif($value['total_patients']!=0 && $value['remaining_appointments']<=0): ?>
                                 <?php echo "All appointments has been taken" ?>
                         <?php elseif($value['status']!='Opened'): ?>
                             <?php echo "Not taking any appointments" ?>
@@ -53,6 +54,7 @@ use app\models\Patient;
                     <?php endif; ?>
                         
                     </div>
+                    <?php endif;?>
                 </div>
             </div>
             <?php endif; ?>
