@@ -187,6 +187,8 @@ $app->router->post('/ctest/pharmacy-picked-up-order',[PharmacyController::class,
 $app->router->get('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
 $app->router->post('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
 
+$app->router->get('/ctest/view-softcopy',[PharmacyController::class,'viewSoftcopy']);
+
 $app->router->get('/ctest/pharmacy-view-report',[PharmacyController::class,'viewReports']);
 $app->router->get('/ctest/pharmacy-view-personal-details',[PharmacyController::class,'viewPersonalDetails']);
 

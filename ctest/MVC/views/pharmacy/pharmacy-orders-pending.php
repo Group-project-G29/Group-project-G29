@@ -22,106 +22,105 @@
 </div>
    
 <div class="table-container">
+
     <?php if($orders): ?>
-        <table border="0">
-            <tr>
-                <th>Order ID</th>
-                <th>Name</th>
-                <th>Contact</th>
-                <th>Address</th>
-                <th>Total Price</th>
-                <th>Note</th>
-                <th>PickUp Status</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Waiting/Rejected</th>
-            </tr>
+        <div class="pending-orders-container">
+                        <div class="order-header-row">
+                            <div class="order_id">Order ID</div>
+                            <div class="name">Name</div>
+                            <div class="contact">Contact</div>
+                            <div class="address">Address</div>
+                            <!-- <div class="total_price">Total Price</div> -->
+                            <div class="pickup_status">PickUp Status</div>
+                            <div class="date">Date</div>
+                            <div class="time">Time</div>
+                            <div class="delete_status">Waiting/Rejected</div>
+                        </div>
         
             <?php foreach($orders as $key=>$order): ?>
                 <?php if($order['processing_status']=='pending'):?>
-                        <tr class="table-row" id=<?=$order['order_ID']?> >
-                            <td><?=$order['order_ID']?></td>
-                            <td><?=$order['name']?></td> 
-                            <td><?=$order['contact']?></td> 
-                            <td><?=$order['address']?></td> 
-                            <td><?=$order['total_price']?></td> 
-                            <td>
-                                <?php if($order['text']!=NULL): ?>
-                                    <?=$order['text']?>
-                                <?php else: ?>
-                                    <?= 'NA' ?>
-                                <?php endif; ?>
-                            </td> 
-                            <td><?=$order['pickup_status']?></td> 
-                            <!-- deliveryd by -> delivery rider -->
-                            <td><?=$order['created_date']?></td> 
-                            <td><?=$order['created_time']?></td> 
-                            <td></td>
-                        </tr>
+
+                    <div class="orders-pending-with-note" id=<?=$order['order_ID']?> >
+                        <div class="orders-pending-table-row">
+                            <div class="orders-pending-data">
+                                <div class="order_id"><?=$order['order_ID']?></div>
+                                <div class="name"><?=$order['name']?></div>
+                                <div class="contact"><?=$order['contact']?></div>
+                                <div class="address"><?=$order['address']?></div>
+                                <!-- <div class="total_price"><?=$order['total_price']?></div> -->
+                                <div class="pickup_status"><?=$order['pickup_status']?></div>
+                                <div class="date"><?=$order['created_date']?></div>
+                                <div class="time"><?=$order['created_time']?></div>
+                                <div class="delete_status"></div>
+                            </div>
+                            <?php if($order['text']!=NULL): ?>
+                                <br><div class="orders-pending-note">
+                                    Note* - <?=$order['text']?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 <?php elseif($order['processing_status']=='waiting'): ?> 
-                        <tr class="table-row_gray" id=<?=$order['order_ID']?> >
-                            <td class="table-row_gray_view" id=<?=$order['order_ID']?> ><?=$order['order_ID']?></td>
-                            <td class="table-row_gray_view" id=<?=$order['order_ID']?> ><?=$order['name']?></td> 
-                            <td class="table-row_gray_view" id=<?=$order['order_ID']?> ><?=$order['contact']?></td> 
-                            <td class="table-row_gray_view" id=<?=$order['order_ID']?> ><?=$order['address']?></td> 
-                            <td class="table-row_gray_view" id=<?=$order['order_ID']?> ><?=$order['total_price']?></td> 
-                            <td class="table-row_gray_view" id=<?=$order['order_ID']?> >
-                                <?php if($order['text']!=NULL): ?>
-                                    <?=$order['text']?>
-                                <?php else: ?>
-                                    <?= 'NA' ?>
-                                <?php endif; ?>
-                            </td> 
-                            <td class="table-row_gray_view" id=<?=$order['order_ID']?> ><?=$order['pickup_status']?></td> 
-                            <!-- deliveryd by -> delivery rider -->
-                            <td class="table-row_gray_view" id=<?=$order['order_ID']?> ><?=$order['created_date']?></td> 
-                            <td class="table-row_gray_view" id=<?=$order['order_ID']?> ><?=$order['created_time']?></td> 
-                            <td><a class='delete-order' id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)">Delete Order</a></td>
-                        </tr>
+                    <div class="orders-pending-with-note_row_gray" id=<?=$order['order_ID']?> >
+                        <div class="orders-pending-table-row">
+                            <div class="orders-pending-data">
+                                <div class="order_id orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['order_ID']?></div>
+                                <div class="name orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['name']?></div>
+                                <div class="contact orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['contact']?></div>
+                                <div class="address orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['address']?></div>
+                                <!-- <div class="total_price orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['total_price']?></div> -->
+                                <div class="pickup_status orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['pickup_status']?></div>
+                                <div class="date orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['created_date']?></div>
+                                <div class="time orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['created_time']?></div>
+                                <div class="delete_status delete-order" id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)">Delete Order</div>
+                            </div>
+                            <?php if($order['text']!=NULL): ?>
+                                <br><div class="orders-pending-note">
+                                    Note* - <?=$order['text']?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 <?php elseif($order['processing_status']=='accepted'): ?>  
-                        <tr class="table-row_green" id=<?=$order['order_ID']?> >
-                        <td><?=$order['order_ID']?></td>
-                            <td><?=$order['name']?></td> 
-                            <td><?=$order['contact']?></td> 
-                            <td><?=$order['address']?></td> 
-                            <td><?=$order['total_price']?></td> 
-                            <td>
-                                <?php if($order['text']!=NULL): ?>
-                                    <?=$order['text']?>
-                                <?php else: ?>
-                                    <?= 'NA' ?>
-                                <?php endif; ?>
-                            </td> 
-                            <td><?=$order['pickup_status']?></td> 
-                            <!-- deliveryd by -> delivery rider -->
-                            <td><?=$order['created_date']?></td> 
-                            <td><?=$order['created_time']?></td> 
-                            <td></td>
-                        </tr>
+                    <div class="orders-pending-with-note  row_green" id=<?=$order['order_ID']?> >
+                        <div class="orders-pending-table-row">
+                            <div class="orders-pending-data">
+                                <div class="order_id"><?=$order['order_ID']?></div>
+                                <div class="name"><?=$order['name']?></div>
+                                <div class="contact"><?=$order['contact']?></div>
+                                <div class="address"><?=$order['address']?></div>
+                                <!-- <div class="total_price"><?=$order['total_price']?></div> -->
+                                <div class="pickup_status"><?=$order['pickup_status']?></div>
+                                <div class="date"><?=$order['created_date']?></div>
+                                <div class="time"><?=$order['created_time']?></div>
+                                <div class="delete_status"></div>
+                            </div>
+                            <?php if($order['text']!=NULL): ?>
+                                <br><div class="orders-pending-note">
+                                    Note* - <?=$order['text']?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 <?php elseif($order['processing_status']=='rejected'): ?> 
-                        <tr class="table-row_red" id=<?=$order['order_ID']?> >
-                        <td><?=$order['order_ID']?></td>
-                            <td><?=$order['name']?></td> 
-                            <td><?=$order['contact']?></td> 
-                            <td><?=$order['address']?></td> 
-                            <td><?=$order['total_price']?></td> 
-                            <td>
-                                <?php if($order['text']!=NULL): ?>
-                                    <?=$order['text']?>
-                                <?php else: ?>
-                                    <?= 'NA' ?>
-                                <?php endif; ?>
-                            </td> 
-                            <td><?=$order['pickup_status']?></td> 
-                            <!-- deliveryd by -> delivery rider -->
-                            <td><?=$order['created_date']?></td> 
-                            <td><?=$order['created_time']?></td> 
-                            <td><a class='delete-order' id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)">Delete Order</a></td>
-                        </tr>  
+                    <div class="row_red" id=<?=$order['order_ID']?> >
+                        <div class="orders-pending-table-row">
+                            <div class="orders-pending-data">
+                                <div class="order_id"><?=$order['order_ID']?></div>
+                                <div class="name"><?=$order['name']?></div>
+                                <div class="contact"><?=$order['contact']?></div>
+                                <div class="address"><?=$order['address']?></div>
+                                <!-- <div class="total_price"><?=$order['total_price']?></div> -->
+                                <div class="pickup_status"><?=$order['pickup_status']?></div>
+                                <div class="date"><?=$order['created_date']?></div>
+                                <div class="time"><?=$order['created_time']?></div>
+                                <div class="delete_status delete-order" id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)"><a>Delete Order</a></div>
+                            </div>
+                        </div>
+                    </div>
                 <?php endif; ?>    
             <?php endforeach; ?>
-        </table>
-
+        </div>                        
     <?php else: ?>
         <br><br><br><h2>No Current Pending Orders</h2>
     <?php endif; ?>
@@ -154,7 +153,7 @@
 <!-- =================================================== -->
 
 <script>
-    elementsArray1 = document.querySelectorAll(".table-row");
+    elementsArray1 = document.querySelectorAll(".orders-pending-with-note");
     elementsArray1.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href='pharmacy-view-pending-order?id='+elem.id; 
@@ -168,7 +167,7 @@
         });
     });
 
-    elementsArray3 = document.querySelectorAll(".table-row_gray_view");
+    elementsArray3 = document.querySelectorAll(".orders-pending-with-note_row_gray_view");
     elementsArray3.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href='pharmacy-view-pending-order?id='+elem.id; 

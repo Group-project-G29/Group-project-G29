@@ -65,7 +65,7 @@
                         </table>
                     </div>
                 </div>
-            <h3>Total Price For Online Ordered Products : <?=$total_online?></h3>
+            <h3 style="text-align: right;">Online Ordered Products : <?= 'LKR. '. number_format($total_online,2,'.','') ?></h3>
         </div>
         <?php $total=$total+$total_online ?>
     <?php endif; ?>
@@ -122,7 +122,7 @@
                             </table>
                         </div>
                     </div>
-                <h3>Total Price For Prescription : <?=$total_prescription?></h3>
+                <h3 style="text-align: right;">E-Prescription : <?= 'LKR. '. number_format($total_prescription,2,'.','') ?></h3>
             </div>
         <?php $total=$total+$total_prescription ?>
         <?php endforeach; ?>
@@ -140,7 +140,7 @@
                         <h3>From Softcopy prescription :</h3>
 
                         <!-- Add medicines for softcopies -->
-                        <section>
+                        <center><section>
                             <?php $form=new Form(); ?>
 
                             <?php $form->begin('pharmacy-new-order-items?presid='.$sf_order['prescription_ID'],'post');?>
@@ -164,7 +164,11 @@
                                     </table>
                                 </div>
                             <?php $form->end(); ?>
-                        </section>
+                            <button><a class="view-prescription" target="_blank"  href="view-softcopy?id=<?= $sf_order['prescription_ID'] ?>" >
+                                view prescription
+                            </a></button>
+                        </section></center>
+
 
 
                         <div class="table-container">
@@ -208,14 +212,14 @@
                             </table>
                         </div>
                     </div>
-                <h3>Total Price For Prescription : <?=$total_prescription?></h3>
+                <h3 style="text-align: right;">Softcopy Prescription : <?= 'LKR. '. number_format($total_prescription,2,'.','') ?></h3>
             </div>
         <?php $total=$total+$total_prescription ?>
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
 
-    <h1>Total Price : <?=$total?></h1>
+    <h1 style="text-align: right;">Total Price : <?= 'LKR. '. number_format($total,2,'.','') ?></h1>
 
 <div class='upper-container'>
     <?php echo $component->button('cancle-process','','Cancle Process','button--class-3  width-10','cancle-process');?>
@@ -253,6 +257,18 @@
         // openPopup();
         location.href="pharmacy-notify-processing-order?id="+<?=$order_details[0]['order_ID']?>; //get
     })
+
+    // const btn4=document.getElementById("view-prescription");
+    // btn4.addEventListener('click',function(){
+    //     location.href="view-softcopy?id="+<?= $sf_order['order_ID'] ?>; //get
+    // })
+
+    // elementsArray = document.querySelectorAll(".view-prescription");
+    // elementsArray.forEach(function(elem) {
+    //     elem.addEventListener("click", function() {
+    //         location.href="view-softcopy?id="+elem.id; 
+    //     });
+    // });
 
     function show(day){
         var x = document.getElementById(day);

@@ -1315,7 +1315,7 @@ select {
 }
 
 .detail {
-    text-align: center;
+    text-align: left;
 }
 
 .new-order-add-item {
@@ -1508,5 +1508,113 @@ select {
     background-color: var(--clr-light);
 }
 
+/* ==================order view row styles ============ */
+
+.pending-orders-container {
+    width: 90%;
+    text-align: center;
+}
+
+.order-header-row {
+    margin-bottom: 20px;
+}
+
+.orders-pending-table-row {
+    margin: 5px 5p 5px 5px;
+    padding: 20px;
+}
 
 
+.orders-pending-with-note {
+    background-color: var(--clr-white);
+    border-bottom:2px solid var(--clr-grey);
+    align-items: center;
+    margin: 10px -20px 10px -20px;
+    min-height: 7vh;
+    /* margin-right: -20px; */
+}
+
+.orders-pending-with-note_row_gray {
+    background-color: rgba(128, 128, 128, 0.418);
+    border-bottom:2px solid var(--clr-grey);
+    align-items: center;
+    margin: 10px -20px 10px -20px;
+    min-height: 7vh;
+}
+
+.orders-pending-with-note:hover {
+    scale: 1.05;
+    transition: 0.5s;
+}
+
+.orders-pending-with-note_row_gray:hover {
+    scale: 1.05;
+    transition: 0.5s;
+}
+
+.row_green {
+    background-color: rgba(0, 255, 55, 0.514);
+}
+
+/* .row_gray {
+    background-color: rgba(128, 128, 128, 0.418);
+} */
+
+.row_red {
+    background-color: rgba(255, 38, 38, 0.555);
+    border-bottom:2px solid var(--clr-grey);
+    align-items: center;
+    margin: 10px -20px 10px -20px;
+    min-height: 7vh;
+}
+
+.order-header-row,
+.orders-pending-data {
+    display: flex;
+    
+}
+
+.pending-orders-container .order_id {
+    width: 10%;
+}
+
+.pending-orders-container .name {
+    width: 15%;
+}
+
+.pending-orders-container .contact {
+    width: 10%;
+}
+
+.pending-orders-container .address {
+    width: 25%;
+}
+
+/* .pending-orders-container .total_price {
+    width: 10%;
+} */
+
+.pending-orders-container .pickup_status {
+    width: 10%;
+}
+
+.pending-orders-container .date {
+    width: 10%;
+}
+
+.pending-orders-container .time {
+    width: 10%; 
+}
+
+.pending-orders-container .delete_status {
+    width: 10%;
+}
+
+.pending-orders-container .delete-order:hover {
+    cursor: pointer;
+}
+
+.orders-pending-note {
+    color: red;
+    text-align: left;
+}

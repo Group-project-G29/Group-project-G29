@@ -59,7 +59,7 @@
             </tr>
         </table>
     </div>
-    <h3>Total Price For Online Ordered Products : <?=$total_online?></h3>
+    <h3 style="text-align: right;">Online Ordered Products : <?= 'LKR. '. number_format($total_online,2,'.','') ?></h3>
     <?php $total=$total+$total_online ?>
 <?php endif; ?>
 
@@ -101,7 +101,7 @@
             </tr>
         </table>
     </div>
-    <h3>Total Price For Prescription : <?=$total_prescription?></h3>
+    <h3 style="text-align: right;">E-Prescription : <?= 'LKR. '. number_format($total_prescription,2,'.','') ?></h3>
     <?php $total=$total+$total_prescription ?>
     <?php endforeach; ?>
 <?php endif; ?>
@@ -144,10 +144,10 @@
             </tr>
         </table>
     </div>
-    <h3>Total Price For Prescription : <?=$total_prescription?></h3>
+    <h3 style="text-align: right;">Softcopy Prescription : <?= 'LKR. '. number_format($total_prescription,2,'.','') ?></h3>
     <?php $total=$total+$total_prescription ?>
     <?php endforeach; ?>
 <?php endif; ?>
 
 
-    <hr><h1>Total Price : <?=$total?></h1>
+    <hr><h1 style="text-align: right;">Total Price : <?= 'LKR. '. number_format($total,2,'.','') ?></h1>

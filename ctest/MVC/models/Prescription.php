@@ -602,6 +602,10 @@ class Prescription extends DbModel{
      public function reset_total ( $pres_ID ) {
          return $this->customFetchAll(" UPDATE prescription SET total_price=0 WHERE prescription_ID = $pres_ID; ");
      }
+
+     public function get_prescription_details ( $pres_ID ){
+        return$this->customFetchAll(" SELECT *, patient.name AS p_name FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID INNER JOIN prescription ON _order.order_ID=prescription.order_ID WHERE prescription.prescription_ID=$pres_ID; ");
+     }
  
 
 }   

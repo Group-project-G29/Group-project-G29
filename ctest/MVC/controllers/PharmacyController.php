@@ -28,7 +28,6 @@ class PharmacyController extends Controller{
         $orderModel=new FrontdeskOrder();
 
         if($request->isPost()){
-
             $orderModel->loadData($request->getBody());
             $orderModel->pharmacist_ID = Application::$app->session->get('userObject')->emp_ID;
             $orderModel->date = date("Y-m-d");
@@ -239,6 +238,21 @@ class PharmacyController extends Controller{
             'order_medicines'=>$order_medicines,
         ]);
     }
+
+//===========================VIEW SOFTCOPY======================================
+
+public function viewSoftcopy(Request $request){
+    $this->setLayout("pharmacy-prescription");
+    $parameters=$request->getParameters();
+    $prescriptionModel=new Prescription();
+    //get previous orders
+    $prescription=$prescriptionModel->get_prescription_details($parameters[0]['id']); 
+    // var_dump($prescription);exit;
+    return $this->render('pharmacy/pharmacy-view-prescription',[
+        'prescription'=>$prescription,
+        'model'=>$prescriptionModel,
+    ]);
+}
 
 //==========================PREVIOUS ORDERS=====================================
     public function viewPreviousOrder(){
