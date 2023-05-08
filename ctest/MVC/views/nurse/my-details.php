@@ -59,7 +59,7 @@
     // const btn=document.getElementById("edit-details");
     const btn=document.querySelector(".button--class-0");
     btn.addEventListener('click',function(){
-        location.href="pharmacy-update-personal-details?mod=update&id="+ btn.id; //get
+        location.href="update-my-details?mod=update&id="+ btn.id; //get
     })
 </script>
 

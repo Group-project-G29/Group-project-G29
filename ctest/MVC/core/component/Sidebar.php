@@ -26,7 +26,7 @@ class Sidebar{
                         </div>";
             }
         }
-        $str="<div class='sidebar'><div class='sidebar_grid-container'>".$str."</div> </div>
+        $str="<div class='sidebar' id='sidebar'><div class='sidebar_grid-container'>".$str."</div> </div>
         <script>
             let elementsArray = document.querySelectorAll(\".sidebar_grid-item\");
             elementsArray.forEach(function(elem) {

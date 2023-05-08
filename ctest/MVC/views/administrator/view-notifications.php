@@ -13,31 +13,40 @@
     </div>
 </div>
 
-<div class="table-container">
-<table border="0">
-    <tr>
-    </tr>
+<div class="notification-container">
+
+    
     <?php foreach($notifications as $key=>$notification): ?>
-        <?php if($notification['is_read']==1){ 
-            $isRead = "no-read";
-            } ?>
-    <tr class="table-row <?=$isRead?>">
-        <td class="add-dec">
-           
-            <div class="content" ><div><?=$notification['content']?></div></div>
-            <div><font color="grey"><?=$notification['created_date_time']." ".substr($notification['created_time'],0,5).(($notification['created_time']>'12:00')?'PM':'AM')?></font><br></div>
-            <div class="notification-btn">
+        <?php 
+            if($notification['is_read']==1){ 
+                $isRead = "no-read";
+            }else{
+                $isRead = "";
+            }
 
-                <?php if($notification['is_read']==1){ ?>
-                    <div onclick="update(<?=$notification['noti_ID']?>)"><?php echo $component->button('update','','Mark as Read','button--class-2',$notification['noti_ID']) ?></div>
-                <?php } ?>
+            $nic = $notification['doctor'];
+            $senderName = $employeeModel->customFetchAll("SELECT name FROM `employee` WHERE nic=$nic;");
+        ?>
+        <div class="notification-div <?=$isRead?>" onclick="update(<?=$notification['noti_ID']?>)">
+            
+            <div class="doctor-name">Sender : <?=$senderName[0]['name']?></div>
+            <div class="content"><?=$notification['content']?></div>
 
-                <div onclick="deletenoty(<?=$notification['noti_ID']?>)"><?php echo $component->button('update','','Mark as Read','button--class-3',$notification['noti_ID']) ?></div>
+            <div class="time-and-btn">
+                <div class="content-time"><?=$notification['created_date_time']?></div>
+                <div class="notification-btn">
+                    
+                    <!-- <?php if($notification['is_read']==1){ ?>
+                        <div onclick="update(<?=$notification['noti_ID']?>)"><?php echo $component->button('update','','Mark as Read','button--class-2',$notification['noti_ID']) ?></div>
+                    <?php } ?> -->
+                        
+                    <div onclick="deletenoty(<?=$notification['noti_ID']?>)"><?php echo $component->button('update','','Delete','button--class-3',$notification['noti_ID']) ?></div>
+                </div>
             </div>
-        </td>
-    </tr>
+
+        </div>
     <?php endforeach; ?>
-    </table>
+
 
 </div>
 

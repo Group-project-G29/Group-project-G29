@@ -9,10 +9,6 @@
 // var_dump($nurse);
 // var_dump("<br><br>");
 
-use app\models\Appointment;
-
-$appointmentModel=new Appointment();
-
 ?>
 
 
@@ -24,7 +20,7 @@ $appointmentModel=new Appointment();
         <div class="number-content">
             <h2>Patients</h2>
             <div class="number-pad">
-                <div class="number-item fs-200"><?=$appointmentModel->getTotoalPatient($openedchanneling->opened_channeling_ID)?></div>
+                <div class="number-item fs-200"><?=$payedPatient?></div>
             </div>
         </div>
 

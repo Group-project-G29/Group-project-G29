@@ -7,9 +7,10 @@ $component=new Component();
 $pid = $patient[$number]['patient_ID']??'';
 $cid = $patient[$number]['channeling_ID']??'';
 $apoid = $patient[$number]['appointment_ID']??'';
-// var_dump($tests);
 // var_dump($number);
-?> 
+// var_dump($patient[$number]);
+?>
+
 
 <?php if($patient){?>
     
@@ -18,24 +19,32 @@ $apoid = $patient[$number]['appointment_ID']??'';
             <h1><?=$channeling['speciality']." - Dr. ".$doctor['name']?></h1>
         </div>
         <div class="patient-change-div">
-            <img class="pimg" style="width: 7vw;" src="./media/images/icons/previous.svg" alt="previous icon" onclick="previous(<?=$id?>,<?=$number?>)">
+            <img class="pimg" style="height: 7vw;" src="./media/images/channeling assistance/left-chevron.png" alt="previous icon" onclick="previous(<?=$id?>,<?=$number?>)">
             
             <div class="number-content">
                 <h2>Patient Number</h2>
                 <div class="number-pad">
-                    <div class="number-item fs-200"><?=$number+1?></div>
+                    <div class="number-item fs-200"><?=$patient[$number]['queue_no']?></div>
                 </div>
                 <div class="move-number-div">
                     <input type="number" id="move-number" name="move-number">
                     <button onclick="move(<?=$id?>)">Move</button>
                 </div>
                 <div class="patient-numbers">
-                    <div class="ptient-count">Total Patients : <span><?=$reAppo?></span></div>
+                    <div class="ptient-count">Total Patients : <span><?=$payedAppoCount?></span></div>
                     <div class="ptient-count">Previous Patient Number : <span><?=$prevNum?></span></div>
+                </div>
+                <div class="patient-checkbox">
+                    <?php if($patient[$number]['status']!='seeing'){ ?>
+                    <label for="Checkbox">Check Patient</label>
+                    <input type="checkbox" class="Checkbox" name="Checkbox" id="Checkbox"/>
+                    <?php } else{ ?>
+                    <div>Patient checked</div>
+                    <?php } ?>
                 </div>
             </div>
 
-            <img class="nimg" style="width: 7vw;" src="./media/images/icons/next.svg" alt="next icon" onclick="next(<?=$id?>,<?=$number?>)">
+            <img class="nimg" style="height: 7vw;" src="./media/images/channeling assistance/right-chevron.png" alt="next icon" onclick="next(<?=$id?>,<?=$number?>)">
         
         </div>
 
@@ -101,6 +110,10 @@ $apoid = $patient[$number]['appointment_ID']??'';
 } ?>
 
 
+
+
+
+
 <script>
     function next(id, num1){
         location.href='nurse-list-patient?id='+id+'&num='+num1+'&n=1';
@@ -117,10 +130,17 @@ $apoid = $patient[$number]['appointment_ID']??'';
 
     function move(id){
         const num = document.getElementById("move-number").value
-        const num1 = num-2;
-        console.log(num1);
-        location.href='nurse-list-patient?id='+id+'&num='+num1+'&n=1&prevNum='+<?=$number+1?>;
+        const num1 = num;
+        location.href='nurse-list-patient?id='+id+'&num='+num1+'&cmd=move&prevNum='+<?=$number+1?>;
 
     }
+   
+
+    const checkActive = document.getElementById("Checkbox");
+    checkActive.addEventListener("click", ()=>{
+        if(checkActive.checked){
+            location.href='nurse-list-patient?id='+<?=$id?>+'&num='+<?=$number-1?>+'&n=1&prevNum='+<?=$prevNum?>+'&check=1&apoid='+<?=$apoid?>;
+        }
+    });
     
 </script>
