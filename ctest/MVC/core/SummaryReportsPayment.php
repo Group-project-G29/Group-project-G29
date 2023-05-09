@@ -129,7 +129,6 @@ class SummaryReportsPayment{
                 </body>
                 </html>
         ";
-       
         $pdfModel->createPDF($html,"Channeling Report");
     }
 
