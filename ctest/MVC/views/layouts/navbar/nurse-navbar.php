@@ -9,6 +9,7 @@
         PHP & MySql Blog Application with Admin
     </title> -->
     <link rel="stylesheet" href="./media/css/style.css">
+    <!-- <link rel="stylesheet" href="./media/css/pharmacy-style.css"> -->
     <link rel="stylesheet" href="./media/css/doctor-style.css">
     <link rel="stylesheet" href="./media/css/nurse-style.css">
 
@@ -49,6 +50,13 @@
         </div>
     </div>
     <div class="nav_row--bottom">
+
+        <input type="checkbox" class="toggle-sidebar" id="toggle-sidebar">
+        <label for="toggle-sidebar" class="toggle-icon" onclick="toggleMenu()">
+            <div class="bar-top"></div>
+            <div class="bar-center"></div>
+            <div class="bar-bottom"></div>
+        </label>
         <h2 class="uppercase">Anspaugh Care</h2>
        
     </div>
@@ -59,5 +67,10 @@
         button.addEventListener('click',()=>{
             location.href="/ctest/login";
         })
+    }
+</script>
+<script>
+    function toggleMenu(){
+        document.getElementById('sidebar').classList.toggle('active');
     }
 </script>

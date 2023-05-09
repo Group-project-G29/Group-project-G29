@@ -932,3 +932,7 @@ padding-left:5vh;
     87%{margin-top:0px}
     100%{margin-top:0px}
 }
+.prescription-table-pay table td{
+    width:15vw;
+    text-align: center;
+}

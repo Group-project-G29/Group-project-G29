@@ -110,7 +110,7 @@ class DoctorController extends Controller{
     public function sessionAssistance(Request $request,Response $response){
         //keep url in the seesion 
         //if session variable is no there redirect to last seen patient
-        
+        Application::$app->session->set('popup','unset');
         
         $parameters=$request->getParameters();
         // if(!Application::$app->session->get('cur_patient') && $parameters['cmd']!='start' && $parameters['cmd']!='finish'){

@@ -36,7 +36,8 @@ class Employee extends DbModel{
         $id=parent::save();
         if($this->role=='delivery'){
             $this->customFetchAll("insert into delivery_rider values(".$id[0]['last_insert_id()'].",'NA') ");
-        }   $this->enqueue_rider($id[0]['last_insert_id()']);
+           $this->enqueue_rider($id[0]['last_insert_id()']);
+        }
         return $id; //save data in the database
         
     }

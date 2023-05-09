@@ -264,7 +264,7 @@ class LabController extends Controller
             
             if (!$requst_reports) {
                 $createReport = $reportmodel->create_new_report($reports[0]['fee'], ' ', ' ', $reports[0]['template_ID'], ' ', $parameters[0]['id']);
-                // $setPayment=$reportmodel->payment($payments[0]['patient_ID'],$payments[0]['fee'],'','',$payments[0]['report_ID'],'','','');
+                $setPayment=$reportmodel->payment($contents[0]['patient_ID'],$reports[0]['fee'],$parameters[0]['id']);
                 // var_dump($setPayment);
                 // exit;
                 // $createreportallocation = $reportmodel->create_report_allocation($createReport, $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);

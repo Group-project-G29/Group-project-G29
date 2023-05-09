@@ -34,12 +34,12 @@ use app\models\Medicine;
                             <img src=<?="./media/images/medicine/"."default.jpg"?>>
                         <?php endif;?>
                         <h2><?=$medicine['name']." ".$medicine['strength'] ?></h2>
-                        <h3><?="LKR ".$medicine['unit_price'] ?></h3>
+                        <h3><?="LKR ".number_format($medicine['unit_price'],'2','.','') ?></h3>
+                        <?php if($model->isResctricted($medicine['med_ID'])): ?>
                         <div class="amount-item">
                             <label>Amount :</label>
                             <input type="number" id=<?='"'."amount_".$medicine['med_ID'].'"'?>>
                         </div>
-                        <?php if($model->isResctricted($medicine['med_ID'])): ?>
                             <?= $component->button('','','add','button--class-add-cart add-medicine',$medicine['med_ID']); ?>
                         <?php else:?>
                             <?="Needs Prescription to buy"?>

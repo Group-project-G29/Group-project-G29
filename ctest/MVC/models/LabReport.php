@@ -57,6 +57,9 @@ use app\core\PDF;
         public function getReport($reportID){
             return $this->customFetchAll("select * from  lab_report_content left join lab_report_template on lab_report_content.template_ID=lab_report_template.template_ID left join  lab_report_content_allocation as l on l.content_ID=lab_report_content.content_ID where l.report_ID=".$reportID." order by lab_report_content.position asc");
         }
+        public function getReportByRequest($request_ID){
+           return  $this->customFetchAll("SELECT * from lab_request left join lab_report on lab_request.request_ID=lab_report.request_ID left join lab_report_template on lab_report_template.template_ID=lab_report.template_ID where lab_request.request_ID=".$request_ID);
+        }
         public function distinctPatientTests($patient,$template_ID){
             return $this->customFetchAll("SELECT distinct(l.content_ID),c.name FROM  lab_report_content_allocation  as l left join lab_report_content as c  on c.content_ID=l.content_ID left join lab_report_allocation as a on a.report_ID=l.report_ID left join lab_report as r on  r.report_ID=l.report_ID where a.patient_ID=".$patient." and r.template_ID=".$template_ID);
         }
@@ -106,6 +109,7 @@ use app\core\PDF;
         }
         public function get_report_by_ID($request_ID){
             return $this->customFetchAll(" SELECT * FROM lab_report where request_ID=$request_ID");
+
     
         } 
         public function create_new_report($fee, $type, $label, $template_ID, $location, $request_ID){
@@ -125,9 +129,9 @@ use app\core\PDF;
             $this->customFetchAll("INSERT INTO lab_report_allocation (report_ID,patient_ID,doctor) values($report,$patient,'$doctor')");
             return $report_ID;
         }
-        public function payment($patient_ID,$amount,$generated_timestamp, $type,$name,$payement_status,$order_ID,$appointment_ID){
+        public function payment($patient_ID,$amount,$request_ID){
             //get patient and doctor from request table and send data to lab_report_alloction $this->customFetchAll("select last_insert_id()"[0]['last_insert_id']
-            return $this->customFetchAll("INSERT INTO payment (patient_ID,amount,generated_timestamp, type,name,payement_status,order_ID,appointment_ID) VALUES ( $patient_ID,$amount,current_timestamp(), 'labreport', '$name', NONE, NONE, NONE); ");
+            return $this->customFetchAll("INSERT INTO payment (patient_ID,amount,type,payment_status,request_ID) VALUES ( $patient_ID,$amount,'lab', 'pending', $request_ID); ");
         }
 
         public function create_report_allocation($report_ID,$patient_ID,$doctor){

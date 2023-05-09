@@ -319,6 +319,20 @@ input [type="time"]::-webkit-time-picker-indicator{
     text-align: center;
     color: #666;
 }
+.reports{
+    margin-top: 2vh;
+    margin-left: 3vw;
+    display: flex;
+    gap: 2vw;
+}
+.reports .btn{
+    background-color: var(--clr-light);
+    border: none;
+    border-radius: 10px;
+    padding: 3px 15px;
+    cursor: pointer;
+    color: white;
+}
 
 
 
@@ -409,4 +423,24 @@ button:hover{
 
 .notee::-webkit-datetime-edit-ampm-field {
   display: none;
+}
+
+.open-channeling{
+    margin-left: 4vw;
+    display: flex;
+    align-items: center;
+    margin-bottom: 2vh;
+}
+
+.open-channeling-date{
+    width: 16vw;
+}
+.open-channeling-date span{
+    margin-left: 1vw;
+    font-weight: bold;
+}
+
+.open-channeling-btn{
+    margin-left: 1vw;
+    width: 300px;
 }

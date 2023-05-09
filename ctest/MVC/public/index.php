@@ -89,7 +89,7 @@ $app->router->post('/ctest/employee-otp', [EmployeeAuthController::class,'OTP'])
 // $app->router->get('/ctest/nurse',[SiteController::class, 'doctor']);
 $app->router->get('/ctest/nurse',[NurseController::class, 'todayClinics']);
 $app->router->get('/ctest/nurse',[NurseController::class, 'channelingCategoriesView']);
-$app->router->get('/ctest/my-detail',[NurseController::class, 'viewUserDetails']);
+$app->router->get('/ctest/my-details',[NurseController::class, 'viewUserDetails']);
 $app->router->get('/ctest/all-channelings',[NurseController::class, 'channelingCategoriesView']);
 $app->router->get('/ctest/all-channeling-more',[NurseController::class, 'viewAllClinicsMore']);
 $app->router->get('/ctest/today-channelings',[NurseController::class, 'todayClinics']);

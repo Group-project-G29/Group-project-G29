@@ -315,7 +315,7 @@ class Prescription extends DbModel{
     public function getPatientPrescriptionPrice($pres_ID){
         $res=$this->fetchAssocAll(['prescription_ID'=>$pres_ID])[0]['total_price'];
         if($res) return $res;
-        else return false;
+        else return 0;
     }
     public function excludePrescriptionMeds(){
         $cartModel=new Cart();
