@@ -17,7 +17,7 @@ use app\models\Employee;
     </title> -->
     <link rel="stylesheet" href="./media/css/style.css">
     <link rel="stylesheet" href="./media/css/delivery-style.css">
-    <link rel="stylesheet" href="./media/css/pharmacy-style.css">
+    <!-- <link rel="stylesheet" href="./media/css/pharmacy-style.css"> -->
     <!-- <link rel="stylesheet" href="./media/header-footer.css"> -->
     <link rel="stylesheet" href="https:unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,32 +31,31 @@ use app\models\Employee;
         <div class="nav_row--top_logo">
             <img src="./media/images/logo-1.png">
         </div>
+        
+        
+        
         <div class="nav_row--top_user flex">
-
-            <!-- switch begin -->
-            <div class="active-switch-container">
-                <label class="active-switch" >
-                    <?php
-                    if($availability==='AV'):
-                        ?>
-                        <input type="checkbox" id="activeCheckbox" onclick="is_checked()" checked>
-                        <?php
-                        else :
-                        ?>
-                        <input type="checkbox" id="activeCheckbox" onclick="is_checked()">
-                        <?php
-                        endif;
-                        ?>
-                <span class="slider"></span>
-                </label>
-            </div>
-
-            <!-- switch end -->
 
             <div class="nav-box">
                 <div class="flex">
-                    <?php echo Application::$app->session->get('userObject')->name ?>
-                    <img src=<?php echo "./media/images/emp-profile-pictures/".Application::$app->session->get('userObject')->img ?>>
+                    <div>
+                        <?php echo Application::$app->session->get('userObject')->name ?>
+                    </div>
+                    <div>
+                        <img src=<?php echo "./media/images/emp-profile-pictures/".Application::$app->session->get('userObject')->img ?>>
+                    </div>
+                    <div class="on-off-btn">
+                        <div class="active-switch-container">
+                            <label class="active-switch" >
+                                <?php if($availability==='AV'): ?>
+                                        <input type="checkbox" id="activeCheckbox" onclick="is_checked()" checked>
+                                <?php else : ?>
+                                    <input type="checkbox" id="activeCheckbox" onclick="is_checked()">
+                                <?php endif; ?>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <ul>
                     <div class="nav-box-item">
@@ -73,6 +72,8 @@ use app\models\Employee;
             </div>
           
         </div>
+
+        
     </div>
     <div class="nav_row--bottom">
         <h2 class="uppercase">Anspaugh Care</h2>

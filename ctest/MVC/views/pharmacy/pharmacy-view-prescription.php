@@ -17,4 +17,10 @@
     <h3>Address : <?=$prescription[0]['address']?></h3>
 </div>
 
+<center>
+    <div class="view-prescription-separate" >
+        <img src=<?="./media/images/patient/".$prescription[0]['location']?> >
+    </div>
+</center>
+
 <!-- get the image with the location -->

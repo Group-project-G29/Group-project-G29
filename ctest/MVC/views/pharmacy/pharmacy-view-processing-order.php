@@ -258,17 +258,13 @@
         location.href="pharmacy-notify-processing-order?id="+<?=$order_details[0]['order_ID']?>; //get
     })
 
-    // const btn4=document.getElementById("view-prescription");
-    // btn4.addEventListener('click',function(){
-    //     location.href="view-softcopy?id="+<?= $sf_order['order_ID'] ?>; //get
-    // })
 
-    // elementsArray = document.querySelectorAll(".view-prescription");
-    // elementsArray.forEach(function(elem) {
-    //     elem.addEventListener("click", function() {
-    //         location.href="view-softcopy?id="+elem.id; 
-    //     });
-    // });
+    elementsArray = document.querySelectorAll(".view-prescription");
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href="view-softcopy?id="+elem.id; 
+        });
+    });
 
     function show(day){
         var x = document.getElementById(day);

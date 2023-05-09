@@ -147,7 +147,7 @@ class PharmacyController extends Controller{
         $update_order_status = $orderModel->set_processing_status($parameters[0]['id'],'packed');
         $update_total = $orderModel->write_total($parameters[0]['id'],$parameters[1]['total']);
 
-        $order_details = $orderModel->get_order_details($parameters[0]['id']);
+        $order_details = $orderModel->get_order_details($parameters[0]['id'])[0];
         $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
         
         $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
@@ -172,7 +172,7 @@ class PharmacyController extends Controller{
         $parameters=$request->getParameters();
         $orderModel = new FrontdeskOrder();
         $update_order_status = $orderModel->set_processing_status($parameters[0]['id'],'pending');
-        $order_details = $orderModel->get_order_details($parameters[0]['id']);
+        $order_details = $orderModel->get_order_details($parameters[0]['id'])[0];
         $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
         
         $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
@@ -229,7 +229,7 @@ class PharmacyController extends Controller{
     public function detailsFrontdeskFinished(Request $request){
         $parameters=$request->getParameters();
         $orderModel = new FrontdeskOrder();
-        $order_details = $orderModel->get_order_details($parameters[0]['id']);
+        $order_details = $orderModel->get_order_details($parameters[0]['id'])[0];
         $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
 
         $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);

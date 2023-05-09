@@ -47,7 +47,7 @@ $component = new Component();
     console.log(elementsArray);
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href = 'pharmacy-update-personal-details?mod=update&id=' + elem.id; //pass the variable value
+            location.href = 'delivery-update-personal-details?mod=update&id=' + elem.id; //pass the variable value
         });
     });
 </script>

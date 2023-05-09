@@ -11,7 +11,7 @@ include "../views/layouts/navbar/pharmacy-navbar.php";
     <div class="layout-div-row">
 
         <!-- <div class="layout-div-col" > -->
-        <div class="sub-container layout-div-col" id="container-col">
+        <!-- <div class="sub-container layout-div-col" id="container-col"> -->
             <div>
                 <?php if(Application::$app->session->getFlash('success')):?>
                 <div class="flash-message">
@@ -21,7 +21,7 @@ include "../views/layouts/navbar/pharmacy-navbar.php";
             </div>
         
             {{content}}
-        </div>
+        <!-- </div> -->
         <!-- </div> -->
 
     </div>
