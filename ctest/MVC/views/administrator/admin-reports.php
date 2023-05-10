@@ -49,6 +49,24 @@
     </div>
 </div>
 
+<div class="charts-2">
+    <div class="chart">
+        <h2>Total Earnings</h2>
+        <canvas id="Doughnut-chart"></canvas>
+    </div>
+    <div class="chart">
+        <h2 class="chart-topic">Download Reports For This Month</h2>
+        <div class="reports">
+            <div class="reports-topic">Patiyents Statistics Reports</div>
+            <button class="btn" onclick="paytient()">Download</button>
+        </div>
+        <div class="reports">
+            <div class="reports-topic">income Reports</div>
+            <button class="btn" onclick="payment()">Download</button>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx1 = document.getElementById('line-chart');
@@ -91,4 +109,37 @@
             responsive: true
         }
     });
+</script>
+<script>
+    const ctx3 = document.getElementById('Doughnut-chart');
+
+    new Chart(ctx3, {
+        type: 'doughnut',
+        data: {
+        labels: ['<?=$employeeEarnings[0]['type']?>', '<?=$employeeEarnings[1]['type']?>', '<?=$employeeEarnings[2]['type']?>'],
+        datasets: [{
+            label: 'Employees',
+            data: [<?=$employeeEarnings[0]['SUM(amount)']?>, <?=$employeeEarnings[1]['SUM(amount)']?>, <?=$employeeEarnings[2]['SUM(amount)']?>],
+            // backgroundColor:[
+            //     'red',
+            //     'green',
+            //     'blue'
+            // ],
+            borderWidth: 1
+        }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+
+<script>
+    function paytient(){
+        location.href='test1?cmd=patients';
+    }
+
+    function payment(){
+        location.href='test1?cmd=payments';
+    }
 </script>

@@ -36,7 +36,11 @@ class OpenedChanneling extends DbModel{
     }
     //cancel a opened channeling session
     public function cancelChanneling($id){
+        $patientNoti=new PatientNotification();
         $this->customFetchAll("update opened_channeling set status='cancelled' where opened_channeling_ID=".$id);
+        $this->customFetchAll("update appointment set status='cancelled' where opened_channeling_ID=".$id);
+        $patientNoti->channelingCancelNoti($id);
+        
     }
     public function isShow($opened_channeling_ID){
         
@@ -53,7 +57,7 @@ class OpenedChanneling extends DbModel{
         return true;
     }
     public function getPatient($channeling,$current_patient,$type,$queuetype):array{
-        $patient_queue=$this->customFetchAll("select * from  patient right join appointment on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID =".$channeling." and appointment.type='$queuetype' order by appointment.queue_no");
+        $patient_queue=$this->customFetchAll("select * from  patient right join appointment on patient.patient_ID=appointment.patient_ID left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID =".$channeling." and appointment.type='$queuetype' and (appointment.payment_status='done' ||  appointment.type='labtest') order by appointment.queue_no");
         $i=0;
       
         while(isSet($patient_queue[$i]['patient_ID']) && $patient_queue[$i]['patient_ID']!=$current_patient){
@@ -93,7 +97,9 @@ class OpenedChanneling extends DbModel{
         return $this->customFetchAll("select * from appointment left join patient on patient.patient_ID=appointment.patient_ID where appointment.opened_channeling_ID='$id'");
     }
 
-
+    public function getAllAppointmentsPatch($id){
+        return $this->customFetchAll("select * from appointment left join patient on patient.patient_ID=appointment.patient_ID where (appointment.payment_status='done' ||  appointment.type='labtest') and appointment.opened_channeling_ID='$id'");
+    }
     public function rules(): array
     {
         return [
@@ -150,7 +156,13 @@ class OpenedChanneling extends DbModel{
             return $patient[0]['patient_ID'];
         }
         else{
-            return $this->customFetchAll("select patient_ID from appointment where opened_channeling_ID=$channelingID and queue_no in (select min(queue_no) from appointment where opened_channeling_ID=$channelingID and type='$type') and type='$type'")[0]['patient_ID']??'';
+             if($type=='consultation'){
+
+                 return $this->customFetchAll("select patient_ID from appointment where opened_channeling_ID=$channelingID and queue_no in (select min(queue_no) from appointment where opened_channeling_ID=$channelingID and type='$type') and appointment.payment_status='done' and type='$type'")[0]['patient_ID']??'';
+             }
+             else{
+                return $this->customFetchAll("select patient_ID from appointment where opened_channeling_ID=$channelingID and queue_no in (select min(queue_no) from appointment where opened_channeling_ID=$channelingID and type='$type') and appointment.type='labtest' and type='$type'")[0]['patient_ID']??'';
+             }
         }
     }
 
@@ -208,16 +220,19 @@ class OpenedChanneling extends DbModel{
         return $this->customFetchAll("Select channeling.fee from opened_channeling left join channeling on channeling.channeling_ID where opened_channeling.opened_channeling_ID=".$channeling)[0]['fee'];
     }
     public function finish($channeling){
+        $percentage=$this->customFetchAll("select * from opened_channeling left join channeling on opened_channeling.channeling_ID=channeling.channeling_ID where opened_channeling.opened_channeling_ID=".$channeling)[0]['percentage'];
+
         $patient_count=0+$this->customFetchAll("select count(appointment_ID) from appointment where type='consultation' and payment_status='done' and opened_channeling_ID=".$channeling)[0]['count(appointment_ID)'];
         $income=$patient_count*($this->getFee(Application::$app->session->get('channeling')));
-        $free_count=0+$this->customFetchAll("select count(appointment_ID) from appointment where type='labtest' and payment_status='done' and opened_channeling_ID=".$channeling)[0]['count(appointment_ID)'];
+        $free_count=0+$this->customFetchAll("select count(appointment_ID) from appointment where type='labtest' and status='used' and opened_channeling_ID=".$channeling)[0]['count(appointment_ID)'];
         $this->customFetchAll("update opened_channeling set status='finished' where opened_channeling_ID=".$channeling);
         $past=new PastChanneling();
         $past->opened_channeling_ID=$channeling;
         $past->no_of_patient=$patient_count;
         $past->total_income=$income;
         $past->free_appointments=$free_count;
-        var_dump($past);
+        $past->doctor_income=$income*((0+$percentage)/100);
+        $past->center_income=$income-$past->doctor_income;
         return $past->saveData();
 
     }

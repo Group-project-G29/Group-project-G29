@@ -1,6 +1,7 @@
-<section class="allocation-chart">
+<section class="allocation-chart" hidden>
     <div class="chart-div">
         <div class="chart-tital">Allocation Chart</div>
+        <canvas id="bar-chart"></canvas>
     </div>
 </section>
 
@@ -141,4 +142,44 @@ foreach($week as $x => $x_value) {
             x.hidden = true;
         }
     }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script>
+    const ctx2 = document.getElementById('bar-chart');
+
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+        labels: ['Monday', 'Tuesday', 'Wednesday', 'thursday', 'Friday', 'Saturday'],
+        datasets: [{
+            label: 'Time duration',
+            data: [
+                ['2021-11-06 07:30:00', '2021-11-06 14:00:00'],
+                ['2021-11-06 08:00:00', '2021-11-06 12:00:00'], 
+                ['2021-11-06 14:00:00', '2021-11-06 22:00:00'],
+                ['2021-11-06 08:00:00', '2021-11-06 12:00:00'],
+                ['2021-11-06 10:00:00', '2021-11-06 16:00:00'],
+                ['2021-11-06 18:00:00', '2021-11-06 22:00:00']
+            ],
+            // borderWidth: 1
+            barPercentage: 0.2
+        }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            scales: {
+                x: {
+                    min: '2021-11-06 07:00:00',
+                    type: 'time',
+                    time: {
+                        unit: 'hour'
+                    },
+                    
+                }
+            }
+        }
+    });
 </script>

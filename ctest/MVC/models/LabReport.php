@@ -21,13 +21,19 @@ use app\core\PDF;
         {
             return [
                 
-                'location'=>[self::RULE_REQUIRED]
+          
+            'fee'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>100000000000]],
+
+
+
+        
     
             ];
         }
         public function fileDestination(): array
         {
-            return ['location'=>'/media/patient/labreports'];
+        
+            return ['location'=>'media/patient/labreports/'.$this->location];
         }
         public function tableName(): string
         {
@@ -46,32 +52,39 @@ use app\core\PDF;
             return  ['type','fee','label','template_ID','location','request_ID'];
         }
         public function getPatientReport($patient){
-            return $this->fetchAssocAllByName(['patient_ID'=>$patient],'lab_report_allocation');
+            return $this->customFetchAll("SELECT * from lab_report_allocation left join lab_report on lab_report_allocation.report_ID=lab_report.report_ID where lab_report_allocation.patient_ID=".$patient);
         }
         public function getReport($reportID){
             return $this->customFetchAll("select * from  lab_report_content left join lab_report_template on lab_report_content.template_ID=lab_report_template.template_ID left join  lab_report_content_allocation as l on l.content_ID=lab_report_content.content_ID where l.report_ID=".$reportID." order by lab_report_content.position asc");
         }
-        public function distinctPatientTests($patient){
-            return $this->customFetchAll("SELECT distinct(l.content_ID),c.name FROM  lab_report_content_allocation  as l left join lab_report_content as c  on c.content_ID=l.content_ID left join lab_report_allocation as a on a.report_ID=l.report_ID left join lab_report as r on  r.report_ID=l.report_ID where a.patient_ID=".$patient);
+        public function getReportByRequest($request_ID){
+           return  $this->customFetchAll("SELECT * from lab_request left join lab_report on lab_request.request_ID=lab_report.request_ID left join lab_report_template on lab_report_template.template_ID=lab_report.template_ID where lab_request.request_ID=".$request_ID);
+        }
+        public function distinctPatientTests($patient,$template_ID){
+            return $this->customFetchAll("SELECT distinct(l.content_ID),c.name FROM  lab_report_content_allocation  as l left join lab_report_content as c  on c.content_ID=l.content_ID left join lab_report_allocation as a on a.report_ID=l.report_ID left join lab_report as r on  r.report_ID=l.report_ID where a.patient_ID=".$patient." and r.template_ID=".$template_ID);
         }
         public function getTestValue($patient,$testID){
             return $this->customFetchAll("SELECT * FROM  lab_report_content_allocation  as l left join lab_report_content as c  on c.content_ID=l.content_ID left join lab_report_allocation as a on a.report_ID=l.report_ID left join lab_report as r on  r.report_ID=l.report_ID where a.patient_id=".$patient." and l.content_ID=".$testID);
         }
-        public function getAllParameterValue($patient){
-            $contents=$this->distinctPatientTests($patient);
+  
+        //changed
+        public function getAllParameterValue($patient,$template_ID){
+            $contents=$this->distinctPatientTests($patient,$template_ID);
             $contentArray=[];
             foreach($contents as $content){
-                $contentArray[$content['name']]=$this->getTestValue($patient,$content['content_ID']);
+                $contentArray[$content['name']]=[$this->getTestValue($patient,$content['content_ID'])];
             }
+        
             return $contentArray;
         }
         public function makeChartInputs($array){
             $labels=[];
             $values=[];
             $mainarray=[];
-            foreach($array as $element){
+            foreach($array[0] as $element){
                 array_push($labels,$element['upload_date']);
                 array_push($values,$element['int_value']);
+                
             }
             $mainarray['labels']=$labels;
             $mainarray['values']=$values;
@@ -96,16 +109,29 @@ use app\core\PDF;
         }
         public function get_report_by_ID($request_ID){
             return $this->customFetchAll(" SELECT * FROM lab_report where request_ID=$request_ID");
+
     
         } 
         public function create_new_report($fee, $type, $label, $template_ID, $location, $request_ID){
-            //get patient and doctor from request table and send data to lab_report_alloction $this->customFetchAll("select last_insert_id()"[0]['last_insert_id']
- /*change*/ $this->customFetchAll("INSERT INTO lab_report ( fee, type,label,template_ID,location,request_ID) VALUES ( $fee, 'e-report', '$label', $template_ID, '$location', $request_ID); ");
-            return $this->customFetchAll("select last_insert_id()")[0]['last_insert_id()'];
+            $labTestModel=new LabTest();
+            //get total fee 
+            $values=$labTestModel->fetchAssocAll(['template_ID'=>$template_ID])[0];
+            $fee=$values['hospital_fee']+$values['test_fee'];
+            $this->customFetchAll("INSERT INTO lab_report ( fee, type,label,template_ID,location,request_ID) VALUES ( $fee, 'e-report', '$label', $template_ID, '$location', $request_ID); ");
+            $report_ID=$this->customFetchAll("select last_insert_id()")[0]['last_insert_id()'];
+            //create record in  test allocation table
+            $labRequestModel=new LabTestRequest();
+            //get information from lab request table
+            $request=$labRequestModel->fetchAssocAll(['request_ID'=>$request_ID])[0];
+            $doctor=$request['doctor'];
+            $patient=$request['patient_ID'];
+            $report=$report_ID;
+            $this->customFetchAll("INSERT INTO lab_report_allocation (report_ID,patient_ID,doctor) values($report,$patient,'$doctor')");
+            return $report_ID;
         }
-        public function payment($patient_ID,$amount,$generated_timestamp, $type,$name,$payement_status,$order_ID,$appointment_ID){
+        public function payment($patient_ID,$amount,$request_ID){
             //get patient and doctor from request table and send data to lab_report_alloction $this->customFetchAll("select last_insert_id()"[0]['last_insert_id']
-            return $this->customFetchAll("INSERT INTO payment (patient_ID,amount,generated_timestamp, type,name,payement_status,order_ID,appointment_ID) VALUES ( $patient_ID,$amount,current_timestamp(), 'labreport', '$name', NONE, NONE, NONE); ");
+            return $this->customFetchAll("INSERT INTO payment (patient_ID,amount,type,payment_status,request_ID) VALUES ( $patient_ID,$amount,'lab', 'pending', $request_ID); ");
         }
 
         public function create_report_allocation($report_ID,$patient_ID,$doctor){
@@ -117,19 +143,57 @@ use app\core\PDF;
         public function isreport($request_ID){
             return $this->customFetchAll("SELECT report_ID from lab_report where request_ID=$request_ID");
         }
+        public function isAParameter($template_ID,$content_ID){
+            $result=$this->fetchAssocAllByName(['template_ID'=>$template_ID,'content_ID'=>$content_ID],' lab_report_content_allocation ');
+            if($result){
+                return true;
+            }
+            else return false;
+        }
+        // $_POST[1=>[123],2=>[234]]
 
+        public function updateReportValue($report_ID){
+            $reports=$_POST;
+            var_dump($_POST);
+            foreach($reports as $key=>$value){
+                echo "update lab_report_content_allocation set int_value=".$value." where content_ID=$key and report_ID=".$report_ID;
+                if(is_numeric($key)){
+
+                    $this->customFetchAll("update lab_report_content_allocation set int_value=".$value." where content_ID=$key and report_ID=".$report_ID) ;
+                }
+            }
+            
+            return true;
+
+
+        }
+
+        //show any labreport in PDF format
         public function labreporttoPDF($reportID){
             $valuerows=$this->getReport($reportID);
-            $addstr='<tr><td>Parameter</td><td>Test Value</td><td>Reference Range</td></tr>';
+            $request=$this->customFetchAll("select * from lab_report left join lab_request on lab_report.request_ID=lab_request.request_ID where lab_report.report_ID=".$reportID)[0];
+            $doctor=$this->customFetchAll("select * from lab_report_allocation left join employee on employee.nic=lab_report_allocation.doctor  where lab_report_allocation.report_ID=".$reportID)[0];
+            $patient=$this->customFetchAll("select * from lab_report_allocation  left join patient on patient.patient_ID=lab_report_allocation.patient_ID where lab_report_allocation.report_ID=".$reportID)[0];
+            $doctorname=$doctor['name'];
+            $requestdate=explode(" ",$request['requested_date_time'])[0];
+            $patientname=$patient['name'];
+            $patientage=$patient['age'];
+            $patientgender=$patient['gender'];
+            $issued_date=$this->fetchAssocAll(['report_ID'=>$reportID])[0]['upload_date'];
+            $addstr='<tr><td>Parameter</td><td>Test Value</td><td>Metric</td><td>Reference Range</td></tr>';
             $title='';
             $subtitle='';
             $date='';
             foreach($valuerows as $row){
                 $title=$row['title'];
-                $subtitle=$row['subtitle'];
+                $subtitle='';
+                if($row['subtitle']){
+
+                    $subtitle=$row['subtitle'];
+                }
                 $date=$row['created_date'];
                 if($row['type']=='field'){
-                    $addstr.="<tr><td>".$row['name']."</td><td>".$row['int_value']."</td><td> ".$row['metric']."</td></tr>";
+                    $addstr.="<tr><td>".$row['name']."</td><td>".$row['int_value']."</td><td> ".$row['metric']."</td><td> ".$row['reference_ranges']." ".$row['metric']."</td></tr>";
                 }
                 elseif($row['type']=='text'){
                     $addstr.="<tr colspan='3'><td>".$row['name']."<br>".$row['text_value']."</td></tr>";
@@ -139,13 +203,28 @@ use app\core\PDF;
                 }
             }
             $pdfModel=new PDF();
-                    
+             
             $str="
                 <html>
                     <head>
                     <style>
                         .show{    
                         background-color:red;
+                        }
+                        td{
+                            width:150px;
+                            height:30px;
+                        }
+                        .tab1 td{
+                            width:130px;
+                            height:10px;
+                        }
+                        .tab1 td{
+                            width:130px;
+                        }
+                        .tab2 td{
+                            width:180px;
+                            margin-top:-30px;   
                         }
                     </style>
                     </head>
@@ -161,10 +240,28 @@ use app\core\PDF;
                         </section>
                         
                         <section  style='border:1px solid #38B6FF; padding:10px; border-radius:5px; '>
-                           <h1>".$title."</h1>
-                           <h2>".$subtitle."</h2>
-                            
-                        </section>
+                            <table class='tab2'>
+                                <tr>
+                                <td>
+                                <table class='tab1'>
+                                <tr><td>"."Patient Name :"."</td><td>".$patientname."</td></tr>
+                                <tr><td>"."Age :"."</td><td>".$patientage."</td></tr>
+                                <tr><td>"."Gender :"."</td><td>".$patientgender."</td></tr>
+                                <tr><td></td><td></td></tr>
+                                <tr><td>"."Issued Date :"."</td><td>".$issued_date."</td></tr>
+                                </table>
+                                </td>
+                                <td>
+                                    <table class='tab1'>
+                                        <tr><th></th><th></th>
+                                        <tr><td>"."As per Request By :"."</td><td>Dr.".$doctorname."</td></tr>
+                                        <tr><td>"."Requested Date :"."</td><td>".$requestdate."</td></tr>
+                                    </table>
+                                </td>
+                                </tr>
+                                </table>
+                                </section>
+                                <center><h3>".$title." ".$subtitle."</h3></center>
                         <section><br><br>
                         <table>
                         ".$addstr."
@@ -172,7 +269,10 @@ use app\core\PDF;
                         </section>
                     </body>
                 <html>";
-                $pdfModel->createPDF($str,'reports-'.$date);
+                
+           
+                $pdfModel->createPDF($str,'reports');
+                
             }
         }   
 

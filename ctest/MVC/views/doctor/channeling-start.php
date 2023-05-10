@@ -22,7 +22,7 @@ $appointmentModel=new Appointment();
 
     </div>
     <div>
-        <span class="fs-100">Assigned Nurses <?php $nurses=$nurse; ?></span>
+        <span><center><h2>Assigned Nurses</h2></center> <?php $nurses=$nurse; ?></span>
         <div class="nurse-container">
             <?php foreach($nurse as $nurse):?>
                 <div class="nurse-item">

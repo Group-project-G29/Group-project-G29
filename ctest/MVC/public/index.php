@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
+date_default_timezone_set("Asia/Colombo");
 require_once __DIR__.'/../vendor/autoload.php';
 
 
@@ -21,6 +21,8 @@ use app\controllers\Advertisement;
 use app\controllers\DeliveryController;
 use app\controllers\NurseController;
 use Dompdf\Dompdf;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 // Initialize application
 $app =new Application(dirname(__DIR__));
 
@@ -55,6 +57,7 @@ $app->router->post('/ctest/patient-pharmacy',[PatientAuthController::class,'medi
 $app->router->get('/ctest/patient-medicine-order',[PatientAuthController::class,'orderMedicine']);
 $app->router->post('/ctest/patient-medicine-order',[PatientAuthController::class,'orderMedicine']);
 $app->router->get('/ctest/patient-dashboard',[PatientAuthController::class,'patientDashboard']);
+$app->router->post('/ctest/patient-dashboard',[PatientAuthController::class,'patientDashboard']);
 $app->router->get('/ctest/patient-payment',[PatientAuthController::class,'patientPayment']);
 $app->router->post('/ctest/patient-payment',[PatientAuthController::class,'patientPayment']);
 $app->router->post('/ctest/doctor',[SiteController::class, 'doctor']);
@@ -66,6 +69,8 @@ $app->router->get('/ctest/patient-my-detail', [PatientAuthController::class,'acc
 $app->router->post('/ctest/patient-my-detail', [PatientAuthController::class,'accountHandle']);
 $app->router->get('/ctest/nic', [PatientAuthController::class,'getNIC']);
 $app->router->post('/ctest/nic', [PatientAuthController::class,'getNIC']);
+$app->router->get('/ctest/otp', [PatientAuthController::class,'OTP']);
+$app->router->post('/ctest/otp', [PatientAuthController::class,'OTP']);
 
 
 
@@ -75,12 +80,16 @@ $app->router->post('/ctest/login',[EmployeeAuthController::class, 'login']);
 $app->router->get('/ctest/login',[EmployeeAuthController::class, 'login']);
 $app->router->post('/ctest/login',[EmployeeAuthController::class, 'login']);
 $app->router->get('/ctest/employee-logout',[EmployeeAuthController::class,'logout']);
+$app->router->get('/ctest/employee-nic', [EmployeeAuthController::class,'getNIC']);
+$app->router->post('/ctest/employee-nic', [EmployeeAuthController::class,'getNIC']);
+$app->router->get('/ctest/employee-otp', [EmployeeAuthController::class,'OTP']);
+$app->router->post('/ctest/employee-otp', [EmployeeAuthController::class,'OTP']);
 
 // -----------------------nurse routers-------------------------------------
 // $app->router->get('/ctest/nurse',[SiteController::class, 'doctor']);
 $app->router->get('/ctest/nurse',[NurseController::class, 'todayClinics']);
 $app->router->get('/ctest/nurse',[NurseController::class, 'channelingCategoriesView']);
-$app->router->get('/ctest/my-detail',[NurseController::class, 'viewUserDetails']);
+$app->router->get('/ctest/my-details',[NurseController::class, 'viewUserDetails']);
 $app->router->get('/ctest/all-channelings',[NurseController::class, 'channelingCategoriesView']);
 $app->router->get('/ctest/all-channeling-more',[NurseController::class, 'viewAllClinicsMore']);
 $app->router->get('/ctest/today-channelings',[NurseController::class, 'todayClinics']);
@@ -138,6 +147,10 @@ $app->router->get('/ctest/pharmacy-handle-advertisement',[PharmacyController::cl
 
 $app->router->get('/ctest/pharmacy-orders-previous',[PharmacyController::class,'viewPreviousOrder']);
 $app->router->get('/ctest/pharmacy-view-previous-order',[PharmacyController::class,'DetailsPreviousOrder']);
+$app->router->get('/ctest/pharmacy-front-orders-pending',[PharmacyController::class,'viewFrontdeskPendingOrder']);
+$app->router->get('/ctest/pharmacy-front-orders-finished',[PharmacyController::class,'viewFrontdeskFinishedOrder']);
+$app->router->get('/ctest/pharmacy-view-front-orders-pending',[PharmacyController::class,'detailsFrontdeskPending']);
+$app->router->get('/ctest/pharmacy-view-front-orders-finished',[PharmacyController::class,'detailsFrontdeskFinished']);
 $app->router->get('/ctest/pharmacy-orders-pending',[PharmacyController::class,'viewPendingOrder']);
 $app->router->get('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'DetailsPendingOrder']);
 $app->router->get('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
@@ -153,6 +166,7 @@ $app->router->get('/ctest/pharmacy-cancle-processing-order',[PharmacyController:
 $app->router->get('/ctest/pharmacy-add-medicine-processing-order',[PharmacyController::class,'addMedicineProcessingOrder']);
 $app->router->get('/ctest/pharmacy-orders-delivering',[PharmacyController::class,'viewDeliveringOrder']);
 $app->router->get('/ctest/pharmacy-track-order',[PharmacyController::class,'trackOrder']);
+$app->router->post('/ctest/pharmacy-track-order',[PharmacyController::class,'trackOrder']);
 $app->router->get('/ctest/pharmacy-go-to-process-order',[PharmacyController::class,'processOrderAgain']);
 $app->router->get('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
 $app->router->post('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
@@ -170,17 +184,20 @@ $app->router->get('/ctest/pharmacy-view-personal-details',[PharmacyController::c
 $app->router->get('/ctest/delivery-view-personal-details',[DeliveryController::class,'viewPersonalDetails']);
 $app->router->post('/ctest/delivery-view-personal-details',[DeliveryController::class,'viewPersonalDetails']);
 $app->router->get('/ctest/delivery-my-deliveries',[DeliveryController::class,'viewMyDeliveries']);
+$app->router->get('/ctest/delivery-pending-deliveries',[DeliveryController::class,'viewPendingDeliveries']);
 $app->router->get('/ctest/delivery-all-deliveries',[DeliveryController::class,'viewAllDeliveries']);
 $app->router->get('/ctest/delivery-view-delivery',[DeliveryController::class,'viewDeliveryDetails']);
 // $app->router->post('/ctest/delivery-view-delivery',[DeliveryController::class,'completeDelivery']);
 $app->router->get('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
 $app->router->post('/ctest/delivery-complete',[DeliveryController::class,'completeDelivery']);
 $app->router->get('/ctest/delivery-pass-delivery',[DeliveryController::class,'passDelivery']);
+$app->router->get('/ctest/delivery-get-delivery',[DeliveryController::class,'getDelivery']);
+$app->router->get('/ctest/delivery-update-personal-details',[DeliveryController::class,'editPersonalDetails']);
+$app->router->post('/ctest/delivery-update-personal-details',[DeliveryController::class,'editPersonalDetails']);
 
 // active status
 $app->router->get('/ctest/delivery-online',[DeliveryController::class,'makeOnline']);
 $app->router->get('/ctest/delivery-offline',[DeliveryController::class,'makeOffline']);
-
 
 
 
@@ -190,12 +207,12 @@ $app->router->get('/ctest/test',[LabController::class,'viewTest']);
 
 
 //--------------------receptionist routers----------------------------------------
-$app->router->get('/ctest/receptionist-handle-patient',[ReceptionistController::class,'handlePatient']);
-$app->router->post('/ctest/receptionist-handle-patient',[ReceptionistController::class,'handlePatient']);
 $app->router->get('/ctest/patient-detail',[ReceptionistController::class,'handlePatient']);
 $app->router->post('/ctest/patient-detail',[ReceptionistController::class,'handlePatient']);
 
 
+$app->router->get('/ctest/receptionist-handle-patient',[ReceptionistController::class,'handlePatient']);
+$app->router->post('/ctest/receptionist-handle-patient',[ReceptionistController::class,'handlePatient']);
 $app->router->get('/ctest/receptionist-patient-appointment',[ReceptionistController::class,'handleAppointments']);
 $app->router->post('/ctest/receptionist-patient-appointment',[ReceptionistController::class,'handleAppointments']);
 $app->router->get('/ctest/receptionist-patient-information',[ReceptionistController::class,'patientInformation']);
@@ -229,11 +246,8 @@ $app->router->get('/ctest/receptionist-channeling-set-appointment',[Receptionist
 $app->router->get('/ctest/receptionist-channeling-payment',[ReceptionistController::class,'handlePayment']);
 $app->router->get('/ctest/receptionist-today-channelings',[ReceptionistController::class,'todayChannelings']);
 
-
 $app->router->get('/ctest/receptionist-all-payment-done',[ReceptionistController::class,'allPaymentDone']);
 $app->router->get('/ctest/receptionist-all-payment-notdone',[ReceptionistController::class,'allPaymentNotdone']);
-
-
 
 // --------------------------------administrator controllers-----------------------------------------
 $app->router->get('/ctest/main-adds', [AdminController::class, 'viewAdvertisement']);
@@ -280,6 +294,9 @@ $app->router->get('/ctest/lab-write-test-result',[LabController::class,'writeRes
 $app->router->post('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
 $app->router->get('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
 $app->router->post('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
+$app->router->get('/ctest/lab-edit-report-detail',[LabController::class,'editReport']);
+$app->router->post('/ctest/lab-edit-report-detail',[LabController::class,'editReport']);
+
 $app->router->get('/ctest/lab-view-report-detail',[LabController::class,'ReportDetail']);
 $app->router->post('/ctest/lab-view-report-detail',[LabController::class,'ReportDetail']);
 $app->router->get('/ctest/lab-report-upload',[LabController::class,'reportUpload']);

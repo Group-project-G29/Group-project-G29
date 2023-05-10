@@ -7,7 +7,7 @@ use app\models\Appointment;
 $appointmentModel=new Appointment();
  $component=new Component(); ?>
 <div class="finish-page">
-   <div class="number-upper">
+   <div class="number-upper" style="margin-left:-7vw">
       <div class="number-pad">
                <div class="number-item--white">
                   <?=$appointmentModel->getUsedPatient(Application::$app->session->get('channeling'))?>
@@ -31,7 +31,7 @@ $appointmentModel=new Appointment();
                </div>
             <?php endforeach; ?>
    </section>
-   <?= $component->button('finish','','finish channeling session','button--class-2','finish'); ?>
+   <?= $component->button('finish','','Finish Channeling Session','button--class-finish','finish'); ?>
 </div>
 
 <script>

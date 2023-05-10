@@ -1,3 +1,7 @@
+<?php 
+    use app\models\Advertisement;
+    $ad=new Advertisement();
+?>
 <style>
     
     .fade{-webkit-animation-name:fade;-webkit-animation-duration:1.5s;animation-name:fade;animation-duration:1.5s}
@@ -8,25 +12,13 @@
 
 </style>
 <div class="slideshow-container">
-
-
-<div class="mySlides fade">
-    <img src="./media/images/patient/main.jpg" style="width:100%">
-    <div class="text">Caption Text</div>
-</div>
-
-<div class="mySlides fade">
-    <img src="./media/images/patient/main2.jpg" style="width:100%">
-    <div class="text">Caption Two</div>
-</div>
-
-<div class="mySlides fade">
-    <img src="./media/images/patient/main3.jpg" style="width:100%">
-    <div class="text ">Caption Three</div>
-</div>
-
-
-
+    <?php $advertisements=$ad->fetchAssocAll(['type'=>'main']); ?>
+        <?php foreach($advertisements as $advertisement): ?>
+        <div class="mySlides fade">
+            <img src=<?="'"."media/images/advertisements/".$advertisement['img']."'"?> style="width:100%">
+          
+        </div>
+        <?php endforeach;?>
 </div>
 <section class="homepage-main-container">
     <section class="homepage-main-container-sub">

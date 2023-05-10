@@ -7,9 +7,19 @@ use app\core\form\Form;
  
 ?>
 
+<section class="main-dashboard">
 <section>
     <?php $form->begin('','post');?>
-    <section class="flex">
+    <section>
+        <div class="refill-con">
+            <div>
+                <?=$form->textarea($prescriptionModel,'note','note','Note',2,100,$prescriptionModel->note,''); ?>
+            </div>
+            <div class="refills">
+                <?=$form->spanfield($prescriptionModel,'refills','Refills','field','number',''); ?>
+            </div>
+        </div>
+        <br>
         <div class="prescription-field-container">
             <div class="cls-name">
             <?=$form->editableselect('name','Medical Product*','',$medicines);  ?>
@@ -27,17 +37,10 @@ use app\core\form\Form;
             
             <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
         </div>
-        <div class="flex refill-bg">
-            <div>
-                <?=$form->textarea($prescriptionModel,'note','note','Note',2,30,$prescriptionModel->note,''); ?>
-            </div>
-            <div class="refills">
-                <?=$form->spanfield($prescriptionModel,'refills','Refills','field','number',''); ?>
-            </div>
-        </div>
     </section>
     <?php $form->end(); ?>
 
+</section>
 </section>
 <section class="medicine-table">
     <?php if($prescription_medicine): ?>

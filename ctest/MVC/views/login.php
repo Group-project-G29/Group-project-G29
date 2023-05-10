@@ -19,7 +19,7 @@ $form=Form::begin('','post');?>
     <div class="reg-body_fields">
     <?php echo $form->field($model,'username','Username','field','text') ?>
     <?php echo $form->field($model,'password','Password','field','password') ?>
-    <div class="reg-body_bottom-text">Forgot Password? click<a href="/ctest/register"> here</a></div>
+    <div class="reg-body_bottom-text">Forgot Password? click<a href="/ctest/employee-nic"> here</a></div>
     <div><input class="button-lighter" type="submit" value="Log In"></div>
     </div>
  

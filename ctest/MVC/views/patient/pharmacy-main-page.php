@@ -31,7 +31,6 @@ use app\core\form\Form;
 <div class="slideshow-container">
     <?php foreach($advertisements as $advertisement): ?>
         <div class="mySlides fade">
-            <?="./media/images/advertisements/pharmacy/".$advertisement['img'] ?>
             <img src=<?="./media/images/advertisements/pharmacy/".$advertisement['img']?> style="width:100%">
         </div>
         <?php endforeach ; ?>
@@ -41,14 +40,23 @@ use app\core\form\Form;
     <div class="prescription-popup hide" id="popup-main">
         <div class="prescription-popup-wrapper">
             <div class="flex-gap">
-                <div>
-                    <h3>Add prescriptions here. Prescrition should be a valid one or else it would be rejected.</h3>
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <h2>Add prescriptions here.</h2>
+                     <h3>Prescrition should be a valid one or else it would be rejected.</h3>
+                     <h4>To add E-prescriptions click <a class="blob" href="patient-dashboard?spec=documentation&search=prescription">here<a></h4>
                 </div>
                 <div>
-                    <?php $form=Form::begin("patient-pharmacy?spec=prescription&cmd=add",'post');?>
-                    <input type='file' name='prescription[]' multiple/> 
-                    <?=$component->button("Done","submit","Done","button--class-0",);?>
-                    <h3 class="fs-50">Make sure to capture any authentication detail on the Prescription when uploading prescription.</h3>
+                    <div class="file-upload">
+                        <?php $form=Form::begin("patient-pharmacy?spec=prescription&cmd=add",'post');?>
+                        <input type='file' name='prescription[]' multiple/> 
+                        <?=$component->button("Done","submit","Done","button--class-0",);?>
+                    </div>
+                    <ul>
+                        <li><h3 class="fs-50">Prescription should be signed by a physician.</h3></li>
+                        <li><h3 class="fs-50">Refills are allowed only if it mentioned in the prescription.</h3></li>
+                        <li><h3 class="fs-50">Unclear parts of the prescription will be ignored.</h3></li>
+                    </ul>
+                    
                     <?php $form=Form::end();?>
                 </div>
             </div>
@@ -143,7 +151,10 @@ function showSlides(){
         bg.classList.add("backgroundp");
         popUp.classList.remove('hide');
     })
-    
+    bg.addEventListener('click',()=>{
+        bg.classList.remove("backgroundp");
+        popUp.classList.add('hide');
+    })
 </script>
 
 

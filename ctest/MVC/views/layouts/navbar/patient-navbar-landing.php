@@ -1,3 +1,4 @@
+
 <?php 
     use app\core\Application;
     use app\core\component\Component;

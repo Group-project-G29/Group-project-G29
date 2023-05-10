@@ -31,13 +31,7 @@ $component = new Component();
             <?php echo $component->button('Add', '', 'Add', 'button--class-0  width-10 ', 'add'); ?>
         </div>
         <?php foreach ($contents as $key => $content) : ?>
-            <!-- <?php if ($content["type"] === 'image') : ?>
-                    <div class="inputbox">
-                    <label for="image"><?php echo $content["cname"] ?></label><br>
-                    <input type='file' id=<?= $content["content_ID"] ?> name=<?= $content["content_ID"] ?>><br>
-                    </form>
-                    </div> -->
-            <!-- <?php else : ?> -->
+           
             <div class="inputbox">
                 <table border="0">
                <tr> <label for="cname"><?php echo $content["cname"] ?></label></tr>
@@ -45,7 +39,6 @@ $component = new Component();
                <tr> <label for="cname"><?php echo $content["metric"] ?></label><br><br></tr>
                 </table>
             </div>
-            <!-- <?php endif; ?> -->
         <?php endforeach; ?>
 
 

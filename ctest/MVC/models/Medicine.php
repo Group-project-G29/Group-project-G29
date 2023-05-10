@@ -63,6 +63,21 @@ class Medicine extends DbModel{
         }
     }
 
+    public function increaseMedicine($id,$amount,$updateDB=false){
+        //get medicine amount
+        $cur_amount=$this->fetchAssocAll(['med_ID'=>$id])[0]['amount'];
+        //increase amount
+        $cur_amount+=$amount;
+        if($updateDB){
+            $this->customFetchAll("update medical_products set amount=$cur_amount where med_ID=$id");
+            return true;
+        }
+        else{
+            return true;
+        }
+    }
+
+
     public function checkStock($medicine){
         //get medicine amount if  amount=0 return false else true
         $amount=$this->getMedicineAmount($medicine);
@@ -73,6 +88,11 @@ class Medicine extends DbModel{
             return false;
         }
 
+    }
+    public function isResctricted($medicine){
+        $result=$this->fetchAssocAll(['med_ID'=>$medicine,'restrict_status'=>0]);
+        if($result) return true;
+        else return false;
     }
     public function getAllMedicine(){
         $medicines=$this->customFetchAll("select * from medical_products");
@@ -112,7 +132,13 @@ class Medicine extends DbModel{
     }
     public function getMedicineID($name,$strength){
         
-        return $this->fetchAssocAll(['name'=>$name,'strength'=>$strength])[0]['med_ID'];
+        $result=$this->fetchAssocAll(['name'=>$name,'strength'=>$strength]);
+        if($result){
+            return $result[0]['med_ID'];
+        }
+        else{
+            return false;
+        }
     }
     public function getMedicineByID($ID){
         return $this->fetchAssocAll(['med_ID'=>$ID])[0]['name'];

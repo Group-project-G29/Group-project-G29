@@ -19,6 +19,11 @@ $form=Form::begin('','post');?>
        
     </div>
     <div class="form-body-fields"> 
+            <label>
+        Restrict Status
+        <input type="checkbox" name="restrict_status" value="1">
+    </label>
+
     <table> 
     <?php echo $form->spanfield($model,'name','Medicine Name*','field','text') ?>
     <?php echo $form->spanfield($model,'strength','Strength*','field','text') ?>
@@ -28,10 +33,6 @@ $form=Form::begin('','post');?>
     <?php echo $form->spanfield($model,'unit_price','Unit Price*','field','text') ?>
     <?php echo $form->spanfield($model,'amount','Amount','field ','text') ?>
     <?php echo $form->spanfield($model,'img','Medicine Picture','field','file') ?>
-    <label>
-        Restrict Status
-        <input type="checkbox" name="restrict_status" value="1">
-    </label>
 
 
     </table>

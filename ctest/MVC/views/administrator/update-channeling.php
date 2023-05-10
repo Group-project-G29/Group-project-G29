@@ -23,8 +23,16 @@ $employeemodel=new Employee();
                         </div>
                     <?php endif;?>
                     <?=$form->select($model,'room','Room','field',$rooms,'')?>
-                    <?=$form->spanfield($model,'total_patients','Total Patients','field','text',''); ?>
                     <?=$form->spanfield($model,'percentage',"Doctor's Income Percentage",'field','text',''); ?>
+                    <tr>
+                        <td>
+                            <label for="limitCheckbox">Limit Patients</label>
+                        </td>
+                        <td>
+                            <input type="checkbox" class="limitCheckbox" name="limitCheckbox" id="limitCheckbox">
+                        </td>
+                    </tr> 
+                    <span id="popLine"></span> 
             </div>
             <div>
                 <div class="nurse-assign-body">
@@ -68,15 +76,18 @@ $employeemodel=new Employee();
     <section class="lower-update">
         <?php foreach($openedchannelings as $op): ?>
             <div class="open-channeling">
-                <div class="open-channeling-date">
-                    Open channeling date 
+                <div class="open-channeling-date flex">
+                    <?=ucfirst($op['status'])." channeling session"?> 
                     <span><?= $op['channeling_date']; ?></span>
                 </div>    
-                <?=$component->button('btn','','Cancel Channeling Session','button-class-01 cancel-btn open-channeling-btn',$op['opened_channeling_ID']) ?>
-                <?php if($op['status']=='closed'): ?>
+                <?php if($op['status']=='cancelled'): ?>
+                    <?=$component->button('btn','','Open Channeling Session','button-class-01 open-btn open-channeling-btn',$op['opened_channeling_ID']) ?>
+                <?php elseif($op['status']=='closed' ): ?>
                         <?=$component->button('btn','','Open Channeling Session','button-class-01 open-btn open-channeling-btn',$op['opened_channeling_ID']) ?>
+                        <?=$component->button('btn','','Cancel Channeling Session','button-class-01 cancel-btn open-channeling-btn',$op['opened_channeling_ID']) ?>
                     <?php else:?>
                         <?=$component->button('btn','','Close Channeling Session','button-class-01 close-btn open-channeling-btn',$op['opened_channeling_ID']) ?>
+                        <?=$component->button('btn','','Cancel Channeling Session','button-class-01 cancel-btn open-channeling-btn',$op['opened_channeling_ID']) ?>
                 <?php endif;?>
             </div>
         <?php endforeach;?>
@@ -155,5 +166,14 @@ $employeemodel=new Employee();
         })
     }
     searchBar.addEventListener('input',checker);
+      const checkActive = document.getElementById("limitCheckbox");
+    checkActive.addEventListener("click", ()=>{
+        if(checkActive.checked){
+            document.getElementById("popLine").innerHTML = `<?php echo $form->spanfield($model,'total_patients','','field','text') ?>`;
+        }
+        else{
+            document.getElementById("popLine").innerHTML = ``;
+        }
+    });
 
 </script>

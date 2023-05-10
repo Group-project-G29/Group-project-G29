@@ -18,7 +18,7 @@ use app\models\Prescription;
             $cartModel=new Cart();
             $medicineModel=new Medicine();
             $prescriptionModel=new Prescription();
-            $items= $cartModel->fetchAssocAllByName(['cart_ID'=>$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID']],'medicine_cart');
+            $items= $cartModel->customFetchall("Select medical_products.med_ID,medical_products.img,medical_products.name,medical_products.strength,medical_products.unit,medicine_in_cart.amount from medicine_in_cart left join medical_products on medical_products.med_ID=medicine_in_cart.med_ID where cart_ID=".$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID']);
             $stritem="";
             $prescriptions=$prescriptionModel->fetchAssocAllByName(['cart_ID'=>$cartModel->getPatientCart(Application::$app->session->get('user'))[0]['cart_ID']],'prescription');
             if(!$items && !$prescriptions) $class='hide';
@@ -26,7 +26,7 @@ use app\models\Prescription;
             foreach($prescriptions as $pres){
                 $stritem.="<div>
                                 <h5>Added Date:".$pres['uploaded_date']."</h5>
-                                <div class='cart-item'><a href=#>".$pres['type']."</a><a href='patient-pharmacy?spec=prescription&cmd=remove&id=".$pres['prescription_ID']."'>x</a></div>
+                                <div class='cart-item'><a href='handle-documentation?spec=prescription&mod=view&id=".$pres['prescription_ID']."'>".$pres['type']."</a><a href='patient-pharmacy?spec=prescription&cmd=remove&id=".$pres['prescription_ID']."'>x</a></div>
                         </div>";
             }
             foreach($items as $item){

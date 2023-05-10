@@ -10,7 +10,7 @@ $component = new Component();
 
 <div class='upper-container'>
     <div class="search-bar-container">
-        <?php echo $component->searchbar('', 'search', 'search-bar--class2', 'Search by name,speciality', 'searchbar'); ?>
+        <?php echo $component->searchbar('', 'search', 'search-bar--class2', 'Search by name', 'searchbar'); ?>
     </div>
    
 
@@ -23,7 +23,7 @@ $component = new Component();
     </div>
     <?php foreach ($channelings as $key => $channeling) : ?>
         
-        <div class="card-0" style="width:30vh;height:35vh" id=<?= $channeling['emp_ID'] ?>>
+        <div class="card-0" style="width:30vh;height:35vh" id=<?= "'".$channeling['emp_ID']."-".$channeling['name']."'" ?>>
             <div class="image" >
                 <img src="./media/images/emp-profile-pictures/<?= $channeling['img'] ?> ">
             </div>
@@ -40,37 +40,40 @@ $component = new Component();
 
 </div>
 
-<!-- <div class="table-container">
-
-
-  <table border="0">
-
-    <tr class="row-height header-underline">
-      <th>Doctor</th>
-      <th>Type</th>
-
-    </tr>
-
-
-    <?php foreach ($channelings as $key => $channeling) : ?>
-      
-      
-      <tr class='table-row  row-height hover' id=<?= $channeling['emp_ID'] ?>>
-        <td><?= $channeling['name'] ?></td>
-        <td><?= $channeling['speciality'] ?> </td>
-      </tr>
-    <?php endforeach; ?>
-
-
-
-
-  </table>
-</div> -->
 <script>
+
+ const doctors = document.querySelectorAll('.card-0');
+    const searchBar = document.getElementById('searchbar');
+    
+
+    function checker() {
+      var re = new RegExp("^" + (searchBar.value).toLowerCase())
+      
+      doctors.forEach((el) => {
+        comp = (el.id).split("-");
+        console.log(comp[1]);
+        console.log(re.test(comp[1].toLowerCase()));
+
+            if ( re.test(comp[1].toLowerCase())) {
+                el.classList.remove("none");
+            } else {
+                el.classList.add("none");
+
+            }
+            if(searchBar.value.length==0){
+              doctors.forEach((el)=>{
+                    el.classList.remove("none");
+                }) 
+            }
+        })
+    }
+    searchBar.addEventListener('input', checker);
+    
     elementsArray = document.querySelectorAll(".card-0");
     elementsArray.forEach(function(elem) {
+      comp = (elem.id).split("-");
         elem.addEventListener("click", function() {
-            location.href = 'receptionist-channeling-more?id=' + elem.id; //pass the variable value
+            location.href = 'receptionist-channeling-more?id=' + comp[0]; //pass the variable value
         });
     });
 </script>

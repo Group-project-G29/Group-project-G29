@@ -9,11 +9,11 @@ use app\core\Time;
 
 
 class OTP extends DbModel{
-    public string $patient_ID='';
+    public ?int $patient_ID=null;
     public string $OTP='';
-    public string $created_date='';
-    public string $created_time="";
     public int $tries=0;
+    public string $expire_time='';
+    public ?int $emp_ID=null;
   
     public function rules():array{
         return [];
@@ -31,24 +31,38 @@ class OTP extends DbModel{
         return 'otp_ID';
     }
     public function tableRecords(): array{
-        return ['OTP'=>['patient_ID','OTP','created_date','created_time','tries']];
+        return ['OTP'=>['patient_ID','OTP','tries','expire_time','emp_ID']];
     }
 
     public function attributes(): array
     {
-        return ['patient_ID','OTP','created_date','created_time','tries'];
+        return ['patient_ID','OTP','tries','expire_time','emp_ID'];
     }
     public function createOTP(){
         return rand(10000,99999);
         
     }
 
-    public function setOTP($patient_ID){
+    public function setOTP($ent_ID,$type='patient'){
         $otpModel=new OTP();
-        $this->patient_ID=$patient_ID;
+        $timeModel=new Time();
+        $otpModel->deleteRecord(['emp_ID'=>$ent_ID]);
+        if($type=='patient'){
+            $otpModel->deleteRecord(['patient_ID'=>$ent_ID]);
+            $this->patient_ID=$ent_ID;
+        }   
+        else {
+            $this->emp_ID=$ent_ID;
+            $otpModel->deleteRecord(['emp_ID'=>$ent_ID]);
+        }
+            
         $this->tries=0;
+        
         $this->OTP=$otpModel->createOTP();
-        return parent::save();    
+        $this->expire_time=$timeModel->addTime(Date('H:i:s'),"00:10");
+        var_dump($this);
+        parent::save();
+        return $this->OTP;    
     }
     public function getPatientOTP($patient_ID){
         $timeModel=new Time();
@@ -75,17 +89,71 @@ class OTP extends DbModel{
         return false;
     }
 
-    public function canSend($patient){
+    public function canSend($entity,$type='patient'){
+        if($type=='employee'){
+           $time=new Time();
+            date_default_timezone_set("Asia/Colombo");
+            $otp=$this->customFetchAll("select OTP from OTP where emp_ID=$entity and created_date='".Date('Y-m-d')."' and expire_time>='".Date("H:i:s")."'");   
+            if($otp) return $otp;
+            else return false; 
+        }
         $time=new Time();
         date_default_timezone_set("Asia/Colombo");
-        $cdate=$this->customFetchAll("select count(otp_ID) from OTP where patient_ID=$patient and created_time>=".Date("H:i:s")." and created_time<=".$time->addTime(Date("H:i:s"),'00:20'))[0]['count(otp_ID)'];   
-        if($cdate==3){
-            return false;
+        $otp=$this->customFetchAll("select OTP from OTP where patient_ID=$entity and created_date='".Date('Y-m-d')."' and expire_time>='".Date("H:i:s")."'");   
+        if($otp) return $otp;
+        else return false;
+    }
+    public function changePassword($response,$type){
+        if($type=='patient'){
+            $model=new Patient();
         }
         else{
-            return true;
+            $model=new Employee();
         }
-    }
+        $password=$_POST['password'];
+        $cpassword=$_POST['cpassword'];
+        $model->password=$_POST['password'];
+        $model->cpassword=$_POST['cpassword'];
+        $model->validate();
+        if(!$_POST['password']){
+            $model->customAddError('password',"This field is required");
+            return $model;
+        }
+        elseif(!$_POST['cpassword']){
+            $model->customAddError('cpassword',"This field is required");
+            return $model;
+        }
+        else if($password!=$cpassword){
+            $model->customAddError('cpassword',"Password Mismatch");
+            return $model;
+        }
+        else{
+            
+            if($type=='patient'){
+                $model=$model->findOne(['patient_ID'=>Application::$app->session->get('temp_user')]);
+                $model->password=password_hash($_POST['password'],PASSWORD_DEFAULT);
+                if($model->updateRecord(['patient_ID'=>Application::$app->session->get('temp_user')])){
+                    Application::$app->session->setFlash('success',"Password changed successfully,Please login to continue");
+                    $response->redirect("/ctest/");
+                    exit;
+                }
+
+            }
+            else{
+                $model=$model->findOne(['emp_ID'=>Application::$app->session->get('temp_user')]);
+                $model->password=password_hash($_POST['password'],PASSWORD_DEFAULT);
+                if($model->save()){
+                    Application::$app->session->setFlash('success',"Password changed successfully,Please login to continue");
+                    $response->redirect("login");
+                    exit;
+                }
+
+            }
+        }
+        
+    }    
+
+
     public function checkOTP($patient){
         $otpModel=new OTP();
         $n1=$_POST['n1'];

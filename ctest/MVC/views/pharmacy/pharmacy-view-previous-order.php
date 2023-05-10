@@ -14,13 +14,15 @@
 ?>
 
 <div class="detail">
+    <h3>Order ID : <?=$order_details[0]['order_ID']?></h3>
+    <h3>Date :<?=$order_details[0]['created_date']?></h3>
+    <h3>Time :<?=$order_details[0]['created_time']?></h3>
+    <h3>Pickup Status : <?=$order_details[0]['pickup_status']?></h3>
+    <h3>Payment Status : <?=$order_details[0]['payment_status']?></h3>
+    <hr>
     <h3>Patient Name : <?=$order_details[0]['name']?></h3>
     <h3>Contact Number : <?=$order_details[0]['contact']?></h3>
     <h3>Address : <?=$order_details[0]['address']?></h3>
-    <hr>
-    <h3>Order ID : <?=$order_details[0]['order_ID']?></h3>
-    <h3>Ordered Date & Time :<?=$order_details[0]['completed_date']?> <?=$order_details[0]['completed_time']?></h3>
-    <h3>Pickup Status : <?=$order_details[0]['pickup_status']?></h3>
 </div>
    
 
@@ -57,7 +59,7 @@
             </tr>
         </table>
     </div>
-    <h3>Total Price For Online Ordered Products : <?=$total_online?></h3>
+    <h3 style="text-align: right;">Online Ordered Products : <?= 'LKR. '. number_format($total_online,2,'.','') ?></h3>
     <?php $total=$total+$total_online ?>
 <?php endif; ?>
 
@@ -99,7 +101,7 @@
             </tr>
         </table>
     </div>
-    <h3>Total Price For Prescription : <?=$total_prescription?></h3>
+    <h3 style="text-align: right;">E-Prescription : <?= 'LKR. '. number_format($total_prescription,2,'.','') ?></h3>
     <?php $total=$total+$total_prescription ?>
     <?php endforeach; ?>
 <?php endif; ?>
@@ -142,10 +144,10 @@
             </tr>
         </table>
     </div>
-    <h3>Total Price For Prescription : <?=$total_prescription?></h3>
+    <h3 style="text-align: right;">Softcopy Prescription : <?= 'LKR. '. number_format($total_prescription,2,'.','') ?></h3>
     <?php $total=$total+$total_prescription ?>
     <?php endforeach; ?>
 <?php endif; ?>
 
 
-    <hr><h1>Total Price : <?=$total?></h1>
+    <hr><h1 style="text-align: right;">Total Price : <?= 'LKR. '. number_format($total,2,'.','') ?></h1>

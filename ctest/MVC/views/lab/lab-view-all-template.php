@@ -13,30 +13,9 @@ $component = new Component();
   </div>
 
   <b>
-    <h1 class="fs-200 fc-color--dark" style="padding-left: 60vh;padding-top: 10vh;">Templates</h1>
   </b>
 
 </div>
-<!-- <div class="main-card-1 ">
-  <?php foreach ($templates as $key => $template) : ?>
-
-    <div class="card-2" id=<?= $template['template_ID'] ?>>
-         
-          <div class="card-header-2" style="padding-top: 8vh;">
-
-            <h1><?= $template['name'] ?> </h1>
-          </div>
-
-       
-
-      </div>
-    
-  <?php endforeach; ?>
-
-</div> -->
-
-
-  
   <?php foreach ($templates as $key => $template) : ?>
   <div class="flip-card" id=<?= $template['template_ID'] ?>>
       <div class="flip-card-inner">
@@ -62,6 +41,8 @@ $component = new Component();
 <?php endforeach; ?>
 
 <script>
+
+  
   elementsArray = document.querySelectorAll(".card-2");
   elementsArray.forEach(function(elem) {
     elem.addEventListener("click", function() {

@@ -17,7 +17,7 @@ include "../views/layouts/navbar/patient-pharmacy-navbar.php";
 
                 <?php endif;?>
                   <?php if(Application::$app->session->getFlash('error')):?>
-                    <div class="flash-message--error">
+                    <div class="flash-message--error disap">
                         <?php echo Application::$app->session->getFlash('error');?>
                     </div>
                 <?php endif; ?>

@@ -35,7 +35,7 @@ class Payment extends DbModel{
 
     }   
     
-     public function createOrderPay($patient_ID,$name,$amount,$payme){
+     public function createOrderPay($patient_ID,$name,$amount,$payme,$order){
         //create payment
         $payment=new Payment();
         $payment->patient_ID=$patient_ID;
@@ -43,12 +43,29 @@ class Payment extends DbModel{
         $payment->type='order';
         $payment->payment_status=$payme;
         $payment->amount=$amount;
+        $payment->order_ID=$order;
         return $payment->save();
 
     } 
         
-        
-
+    public function getCheckerPayments(){
+        $total=0;
+        // ["sel_pays"]=> array(2) { [0]=> string(3) "105" [1]=> string(3) "106" }
+        Application::$app->session->set('sel_pays',$_POST['sel_pays']);
+        foreach($_POST['sel_pays'] as $payments){
+            $pay=$this->fetchAssocAll(['payment_ID'=>$payments]);
+            $fee=$pay[0]['amount'];
+            $total=$total+$fee;
+        }
+        return $total;
+    }    
+    public function donePayment(){
+        $result=Application::$app->session->get('sel_pays',$_POST['sel_pays']);
+        foreach($result as $payments){
+            $this->customFetchAll("update payment set payment_status='done' where payment_ID=",$payments);
+        }
+        return true;
+    }
     public function earningValues($para){
         $dateModel=new Date();
         $today=Date('Y-m-d');
@@ -59,7 +76,7 @@ class Payment extends DbModel{
         if($para == 'year'){
             $lowdate=$dateModel->arrayToDate([01,$month,$year]);
             
-            $result = $this->customFetchAll("SELECT MONTH(generated_timestamp), SUM(amount) FROM `payment` WHERE generated_timestamp>='$lowdate' and generated_timestamp<'$update' GROUP by MONTH(generated_timestamp);");
+            $result = $this->customFetchAll("SELECT MONTH(generated_timestamp), SUM(amount) FROM `payment` WHERE generated_timestamp>='$lowdate' and generated_timestamp<='$update' GROUP by MONTH(generated_timestamp);");
             // var_dump($result);exit;
     
             $value=[0,0,0,0,0,0,0,0,0,0,0,0];
@@ -68,7 +85,7 @@ class Payment extends DbModel{
             }
         }
         elseif($para == 'month'){
-            $value = $this->customFetchAll("SELECT SUM(amount) FROM `payment` WHERE generated_timestamp>='$update';");
+            $value = $this->customFetchAll("SELECT SUM(amount) FROM `payment` WHERE month(generated_timestamp)=month('".Date('Y-m-d')."');");
         }
         return ['value'=>$value];
     }
@@ -110,11 +127,11 @@ class Payment extends DbModel{
     public function payNow($amount,$text,Patient $patientModel,$order,$hash,$return_complete,$return_fail){
         $hash1 = strtoupper(
                             md5(
-                                '1222960' . 
-                                $order . 
-                                number_format($amount, 2, '.', '') . 
-                                'LKR' .  
-                                strtoupper(md5('MzAzOTcxMjc5NTIzODU1OTk5ODg3MTE2MTM1NDU0MDgxODMzNjk2')) 
+                                '1223094'. 
+                                "Medicine Order-".Application::$app->session->get('user'). 
+                                number_format($amount, 2, '.', ''). 
+                                'LKR'.  
+                                strtoupper(md5('NDA0Mjc0OTcyMzQxOTM0OTkwMzIyMjQxMTI4NzEzNDAwNjY0MjQ0NQ==')) 
                             ) 
         );
         $str='<script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
@@ -168,8 +185,13 @@ class Payment extends DbModel{
         payhere.startPayment(payment);
     
 </script>';   
-        return sprintf($str,$return_complete,$return_fail,$return_fail,$order,$text,$amount,$hash,explode(" ",$patientModel->name)[0],explode(" ",$patientModel->name)[1]??'',$patientModel->email,$patientModel->contact,$patientModel->address);
+        return sprintf($str,$return_complete,$return_fail,$return_fail,$order,$text,$amount,$hash1,explode(" ",$patientModel->name)[0],explode(" ",$patientModel->name)[1]??'',$patientModel->email,$patientModel->contact,$patientModel->address);
     }
+
+    public function update_payment_status ($order_ID) {
+        return $this->customFetchAll("UPDATE _order SET payment_status = 'done' WHERE order_ID = $order_ID;");
+    }
+
 
     
 }   

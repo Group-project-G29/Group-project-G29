@@ -21,11 +21,11 @@ use app\models\Employee;
     <tr class="table-row" id=<?="'".$account['name']."-".$account['nic']."-".$account['role']."'"?>>
        
         <td><?=$account['name']?></td>
-        <td><?=$account['role']?></td>  
+        <td><?=ucfirst(($account['role']=='delivery')?'delivery Rider':$account['role'])?></td>  
             <td>
             
                 <div>
-                    <?php echo $account['employee_status']." account" ?>
+                    <?php echo ucfirst($account['employee_status'])." Account" ?>
                 </div>
                 
             </td>
@@ -39,7 +39,12 @@ use app\models\Employee;
                     }
                     else{
                         echo $component->button('update','','Update','button--class-2',$account['emp_ID']); 
-                        echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);
+                        if($account['employee_status'] == 'active'){
+                            echo $component->button('delete',' ','Deactivate','button--class-3',$account['emp_ID']);    
+                        }
+                        else{
+                            echo $component->button('delete',' ','Activate','button--class-3',$account['emp_ID']);    
+                        }
                         
                     }
                 }

@@ -74,23 +74,24 @@ class MedicalReport extends DbModel{
     }
     public function updateReport(Request $request,Response $response){
         $parameters=$request->getParameters();
-        if($parameters[0]['spec']='consultation-report'){
+        $type=$this->fetchAssocAll(['report_ID'=>$parameters[1]['id']])[0]['type'];
+        $parameters=$request->getParameters();
+        if($type=='consultation'){
             $ReportModel=new ConsultationReport();
             $ReportModel->loadData($request->getBody());
-            $ReportModel->updateRecord(['report_ID'=>$parameters[2]['id']]);
-            $response->redirect("doctor-report?spec=consultation-report"); 
+            $ReportModel->updateRecord(['report_ID'=>$parameters[1]['id']]);
+           
         }
-        if($parameters[0]['spec']='medical-history-report'){
+        if($type=='medical-history'){
             $ReportModel=new MedicalHistory();
             $ReportModel->loadData($request->getBody());
-            $ReportModel->updateRecord(['report_ID'=>$parameters[2]['id']]);
-            $response->redirect("doctor-report?spec=medical-history-report"); 
+            $ReportModel->updateRecord(['report_ID'=>$parameters[1]['id']]);
+            
         }
-        if($parameters[0]['spec']='soap-report'){
+        if($type=='soap'){
             $ReportModel=new SOAPReport();
             $ReportModel->loadData($request->getBody());
-            $ReportModel->updateRecord(['report_ID'=>$parameters[2]['id']]);
-            $response->redirect("doctor-report?spec=soap-report"); 
+            $ReportModel->updateRecord(['report_ID'=>$parameters[1]['id']]);
         }
         
     }
@@ -129,5 +130,10 @@ class MedicalReport extends DbModel{
     }
     public function getAllReportsDoctor(){
         return $this->customFetchAll("Select medical_report.report_ID,medical_report.uploaded_date,medical_report.type,medical_report.label from medical_report left join Medical_history on medical_report.report_ID=Medical_history.report_ID left join soap_report on soap_report.report_ID=medical_report.report_ID left join consultation_report on consultation_report.report_ID=medical_report.report_ID where medical_report.patient=".Application::$app->session->get('cur_patient')." and medical_report.doctor=".Application::$app->session->get('userObject')->nic." order by medical_report.uploaded_date desc");
+    }
+    public function updater($model,$type,$id){
+        if($type=='consultation') $this->customFetchAll("update consultation_report set examination='$model->examination',consultation='$model->consultation',recommendation='$model->recommendation' where report_ID=".$id);
+        if($type=='medical-history') $this->customFetchAll("update consultation_report set examination='$model->examination',consultation='$model->consultation',recommendation='$model->recommendation' where report_ID=".$id);
+        if($type=='soap') $this->customFetchAll("update consultation_report set examination='$model->examination',consultation='$model->consultation',recommendation='$model->recommendation' where report_ID=".$id);
     }
 }

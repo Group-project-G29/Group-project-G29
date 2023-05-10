@@ -69,7 +69,7 @@ use app\core\DbModel;
         
 // functions
 
-      public function get_unfinished_deliveries( $emp_ID ) {
+        public function get_unfinished_deliveries( $emp_ID ) {
             return $this->customFetchAll("SELECT * FROM delivery INNER JOIN _order ON delivery.delivery_ID=_order.delivery_ID WHERE delivery.completed_date IS NULL AND delivery.delivery_rider = $emp_ID");
         }
 

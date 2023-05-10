@@ -5,7 +5,7 @@ use app\core\DbModel;
 use app\core\Application;
 use app\core\UserModel;
 
-class LabReport extends DbModel{
+class LabReporta extends DbModel{
     // public int $report_ID;
     public int $fee=0;
     // public $upload_date_time;

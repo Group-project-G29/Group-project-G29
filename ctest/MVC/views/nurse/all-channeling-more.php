@@ -20,7 +20,7 @@ $component = new Component();
         <div class="number-content">
             <h2>Patients</h2>
             <div class="number-pad">
-                <div class="number-item fs-200"><?=$channeling[0]['total_patients']?></div>
+                <div class="number-item fs-200"><?php if($channeling[0]['total_patients'] == -1){echo("Unlimit");}else{echo($channeling[0]['total_patients']);}?></div>
             </div>
         </div>
 
@@ -65,7 +65,7 @@ $component = new Component();
             <?php $session = 1; ?>
         <?php foreach($openedchanneling as $key=>$clinic): ?>
 
-            <tr class="table-row row-height hover" id="<?= $clinic['opened_channeling_ID'] ?>">
+            <tr class="table-row row-height" id="<?= $clinic['opened_channeling_ID'] ?>">
                 <td><?php echo("Session - ".$session); ?></td>
                 <td><?= $clinic['channeling_date'] ?></td>
                 <td><?php if($clinic['remaining_appointments']== -1){echo("Unlimit");}else{echo($clinic['remaining_appointments']);} ?></td>
@@ -77,7 +77,7 @@ $component = new Component();
             
         <?php endforeach; ?>
 
-        <script>
+        <!-- <script>
             elementsArray = document.querySelectorAll(".table-row");
             elementsArray.forEach(function(elem) {
                 elem.addEventListener("click", function() {
@@ -85,7 +85,7 @@ $component = new Component();
                     location.href="nurse-list-patient?id="+elem.id+"&view=1";
                 });
             });
-        </script>
+        </script> -->
     </table>
     </div>
 

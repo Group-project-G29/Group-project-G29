@@ -86,7 +86,7 @@ class Appointment extends DbModel{
     }
     //check whether the appointment is valid
     public function isInPass($appointment){
-        $result=$this->customFetchAll("Select * from opened_channeling left join appointment on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID where  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and appointment.status='unused' and appointment.appointment_ID=".$appointment);
+        $result=$this->customFetchAll("Select * from opened_channeling left join appointment on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID where  (opened_channeling.status='Opened' or opened_channeling.status='started' or opened_channeling.status='closed' ) and appointment.status='unused' and appointment.appointment_ID=".$appointment);
         if($result) return true;
         else return false;
     } 
@@ -130,7 +130,7 @@ class Appointment extends DbModel{
     }
      public function getTotoalPatient($channelingID){
         //take count in the database on appointment
-        return $this->customFetchAll("select count(*) from appointment where opened_channeling_ID=".$channelingID)[0]['count(*)'];
+        return $this->customFetchAll("select count(*) from appointment where (payment_status='done' || type='labtest') && opened_channeling_ID=".$channelingID)[0]['count(*)'];
     }
     public function getUsedPatient($channelingID){
         //take count in the database on appointment where status is not used
@@ -156,8 +156,7 @@ class Appointment extends DbModel{
         $day=$dateModel->get($today,'day');
         $lowdate=$dateModel->arrayToDate([$day,$month,$year]);
         $update=$dateModel->arrayToDate([01,$month,$dateModel->get($today,'year')]);
-
-        $result = $this->customFetchAll("SELECT MONTH(opened_channeling.channeling_date), COUNT(appointment.appointment_ID) FROM `appointment` LEFT JOIN `opened_channeling` ON appointment.opened_channeling_ID = opened_channeling.opened_channeling_ID WHERE opened_channeling.channeling_date>='$lowdate' and opened_channeling.channeling_date<'$update' AND appointment.status='used' GROUP by MONTH(opened_channeling.channeling_date);");
+        $result = $this->customFetchAll("SELECT MONTH(opened_channeling.channeling_date), COUNT(appointment.appointment_ID) FROM `appointment` LEFT JOIN `opened_channeling` ON appointment.opened_channeling_ID = opened_channeling.opened_channeling_ID WHERE opened_channeling.channeling_date>='$lowdate' and opened_channeling.channeling_date<='$update' AND appointment.status='used' GROUP by MONTH(opened_channeling.channeling_date);");
 
         $value=[0,0,0,0,0,0,0,0,0,0,0,0];
         foreach($result as $row){

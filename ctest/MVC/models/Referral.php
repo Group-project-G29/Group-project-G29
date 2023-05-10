@@ -67,9 +67,10 @@ class Referral extends DbModel{
 
     }
     public function getReferrals($patient,$doctor){
-        $speciality=$this->customFetchAll("select channeling.speciality from  opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.opened_channeling_ID=".Application::$app->session->get('channeling'))[0]['speciality'];
+        $appointmentModel=new Appointment();
+        $appointment=$appointmentModel->getAppointment($patient,Application::$app->session->get('channeling'));
         $referrals_written = $this->customFetchAll("select distinct * from referrel   where patient=".$patient." and (issued_doctor='".$doctor."') order by date desc");
-        $referrals_sent = $this->customFetchAll("select distinct * from referrel  where patient=".$patient." and (doctor='".$doctor."' or (doctor is null and speciality='".$speciality."')) order by date desc");
+        $referrals_sent = $this->customFetchAll("select distinct * from referrel  where patient=".$patient." and (doctor='".$doctor."') and appointment_ID=$appointment order by date desc");
         $ref['written']=$referrals_written;
         $ref['sent']=array_slice($referrals_sent,0,2);
         return $ref;
@@ -126,28 +127,34 @@ class Referral extends DbModel{
         $stakeholdersub=$this->customFetchAll("select employee.name as issued_doctor_name,doctor.description from referrel right join doctor on doctor.nic=referrel.issued_doctor left join employee on employee.nic=doctor.nic where ref_ID=$refID")[0];
         
         $referral=$this->fetchAssocAll(['ref_ID'=>$refID])[0];
+  
         $addstr='';
         if($referral['history'] && $referral['history']!=''){
-            $addstr.="<div>Patient Medical History</div>
+            $addstr.="<br><div>Patient Medical History</div>
                     <div>".$referral['history']."</div>";
 
         }
         if($this->stringchecker($referral['assessment']) && $referral['assessment']!=''){
-            $addstr.="<div>Medical Assessment</div>
+            $addstr.="<br><div>Medical Assessment</div>
             <div>".$referral['assessment']."</div>";
         }
         if($this->stringchecker($referral['reason']) && $referral['reason']!=''){
-            $addstr.="<div>Reason for referral</div>
+            $addstr.="<br><div>Reason for referral</div>
             <div>".$referral['reason']."</div>";
         }
         
         if($this->stringchecker($referral['note']) && $referral['note']!=' '){
-            $addstr.="<div>Note</div>
+            $addstr.="<br><div>Note</div>
             <div>".$referral['note']."</div>";
         }
       
         if($this->stringchecker($doctor['doctor_name'])){
             $doctor_name="<div>Written to Doctor :".$doctor['doctor_name']."</div>";
+        }
+        elseif($this->stringchecker($referral['third_party'])){
+
+            $doctor_name="<div>Written to :".$referral['third_party']."</div>";
+          
         }
     
         else{
@@ -184,7 +191,7 @@ class Referral extends DbModel{
                     <section class='show'>
                         ".$doctor_name."
                         ".$spec."
-                        <div>Patient Name :".$stakeholdermain['patient_name']."</div>
+                        <br><div>Patient Name :".$stakeholdermain['patient_name']."</div>
                         <div>Patient Gender :".$stakeholdermain['gender']."</div><br>
                         <div>Issued Doctor :".$stakeholdersub['issued_doctor_name']."</div>"."
                         <div>Issued date :".$referral['date']."</div><br><br><br>

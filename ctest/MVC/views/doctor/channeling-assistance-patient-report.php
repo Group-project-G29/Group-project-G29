@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <div class="channeling-patient">
     <?php
 use app\core\component\Component;
@@ -21,13 +22,14 @@ $form=new Form();
 $chart=new ChartModel();
 $class='';
 $popup=Application::$app->session->get('popup')??null;
-if( (isset($popup)) || $popup=='unset' ) $class='hide';
-Application::$app->session->set('popup','unset');
+if(isset($popup) && $popup=='unset') $class='hide';
+$popup=Application::$app->session->set('popup','unset')??null;
 ?>
     <?php $component=new Component(); ?>
-    <div class='background--1 hide'> </div>
+    <div class=<?='"background--1'.' '.$class.'"'?>> </div>
     <div class=<?='"labtest-popup'.' '."$class".'"'?> id=<?="'".$class."'"?>>
-        <h3>Add lab test here</h3>
+        <h2>Add lab test here</h2>
+        <br>
         <?php $form->begin('/ctest/doctor-labtest','post'); ?>
         <div class="labtest-request-con1">
             <div>
@@ -35,50 +37,58 @@ Application::$app->session->set('popup','unset');
                 <?= $form->textarea(new LabTestRequest,'note','note','Note',3,28,'');?>
             </div>
             <div>
-                <?= $component->button('btn','submit','Request','',''); ?>
+                <?= $component->button('btn','submit','Request','button-class--lightblue',''); ?>
             </div>
         </div>
         <?php $form->end(); ?>
         <div class="scrollable-labtest-container">
             <?php $labrequests=$labrequestModel->getLabTestRequests();?>
-            <h3>Lab test requests </h3>
+            <h2>Lab test requests </h2><br>
             <?php foreach($labrequests as $labrequest): ?>
-                <div class="flex">
-                    <h4><?=$labrequest['name']."  date :".$labrequest['requested_date_time']?></h4>
-                    <?=$component->button('btn','','Cancel','rqst-rmv',$labrequest['request_ID']); ?>
-                </div>
+                <?php if(!$labreportModel->isreport($labrequest['request_ID'])): ?>
+                    <div class="flex lab-test-itm">
+                        <h4><?=$labrequest['name']."  date :".$labrequest['requested_date_time']?></h4>
+                        <?=$component->button('btn','','X','rqst-rmv button-cancel',$labrequest['request_ID']); ?>
+                    </div>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
 
     </div>
     <div class="labreport-popup hide" id="popup-report">
         <div class="labreport-popup-wrapper">
-            <h3 class="fs-50">Add Lab reports here.</h3>
+            <h2>Add Lab reports here.</h2>
+            <br>
             <?php $form2=Form::begin("upload-reports",'post');?>
-            <?php echo $form->editableselect('type','Report Type','field',['CBC'=>'CBC(Complete Blood Count)']) ?>
+            <div class="editable-test">
+                <?php echo $form->editableselect('type','Report Type','field',['CBC chem 7 panel'=>'CBC chem 7 panel','']) ?>
+            </div>
+            <br>
             <input type='file' name='report[]' multiple/> 
             <?=$component->button("Done","submit","Done","button-class--lightblue",);?>
             <?php $form2=Form::end();?>
         </div>        
     </div>
+
     <div class="assistance-container">
         <div class="assistance-subcontainer ">
             
             <div class="flex-0">
                 <?= $component->button('referral','','Referral','button--class-doc1 btn-1','referrals');?>
-                <?=  $component->button('consultaion','','Recent reports ','button--class-doc1 btn-1',"last-consultation");?>
+                <?=  $component->button('consultaion','','Recent Reports ','button--class-doc1 btn-1',"last-consultation");?>
             </div>
             <div class="variable-container--1">
                 <div class="wrapper--referrals">
                     <div class="variable-container">
                         <table>
-                            <tr>
+                            <tr class="fixer">
                                 <th>Referral</th><th>Added Date</th><th></th><th></th>
                             </tr>
                             <?php foreach($referrals['sent'] as $referral): ?>
                     
-                                <tr>
+                                <tr class="border-bottom--1">
                                     <td><a href=<?="/ctest/doctor-report?spec=referral&mod=view&id=".$referral['ref_ID']?>><?=$referral['issued_doctor']?("Dr. ".$employeeModel->getDocName($referral['issued_doctor']))."'s":"Softcopy-".$referral['ref_ID']."' "."Referral"?></a></td><td><?=$referral['date'] ?></td>
+                                   
     
                                 </tr>
                             <?php endforeach; ?>
@@ -122,7 +132,9 @@ Application::$app->session->set('popup','unset');
                 </div>
                 <div class="nav_container-lb">
                     <div class="nav-item">
+                       
                         <input type="number" id="patient-input">
+                        
                         <?=$component->button('btn','','Move','','move-btn'); ?>
                        
                     </div>
@@ -150,12 +162,13 @@ Application::$app->session->set('popup','unset');
             <div>
                 <center>
                 <table>
+                    <tr><td>Quene No :</td><td class="Qno-lb"><?=$appointment['queue_no']?></td></tr>
                     <tr><td>Age :</td><td><?=$appointment['age']." yrs"?></td></tr>
                     <tr><td>Gender :</td><td><?=$appointment['gender']?></td></tr>
                 </table>
                 </center>
                 
-                <?=$component->button('btn','','Switch to Consultation Queue','button-class--lightblue switch',$appointment['patient_ID']);?>
+                <?=$component->button('btn','','Switch to Report Consultation Queue','button-class--lightblue switch',$appointment['patient_ID']);?>
             </div>
             <div class="result-container">
                 <table class="fs-100">
@@ -164,30 +177,32 @@ Application::$app->session->set('popup','unset');
                     <?php endforeach; ?>
                 </table>
                 <section class="graph">
-                    <div>
+                    <div class="editable-select">
                         <?=$form->editableselectversion2('tests_ed','','test_select',array_keys($alltests)) ?>
                     </div>
+                    <div class="graph-part">
                     <?php foreach($alltests as $val=>$test):?>
                         
-                        <div id=<?='"'.'c'.join('_',explode(' ',$val)).'"'?> class=<?='"'.'c'.join('_',explode(' ',$val)).' hide gcontainer"'?>>
+                        <div id=<?='"'.'c'.join('_',explode(' ',$val)).'"'?> class=<?='"'.'c'.join('_',explode(' ',$val)).' hide gcontainer"'?> class="chart-ast">
                             
-                            <canvas id=<?='"myChart'.$val.'"'?> style="width:100%;max-width:700px"></canvas>
-                            <?=$chart->lineChart($test['labels'],[],$test['data'],[],$val,'rgb(0,0,0)',$val);?>
+                            <canvas id=<?='"myChart'.join("-",explode(" ",trim($val))).'"'?> style="width:100%;max-width:700px chart-ast"></canvas>
+                            <?=$chart->lineChartAssis($test['labels'],[],$test['data'],[],$val,'rgb(0,0,0)',$val);?>
                         </div>
                         <?php endforeach;?>
+                    </div>
                 </section>
             </div>
        
         </div>
         <div class="assistance-subcontainer">
             <div class="flex-0">
-                <?=$component->button('report','','View Reports','button--class-doc1 btn-2',"reports");?>
-                <?=$component->button('prescription','','View Prescription','button--class-doc1 btn-2',"prescriptions");?>
-                <?=$component->button('lab test','','View Lab Tests','button--class-doc1 btn-2',"lab-tests");?>
+                <?=$component->button('report','','Reports','button--class-doc1 btn-2',"reports");?>
+                <?=$component->button('prescription','','Prescriptions','button--class-doc1 btn-2',"prescriptions");?>
+                <?=$component->button('lab test','','Lab Reports','button--class-doc1 btn-2',"lab-tests");?>
             </div>
             <div class="variable-container--2">
                 <div class="wrapper--reports">
-                    <div class="variable-container-item flex">
+                    <div class="variable-container">
                         <div>
                             <table>
                                 <tr>
@@ -208,7 +223,7 @@ Application::$app->session->set('popup','unset');
                     </div>
                 </div>
                 <div class="wrapper--prescriptions none">
-                    <div class="variable-container-item flex">
+                    <div class="variable-container">
                         <div>
                             <table>
                                 <tr>
@@ -228,7 +243,7 @@ Application::$app->session->set('popup','unset');
                     </div>
                 </div>
                 <div class="wrapper--lab-tests none">
-                    <div class="variable-container-item flex">
+                    <div class="variable-container">
                         <div>
                             <table>
                                 <tr>
@@ -313,7 +328,7 @@ Application::$app->session->set('popup','unset');
         const  movebtn=document.getElementById('move-btn');
         const painput=document.getElementById('patient-input');
         movebtn.addEventListener('click',()=>{
-        
+            console.log("dfdf");
             if(checkbox.checked){
                 location.href="channeling-assistance?cmd=move&id="+painput.value+"&set=used";
                 

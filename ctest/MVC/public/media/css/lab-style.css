@@ -2143,14 +2143,15 @@ select{
 .semi-header-container-1{
     background-color: white;
     /* border:20vh 20vh 20vh 20vh; */
-    padding-top: 0vh;
+    padding-top: 5vh;
     padding-bottom: 4vh;
-    width: 70%;
+    width:70vw;
     /* position:absolute; */
     left: 25vw;
     border: 3px;
     border-radius: 15px;
-    margin-left:12vw;
+    margin-left:6vw;
+    min-height:80vh;
     
     
 
@@ -2259,6 +2260,12 @@ select{
     border:none;
     border-radius:8px;
 }
+.edit-btn{
+    width:10vw;
+    margin-left: 54vw;
+    border-radius: 5px;
+    font-size: medium;
+}
 .button--class-8{
     height:4vh;
     width: 100%;
@@ -2311,6 +2318,7 @@ select{
     width: 100%;
     top:0;
     left: 0;
+    border-radius:10px;
     background-color: rgb(0, 0, 0,0.8); 
     /* display: none; */
     /* visibility: hidden; */
@@ -2378,6 +2386,10 @@ select{
     background-color: red;
     border: red;
     color : white;
+    padding-inline:10px;
+    border-radius:5px;
+    height:4vh;
+    width:10vw;
 }
 
 /* card */
@@ -2486,7 +2498,7 @@ select{
   /* new card */
 
   .card-new {
-    width: 190px;
+    width: 250px;
     height: 254px;
     border-radius: 20px;
     background: #f5f5f5;
@@ -2608,3 +2620,28 @@ select{
     width: 10vw;
 }
 
+
+
+
+
+
+
+
+
+/* extra */
+.field-tab td{
+    height:7vh;
+}
+.template{
+    border-collapse: collapse;
+    margin-left: -5vw;
+}
+.template td{
+    width:15vw;
+    padding-block:10px;
+    padding-inline:10px;
+    border:0.5px solid gainsboro;
+    
+
+    
+}

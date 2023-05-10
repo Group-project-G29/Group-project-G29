@@ -15,6 +15,7 @@ abstract class Model{
     public const RULE_DATE_VALIDATION="date";
     public const RULE_NUMBERS='num';
     public const RULE_PIN_VALIDATION="pin_confirm";
+    public const RULE_TIME="time";
 
     public const RULE_INCOMPLETE_PAYMENT="asa";
 
@@ -66,6 +67,7 @@ abstract class Model{
         
         foreach($this->rules() as $attribute=>$rules){
             $value=$this->{$attribute};
+            $time=new Time();
             foreach($rules as $rule){
                 $ruleName=$rule;
                 if(!is_string($ruleName)){
@@ -127,6 +129,11 @@ abstract class Model{
                 if($ruleName==self::RULE_PIN_VALIDATION ){
 
                 }
+                if($ruleName==self::RULE_TIME && $rule['start_date'] && $rule['date'] && ($rule['start_date']==Date('Y-m-d') && $rule['today']==date('l',strtotime(Date('Y-m-d'))) )  && $value<$time->addTime(Date('H:i'),'00:30')){
+                    $this->addError($attribute,self::RULE_TIME);
+                    
+                    
+                }
 
                 // if($ruleName==self::RULE_INCOMPLETE_PAYMENT ){
 
@@ -167,6 +174,7 @@ abstract class Model{
             self::RULE_DATE_VALIDATION=>"Passsed date is chosen",
             self::RULE_NUMBERS=>"This field should be numeric type",
             self::RULE_PIN_VALIDATION=>"Incorrect Pin",
+            self::RULE_TIME=>"Wrong time"
             // self::RULE_INCOMPLETE_PAYMENT=>"Payment not done"
         ];
     }

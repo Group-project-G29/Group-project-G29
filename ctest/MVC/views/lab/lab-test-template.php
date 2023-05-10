@@ -11,18 +11,14 @@ $contentM = new TemplateContent();
 ?>
 
 <div>
-    <h1 class="fs-200 fc-color--dark" style="padding-left: 65vh;padding-top: 1vh">Add Template Content</h1>
-
-
-
-</div>
-
-<div class="semi-header-container-1">
-    <div class="semi-field-container">
-        <tr>
-            <td><b><?= $temp_title_sub["title"] ?></b></td><br>
-            <td><?= $temp_title_sub["subtitle"] ?></td><br><br>
-        </tr>
+    
+    
+    
+    </div>
+    
+    <div class="semi-header-container-1">
+        <div class="semi-field-container">
+           <div class="flex"><h1><?= $temp_title_sub["title"] ?></h1><h2> <?= $temp_title_sub["subtitle"] ?></h2></div>
     </div>
     <div class="field-container" style="margin-left:5vw;margin-top:1vw">
         <?php $form = Form::begin('', 'post'); ?>
@@ -30,18 +26,20 @@ $contentM = new TemplateContent();
         <!-- <div class="reg-body-spec fields" style="padding-left:15vw"> -->
 
         <table class="template">
+            <tr><th>Content Type</th><th>Parameter Name</th><th>Reference Range</th><th>Metric</th></tr>
             <tr>
 
-                <td> <?php echo $form->labselect($contentM, 'type', 'Type', 'field-1', ['field', 'text', 'select'], 'picker'); ?></td>
-                <td> <?php echo $form->labfield($contentmodel, 'name', 'Name', 'hide', 'text', 'name'); ?></td>
-                <td><?php echo $form->labfield($contentmodel, 'reference_ranges', 'Reference Range', 'hide', 'text', 'range'); ?></td>
-                <td> <?php echo $form->labselect($contentM, 'metric', 'Metric', 'hide', ['K/UL', 'MIL/UL', 'G/UL', 'FL', 'select'], 'metric'); ?></td>
-
+                <td> <?php echo $form->labselect($contentM, 'type', '', 'field-1', ['select', 'text','field'], 'picker'); ?></td>
+                <td> <?php echo $form->labfield($contentmodel, 'name', '', 'hide', 'text', 'name'); ?></td>
+                <td><?php echo $form->labfield($contentmodel, 'reference_ranges', '', 'hide', 'text', 'range'); ?></td>
+                <td> <?php echo $form->labselect($contentM, 'metric', '', 'hide', ['g/dl','IU/L', 'MIL/UL', 'G/UL', 'FL', 'select'], 'metric'); ?></td>
+                <td>
+                    <div class="button" >
+                        <?= $component->button('btn', '', 'Add Content', 'button--class-0 width-10', 'btn-2'); ?>
+                    </div>
+                </td>
             </tr>
-        </table>
-        <div class="button" style="margin-top: 2vh;">
-            <?= $component->button('btn', '', 'Add', 'button--class-0', 'btn-2'); ?>
-        </div>
+    
 
 
 
@@ -50,10 +48,9 @@ $contentM = new TemplateContent();
     </div>
 
     <?php Form::end() ?>
-    <!-- <section class="reg_body-spec" style="padding:5vw"> -->
-    </section>
-    <div class="table-container">
-        <table border="0" style="margin-left:0px">
+
+        
+        
             <?php foreach ($contents as $content) : ?>
                 <tr class='table-row  ' id=<?= $content["content_ID"] ?>>
 
@@ -62,7 +59,7 @@ $contentM = new TemplateContent();
                         <td><b>Name :</b><?= $content['name'] ?> </td>
                         <td><b>Metric :</b><?= $content['metric'] ?> </td>
                         <td><b>Reference Ranges :</b><?= $content['reference_ranges'] ?> </td>
-                        <td><?= $component->button('btn', '', 'X', 'btn-1', $content["content_ID"]); ?></td>
+                        <td><?= $component->button('btn', '', 'Remove Content', 'btn-1', $content["content_ID"]); ?></td>
                         <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $content["content_ID"]); ?></td> -->
 
 
@@ -76,7 +73,7 @@ $contentM = new TemplateContent();
 
 
 
-                        <td><?= $component->button('btn', '', 'X', 'btn-1', $content["content_ID"]); ?></td>
+                        <td><?= $component->button('btn', '', 'Remove Content', 'btn-1', $content["content_ID"]); ?></td>
                         <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $content["content_ID"]); ?></td> -->
 
                     <?php endif; ?>
@@ -88,14 +85,13 @@ $contentM = new TemplateContent();
                         <td><b> </b><?    ?> </td>
 
 
-                        <td><?= $component->button('btn', '', 'X', 'btn-1', $content["content_ID"]) ?></td>
-                        <!-- <td><?= $component->button('btn', '', 'Edit', 'btn-2', $content["content_ID"]); ?></td> -->
+                        <td><?= $component->button('btn', '', 'Remove Content', 'btn-1', $content["content_ID"]) ?></td>
 
                     <?php endif; ?>
                 </tr>
             <?php endforeach; ?>
         </table>
-    </div>
+    
 
 </div>
 
@@ -158,6 +154,9 @@ $contentM = new TemplateContent();
         element.classList.remove(hideClass);
         element.classList.add(visibleClass);
     }
+             visible(name);
+            visible(reference_ranges);
+            visible(metric);
     select.addEventListener('change', () => {
 
         if (select.value == 'field') {
@@ -196,7 +195,8 @@ $contentM = new TemplateContent();
 
     elementsArray = document.querySelectorAll(".btn-1");
     elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function() {
+        elem.addEventListener("click", function(event) {
+            event.preventDefault();
             location.href = 'lab-test-template?cmd=delete&id=' + elem.id;
         });
     });

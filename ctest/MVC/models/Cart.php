@@ -44,7 +44,7 @@ use app\core\DbModel;
         public function addItem(string $itemID,string $cartID,string $amount){
             $medicineModel=new Medicine();
             //check item is in the cart
-            $cart_item=$this->fetchAssocAllByName(['med_ID'=>$itemID,'cart_ID'=>$cartID],'medicine_cart');
+            $cart_item=$this->fetchAssocAllByName(['med_ID'=>$itemID,'cart_ID'=>$cartID],'medicine_in_cart');
             $unit_price=$medicineModel->getMedicinePrice($itemID);
             //update if it is in cart
             if($cart_item){
@@ -110,8 +110,7 @@ use app\core\DbModel;
         //if order is a pickup $pickup_status should be true
         public function transferCartItem($cartID,$pickup_status,$deliveryModel){
             //create order
-            $deliveryModel=new Delivery();
-            $orderModel=new Order();
+            $orderModel=Application::$app->session->get('order');
             $unavailableItems=[];
             $medicineModel=new Medicine();
             $prescriptionModel=new Prescription();
@@ -124,7 +123,7 @@ use app\core\DbModel;
             else{
                 //create an delivery 
                 $deliveryModel->createPIN();
-                $delivery_id=$deliveryModel->save();
+            $delivery_id=$deliveryModel->save();
                 $orderModel->delivery_ID=$delivery_id[0]['last_insert_id()'];
             }
             $orderID=$orderModel->save()[0]['last_insert_id()'];
@@ -143,14 +142,7 @@ use app\core\DbModel;
                 //reduce medicine
                 $medicineModel->reduceMedicine($item['med_ID'],$item['amount'],true);
             }
-            if($unavailableItems){
-                $str='';
-                foreach($unavailableItems as $item){
-                    $str.=$item;
-                    $str.=",<br> ";
-                }
-                Application::$app->session->setFlash('error',"Sorry, Medical Products named <br>".$str."<br> are out of stock. Remove this item from the stock to proceed.");
-            }
+            $prescriptionModel->reducePrescriptionMedicines($cartID);
             //check whether there is prescription in the cart
             //transfer prescription
             $prescriptionModel->addToOrder($orderID,$cartID);
@@ -158,7 +150,7 @@ use app\core\DbModel;
             $this->deleteRecordByName(['cart_ID'=>$cartID],'medicine_in_cart');
             //if all items are available return true
             
-            return true;
+            return $orderID;
         }
         
     }

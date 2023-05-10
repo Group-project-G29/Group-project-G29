@@ -6,6 +6,7 @@ use app\core\Application;
 use app\core\Date;
 use app\core\UserModel;
 use app\models\Patient;
+use JetBrains\PhpStorm\Internal\ReturnTypeContract;
 
 class Employee extends DbModel{
     
@@ -32,7 +33,12 @@ class Employee extends DbModel{
     public function register(){
        
         $this->password=password_hash($this->password,PASSWORD_DEFAULT);
-        return parent::save(); //save data in the database
+        $id=parent::save();
+        if($this->role=='delivery'){
+            $this->customFetchAll("insert into delivery_rider values(".$id[0]['last_insert_id()'].",'NA') ");
+           $this->enqueue_rider($id[0]['last_insert_id()']);
+        }
+        return $id; //save data in the database
         
     }
 
@@ -40,6 +46,7 @@ class Employee extends DbModel{
         Application::$app->logout();
         return true;
     }
+    
 
     public function rules(): array
     {
@@ -206,13 +213,14 @@ class Employee extends DbModel{
         }
     }
     
-    public function get_employee_details($emp_ID) {
+    
+     public function get_employee_details($emp_ID) {
         return $this->customFetchAll("SELECT * FROM employee WHERE emp_ID=$emp_ID");
     }
 
     public function select_suitable_rider( $postal_code, $order_ID ) {
         //error in query -> no elements in array
-        return $this->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE delivery_rider.availability='AV' AND _order.order_ID != $order_ID AND delivery.postal_code BETWEEN $postal_code-10 AND $postal_code+10");
+        return $this->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.pickup_status='delivery' AND delivery_rider.availability='AV' AND _order.order_ID != $order_ID AND delivery.postal_code BETWEEN $postal_code-10 AND $postal_code+10");
     }
 
     public function select_queue_rider() {
@@ -227,26 +235,38 @@ class Employee extends DbModel{
         return $this->customFetchAll("INSERT INTO delivery_riders_queue (delivery_rider_ID) VALUES ($rider_ID);");
     }
     
-    public function make_rider_offline( $delivery_rider_ID ) {
-        return $this->customFetchAll("UPDATE delivery_rider SET availability = 'NA' WHERE emp_ID = $delivery_rider_ID;");
+    public function make_rider_offline( $rider_ID ) {
+        return $this->customFetchAll("UPDATE delivery_rider SET availability = 'NA' WHERE emp_ID = $rider_ID;");
     }
 
-    public function make_rider_online( $delivery_rider_ID ) {
-        return $this->customFetchAll("UPDATE delivery_rider SET availability = 'AV' WHERE emp_ID = $delivery_rider_ID;");
+    public function make_rider_online( $rider_ID ) {
+        return $this->customFetchAll("UPDATE delivery_rider SET availability = 'AV' WHERE emp_ID = $rider_ID;");
     }
-
-    //update personal info - not working
-    // public function change_details ( $user_ID, $new_name, $new_contact, $new_address ) {
-    //     return $this->customFetchAll("UPDATE employee SET name = '$new_name', contact = '$new_contact', address = '$new_address' WHERE emp_ID = $user_ID");
-    // }
 
     public function get_rider_availability( $delivery_rider ) {
         return $this->customFetchAll("SELECT availability FROM delivery_rider WHERE emp_ID = $delivery_rider");
     }
 
      public function updateAccounts($id){
-        echo "update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id;
-        $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id);
+        if(Application::$app->session->get('userObject')->role=='admin'){
+            $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".$_POST['nic']."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id);    
+            return true;
+        }
+        $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".Application::$app->session->get('userObject')->nic."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where emp_ID=".$id);    
+        return true;
+    }
+     public function updateDoctorRecord($id){
+      
+        if($_FILES['img']['name']){
+            $this->fileStore(); 
+            $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".Application::$app->session->get('userObject')->nic."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."',img='".$this->img."' where nic=".$id);
+            $this->customFetchAll("update doctor set description='".$_POST['description']."' where nic=".$id);
+            return true;
+        }
+        $this->customFetchAll("update employee set name='".$_POST['name']."', nic='".Application::$app->session->get('userObject')->nic."', age=".$_POST['age'].", contact='".$_POST['contact']."', email='".$_POST['email']."', address='".$_POST['address']."', gender='".$_POST['gender']."' where nic=".$id);
+      
+            $this->customFetchAll("update doctor set description='".$_POST['description']."' where nic=".$id);
+        
         
         return true;
     }

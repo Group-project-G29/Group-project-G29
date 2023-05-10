@@ -40,7 +40,7 @@ $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID'],'post'
             ?>
         </div>
     <?php elseif ( $delivery['payment_status'] === 'done' ) : ?>
-        <p>payment successful</p>
+        <p>Payment has been done.</p>
     <?php endif; ?>
 
     <div class="main_title">
@@ -50,7 +50,7 @@ $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID'],'post'
     <div class="form-body-fields">
 
     <table>
-        <?php echo $form->spanfield($model,'confirmation_PIN','Enter PIN here','field','text') ?>
+        <?php echo $form->spanfield($model,'PIN','Enter PIN here','field','text') ?>
         <?php 
             if (isset($err)){
                 if($err === "empty_pin"){

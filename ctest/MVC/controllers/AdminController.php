@@ -17,6 +17,8 @@ use app\models\OpenedChanneling;
 use app\core\Time;
 use app\models\Appointment;
 use app\models\Payment;
+use app\core\SummaryReportsPayment;
+use app\core\SummaryReportsPatients;
 
 class AdminController extends Controller{
     // create add,view channeling session
@@ -350,12 +352,13 @@ class AdminController extends Controller{
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
             $delRow= $advertisementModel->customFetchAll("Select * from advertisement where ad_ID = ".$parameters[1]['id']);
             $advertisementModel->deleteRecord(['ad_ID'=>$parameters[1]['id']]);
+            $response->redirect('main-adds');
+            exit;
         }
 
         //Go to update page of a advertisement
         if(isset($parameters[0]['mod']) && $parameters[0]['mod']=='update'){
-            $advertisement=$advertisementModel->customFetchAll("Select * from advertisement where ad_ID=".$parameters[1]['id']);
-            $advertisementModel->updateData($advertisement,$advertisementModel->fileDestination());
+            $advertisementModel=$advertisementModel->findOne(['ad_ID'=>$parameters[1]['id']]);
             Application::$app->session->set('advertisement',$parameters[1]['id']);
             return $this->render('administrator/main-adds-update',[
                 'model'=>$advertisementModel,
@@ -365,14 +368,16 @@ class AdminController extends Controller{
         if($request->isPost()){
             $advertisementModel->loadData($request->getBody());
             $advertisementModel->loadFiles($_FILES);
-            $ad_ID=(int)$parameters[1]['id'];
-
+            
             // update advertisement
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
+                $ad_ID=(int)$parameters[1]['id'];
                 // var_dump($parameters);exit;
                 if(!isset($_POST['img'])){
                     $imgName = $advertisementModel->customFetchAll("SELECT img FROM advertisement WHERE ad_ID=$ad_ID;");
+                    $type= $advertisementModel->customFetchAll("SELECT type FROM advertisement WHERE ad_ID=$ad_ID;");
                     $advertisementModel->img = $imgName[0]['img'];
+                    $advertisementModel->type=$type[0]['type'];
                     // var_dump($advertisementModel);exit;
                 }
                 if($advertisementModel->validate() && $advertisementModel->updateRecord(['ad_ID'=>$ad_ID])){
@@ -385,6 +390,7 @@ class AdminController extends Controller{
             } 
             
             // add advertisement
+        
             if($advertisementModel->validate() && $advertisementModel->save()){
                 Application::$app->session->setFlash('success',"Advertisement successfully added ");
                 Application::$app->response->redirect('/ctest/main-adds'); 
@@ -406,10 +412,12 @@ class AdminController extends Controller{
 
 
 
+    // notifications
     public function handleNotifications(Request $request,Response $response){
         $parameters=$request->getParameters();
         $this->setLayout('admin',['select'=>""]);
         $notificationModel=new AdminNotification();
+        $employeeModel= new Employee(); 
         
 
         // var_dump($parameters);exit;
@@ -431,13 +439,16 @@ class AdminController extends Controller{
             return true;
         }
 
-        $notifications=$notificationModel->customFetchAll("Select * from admin_notification order by created_date_time");
+        $notifications=$notificationModel->customFetchAll("SELECT * FROM `admin_notification` ORDER BY created_date_time");
 
         return $this->render('administrator/view-notifications',[
             "notifications"=>$notifications,
-            "model"=>$notificationModel
+            "model"=>$notificationModel,
+            "employeeModel"=>$employeeModel
         ]);
     }
+
+
     //update channeling session information
     public function changeChanneling(Request $request,Response $response){
         $this->setLayout('admin',['select'=>'Channelings Sessions']);
@@ -538,7 +549,7 @@ class AdminController extends Controller{
     }
 
        
-    public function viewReports(){
+     public function viewReports(){
         $this->setLayout('admin',['select'=>'Reports']);
 
         $EmployeeModel = new Employee();
@@ -554,19 +565,35 @@ class AdminController extends Controller{
 
         $patients = $AppointmentModel->growthOfPatients();
         $earnings = $PaymentModel->earningValues('year');
-        // var_dump($thisMonthEarnings['value'][0]['SUM(amount)']);exit;
+
+        $employeeEarnings = $PaymentModel->customFetchAll("SELECT SUM(amount), type FROM `payment` WHERE payment_status='Done' GROUP BY type;");
+        // var_dump($employeeEarnings);exit;
         return $this->render('administrator/admin-reports',[
             'doctorsCount' => $doctorsCount,
             'employeesCount' => $employeesCount,
             'patientsCount' => $patiyentsCount,
             'thisMonthEarnings' => $thisMonthEarnings['value'][0]['SUM(amount)'],
             'valuesP' => $patients['values'],
-            'valuesE' => $earnings['value']
+            'valuesE' => $earnings['value'],
+            'employeeEarnings' => $employeeEarnings
         ]);
     }
 
 
-    public function test(){
-        return $this->render('administrator/test');
+    public function test(Request $request){
+
+        $parameters=$request->getParameters();
+        // var_dump($parameters);exit;
+        $report1=new SummaryReportsPayment();
+        $report2=new SummaryReportsPatients();
+
+        if($parameters[0]['cmd'] == 'payments'){
+            $report1->paymentReport();exit;
+
+        }
+        if($parameters[0]['cmd'] == 'patients'){
+            $report2->patientsReport();exit;
+
+        }
     }
 }

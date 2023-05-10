@@ -126,6 +126,9 @@ class ReceptionistController extends Controller
         $paymentModel= new Payment();
         $parameters = $request->getParameters();
         $pay1=$paymentModel->customFetchAll("update payment set payment_status='done' where payment_ID=" . $parameters[0]['pay_ID'] );
+        $appoinmentModelID=$paymentModel->customFetchAll("select appointment_ID from payment where payment_ID=".$parameters[0]['pay_ID'] );
+        $paymentModel->customFetchAll("update appointment set payment_status='done' where appointment_ID=".$appoinmentModelID[0]['appointment_ID']);
+       
         return json_encode(['status'=>true,'message'=>'user online']);
     }
 
@@ -133,6 +136,8 @@ class ReceptionistController extends Controller
         $paymentModel= new Payment();
         $parameters = $request->getParameters();
         $pay1=$paymentModel->customFetchAll("update payment set payment_status='pending' where payment_ID=" . $parameters[0]['pay_ID'] );
+        $appoinmentModelID=$paymentModel->customFetchAll("select appointment_ID from payment where payment_ID=".$parameters[0]['pay_ID'] );
+        $paymentModel->customFetchAll("update appointment set payment_status='pending' where appointment_ID=".$appoinmentModelID[0]['appointment_ID']);
         return json_encode(['status'=>true,'message'=>'user online']);
     }
 
@@ -162,11 +167,14 @@ class ReceptionistController extends Controller
             
             $channelings = $ChannelingModel->customFetchAll("Select * from appointment  left join opened_channeling on appointment.opened_channeling_ID=opened_channeling.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on  doctor.nic=channeling.doctor left join employee on employee.nic=doctor.nic where appointment.appointment_ID=" . $parameters[1]['id']);
             if ($request->isPost()) {
-                $ReferralModel->loadFiles($_FILES);
-                $ReferralModel->type='softcopy';
+                if($_FILES['name']['size']){
 
-                $ReferralModel->setter($channelings[0]['nic'], Application::$app->session->get('patient'), $channelings[0]['speciality'], '', 'softcopy', $channelings[0]['name'],$parameters[1]['id']);
-                $ReferralModel->addReferral();
+                    $ReferralModel->loadFiles($_FILES);
+                    $ReferralModel->type='softcopy';
+    
+                    $ReferralModel->setter($channelings[0]['nic'], Application::$app->session->get('patient'), $channelings[0]['speciality'], '', 'softcopy', $channelings[0]['name'],$parameters[1]['id']);
+                    $ReferralModel->addReferral($parameters[1]['id']);
+                }
                 Application::$app->session->setFlash('success', "Appointment Successfuly Created");
                 Application::$app->response->redirect('/ctest/receptionist-patient-information?mod=view&id=' . Application::$app->session->get('patient'));
             }
@@ -203,18 +211,18 @@ class ReceptionistController extends Controller
                     $number=1;
                 }
                 if(isSet($parameters[2]['type']) && $parameters[2]['type']=='consultation'){
-                    $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
+                    $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"pending",'consultation']);
                     $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
                     $PaymentModel->createAppointmenPay(Application::$app->session->get('patient'),'appointment',$AppointmentModel->getFee($appointment_id[0]['last_insert_id()']),$appointment_id[0]['last_insert_id()'],'pending');
                     Application::$app->response->redirect("receptionist-patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
                 }
                 else if(isSet($parameters[2]['type']) && $parameters[2]['type']??''=='labtest'){
-                    $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'labtest']);
+                    $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"pending",'labtest']);
                     $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
                     Application::$app->response->redirect("receptionist-patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
                 }
                 else{
-                    $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
+                    $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"pending",'consultation']);
                     $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
                     $PaymentModel->createAppointmenPay(Application::$app->session->get('patient'),'appointment',$AppointmentModel->getFee($appointment_id[0]['last_insert_id()']),$appointment_id[0]['last_insert_id()'],'pending');
                     Application::$app->response->redirect("receptionist-patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
@@ -322,7 +330,7 @@ class ReceptionistController extends Controller
         $this->setLayout("receptionist", ['select' => 'Today Channelings']);
         $channelings = $channelingModel->customFetchAll("SELECT * from employee  inner join channeling on employee.nic = channeling.doctor inner 
 join doctor  on channeling.doctor=doctor.nic 
-left join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.start_date=CURRENT_DATE ");
+left join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where opened_channeling.channeling_date=CURRENT_DATE ");
 
         return $this->render('receptionist/receptionist-today-channelings', [
             'channelings' => $channelings

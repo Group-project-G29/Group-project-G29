@@ -6,8 +6,8 @@ use app\core\form\Form;
 <?php $form = new Form();?>
 <?php $component=new Component(); ?>
 
-    <div class="document-container">
-         <div class="wrapper--referrals">
+    <div class="referral-container">
+         <div class="wrapper--referrals-showit">
                     <div class="variable-container-mu">
                         <table>
                             <tr>
@@ -71,5 +71,25 @@ use app\core\form\Form;
     mainSelect.addEventListener('change',()=>{
 
         location.href="/ctest/doctor-report?spec="+mainSelect.value;
+    })
+      //delete buttons
+    const deletes=document.querySelectorAll(".ref-delete");
+    deletes.forEach((el)=>{     
+        el.addEventListener('click',(event)=>{
+            event.preventDefault();
+            console.log("change");
+            location.href="/ctest/doctor-report?cmd=delete&id="+el.id;
+    
+        })
+    })
+
+    //update buttons
+    const updates=document.querySelectorAll(".ref-update");
+    updates.forEach((el)=>{     
+        el.addEventListener('click',(event)=>{
+            event.preventDefault();
+            location.href="/ctest/doctor-report?mod=update&id="+el.id;
+    
+        })
     })
 </script>

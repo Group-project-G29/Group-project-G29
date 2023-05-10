@@ -61,7 +61,7 @@ class Patient extends DbModel{
                 'age'=>[self::RULE_REQUIRED],
                 'gender'=>[self::RULE_REQUIRED],
                 'guardian_name'=>[self::RULE_REQUIRED],
-                'nic'=>[self::RULE_REQUIRED],
+                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
                 'contact'=>[self::RULE_REQUIRED],
                 'email'=>[self::RULE_EMAIL],
                // 'password'=>[self::RULE_PASSWORD_VALIDATION]

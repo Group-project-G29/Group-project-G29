@@ -20,7 +20,7 @@
         <div class="number-content">
             <h2>Patients</h2>
             <div class="number-pad">
-                <div class="number-item fs-200"><?=$channeling->total_patients?></div>
+                <div class="number-item fs-200"><?=$payedPatient?></div>
             </div>
         </div>
 

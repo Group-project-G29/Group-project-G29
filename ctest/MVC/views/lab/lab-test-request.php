@@ -5,8 +5,6 @@ use app\models\LabReport;
 
 $component = new Component();
 $LabReport = new LabReport();
-// var_dump($tests);
-// exit;
 ?>
 <div class="search-bar-container" style="padding-left:19vw">
   <?php echo $component->searchbar('', 'search', 'search-bar--class2', 'Search by name,specilaity', 'searchbar'); ?>

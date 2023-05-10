@@ -68,8 +68,8 @@ class LabContentAllocation extends DbModel{
         return $this->customFetchAll("INSERT INTO lab_report_content_allocation (report_ID, content_ID, location, int_value, text_value) VALUE ('$report_ID', '$content_ID', NULL, '$int_value', NULL)");
 
     }
-    public function add_text_allocation($report_ID,$content_ID,$text_value){
-        return $this->customFetchAll("INSERT INTO lab_report_content_allocation (report_ID, content_ID, location, int_value, text_value) VALUE ('$report_ID', '$content_ID', NULL, NULL,'$text_value')");
+    public function add_text_allocation($report_ID,$content_ID,$int_value){
+        return $this->customFetchAll("INSERT INTO lab_report_content_allocation (report_ID, content_ID, location, int_value, text_value) VALUE ('$report_ID', '$content_ID', NULL, '$int_value',NULL)");
 
     }
     public function add_image_allocation($report_ID,$content_ID,$location){
