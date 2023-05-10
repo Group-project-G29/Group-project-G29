@@ -976,12 +976,12 @@
     margin-top:-3vh;
 }
 .prescription-table table td{
-    width: 5vw;
+    width: 20vw;
     text-align: center;
     height:5vh;
 }
 .prescription-table table th{
-    width:5vw;
+    width: 20vw;
     text-align: center;
     height:5vh;
 }
@@ -989,6 +989,17 @@
     display: flex;
     
     
+}
+.spec-h{
+    max-height:4vh;
+    max-width:2vw;
+
+}
+.total-container{
+    background-color: var(--clr-dark);
+    color: white;
+    padding-inline:20px;
+    padding-block:7px;
 }
 .image-pres{
     display: flex;

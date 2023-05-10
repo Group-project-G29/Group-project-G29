@@ -52,7 +52,7 @@ use app\core\PDF;
             return  ['type','fee','label','template_ID','location','request_ID'];
         }
         public function getPatientReport($patient){
-            return $this->customFetchAll("SELECT * from lab_report left join lab_request on lab_report.request_ID=lab_report.request_ID where lab_request.patient_ID=".$patient);
+            return $this->customFetchAll("SELECT * from lab_report_allocation left join lab_report on lab_report_allocation.report_ID=lab_report.report_ID where lab_report_allocation.patient_ID=".$patient);
         }
         public function getReport($reportID){
             return $this->customFetchAll("select * from  lab_report_content left join lab_report_template on lab_report_content.template_ID=lab_report_template.template_ID left join  lab_report_content_allocation as l on l.content_ID=lab_report_content.content_ID where l.report_ID=".$reportID." order by lab_report_content.position asc");
@@ -150,8 +150,19 @@ use app\core\PDF;
             }
             else return false;
         }
+
+        //show any labreport in PDF format
         public function labreporttoPDF($reportID){
             $valuerows=$this->getReport($reportID);
+            $request=$this->customFetchAll("select * from lab_report left join lab_request on lab_report.request_ID=lab_request.request_ID where lab_report.report_ID=".$reportID)[0];
+            $doctor=$this->customFetchAll("select * from lab_report_allocation left join employee on employee.nic=lab_report_allocation.doctor  where lab_report_allocation.report_ID=".$reportID)[0];
+            $patient=$this->customFetchAll("select * from lab_report_allocation  left join patient on patient.patient_ID=lab_report_allocation.patient_ID where lab_report_allocation.report_ID=".$reportID)[0];
+            $doctorname=$doctor['name'];
+            $requestdate=explode(" ",$request['requested_date_time'])[0];
+            $patientname=$patient['name'];
+            $patientage=$patient['age'];
+            $patientgender=$patient['gender'];
+            $issued_date=$this->fetchAssocAll(['report_ID'=>$reportID])[0]['upload_date'];
             $addstr='<tr><td>Parameter</td><td>Test Value</td><td>Metric</td><td>Reference Range</td></tr>';
             $title='';
             $subtitle='';
@@ -187,6 +198,17 @@ use app\core\PDF;
                             width:150px;
                             height:30px;
                         }
+                        .tab1 td{
+                            width:130px;
+                            height:10px;
+                        }
+                        .tab1 td{
+                            width:130px;
+                        }
+                        .tab2 td{
+                            width:180px;
+                            margin-top:-30px;   
+                        }
                     </style>
                     </head>
                     <body>
@@ -201,9 +223,28 @@ use app\core\PDF;
                         </section>
                         
                         <section  style='border:1px solid #38B6FF; padding:10px; border-radius:5px; '>
-                           <h3>".$title." ".$subtitle."</h3>
-                            
-                        </section>
+                            <table class='tab2'>
+                                <tr>
+                                <td>
+                                <table class='tab1'>
+                                <tr><td>"."Patient Name :"."</td><td>".$patientname."</td></tr>
+                                <tr><td>"."Age :"."</td><td>".$patientage."</td></tr>
+                                <tr><td>"."Gender :"."</td><td>".$patientgender."</td></tr>
+                                <tr><td></td><td></td></tr>
+                                <tr><td>"."Issued Date :"."</td><td>".$issued_date."</td></tr>
+                                </table>
+                                </td>
+                                <td>
+                                    <table class='tab1'>
+                                        <tr><th></th><th></th>
+                                        <tr><td>"."As per Request By :"."</td><td>Dr.".$doctorname."</td></tr>
+                                        <tr><td>"."Requested Date :"."</td><td>".$requestdate."</td></tr>
+                                    </table>
+                                </td>
+                                </tr>
+                                </table>
+                                </section>
+                                <center><h3>".$title." ".$subtitle."</h3></center>
                         <section><br><br>
                         <table>
                         ".$addstr."

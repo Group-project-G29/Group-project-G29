@@ -22,7 +22,7 @@ $form=new Form();
 $chart=new ChartModel();
 $class='';
 $popup=Application::$app->session->get('popup')??null;
-if(isset($popup) && $popup=='unset') $class='hide';
+if($popup==null || $popup=='unset') $class='hide';
 $popup=Application::$app->session->set('popup','unset')??null;
 ?>
     <?php $component=new Component(); ?>

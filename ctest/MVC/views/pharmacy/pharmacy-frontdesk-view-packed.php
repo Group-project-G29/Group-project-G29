@@ -10,11 +10,12 @@
 ?>
 
 <div class="detail">
-    <h3>Patient Name : <?=$order_details[0]['name']?></h3>
-    <h3>Contact Number : <?=$order_details[0]['contact']?></h3>
-    <h3>Order ID : <?=$order_details[0]['order_ID']?></h3>
-    <h3>Ordered Date & Time :<?=$order_details[0]['date']?> <?=$order_details[0]['time']?></h3>
-    <h3>Doctor : <?=$order_details[0]['doctor']?></h3>
+    <h3>Order ID : <?=$order_details['order_ID']?></h3>
+    <h3>Patient Name : <?=$order_details['name']?></h3>
+    <h3>Contact Number : <?=$order_details['contact']?></h3>
+    <h3>Date : <?=$order_details['date']?></h3>
+    <h3>Time : <?=$order_details['time']?></h3>
+    <h3>Doctor : <?=$order_details['doctor']?></h3>
 </div>
 
 
@@ -57,7 +58,7 @@
         </tr>
     </table>
 </div>
-<h1>Total Price : <?=$total?></h1>
+<h1 style="text-align: right;">Total Price : <?=$total?></h1>
 
 <div class='upper-container'>
     <?php echo $component->button('cancle-process','','Cancle Process','button--class-3  width-10','cancle-process');?>

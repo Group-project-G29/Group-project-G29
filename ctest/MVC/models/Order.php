@@ -150,9 +150,25 @@ use app\core\DbModel;
             return $this->customFetchAll("SELECT * FROM _order WHERE order_ID = $orderID");
         }
 
-        public function getPatientOrder(){
+        public function getPatientOrder($that=false){
             $patientID=Application::$app->session->get('user');
-            return $this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'completed'")[0]??'';
+            $reuslt=$this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'pickedup'");
+            if($that){
+                if($reuslt){
+                    return $reuslt[0];
+                }
+                else return '';
+
+            }
+            else{
+                 $od=$this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'pickedup'");
+                 if($od){
+                    return $od[0];
+                 }
+                 $result=$this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status='pickedup' order by _order.order_ID desc");
+                 if($result) return $result[0];
+                 else return '';
+            }
         }
         public function getLackedItems(){
             $order=$this->getPatientOrder()['order_ID']??'';
@@ -187,7 +203,7 @@ use app\core\DbModel;
             return $na_array;
 
         }
-        public function setOrderStatus($orderID,$status){
+       public function setOrderStatus($orderID,$status){
             $this->customFetchAll("update _order set processing_status="."'".$status."'"." where order_ID=".$orderID);
         }
         public function view_previous_online_order_details( $order_ID ) {
@@ -252,11 +268,11 @@ use app\core\DbModel;
         }
 
         public function reset_total ( $order_ID ) {
-            return $this->customFetchAll(" UPDATE order SET total_price=0 WHERE order_ID = $order_ID; ");
+            return $this->customFetchAll(" UPDATE _order SET total_price=0 WHERE order_ID = $order_ID; ");
         }
 
         public function update_payment_status ( $order_ID ) {
-            return $this->customFetchAll(" UPDATE order SET payment_status='completed' WHERE order_ID = $order_ID; ");
+            return $this->customFetchAll(" UPDATE _order SET payment_status='completed' WHERE order_ID = $order_ID; ");
         }
 
         // public function get_frontdesk_last_order ( $name ) {

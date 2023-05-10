@@ -24,15 +24,15 @@
             
 
             $str='<div>
-                <label>%s</label><input type="text" name="%s" id="input" class="sl in">
+                <label>%s</label><input type="text" name="%s" id="input-ds" class="sl in">
                 <div class="ed-se-item-container hide %s">
-                    <div class="ed-se-item" id="days">
+                    <div class="ed-d-se-item edse" id="days">
                         days
                     </div>
-                    <div class="ed-se-item" id="week">
+                    <div class="ed-d-se-item edse" id="weeks">
                         weeks
                     </div>
-                    <div class="ed-se-item" id="months">
+                    <div class="ed-d-se-item edse" id="months">
                         months
                     </div>
                     
@@ -41,7 +41,7 @@
             <script>
                 // take the field element
                 //onchange if empty hide all itemsd
-                let itemsd=document.querySelectorAll(".ed-se-item");
+                let itemsd=document.querySelectorAll(".ed-d-se-item");
                 let text_inputd=document.querySelector(".sl");
                 let container=document.querySelector(".ed-se-item-container");
                 text_inputd.addEventListener("input",()=>{
@@ -61,7 +61,8 @@
                     element.addEventListener("click",()=>{
                         text_inputd.value=text_inputd.value.split(" ")[0]+" "+element.id;
                         itemsd.forEach(element=>{
-                            itemsd.classList.add("hide");
+                            element.classList.add("hide");
+                            
                         })
                     })
                 })

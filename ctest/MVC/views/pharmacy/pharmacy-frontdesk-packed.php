@@ -37,8 +37,8 @@
         <th>Age</th>
         <th>Contact</th>
         <th>Doctor</th>
-        <th>Date</th>
-        <th>Time</th>
+        <!-- <th>Date</th>
+        <th>Time</th> -->
     </tr>
     <?php if($orders): ?>
         <?php foreach($orders as $key=>$order): ?>
@@ -48,8 +48,8 @@
                 <td><?=$order['age']?></td> 
                 <td><?=$order['contact']?></td> 
                 <td><?=$order['doctor']?></td> 
-                <td><?=$order['date']?></td> 
-                <td><?=$order['time']?></td> 
+                <!-- <td><?=$order['date']?></td> 
+                <td><?=$order['time']?></td>  -->
             </tr>
         <?php endforeach; ?>
     <?php endif; ?>

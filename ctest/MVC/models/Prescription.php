@@ -124,9 +124,24 @@ class Prescription extends DbModel{
             return false;
         }
     }
+    public function validator($value,$typename){
+        if($typename=='amount') return is_numeric($value);
+        elseif($typename=='frequency'){
+            $freqs=['Daily','BID','TID','QID','QHS','QWK'];   
+            return in_array($value,$freqs);
+        }
+    }
+    public function checkdispanse($num,$str){
+        
+        if(is_numeric($num) && is_string($str)){
+            return true;
+        }
+        else return false;
+    }
     //med_ID 	prescription_ID 	amount 	route 	dispense 	frequency 	
     public function addPrescriptionMedicine($patientID,$channelingID){
         $medicineModel=new Medicine();
+        //check if there is prescription
         $prescription=$this->isTherePrescription($patientID,$channelingID);
         $note=$_POST['note'];
         $refills=$_POST['refills'];
@@ -134,7 +149,7 @@ class Prescription extends DbModel{
             $prescription=$this->createNewPrescription($patientID);
         }
         $this->customFetchAll("update prescription set note='$note',refills=$refills where prescription_ID=".$prescription);
-        if(($_POST['amount']!='')  && ($_POST['frequency']!='') && ($_POST['name']!='')){
+        if(($_POST['amount']!='')  && ($_POST['frequency']!='') && ($_POST['name']!='') && ($_POST['dispense']!='')){
             $dispense=explode(' ',$_POST['dispense'])??[];
             $name=explode('-',$_POST['name'])[0]??[];
             $strength=explode('-',$_POST['name'])[1]??null;
@@ -143,12 +158,21 @@ class Prescription extends DbModel{
             if($dispense_count=='')$dispense_count=null;
             $amount=explode(' ',$_POST['amount'])[0];
             $frequency=$_POST['frequency'];
-        
+            
         }
         else{
             return [$note,$refills,$prescription];       
         }
+       
+        //validation
         $med_ID=$medicineModel->getMedicineID($name,$strength);
+        $amountF=$this->validator($amount,'amount');
+        $freqF=$this->validator($frequency,'frequency');
+        $diF=$this->checkdispanse($dispense_count,$dispense_type);
+        if(!$med_ID || !$amountF || !$freqF || !$diF){
+            return [$note,$refills,$prescription,!$med_ID,!$amountF,!$freqF , !$diF];
+        }
+        
         if($this->alreadyIn($prescription,$med_ID)){
             $this->customFetchAll("update prescription_medicine set med_amount=$amount,dispense_type=$dispense_type,dispense_count='$dispense_count',frequency='$frequency' where med_ID=$med_ID and prescription_ID=$prescription");
             $this->changeMedicineAmount($prescription,$med_ID);
@@ -156,9 +180,9 @@ class Prescription extends DbModel{
         }
         $this->customFetchAll("insert into prescription_medicine (med_ID,prescription_ID,med_amount,dispense_type,dispense_count,frequency,status) values('$med_ID','$prescription','$amount',$dispense_type,$dispense_count,'$frequency','include') ");
         $this->changeMedicineAmount($prescription,$med_ID);
-
+        
         return [$note,$refills,$prescription];   
-
+        
     }
     
     public function isInCart($pres){
@@ -582,7 +606,7 @@ class Prescription extends DbModel{
     // =========CREATE NEW ORDER===============
     
     public function add_med_rec ($med_ID, $prescription_ID, $amount, $curr_price, $status) {
-        return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, $status ); ");
+        return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, '$status' ); ");
      }
      
      public function get_curr_orders($prescription_ID) {

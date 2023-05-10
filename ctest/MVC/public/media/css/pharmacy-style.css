@@ -1315,7 +1315,7 @@ select {
 }
 
 .detail {
-    text-align: center;
+    text-align: left;
 }
 
 .new-order-add-item {
@@ -1508,5 +1508,498 @@ select {
     background-color: var(--clr-light);
 }
 
+/* ==================order view row styles ============ */
+
+.pending-orders-container {
+    width: 90%;
+    text-align: center;
+}
+
+.order-header-row {
+    margin-bottom: 20px;
+}
+
+.orders-pending-table-row {
+    margin: 5px 5p 5px 5px;
+    padding: 20px;
+}
 
 
+.orders-pending-with-note {
+    background-color: var(--clr-white);
+    border-bottom:2px solid var(--clr-grey);
+    align-items: center;
+    margin: 10px -20px 10px -20px;
+    min-height: 7vh;
+    /* margin-right: -20px; */
+}
+
+.orders-pending-with-note_row_gray {
+    background-color: rgba(128, 128, 128, 0.418);
+    border-bottom:2px solid var(--clr-grey);
+    align-items: center;
+    margin: 10px -20px 10px -20px;
+    min-height: 7vh;
+}
+
+.orders-pending-with-note:hover {
+    scale: 1.05;
+    transition: 0.5s;
+}
+
+.orders-pending-with-note_row_gray:hover {
+    scale: 1.05;
+    transition: 0.5s;
+}
+
+.row_green {
+    background-color: rgba(0, 255, 55, 0.514);
+}
+
+/* .row_gray {
+    background-color: rgba(128, 128, 128, 0.418);
+} */
+
+.row_red {
+    background-color: rgba(255, 38, 38, 0.555);
+    border-bottom:2px solid var(--clr-grey);
+    align-items: center;
+    margin: 10px -20px 10px -20px;
+    min-height: 7vh;
+}
+
+.order-header-row,
+.orders-pending-data {
+    display: flex;
+    
+}
+
+.pending-orders-container .order_id {
+    width: 10%;
+}
+
+.pending-orders-container .name {
+    width: 15%;
+}
+
+.pending-orders-container .contact {
+    width: 10%;
+}
+
+.pending-orders-container .address {
+    width: 25%;
+}
+
+/* .pending-orders-container .total_price {
+    width: 10%;
+} */
+
+.pending-orders-container .pickup_status {
+    width: 10%;
+}
+
+.pending-orders-container .date {
+    width: 10%;
+}
+
+.pending-orders-container .time {
+    width: 10%; 
+}
+
+.pending-orders-container .delete_status {
+    width: 10%;
+}
+
+.pending-orders-container .delete-order:hover {
+    cursor: pointer;
+}
+
+.orders-pending-note {
+    color: red;
+    text-align: left;
+}
+
+.view-prescription-separate {
+    width: 70%;
+    min-width: 2000px;
+    height: auto;
+}
+
+
+
+/* ================================= */
+/* ===========NURSE=========== */
+/* ==================================== */
+
+.container{
+    display: flex;
+    margin-top: 2vh;
+    justify-content: center;
+}
+
+.detail-container-left{
+    display: flex;
+    flex-direction: column;
+    width: 20vw;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(213, 237, 243);
+    margin-right: 1vw;
+}
+.detail-container-left img{
+    width: 10vw;
+    height: 10vw;
+    margin: 0 0 5vh 0;
+    border-radius: 50%;
+}
+
+.detail-container-right{
+    line-height: 5vh;
+    font-size: 1.1rem;
+    background-color: rgb(213, 237, 243);
+    padding: 6vh 6vw;
+}
+.data-row{
+    display: flex;
+}
+.data-row-left{
+    width: 10vw;
+}
+
+
+.no-clinic-desc{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+.normal-container{
+    padding-top:3vh;
+    position: absolute;
+    top:14vh;
+    left:8vw;
+    width:84vw;
+}
+.table-div>table{
+    border-collapse: separate;
+    border-style: hidden;
+    border-spacing: 0px 1vh;
+    margin-top: 0vh;
+    width: 84vw;
+    border-color:transparent;
+    z-index: 0;
+    margin-top: 5vh;
+}
+
+.table-div td{
+    text-align: center;
+    padding-block:2vh;
+    padding-left: 2vw;
+    border-bottom: 1px solid var(--clr-grey);
+    min-width: 10vw;
+   
+}
+
+
+/* Channeling main titles */
+.channeling--main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.channeling--main_title,.main-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 6vh;
+    margin-top: 60px;
+    /* width:100vw; */
+
+}
+.channeling--main_tiles{
+    color:var(--primary-color-dark);
+    padding-top: 30px;
+    padding-bottom: 30px;
+    /* padding-left:10vw; */
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap:120px;
+
+}
+.channeling--main_tiles_tile img{
+    
+    height:150px;
+    width:150px;
+
+}
+.channeling--main_tiles_tile{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap:2vh;
+    border: 2px solid var(--primary-color-dark);
+    border-radius: 10px;
+    background-color: var(--clr-white);
+    border:1px solid var(--clr-borders);
+    padding: 20px;
+}
+.channeling--main_tiles_tile:hover, .channeling--main_tiles-day:hover{
+    transform: scale(1.2);
+    cursor: pointer;
+   
+
+
+}
+.channeling--main_tiles-div{
+    margin-left: 3vw;
+    margin-top: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 5vw;
+    flex-wrap: wrap;
+}
+.channeling--main_tiles-day{
+    display: flex;
+    justify-content: center;
+    /* flex-direction:; */
+    align-items: center;
+    gap:2vh;
+    border: 2px solid var(--primary-color-dark);
+    border-radius: 10px;
+    background-color: var(--clr-white);
+    border:1px solid var(--clr-borders);
+    padding: 20px;
+    width: 12vw;
+    font-size: 1.5rem;
+    /* justify-content: flex-start; */
+    /* flex-wrap: wrap; */
+}
+
+
+/* Patiyent Channeling LIST */
+
+.nimg .pimg{
+    width: 7vw;
+}
+
+.patient-change-div{
+    display: flex;
+    gap: 5vw;
+}
+
+.scheduled-info{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.patient-details{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2vh;
+}
+
+.inputs-div{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    margin-top: 3vh;
+    gap: 2vh;
+}
+.input-row{
+    display: flex;
+    align-items: center;
+}
+.border-bottom{
+    border-bottom: 1px solid var(--clr-borders);
+}
+.input-row-col-1{
+    width: 120px;
+}
+.input-row-col-2{
+    width: 50px;
+}
+.input-row-col-3{
+    margin-left: 1vw;
+    width: 50px;
+}
+.save-button{
+    margin-top: 3vh;
+    margin-left: 25vw;
+    width: 60px;
+}
+.button--class-0{
+    min-width: 60px;
+}
+
+.move-number-div{
+    margin-top: 2vh;
+    
+}
+
+.number-item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2vw;
+    height: 7vh;
+    background-color: var(--clr-dark);
+    color: var(--clr-white);
+}
+
+
+
+
+
+/* Channeling Allocations */
+
+.sub-container{
+    width: 80vw!important;
+    margin-left: 1vw!important;
+}
+
+.allocation-days{
+    margin-bottom: 8vh;
+}
+
+.allocation-chart{
+    margin-bottom: 3vh;
+}
+.chart-div{
+    background-color: rgb(229, 247, 252);
+    height: 400px;
+}
+.chart-tital{
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding-top: 2vh;
+    border-bottom: solid blue 2px;
+    margin: 0 5vw;
+}
+
+.day{
+    border-radius: 5px;
+    padding: 1vh 4vw;
+    margin-bottom: 1.5vh;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+.day img{
+    margin-top: 1vh;
+    width: 2vw;
+    height: 1.5vh;
+}
+.day:hover{
+    /* scale: 1.01; */
+    background-color: rgb(226, 224, 224);
+}
+
+.green{
+    background-color: rgb(204, 252, 237);
+}
+.red{
+    background-color: rgb(197, 194, 194);
+}
+.yellow{
+    background-color: rgb(248, 248, 185);
+}
+
+.no-channelings{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10vh;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.channel-data{
+    display: flex;
+    flex-direction: column;
+    gap: 1.2vh;
+    align-items: center;
+    justify-content: center;
+    margin-top: -2vh;
+    margin-bottom: 2vh;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+}
+.green-g{
+    background-image: linear-gradient(rgb(204, 252, 237),white);
+}
+.red-g{
+    background-image: linear-gradient(rgb(253, 200, 200),white);
+}
+.yellow-g{
+    background-image: linear-gradient(rgb(248, 248, 185),white);
+}
+.channel-deatails{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    width: 90%;
+    height: 10vh;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+}
+.green-b{
+    border: solid rgb(149, 243, 213) 1px;
+}
+.red-b{
+    border: solid rgb(241, 146, 146) 1px;
+}
+.yellow-b{
+    border: solid rgb(240, 240, 143) 2px;
+}
+.channel-deatail-1, .channel-deatail-2{
+    margin-right: 5vw;
+}
+
+
+
+
+
+@media(max-width:550px){
+    .main-detail-title{
+        font-size: 0.8rem;
+    }
+    .number-content{
+        font-size: 0.8rem;
+
+    }
+    .pimg, .nimg{
+        width: 10vw!important;
+    }
+    .move-number-div{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100px;
+    }
+    .move-number-div button{
+        width: 15vw!important;
+        margin-top: 5px;
+    }
+    .scheduled-info span{
+        font-size: 1rem;
+    }
+    .patient-details, .input-row-col-1, .input-row-col-2, .input-row-col-3{
+        font-size: 0.8rem;
+    }
+    .input-row-col-1{
+        width: 85px!important;
+    }
+    .save-button{
+        margin-left: 0;
+
+    }
+}

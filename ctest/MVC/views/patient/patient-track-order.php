@@ -140,7 +140,7 @@ use app\models\Prescription;
            </div>
            <?php endif; ?>
            <div class="price-container">
-               <h3><?="Total Price :LKR ".number_format($total,'2','.','')?></h3>
+               <h3><?="Medicine Price :LKR ".number_format($total,'2','.','')?></h3>
                 <?php $grand_total=$grand_total+$total; ?>
             </div>
     </div>
@@ -165,6 +165,7 @@ use app\models\Prescription;
                             <a href=<?="'"."handle-documentation?spec=prescription&mod=view&id=".$prescription['prescription_ID']."'"?>><?=(($prescription['type']=='E-prescription')?"E-Prescription-":"SoftCopy Prescription-").$prescription['prescription_ID']?></a>
                         </td>
                         <td>
+                            <?php $set=false;?>
                             <?php if($prescription['type']=='E-prescription'): ?>
                                 <?=($prescriptionModel->getPrice($prescription['prescription_ID'])==''?'':'LKR'.$prescriptionModel->getPrice($prescription['prescription_ID']).".00") ?>
                                 <?php $grand_total=$grand_total+(($prescriptionModel->getPrice($prescription['prescription_ID'])=='')?0:$prescriptionModel->getPrice($prescription['prescription_ID']))?>
@@ -172,13 +173,14 @@ use app\models\Prescription;
                             <?php else: ?>
                                 <?php $val=$prescriptionModel->getPatientPrescriptionPrice($prescription['prescription_ID']);?>
                                 <?php if($val): ?>
+                                   <?php  $set=true; ?>
                                     <?="LKR ".number_format($val,'0','.','')?>
                                     <?php $grand_total=$grand_total+$val; ?>
                                     <?php $total=$total+$val?>
                                 <?php else:?>
                                     <div class="image-pres">
-                                        <div class="h-container">
-                                            <img class="h-glass" src="./media/anim_icons/pending.gif">
+                                        <div class="h-container ">
+                                            <img class="spec-h" src="./media/anim_icons/pending.gif">
                                         </div>
                                         Price will be shown after order is processed
                                     </div>
@@ -194,9 +196,18 @@ use app\models\Prescription;
            </div>
            <?php else:?>
            <div class="price-container">
-               <h3><?="Total Price :LKR ".number_format($total,'2','.','')?></h3>
+               <h3><?="Prescription Price :LKR ".number_format($total,'2','.','')?></h3>
             </div>
            <?php endif; ?>
+           <?php if($val):?>
+            <div class="total-container">
+                <h3><?="Total Price :LKR ".number_format($total,'2','.','')?></h3>
+           </div>
+           <?php else:?>
+                <div class="total-container">
+                    <h3><?="Current Price(Without Pending Prices) :LKR ".number_format($total,'2','.','')?></h3>
+                 </div>
+            <?php endif;?>
         
     </div>
     
@@ -296,7 +307,7 @@ use app\models\Prescription;
            </div>
            <?php endif; ?>
            <div class="price-container">
-               <h3><?="Total Price :LKR ".number_format($total,'2','.','')?></h3>
+               <h3><?="Medicine Price :LKR ".number_format($total,'2','.','')?></h3>
                 <?php $grand_total=$grand_total+$total; ?>
            </div>
     </div>
@@ -320,6 +331,7 @@ use app\models\Prescription;
                         <td>
                             <?php $total=0;?>
                             <?php $val=0;?>
+                            <?php $set=false;?>
                             <?php if($prescription['type']=='E-prescription'): ?>
                                 <?=($prescriptionModel->getPrice($prescription['prescription_ID'])==''?'':'LKR '.number_format($prescriptionModel->getPrice($prescription['prescription_ID']))) ?>
                                 <?php $grand_total=$grand_total+(($prescriptionModel->getPrice($prescription['prescription_ID'])=='')?0:$prescriptionModel->getPrice($prescription['prescription_ID']))?>
@@ -327,6 +339,7 @@ use app\models\Prescription;
                             <?php else: ?>
                                 <?php $val=$prescriptionModel->getPatientPrescriptionPrice($prescription['prescription_ID']);?>
                                 <?php if($val): ?>
+                                    <?php $set=true;?>
                                     <?="LKR ".number_format($val,'2','.','')?>
                                     <?php $grand_total=$grand_total+$val; ?>
                                     <?php $total=$total+$val; ?>
@@ -349,10 +362,18 @@ use app\models\Prescription;
            </div>
            <?php else:?>
            <div class="price-container">
-               <h3><?="Total Price :LKR ".number_format($total,'2','.','')?></h3>
+               <h3><?="Prescription Price :LKR ".number_format($total,'2','.','')?></h3>
             </div>
            <?php endif;?>
-        
+            <?php if($set):?>
+            <div class="total-container">
+                <h3><?="Total Price :LKR ".number_format($total,'2','.','')?></h3>
+           </div>
+           <?php else:?>
+                <div class="total-container">
+                    <h3><?="Current Price(Without Pending Prices) :LKR ".number_format($total,'2','.','')?></h3>
+                 </div>
+            <?php endif;?>
     </div>
         
     <?php $form->end(); ?>

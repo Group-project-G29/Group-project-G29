@@ -5,7 +5,7 @@
 
     // var_dump($online_orders);
     // var_dump($sf_orders);
-    // var_dump($orders);
+    // var_dump($ep_orders);
     // exit;
 
     // var_dump($order_details);    //done
@@ -27,6 +27,11 @@
     <h3>Patient Name : <?=$order_details[0]['name']?></h3>
     <h3>Contact Number : <?=$order_details[0]['contact']?></h3>
     <h3>Address : <?=$order_details[0]['address']?></h3>
+    <?php if($order_details[0]['text']!=NULL): ?>
+        <h3 class="orders-pending-note">
+            Note* - <?=$order_details[0]['text']?>
+        </h3>
+    <?php endif; ?>
 </div>
 
 <div class="order-type-view">
@@ -65,7 +70,7 @@
                         </table>
                     </div>
                 </div>
-            <h3>Total Price For Online Ordered Products : <?=$total_online?></h3>
+            <h3 style="text-align: right;">Online Ordered Products : <?= 'LKR. '. number_format($total_online,2,'.','') ?></h3>
         </div>
         <?php $total=$total+$total_online ?>
     <?php endif; ?>
@@ -111,7 +116,7 @@
                             </table>
                         </div>
                     </div>
-                <h3>Total Price For Prescription : <?=$total_prescription?></h3>
+                <h3 style="text-align: right;">E-Prescription : <?= 'LKR. '. number_format($total_prescription,2,'.','') ?></h3>
             </div>
         <?php $total=$total+$total_prescription ?>
         <?php endforeach; ?>
@@ -158,14 +163,14 @@
                             </table>
                         </div>
                     </div>
-                <h3>Total Price For Prescription : <?=$total_prescription?></h3>
+                <h3 style="text-align: right;">Softcopy Prescription : <?= 'LKR. '. number_format($total_prescription,2,'.','') ?></h3>
             </div>
         <?php $total=$total+$total_prescription ?>
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
 
-    <hr><h1>Total Price : <?=$total?></h1>
+    <hr><h1 style="text-align: right;">Total Price : <?= 'LKR. '. number_format($total,2,'.','') ?></h1>
 
 
 <div class='upper-container'>

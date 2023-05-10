@@ -39,6 +39,7 @@
         <th>Doctor</th>
         <th>Date</th>
         <th>Time</th>
+        <th>Total Price</th>
     </tr>
     <?php if($orders): ?>
         <?php foreach($orders as $key=>$order): ?>
@@ -50,6 +51,7 @@
                 <td><?=$order['doctor']?></td> 
                 <td><?=$order['date']?></td> 
                 <td><?=$order['time']?></td> 
+                <td><?= 'LKR. '. number_format($order['total'],2,'.','') ?></td> 
             </tr>
         <?php endforeach; ?>
     <?php endif; ?>

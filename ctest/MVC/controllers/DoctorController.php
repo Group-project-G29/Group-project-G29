@@ -110,7 +110,6 @@ class DoctorController extends Controller{
     public function sessionAssistance(Request $request,Response $response){
         //keep url in the seesion 
         //if session variable is no there redirect to last seen patient
-        Application::$app->session->set('popup','unset');
         
         $parameters=$request->getParameters();
         // if(!Application::$app->session->get('cur_patient') && $parameters['cmd']!='start' && $parameters['cmd']!='finish'){
@@ -162,6 +161,7 @@ class DoctorController extends Controller{
 
         //check whether the appointment is used or not
         if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='start'){
+        Application::$app->session->set('popup','unset');
             $id=$parameters[1]['id']??'';
             $ch=$OpenedChanneling->findOne(['opened_channeling_ID'=>$id]); 
              if($ch->status!='finished'){
@@ -483,8 +483,9 @@ class DoctorController extends Controller{
         $userDoctor=Application::$app->session->get('userObject')->nic;
         $patient=Application::$app->session->get('cur_patient');
         if(isset($parameter[0]['cmd']) && $parameter[0]['cmd']=='delete' ){
+            $type=$medicalReportModel->fetchAssocAll(['report_ID'=>$parameter[1]['id']])[0]['type'];
             $medicalReportModel->deleteRecord(['report_ID'=>$parameter[1]['id']]);
-            Application::$app->response->redirect(Application::$app->session->get('churl'));
+            $response->redirect('doctor-report?spec='.$type);
             exit;
         }
         if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='referral'){
@@ -591,9 +592,7 @@ class DoctorController extends Controller{
                 $medicalReportModel->loadData($request->getBody());
                 $medicalReportModel->setReport('medical-history','Medical-history-'.date('Y:m:d'),$patient,$userDoctor,'e-report');
                 if($medHistoryModel->validate() && $medHistoryModel->addReport($medicalReportModel)){
-                    //redirect
-                    Application::$app->response->redirect(Application::$app->session->get('churl'));
-                    exit;
+                    
                 }
             }
             return $this->render('doctor/write-history-report',[
@@ -621,8 +620,7 @@ class DoctorController extends Controller{
 
                 if ($consultationModel->validate() && $consultationModel->addReport($medicalReportModel)) {
                     //redirect
-                    Application::$app->response->redirect(Application::$app->session->get('churl'));
-                    exit;
+                   
                 }
                 //render on fall-through
             }
@@ -650,9 +648,7 @@ class DoctorController extends Controller{
                 $soapModel->loadData($request->getBody());
                 $medicalReportModel->setReport('soap','SOAP-report-'.date('Y:m:d'),$patient,$userDoctor,'e-report');
                 if ($soapModel->validate() && $soapModel->addReport($medicalReportModel)) {
-                    //redirect
-                    Application::$app->response->redirect(Application::$app->session->get('churl'));
-                    exit;
+                  
                 }
                 //render on fall-through
             }
@@ -666,24 +662,67 @@ class DoctorController extends Controller{
                $medicalModel=new MedicalReport();
                $medicalReport=$medicalModel->fetchAssocAll(['report_ID'=>$parameter[2]['id']]);
                $response->redirect('/ctest/MVC/public/media/patient/medicalreports/'.$medicalReport[0]['label']);        
-        }
-        if(isset($parameter[1]['mod']) && $parameter[1]['mod']=='update'){
+            }
+            
+        if(isset($parameter[0]['mod']) && $parameter[0]['mod']=='update'){
+   
+            $type=$medicalReportModel->fetchAssocAll(['report_ID'=>$parameter[1]['id']])[0]['type'];
+            $medicalModel=new MedicalReport();
+            var_dump($medicalModel->findOne(['report_ID'=>$parameter[1]['id']]));
             if($request->isPost()){
-                $medicalModel->updateReport($request,$response);
-            }
-            if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='consultation-report'){
+                if($type=='consultation'){
+                $model=new ConsultationReport();
+                $model->loadData($request->getBody());
+                $medicalModel->updater($model,$type,$parameter[1]['id']);
+                $report=$model->findOne(['report_ID'=>$parameter[1]['id']]);
                 return $this->render('doctor/update-consultation-report',[
-                    'model'=>$medicalModel->findOne(['report_ID'=>$parameter[2]['id']])
+                    'model'=>$report,
+                    'todayreport'=>$medicalReportModel->getAllReportsDoctor()
                 ]);
             }
-            if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='medical-history-report'){
+            if($type=='medical-history'){
+                $model=new MedicalHistory();
+                $model->loadData($request->getBody());
+                $medicalModel->updater($model,$type,$parameter[1]['id']);
+                $report=$model->findOne(['report_ID'=>$parameter[1]['id']]);
                 return $this->render('doctor/update-history-report',[
-                    'model'=>$medicalModel->findOne(['report_ID'=>$parameter[2]['id']])
+                    'model'=>$report,
+                    'todayreport'=>$medicalReportModel->getAllReportsDoctor()
                 ]);
             }
-            if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='soap-report'){
+            if($type=='soap'){
+                $model=new SOAPReport();
+                $model->loadData($request->getBody());
+                $medicalModel->updater($model,$type,$parameter[1]['id']);
+                $report=$model->findOne(['report_ID'=>$parameter[1]['id']]);
                 return $this->render('doctor/update-soap-report',[
-                    'model'=>$medicalModel->findOne(['report_ID'=>$parameter[2]['id']])
+                    'model'=>$report,
+                    'todayreport'=>$medicalReportModel->getAllReportsDoctor()
+                ]);
+            }
+            }
+            if($type=='consultation'){
+                $model=new ConsultationReport();
+                $report=$model->findOne(['report_ID'=>$parameter[1]['id']]);
+                return $this->render('doctor/update-consultation-report',[
+                    'model'=>$report,
+                    'todayreport'=>$medicalReportModel->getAllReportsDoctor()
+                ]);
+            }
+            if($type=='medical-history'){
+                $model=new MedicalHistory();
+                $report=$model->findOne(['report_ID'=>$parameter[1]['id']]);
+                return $this->render('doctor/update-history-report',[
+                    'model'=>$report,
+                    'todayreport'=>$medicalReportModel->getAllReportsDoctor()
+                ]);
+            }
+            if($type=='soap'){
+                $model=new SOAPReport();
+                $report=$model->findOne(['report_ID'=>$parameter[1]['id']]);
+                return $this->render('doctor/update-soap-report',[
+                    'model'=>$report,
+                    'todayreport'=>$medicalReportModel->getAllReportsDoctor()
                 ]);
             }
 
@@ -700,12 +739,16 @@ class DoctorController extends Controller{
 
         if($request->isPost()){
             //function to add new lab test request
+            Application::$app->session->set('popup','set');
+            if(!$labTestRequestModel->name){
+                 Application::$app->response->redirect(Application::$app->session->get('churl'));
+                 exit;
+            } 
             $labTestRequestModel->loadData($request->getBody());
             $labTestRequestModel->isExist($labTestRequestModel->name);
             $labTestRequestModel->createLabTestRequest($labTestRequestModel);
 
             //get the url in the session to reload
-            Application::$app->session->set('popup','set');
             $response->redirect(Application::$app->session->get('churl'));
             exit;
 
@@ -727,8 +770,7 @@ class DoctorController extends Controller{
         }
     }
 
-
-//move to doctor controller
+    //take prescriptoin medicine and show it in PDF format
     public function handlePrescription(Request $request,Response $response){
         $this->setLayout('doctor-striped');
         $medicinesModel=new Medicine();

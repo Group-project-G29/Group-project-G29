@@ -114,7 +114,6 @@
     height: 17vh;
     padding-left:1.5vw ;
     border-radius: 10%;;
-    overflow: scroll;
 }
 
 .nurse-item{
@@ -456,14 +455,36 @@
     align-items:center;
     justify-content: center;
 }
-.prescription-field-container{
-    margin-left: -15vw;
-    display: flex;
-    justify-content: space-between;
 
+.main-dashboard{
+    display: flex;
+    align-items: right;
+    width:90vw;
+    flex-direction: column;
+    background-color: white;
+    padding-block:1vh;
+    border-radius: 10px;
+    box-shadow: 0px 0px 20px 1px #e7e7e7;
+    margin-left:-16vw;
+    padding-inline: 5vw;
+   
+    
+}
+.flex-c{
+    display: flex;
+    flex-direction:column;
+
+    
+}
+.prescription-field-container{
+    margin-left:-5vh;
+    display: flex;
     align-items: center;
     height: 10vh;
-    background-color: var(--clr-white);
+    max-width:190vw;
+    gap:2vw;
+    padding-inline:2vw;
+    border-radius:10px;
 }
 .prescription-field-container [type="text"]{
     width: 8vw;
@@ -547,6 +568,20 @@
     background-color: var(--clr-white);
     width:18vw;
     height:27vh;
+    border-radius: 10px;
+    padding-inline:3vw;
+    padding-block: 2vh;
+    box-shadow: 0px 0px 20px 1px #e7e7e7
+}
+.today_channeling_tiles-inactive{
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--clr-white);
+    width:18vw;
+    height:27vh;
+    color:gainsboro;
     border-radius: 10px;
     padding-inline:3vw;
     padding-block: 2vh;
@@ -806,8 +841,8 @@
     gap:3vw;
 }
 .edse{
-    color: red;
-    cursor:zoom-in;
+    color:var(--clr-dark);
+    cursor:default;
 }
 
 .refills [type='number']{
@@ -815,7 +850,22 @@
 }
 .refill-bg{
     background-color: white;
-    padding:0.5vh;
+    padding-inline:2vw;
+    box-shadow: 0px 0px 20px 1px #e7e7e7;
+    border-radius:10px;
+    padding-block:0.5vh;
+    display: flex;
+    gap:2vw;
+    width:100vw;
+}
+.refill-con{
+    display: flex;
+    gap:5vw;
+    align-items: center;
+}
+.refill-con textarea{
+    border: 1px solid gainsboro;
+    border-radius:10px;
 }
 .sub a{
  text-decoration: none;
@@ -914,3 +964,59 @@
     margin-top:5vh;
     margin-left:26vw;
 }
+/* request editable select  */
+.ed-se-item-container-name,.edse-container{
+    position: fixed;
+    margin-left:95px;
+    min-height:0px;
+    margin-top:5px;
+    background-color: white;
+    z-index: 100;
+    width:10vw;
+    color:var(--clr-dark);
+    box-shadow: 0px 0px 20px 1px #e7e7e7;
+    border-radius:5px;
+    
+    
+}
+.ed-se-item-container{
+    position: fixed;
+    margin-left:75px;
+    min-height:0px;
+    margin-top:5px;
+    background-color: white;
+    z-index: 100;
+    width:10vw;
+    color:var(--clr-dark);
+    box-shadow: 0px 0px 20px 1px #e7e7e7;
+    border-radius:5px;
+    
+    
+}
+.in{
+    border:1px solid gainsboro;
+    border-radius: 5px;
+}
+
+.ed-se-item-container-name{
+       position: fixed;
+    margin-left:2px;
+    min-height:0px;
+    margin-top:5px;
+    background-color: white;
+    z-index: 100;
+    width:15vw;
+    color:var(--clr-dark);
+    box-shadow: 0px 0px 20px 1px #e7e7e7;
+    border-radius:5px;
+}
+.edse{
+    padding-inline:5px;
+    border-radius:5px;
+}
+.edse:hover{
+    background-color: var(--clr-dark);
+    color:white;
+}
+
+
