@@ -4,6 +4,7 @@
     $component=new Component();
     $total = 0;
     $NA_count =0;
+    // var_dump($sf_orders);exit;
 ?>
 
 <div class="detail">
@@ -164,7 +165,7 @@
                                     </table>
                                 </div>
                             <?php $form->end(); ?>
-                            <button><a class="view-prescription" target="_blank"  href="view-softcopy?id=<?= $sf_order['prescription_ID'] ?>" >
+                            <button><a class="view-prescription" target="_blank"  href="view-softcopy?id=<?=$sf_order['prescription_ID']?>" >
                                 view prescription
                             </a></button>
                         </section></center>
@@ -174,7 +175,13 @@
                         <div class="table-container">
                             <table border="0">
                                 <tr>
-                                    <th>Medicine ID</th><th>Medicine Name</th><th>Medicine Strength</th><th>Price per unit</th><th>Amount</th><th>Total Price</th>
+                                    <th>Medicine ID</th>
+                                    <th>Medicine Name</th>
+                                    <th>Medicine Strength</th>
+                                    <th>Price per unit</th>
+                                    <th>Amount</th>
+                                    <th>Total Price</th>
+                                    <th>Action</th>
                                 </tr>
                                 <?php $total_prescription=0 ?>
                                 <?php foreach($sf_pres_med[$sf_order['prescription_ID']] as $key=>$sf_pres_medicine): ?>
@@ -186,6 +193,7 @@
                                         <td><?=$sf_pres_medicine['current_price']?></td> 
                                         <td><?=$sf_pres_medicine['order_amount']?></td> 
                                         <td><?=$sf_pres_medicine['current_price']*$sf_pres_medicine['order_amount']?></td> 
+                                        <td> <a class="delete-med" id=<?= $sf_order['prescription_ID'].'-'.$sf_pres_medicine['med_ID'] ?> >Delete</a> </td>
                                         <?php $total_prescription = $total_prescription + $sf_pres_medicine['current_price']*$sf_pres_medicine['order_amount'] ?>
                                     <?php else: ?>
                                         <tr class="table-row-faded">
@@ -196,15 +204,16 @@
                                         <td style="color:red;"><?= "Out of Stock" ?></td> 
                                         <td style="color:red;">
                                             <?php 
-                                                if ( (int)$order['available_amount']==0 ){
+                                                if ( (int)$sf_pres_medicine['available_amount']==0 ){
                                                     echo 'No items available';
-                                                } elseif ( (int)$order['available_amount']==1 ){
+                                                } elseif ( (int)$sf_pres_medicine['available_amount']==1 ){
                                                     echo '1 item available';
                                                 } else {
-                                                    echo $order['available_amount'].' items available'; 
+                                                    echo $sf_pres_medicine['available_amount'].' items available'; 
                                                 }
                                             ?>    
                                         </td>
+                                        <td></td>
                                         <?php $NA_count = $NA_count + 1 ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
@@ -258,11 +267,12 @@
         location.href="pharmacy-notify-processing-order?id="+<?=$order_details[0]['order_ID']?>; //get
     })
 
-
-    elementsArray = document.querySelectorAll(".view-prescription");
+    elementsArray = document.querySelectorAll(".delete-med");
     elementsArray.forEach(function(elem) {
+        comp=""+elem.id; 
+        comp=comp.split("-");
         elem.addEventListener("click", function() {
-            location.href="view-softcopy?id="+elem.id; 
+            location.href='pharmacy-delete-pres-med?pid='+comp[0]+'&mid='+comp[1]; 
         });
     });
 

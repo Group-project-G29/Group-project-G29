@@ -34,12 +34,11 @@ use app\models\SOAPReport;
 use ReflectionFiber;
 
 class PatientAuthController extends Controller{
+
+    //call core loging  function of application and redirecting
     public function login(Request $request,Response $response){
-      
         $this->setLayout('visitor-homepage-landing');
         $PatientLoginForm=new PatientLoginForm();
-
-
         if($request->isPost()){
             $PatientLoginForm->loadData($request->getBody());
             if($PatientLoginForm->validate() && $PatientLoginForm->login()){
@@ -55,6 +54,7 @@ class PatientAuthController extends Controller{
        
         
     }
+    //pediatric loging=>same process as login
     public function pedlogin(Request $request,Response $response){
       
         $this->setLayout('visitor-homepage-landing');
@@ -63,7 +63,7 @@ class PatientAuthController extends Controller{
 
         if($request->isPost()){
             $PatientLoginForm->loadData($request->getBody());
-            if($PatientLoginForm->validate() && $PatientLoginForm->login()){
+            if($PatientLoginForm->validate() && $PatientLoginForm->loginpediatric()){
                 Application::$app->session->setFlash('success',"Welcome ");
                 $response->redirect('/ctest/patient-main');
                 return true;
@@ -76,6 +76,8 @@ class PatientAuthController extends Controller{
        
         
     }
+
+    //patient login
     public function register(Request $request){
 
         $this->setLayout('auth');
@@ -111,7 +113,9 @@ class PatientAuthController extends Controller{
             'model'=>$registerModel,
         ]);
     }
-       public function registerPediatric(Request $request){
+
+    //regidter pediatric patients
+    public function registerPediatric(Request $request){
 
         $this->setLayout('auth');
         $registerModel=new Patient();
@@ -147,6 +151,7 @@ class PatientAuthController extends Controller{
         ]);
     }
 
+    //core logout function
     public function logout(Request $request,Response $response){
         $registerModel=new Patient();
         if($registerModel->logout()){
@@ -155,12 +160,16 @@ class PatientAuthController extends Controller{
             exit;
         }
     }
+    //show main page
     public function mainPage(){
         $this->setLayout('visitor-homepage');
         return $this->render('patient/home',[
             
         ]);
     }
+
+    /*---------------------Change password methods getNIC->OTP --------------*/
+    //keep session on verified temporary user
     public function getNIC(Request $request,Response $response){
         $this->setLayout('auth');
         $emailModel=new Email();
@@ -197,6 +206,7 @@ class PatientAuthController extends Controller{
             'patient'=>$patient
         ]);
     }
+    // Generate time limited OTP
     public function OTP(Request $request,Response $response){
         $patient=Application::$app->session->get('temp_user');
         $parameters=$request->getParameters();
@@ -223,10 +233,8 @@ class PatientAuthController extends Controller{
 
 
     }
-    public function changePassword(){
-        
-    }
-
+   
+    //show channeling inforamtion
     public function channelingView(Request $request){
         $this->setLayout('visitor');
         $parameters=$request->getParameters();
@@ -276,6 +284,12 @@ class PatientAuthController extends Controller{
         $ReferralModel=new Referral();
         $appointment=new Appointment();
         if($request->isPost()){
+           
+            if(!$_FILES['name']['size']){
+                Application::$app->session->setFlash('success',"Appointment successfully created");
+                Application::$app->response->redirect("/ctest/patient-all-appointment");
+                exit;
+            }
             $ReferralModel->loadData($request);
             $ReferralModel->loadFiles($_FILES);
             $appointment_detail=$appointment->customFetchAll("select * from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join doctor on doctor.nic=channeling.doctor where appointment_ID=".$parameter[1]['id'])[0];
@@ -350,18 +364,18 @@ class PatientAuthController extends Controller{
                 $number=1;
             }
             if(isSet($parameters[2]['type']) && $parameters[2]['type']=='consultation'){
-                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
+                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"pending",'consultation']);
                 $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
                 $PaymentModel->createAppointmenPay(Application::$app->session->get('user'),'appointment',$AppointmentModel->getFee($appointment_id[0]['last_insert_id()']),$appointment_id[0]['last_insert_id()'],'pending');
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
             else if(isSet($parameters[2]['type']) && $parameters[2]['type']??''=='labtest'){
-                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'labtest']);
+                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"pending",'labtest']);
                 $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
             }
             else{
-                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"Pending",'consultation']);
+                $appointment_id=$AppointmentModel->setAppointment([$opened_channeling_id,$patient,$number,"pending",'consultation']);
                 $OpenedChannelingModel->decreasePatientNumber($opened_channeling_id);
                 $PaymentModel->createAppointmenPay(Application::$app->session->get('user'),'appointment',$AppointmentModel->getFee($appointment_id[0]['last_insert_id()']),$appointment_id[0]['last_insert_id()'],'pending');
                 Application::$app->response->redirect("patient-appointment?mod=referral&id=".$appointment_id[0]['last_insert_id()']);
@@ -458,7 +472,7 @@ class PatientAuthController extends Controller{
             $order=new Order();
             $lacked=$order->getLackedItems();
             $orderModel=new Order();
-            $order_ID=$order->getPatientOrder()['order_ID']??'';
+            $order_ID=$order->getPatientOrder(true)['order_ID']??'';
             return $this->render('patient/patient-track-order',[
                 'lacked'=>$lacked,
                 'order'=>$order->getPatientOrder(),
@@ -551,7 +565,7 @@ class PatientAuthController extends Controller{
             $orderModel->loadData($request->getBody());            
             $deliveryModel->loadData($request->getBody());
             //if there is a order
-            if($orderModel->getPatientOrder()){
+            if($orderModel->getPatientOrder(true)){
                 Application::$app->session->setFlash('error',"Please wait until next order get finished.");
                 $cartModel=new Cart();
                 $patient=Application::$app->session->get('userObject');
@@ -941,7 +955,7 @@ class PatientAuthController extends Controller{
             if(isset($parameters[1]['cmd']) &&  $parameters[1]['cmd']=='view'){
                 $report=$labreportModel->fetchAssocAll(['report_ID'=>$parameters[2]['id']])[0];
                 if($report['type']=='softcopy'){
-                    $response->redirect('http://localhost/ctest/MVC/public/media/patient/labreports/'.$report['location']);   
+                    $response->redirect('/ctest/MVC/public/media/patient/labreports/'.$report['location']);   
                 }
                 else{
                     $labreportModel->labreporttoPDF($parameters[2]['id']);

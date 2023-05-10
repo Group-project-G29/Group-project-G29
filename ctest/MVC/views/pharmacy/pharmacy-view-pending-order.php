@@ -3,9 +3,9 @@
     $component=new Component();
     $total = 0;
 
-    // var_dump($online_orders);
     // var_dump($sf_orders);
     // var_dump($ep_orders);
+    // var_dump($online_orders);exit;
     // exit;
 
     // var_dump($order_details);    //done
@@ -35,7 +35,7 @@
 </div>
 
 <div class="order-type-view">
-    <?php if( $online_orders !== NULL ): ?>
+    <?php if( $online_orders != NULL ): ?>
         <div class="drop-down-container">
             <div class="one-drop-down" onclick="show('online_orders_products')">Online Ordered Products <img src="./media/images/icons/angle-down.png" alt="down arrow image"></div>
                 <div id="online_orders_products" hidden>
@@ -76,7 +76,7 @@
     <?php endif; ?>
 
 
-    <?php if( $ep_orders !== NULL ):?>
+    <?php if( $ep_orders != NULL ):?>
         <?php foreach( $ep_orders as $key=>$ep_order ): ?>
             <div class="drop-down-container">
                 <div class="one-drop-down" onclick="show('<?= 'ep'.$key ?>')">E-prescription <img src="./media/images/icons/angle-down.png" alt="down arrow image"></div>
@@ -123,7 +123,7 @@
     <?php endif; ?>
 
 
-    <?php if( $sf_orders !== NULL ):?>
+    <?php if( $sf_orders != NULL ):?>
         <?php foreach( $sf_orders as $key=>$sf_order ): ?>
             <div class="drop-down-container">
                 <div class="one-drop-down" onclick="show('<?= 'sf'.$key ?>')">Softcopy prescription <img src="./media/images/icons/angle-down.png" alt="down arrow image"></div>
@@ -156,7 +156,7 @@
                                         <td><?=$sf_pres_medicine['strength']?></td> 
                                         <td><?=$sf_pres_medicine['current_price']?></td> 
                                         <td><?= "Out of Stock" ?></td> 
-                                        <td></td>
+                                    <td></td>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
                             </tr>

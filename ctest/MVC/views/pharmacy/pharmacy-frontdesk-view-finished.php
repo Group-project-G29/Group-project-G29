@@ -68,7 +68,7 @@
         </tr>
     </table>
 </div>
-<h1 style="text-align: right;">Total Price : <?=$total?></h1>
+<h1 style="text-align: right;">Total Price : <?= 'LKR. '. number_format($total,2,'.','') ?></h1>
 
 <!-- <div class='upper-container'>
     <?php echo $component->button('take-order','','Process','button--class-0  width-10','take-order');?>

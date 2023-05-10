@@ -108,23 +108,23 @@ use app\core\DbModel;
         //functions for orders
 
         public function get_previous_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status IN ('pickedup','deleted') ORDER BY created_date ASC");
+            return $this->customFetchAll("SELECT *, _order.name AS ordered_person FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status IN ('pickedup','deleted') ORDER BY created_date ASC");
         }
 
         public function get_pending_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status IN ('pending','waiting','rejected','accepted') ORDER BY created_date ASC");
+            return $this->customFetchAll("SELECT *, _order.name AS ordered_person FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status IN ('pending','waiting','rejected','accepted') ORDER BY created_date ASC");
         }
         
         public function get_processing_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'processing' ORDER BY created_date ASC");
+            return $this->customFetchAll("SELECT *, _order.name AS ordered_person FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'processing' ORDER BY created_date ASC");
         }
         
         public function get_packed_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'packed' ORDER BY created_date ASC");
+            return $this->customFetchAll("SELECT *, _order.name AS ordered_person FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status = 'packed' ORDER BY created_date ASC");
         }
         
         public function get_pickedup_orders() {
-            return $this->customFetchAll("SELECT * FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status='pickedup'");
+            return $this->customFetchAll("SELECT *, _order.name AS ordered_person FROM _order INNER JOIN patient ON _order.patient_ID = patient.patient_ID WHERE _order.processing_status='pickedup'");
         }
        
         // public function get_frontdesk_orders() {
@@ -252,11 +252,11 @@ use app\core\DbModel;
         }
 
         public function reset_total ( $order_ID ) {
-            return $this->customFetchAll(" UPDATE order SET total_price=0 WHERE order_ID = $order_ID; ");
+            return $this->customFetchAll(" UPDATE _order SET total_price=0 WHERE order_ID = $order_ID; ");
         }
 
         public function update_payment_status ( $order_ID ) {
-            return $this->customFetchAll(" UPDATE order SET payment_status='completed' WHERE order_ID = $order_ID; ");
+            return $this->customFetchAll(" UPDATE _order SET payment_status='completed' WHERE order_ID = $order_ID; ");
         }
 
         // public function get_frontdesk_last_order ( $name ) {

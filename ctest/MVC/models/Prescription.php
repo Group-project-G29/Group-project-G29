@@ -576,36 +576,43 @@ class Prescription extends DbModel{
     // =========CREATE NEW ORDER===============
     
     public function add_med_rec ($med_ID, $prescription_ID, $amount, $curr_price, $status) {
-        return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, $status ); ");
-     }
-     
-     public function get_curr_orders($prescription_ID) {
-        return $this->customFetchAll("SELECT *, prescription_medicine.amount AS order_amount, prescription_medicine.prescription_current_price AS current_price, medical_products.amount AS available_amount FROM prescription_medicine INNER JOIN prescription ON prescription_medicine.prescription_ID=prescription.prescription_ID INNER JOIN medical_products ON prescription_medicine.med_ID=medical_products.med_ID WHERE prescription_medicine.prescription_ID=$prescription_ID; ");
-     }
-     
-     public function get_patient_details($prescription_ID) {
-        return $this->customFetchAll("SELECT * FROM prescription INNER JOIN patient ON prescription.patient=patient.patient_ID WHERE prescription.prescription_ID=$prescription_ID;");
-     }
-     
-     public function get_prescription_location( $order_ID ) {
-        return $this->customFetchAll(" SELECT *, patient.name AS p_name FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID INNER JOIN prescription ON _order.order_ID=prescription.order_ID WHERE prescription.order_ID=$order_ID ");
-     }
-     
-     public function get_order_ID_by_pres_ID ( $pres_ID ){
-         return $this->customFetchAll(" SELECT order_ID FROM prescription WHERE prescription_ID = $pres_ID ");
-     }
- 
-     public function update_prescription_total ( $pres_ID, $med_total ){
-         return $this->customFetchAll(" UPDATE prescription SET total_price= (total_price+$med_total) WHERE prescription_ID = $pres_ID; ");
-     }
- 
-     public function reset_total ( $pres_ID ) {
-         return $this->customFetchAll(" UPDATE prescription SET total_price=0 WHERE prescription_ID = $pres_ID; ");
-     }
+        return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, '$status' ); ");
+    }
+    
+    public function get_curr_orders($prescription_ID) {
+    return $this->customFetchAll("SELECT *, prescription_medicine.amount AS order_amount, prescription_medicine.prescription_current_price AS current_price, medical_products.amount AS available_amount FROM prescription_medicine INNER JOIN prescription ON prescription_medicine.prescription_ID=prescription.prescription_ID INNER JOIN medical_products ON prescription_medicine.med_ID=medical_products.med_ID WHERE prescription_medicine.prescription_ID=$prescription_ID; ");
+    }
+    
+    public function get_patient_details($prescription_ID) {
+    return $this->customFetchAll("SELECT * FROM prescription INNER JOIN patient ON prescription.patient=patient.patient_ID WHERE prescription.prescription_ID=$prescription_ID;");
+    }
+    
+    public function get_prescription_location( $order_ID ) {
+    return $this->customFetchAll(" SELECT *, patient.name AS p_name FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID INNER JOIN prescription ON _order.order_ID=prescription.order_ID WHERE prescription.order_ID=$order_ID ");
+    }
+    
+    public function get_order_ID_by_pres_ID ( $pres_ID ){
+        return $this->customFetchAll(" SELECT order_ID FROM prescription WHERE prescription_ID = $pres_ID ");
+    }
 
-     public function get_prescription_details ( $pres_ID ){
+    public function update_prescription_total ( $pres_ID, $med_total ){
+        return $this->customFetchAll(" UPDATE prescription SET total_price= (total_price+$med_total) WHERE prescription_ID = $pres_ID; ");
+    }
+
+    public function reset_total ( $pres_ID ) {
+        return $this->customFetchAll(" UPDATE prescription SET total_price=0 WHERE prescription_ID = $pres_ID; ");
+    }
+
+    public function get_prescription_details ( $pres_ID ){
         return$this->customFetchAll(" SELECT *, patient.name AS p_name FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID INNER JOIN prescription ON _order.order_ID=prescription.order_ID WHERE prescription.prescription_ID=$pres_ID; ");
-     }
+    }
  
+    public function remove_med_from_prescription ( $pres_ID, $med_ID ){
+        return $this->customFetchAll(" DELETE FROM prescription_medicine WHERE med_ID=$med_ID AND prescription_ID=$pres_ID; ");
+    }
+
+    public function get_med_rec_details( $pres_ID, $med_ID ){
+        return $this->customFetchAll(" SELECT * FROM prescription_medicine INNER JOIN prescription ON prescription_medicine.prescription_ID=prescription.prescription_ID WHERE prescription_medicine.med_ID=$med_ID AND prescription_medicine.prescription_ID=$pres_ID; ");
+    }
 
 }   

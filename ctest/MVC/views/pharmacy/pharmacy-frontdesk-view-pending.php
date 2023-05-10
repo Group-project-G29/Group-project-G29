@@ -51,7 +51,7 @@
     <table border="0">
         <?php if($order_medicines!==NULL): ?>
             <tr>
-                <th>Medicine ID</th><th>Medicine Name</th><th>Medicine Strength</th><th>Price per unit</th><th>Amount</th><th>Total Price</th>
+                <th>Medicine ID</th><th>Medicine Name</th><th>Medicine Strength</th><th>Price per unit</th><th>Amount</th><th>Total Price</th><th>Action</th>
             </tr>
             <?php foreach($order_medicines as $key=>$order): ?>
                 <?php if( $order['status']=='include' ): ?>
@@ -62,6 +62,7 @@
                         <td><?=$order['current_price']?></td> 
                         <td><?=$order['order_amount']?></td> 
                         <td><?=$order['current_price']*$order['order_amount']?></td> 
+                        <td> <a class="delete-med" id=<?= $order['order_ID'].'-'.$order['med_ID'] ?> >Delete</a> </td>
                         <?php $total = $total + $order['current_price']*$order['order_amount'] ?>
                     </tr>
                 <?php else: ?>
@@ -82,6 +83,7 @@
                                 }
                             ?>
                         </td> 
+                        <td></td>
                     </tr>
                     <?php $NA_count = $NA_count + 1 ?>
                 <?php endif; ?>
@@ -92,12 +94,16 @@
         
     </table>
 </div>
-<h1 style="text-align: right;">Total Price : <?=$total?></h1>
+<h1 style="text-align: right;">Total Price : <?= 'LKR. '. number_format($total,2,'.','') ?></h1>
 
 
 <div class='upper-container'>
     <?php echo $component->button('delete','','Delete Order','button--class-3  width-10','delete');?>
-    <?php echo $component->button('finished','','Process','button--class-0  width-10','finished');?>
+    <?php 
+        if ($total!=0){
+            echo $component->button('finished','','Process','button--class-0  width-10','finished');
+        }
+    ?>
 </div>
 
 <!-- <div class="popup" id="popup">
@@ -112,13 +118,22 @@
 <script>
     const btn1=document.getElementById("delete");
     btn1.addEventListener('click',function(){
-        location.href="pharmacy-delete-front-processing-order?id="+<?=$order_details['order_ID']?>+'&total='+<?=$total?>; //get
+        location.href="pharmacy-delete-front-processing-order?id="+<?=$order_details['order_ID']?>+'&total='+<?=$total?>; 
     })
 
     const btn2=document.getElementById("finished");
     btn2.addEventListener('click',function(){
-        location.href="pharmacy-finish-front-processing-order?id="+<?=$order_details['order_ID']?>+'&total='+<?=$total?>; //get
+        location.href="pharmacy-finish-front-processing-order?id="+<?=$order_details['order_ID']?>+'&total='+<?=$total?>; 
     })
+
+    elementsArray = document.querySelectorAll(".delete-med");
+    elementsArray.forEach(function(elem) {
+        comp=""+elem.id; 
+        comp=comp.split("-");
+        elem.addEventListener("click", function() {
+            location.href='pharmacy-delete-front-med?id='+comp[0]+'&mid='+comp[1]; 
+        });
+    });
 
     function show(day){
         var x = document.getElementById(day);

@@ -188,6 +188,8 @@ $app->router->get('/ctest/pharmacy-new-order-items',[PharmacyController::class,'
 $app->router->post('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
 
 $app->router->get('/ctest/view-softcopy',[PharmacyController::class,'viewSoftcopy']);
+$app->router->get('/ctest/pharmacy-delete-pres-med',[PharmacyController::class,'deleteOrderItem']);
+$app->router->get('/ctest/pharmacy-delete-front-med',[PharmacyController::class,'deleteFrontOrderItem']);
 
 $app->router->get('/ctest/pharmacy-view-report',[PharmacyController::class,'viewReports']);
 $app->router->get('/ctest/pharmacy-view-personal-details',[PharmacyController::class,'viewPersonalDetails']);

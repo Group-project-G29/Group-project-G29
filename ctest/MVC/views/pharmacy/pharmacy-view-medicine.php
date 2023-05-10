@@ -13,7 +13,12 @@
 <div class="table-container">
 <table border="0">
     <tr>
-        <th></th><th>Product</th><th>Unit Price</th><th>Availabilty</th><th></th>
+        <th></th>
+        <th>Product</th>
+        <th>Unit Price</th>
+        <th>Availabilty</th>
+        <th>Available Amount</th>
+        <th></th>
     </tr>
     <?php foreach($medicines as $key=>$medicine): ?>
     <tr class="table-row">
@@ -21,6 +26,7 @@
         <td><?=$medicine['name']." ".$medicine['strength']." ".$medicine['unit']?></td>
         <td><?=$medicine['unit_price']?></td>  
         <td><?=($medicine['availability']=="NA")?"Not Available":"Available"; ?></td>
+        <td><?=$medicine['amount']?></td>
         <td>
             <div>
                 <?php echo $component->button('update','','Update','button--class-2',$medicine['med_ID']) ?>

@@ -115,6 +115,25 @@ class PharmacyController extends Controller{
             'medicine_array' => $medicine_array
         ]);
     }
+
+    public function deleteFrontOrderItem(Request$request){
+        $parameters=$request->getParameters();
+        $orderModel = new FrontdeskOrder();
+        $deleted_medicine = $orderModel->removeItem($parameters[0]['id'],$parameters[1]['mid']);
+        $order_details = $orderModel->get_order_details($parameters[0]['id'])[0];
+        $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
+        
+        //all medicine details
+        $medicineModel = new Medicine();
+        $medicine_array = $medicineModel->getAllMedicine();
+
+        $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+        return $this->render('pharmacy/pharmacy-frontdesk-view-pending',[
+            'order_details'=>$order_details,
+            'order_medicines'=>$order_medicines,
+            'medicine_array' => $medicine_array
+        ]);
+    }
     
     public function deleteFrontdeskOrder(Request $request){
         $parameters=$request->getParameters();
@@ -204,7 +223,7 @@ class PharmacyController extends Controller{
         $parameters=$request->getParameters();
         $orderModel = new FrontdeskOrder();
         $update_order_status = $orderModel->set_processing_status($parameters[0]['id'],'pickedup');
-        $update_payment_status = $orderModel->set_payment_status($parameters[0]['id']);
+        // $update_payment_status = $orderModel->set_payment_status($parameters[0]['id']);
 
         $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
         //get frontdesk orders
@@ -394,8 +413,8 @@ public function viewSoftcopy(Request $request){
         foreach ($sf_pres_med as $sf_pres_separate){
             foreach ($sf_pres_separate as $sf_pres_med_separate){
                 if($sf_pres_med_separate['order_amount']<=$sf_pres_med_separate['available_amount']){
-                    // reduce medicine amount from stocks
-                    $reduce_med_amount = $medicineModel->reduceMedicine($sf_pres_med_separate['med_ID'],$sf_pres_med_separate['order_amount'], true);
+                    // reduce medicine amount from stocks -  already reduced when adding
+                    // $reduce_med_amount = $medicineModel->reduceMedicine($sf_pres_med_separate['med_ID'],$sf_pres_med_separate['order_amount'], true);
                     // update prescription total for available medicines
                     $update_prescription_total = $prescriptionModel->update_prescription_total($sf_pres_med_separate["prescription_ID"],$sf_pres_med_separate["order_amount"]*$sf_pres_med_separate["current_price"]);
                     // calculate total
@@ -889,9 +908,9 @@ public function viewSoftcopy(Request $request){
 
         // add medicine to the prescription
         if ( $med_details[0]["amount"]>=$_POST["amount"] ) { 
-        // if available reduce stocks
-        $reduce_med_amount = $medicineModel->reduceMedicine($med_ID, $_POST["amount"], true);
-        $prescreption_medicine = $prescriptionModel->add_med_rec($med_ID, $parameters[0]['presid'], $_POST["amount"], $med_details[0]["unit_price"],'include');
+            // if available reduce stocks
+            $reduce_med_amount = $medicineModel->reduceMedicine($med_ID, $_POST["amount"], true);
+            $prescreption_medicine = $prescriptionModel->add_med_rec($med_ID, $parameters[0]['presid'], $_POST["amount"], $med_details[0]["unit_price"],'include');
         } else {
             $prescreption_medicine = $prescriptionModel->add_med_rec($med_ID, $parameters[0]['presid'], $_POST["amount"], $med_details[0]["unit_price"],'exclude');
         }
@@ -925,6 +944,56 @@ public function viewSoftcopy(Request $request){
             'ep_orders'=>$ep_orders,
             'sf_orders'=>$sf_orders,
             'model'=>$orderModel,
+            'medicine_array'=>$medicine_array
+        ]);
+    }
+
+    public function deleteOrderItem(Request $request){
+        $parameters=$request->getParameters();
+        $prescriptionModel = new Prescription();
+        $pres_med_details = $prescriptionModel->get_med_rec_details($parameters[0]['pid'],$parameters[1]['mid']);
+        $deleted_med = $prescriptionModel->remove_med_from_prescription($parameters[0]['pid'],$parameters[1]['mid']);
+        $medicineModel = new Medicine();
+        $increase_med_amount = $medicineModel->increaseMedicine($parameters[1]['mid'], $pres_med_details[0]['total_med_amount'], true); 
+        // var_dump($pres_med_details[0]["order_ID"]);exit;
+
+            //get order_id and pass
+        $this->setLayout("pharmacy",['select'=>'Orders']);
+        $orderModel=new Order();
+        $medicineModel=new Medicine();
+        $prescriptionModel=new Prescription();
+
+        //all medicine details
+        $medicine_array = $medicineModel->getAllMedicine();
+
+        //order details
+        $order_details = $orderModel->get_order_details($pres_med_details[0]["order_ID"]);
+
+        //online medicine details
+        $online_orders = $orderModel->view_online_order_details($pres_med_details[0]["order_ID"]);  
+        
+        //softcopy prescription details
+        $sf_orders = $orderModel->take_sf_orders($pres_med_details[0]["order_ID"]);                 
+        $sf_pres_med = [];
+        foreach ($sf_orders as $key=>$sf_order){
+            $sf_pres_med[$sf_order['prescription_ID']] = $orderModel->view_prescription_details($sf_order['prescription_ID']);
+        }
+        //e-prescription details
+        $ep_orders = $orderModel->take_ep_orders($pres_med_details[0]["order_ID"]);                 //prescription details
+        $ep_pres_med = [];
+        foreach ($ep_orders as $key=>$ep_order){
+            $ep_pres_med[$ep_order['prescription_ID']] = $orderModel->view_prescription_details($ep_order['prescription_ID']);
+        }
+
+        return $this->render('pharmacy/pharmacy-view-processing-order',[
+            'order_details'=>$order_details,
+            'online_orders'=>$online_orders,
+            'sf_pres_med'=>$sf_pres_med,
+            'ep_pres_med'=>$ep_pres_med,
+            'ep_orders'=>$ep_orders,
+            'sf_orders'=>$sf_orders,
+            'ordermodel'=>$orderModel,
+            'prescriptionmodel'=>$prescriptionModel,
             'medicine_array'=>$medicine_array
         ]);
     }

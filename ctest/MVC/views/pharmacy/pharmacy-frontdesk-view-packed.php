@@ -58,41 +58,23 @@
         </tr>
     </table>
 </div>
-<h1 style="text-align: right;">Total Price : <?=$total?></h1>
+<h1 style="text-align: right;">Total Price : <?= 'LKR. '. number_format($total,2,'.','') ?></h1>
 
 <div class='upper-container'>
     <?php echo $component->button('cancle-process','','Cancle Process','button--class-3  width-10','cancle-process');?>
     <?php echo $component->button('pickup','','Pick Up','button--class-0  width-10','pickup');?>
 </div>
 
-
-<!-- <div class="popup" id="popup">
-        <h2>Successful !!</h2>
-        <p> Notification has been sent.. </p>
-        <button type="button" onclick="closePopup()" id="ok">OK</button>
-</div> -->
-
-
-<!-- ==================== -->
 <script>
     
     const btn1=document.getElementById("cancle-process");
     btn1.addEventListener('click',function(){
-        location.href="pharmacy-frontdesk-cancle-order?id="+<?=$order_details[0]['order_ID']?>; //get
+        location.href="pharmacy-frontdesk-cancle-order?id="+<?=$order_details['order_ID']?>; 
     })
     
     const btn2=document.getElementById("pickup");
     btn2.addEventListener('click',function(){
-        location.href="pharmacy-frontdesk-pickup-order?id="+<?=$order_details[0]['order_ID']?>+'&total='+<?=$total?>; //get
+        location.href="pharmacy-frontdesk-pickup-order?id="+<?=$order_details['order_ID']?>+'&total='+<?=$total?>; 
     })
-
-    function show(day){
-        var x = document.getElementById(day);
-        if (x.hidden === true) {
-            x.hidden = false;
-        } else {
-            x.hidden = true;
-        }
-    }
 
 </script>
