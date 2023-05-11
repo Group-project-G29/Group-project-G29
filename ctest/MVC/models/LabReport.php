@@ -114,13 +114,16 @@ use app\core\PDF;
         } 
         public function create_new_report($fee, $type, $label, $template_ID, $location, $request_ID){
             $labTestModel=new LabTest();
+           
             //get total fee 
             $values=$labTestModel->fetchAssocAll(['template_ID'=>$template_ID])[0];
             $fee=$values['hospital_fee']+$values['test_fee'];
             $this->customFetchAll("INSERT INTO lab_report ( fee, type,label,template_ID,location,request_ID) VALUES ( $fee, 'e-report', '$label', $template_ID, '$location', $request_ID); ");
             $report_ID=$this->customFetchAll("select last_insert_id()")[0]['last_insert_id()'];
+           
             //create record in  test allocation table
             $labRequestModel=new LabTestRequest();
+           
             //get information from lab request table
             $request=$labRequestModel->fetchAssocAll(['request_ID'=>$request_ID])[0];
             $doctor=$request['doctor'];
@@ -150,16 +153,13 @@ use app\core\PDF;
             }
             else return false;
         }
-        // $_POST[1=>[123],2=>[234]]
 
         public function updateReportValue($report_ID){
             $reports=$_POST;
-            var_dump($_POST);
             foreach($reports as $key=>$value){
-                echo "update lab_report_content_allocation set int_value=".$value." where content_ID=$key and report_ID=".$report_ID;
                 if(is_numeric($key)){
 
-                    $this->customFetchAll("update lab_report_content_allocation set int_value=".$value." where content_ID=$key and report_ID=".$report_ID) ;
+                    $this->customFetchAll("update lab_report_content_allocation set int_value='".$value."' where content_ID=$key and report_ID=".$report_ID) ;
                 }
             }
             

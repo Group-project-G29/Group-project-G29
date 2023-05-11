@@ -200,9 +200,14 @@ class LabController extends Controller
     {
         $this->setLayout("lab", ['select' => 'Tests']);
         $labTestModel = new LabTest();
-        $tests = $labTestModel->customFetchAll("SELECT * FROM lab_tests");
+        $reportModel= new LabReport();
+        // $tests = $labTestModel->customFetchAll("SELECT * FROM lab_tests");
+        $reportDetail =$reportModel->customFetchAll("SELECT * FROM lab_report");
+        $tests = $labTestModel->customFetchAll("SELECT * FROM lab_report right join lab_tests on lab_report.template_ID=lab_tests.template_ID GROUP by lab_tests.template_ID");
+
         return $this->render('lab/lab-view-all-test', [
-            'tests' => $tests
+            'tests' => $tests,
+            'reportDetail'=>$reportDetail
         ]);
     }
 
@@ -236,46 +241,43 @@ class LabController extends Controller
         $reportallocation = $reportmodel->customFetchAll("SELECT lab_request.patient_ID,lab_request.doctor,lab_report.report_ID from lab_report join lab_request on lab_request.request_ID=lab_report.request_ID order by lab_report.report_ID desc");
 
         if ($request->isPost()) {
-
+            $AllocationModel = new LabContentAllocation();
+            
             $reportmodel->loadData($request->getBody());
             $reportmodel->loadFiles($_FILES);
-            $AllocationModel = new LabContentAllocation();
             $requst_reports = $reportmodel->get_report_by_ID($parameters[0]['id']);
-
+            
             if (!$requst_reports) {
                 $createReport = $reportmodel->create_new_report($reports[0]['fee'], ' ', ' ', $reports[0]['template_ID'], ' ', $parameters[0]['id']);
                 $setPayment = $reportmodel->payment($contents[0]['patient_ID'], $reports[0]['fee'], $parameters[0]['id']);
-                // var_dump($setPayment);
-                // exit;
-                // $createreportallocation = $reportmodel->create_report_allocation($createReport, $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);
-                // $createreportallocation = $reportmodel->create_report_allocation($reportallocation[0]['report_ID'], $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);
                 $requst_reports = $reportmodel->get_report_by_ID($parameters[0]['id']);
             }
-
+            
             $setreport = $reportmodel->customFetchAll("SELECT report_ID from lab_report where request_ID=" . $parameters[0]['id']);
+            // if ($AllocationModel->validate()) {
+                // echo 'validate';
+                // exit;
             foreach ($_POST as $content_ID => $value) {
-                if ($content_ID != "Add") {
-                    if ($AllocationModel->get_types($content_ID)[0]['type'] === 'field') {
-                        $AllocationModel->add_field_allocation($setreport[0]['report_ID'], $content_ID, $value);
-                    } elseif ($AllocationModel->get_types($content_ID)[0]['type'] === 'text') {
-                        $AllocationModel->add_text_allocation($setreport[0]['report_ID'], $content_ID, $value);
-                    } else {
-                        $AllocationModel->add_image_allocation($setreport[0]['report_ID'], $content_ID, $value);
+                    if ($content_ID != "Add") {
+                        if ($AllocationModel->get_types($content_ID)[0]['type'] === 'field') {
+                            $AllocationModel->add_field_allocation($setreport[0]['report_ID'], $content_ID, $value);
+                        } elseif ($AllocationModel->get_types($content_ID)[0]['type'] === 'text') {
+                            $AllocationModel->add_text_allocation($setreport[0]['report_ID'], $content_ID, $value);
+                        } else {
+                            $AllocationModel->add_image_allocation($setreport[0]['report_ID'], $content_ID, $value);
+                        }
                     }
-                    // echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
-
                 }
-            }
 
-            echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
+            // }
+                echo $reportmodel->labreporttoPDF($setreport[0]['report_ID']);
 
-            Application::$app->session->setFlash('success', "Lab Report successfully added ");
-            Application::$app->response->redirect('/ctest/lab-view-all-report');
-            exit;
+                Application::$app->session->setFlash('success', "Lab Report successfully added ");
+                Application::$app->response->redirect('/ctest/lab-view-all-report');
+                exit;
         }
         return $this->render('lab/lab-write-test-result', [
             'contentmodel' => $contentModel,
-            // 'allocationmodel' => $AllocationModel,
             'contents' => $contents
         ]);
     }
@@ -329,8 +331,6 @@ class LabController extends Controller
                 exit;
             }
         }
-
-
     }
     public function ReportDetail(Request $request, Response $response)
     {
@@ -416,14 +416,12 @@ class LabController extends Controller
             $reportmodel->type = 'softcopy';
             $reportmodel->template_ID = $reports[0]['template_ID'];
             $reportmodel->request_ID = $parameters[0]['id'];
-            // $createReport=$reportmodel->customFetchAll("SELECT report_ID from lab_report order by report_ID desc");
-            // $createreportallocation = $reportmodel->create_report_allocation($createReport, $reportallocation[0]['patient_ID'], $reportallocation[0]['doctor']);
-            // var_dump($reportmodel->report_ID);
+
             $report_ID = $reportmodel->save();
 
             if ($report_ID) {
-                //create record in  test allocation table
                 $labRequestModel = new LabTestRequest();
+
                 //get information from lab request table
                 $request = $labRequestModel->fetchAssocAll(['request_ID' => $parameters[0]['id']])[0];
                 $doctor = $request['doctor'];

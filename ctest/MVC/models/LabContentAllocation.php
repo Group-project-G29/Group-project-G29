@@ -24,7 +24,7 @@ class LabContentAllocation extends DbModel{
             'report_ID'=>[self::RULE_REQUIRED],
             'content_ID'=>[self::RULE_REQUIRED],
             'location'=>[],
-            'int_value'=>[self::RULE_NUMBERS],
+            'int_value'=>[self::RULE_NUMBERS,self::RULE_REQUIRED],
             'text_value'=>[]
 
 

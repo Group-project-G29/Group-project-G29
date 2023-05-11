@@ -31,13 +31,13 @@ $component = new Component();
             <?php echo $component->button('Add', '', 'Add', 'button--class-0  width-10 ', 'add'); ?>
         </div>
         <?php foreach ($contents as $key => $content) : ?>
-
-            <div class="subscribe">
-             <label for="cname"><?php echo $content["cname"] ?></label></tr>
-                <input  class="subscribe-input" name=<?= $content["content_ID"] ?> type="email">
-                <!-- <label for="cname"><?php echo $content["metric"] ?></label><br><br></tr> -->
-
-                <br>
+           
+            <div class="inputbox">
+                <table border="0">
+               <tr> <label for="cname"><?php echo $content["cname"] ?></label></tr>
+               <tr><input type='text' id=<?= $content["content_ID"] ?> name=<?= $content["content_ID"] ?>></tr>
+               <tr> <label for="cname"><?php echo $content["metric"] ?></label><br><br></tr>
+                </table>
             </div>
         <?php endforeach; ?>
 
