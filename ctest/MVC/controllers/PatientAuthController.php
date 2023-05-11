@@ -644,17 +644,20 @@ class PatientAuthController extends Controller{
     public function patientDashboard(Request $request,Response $response){
         $parameters=$request->getParameters();
         $orderModel=new Order();
+        $patientNotification=new PatientNotification();
         if(isSet($parameters[0]['spec']) && $parameters[0]['spec']=="orders"){
             
             $this->setLayout('patient',['select'=>'My Orders']);
             $orderModel=new Order();
             if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='reject'){
                 $orderModel->setOrderStatus($parameters[2]['id'],'rejected');
+                $patientNotification->deleteRecord(['order_ID'=>$parameters[2]['id']]);
                 $response->redirect("patient-dashboard?spec=orders");
                 return true;
             }
             else if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='accept'){
                 $orderModel->setOrderStatus($parameters[2]['id'],'accepted');
+                $patientNotification->deleteRecord(['order_ID'=>$parameters[2]['id']]);
                 $response->redirect("patient-dashboard?spec=orders");
                 return true;
             }
@@ -719,9 +722,13 @@ class PatientAuthController extends Controller{
             $testModel=new LabReport();
             $this->setLayout('patient',['select'=>"Medical Analysis"]);
             $array['Choose']='choose';
+            $patient=new Patient();
             $reports=$testModel->customFetchAll("Select distinct lab_tests.name,lab_report_template.template_ID from lab_report_allocation left join lab_report on lab_report.report_ID=lab_report_allocation.report_ID left join lab_report_template on lab_report_template.template_ID=lab_report.template_ID left join lab_tests on lab_tests.template_ID=lab_report_template.template_ID where lab_report_allocation.patient_ID=".Application::$app->session->get('user'));
             foreach($reports as $report){
-                $array[$report['name']]=$report['template_ID'];
+                
+                    $array[$report['name']]=$report['template_ID'];
+
+                
             }
             if(isset($parameters[1]['id'])){
                 $values=$testModel->getAllParameterValue(Application::$app->session->get('user'),$parameters[1]['id']);

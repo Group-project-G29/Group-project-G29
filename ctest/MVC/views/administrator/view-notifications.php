@@ -8,7 +8,7 @@
 ?>
 <div class='upper-container'>
     <div class="search-bar-container">
-        <?php echo $component->searchbar($model,"title","search-bar--class1","Search by Doctor ID","searh");?>
+        <?php echo $component->searchbar($model,"title","search-bar--class1","Search by Doctor ID","search");?>
         <?php // echo $component->button('new-notification','','Add New notification','button--class-0  width-20','new-notification');?>
     </div>
 </div>
@@ -27,7 +27,7 @@
             $nic = $notification['doctor'];
             $senderName = $employeeModel->customFetchAll("SELECT name FROM `employee` WHERE nic=$nic;");
         ?>
-        <div class="notification-div <?=$isRead?>" onclick="update(<?=$notification['noti_ID']?>)">
+        <div class="notification-div <?=$isRead?>" id=<?="'".$senderName[0]['name']."'"?></ onclick="update(<?=$notification['noti_ID']?>)">
             
             <div class="doctor-name">Sender : <?=$senderName[0]['name']?></div>
             <div class="content"><?=$notification['content']?></div>
@@ -51,10 +51,7 @@
 </div>
 
 <script>
-    const btn=document.getElementById("new-notification");
-    btn.addEventListener('click',function(){
-        location.href="admin-handle-notification";
-    })
+
     
     function deletenoty(id){
         location.href='admin-notification?cmd=delete&id='+id;
@@ -62,4 +59,30 @@
     function update(id){
         location.href='admin-notification?cmd=update&id='+id;
     }
+    const nots=document.querySelectorAll('.notification-div');
+    const searchBar=document.getElementById('search');
+       
+    
+    function checker(){    
+        var re=new RegExp(("^"+searchBar.value).toLowerCase())
+        nots.forEach((el)=>{
+            comp=""+el.id;
+            comp=comp.split("-");
+            if(searchBar.value.length==0){
+            }
+            else if(re.test(comp[0].toLowerCase())){
+                el.classList.remove("none");
+            }
+            else{
+                el.classList.add("none");
+               
+            }
+        })
+        if(searchBar.value.length==0){
+            not.forEach((el)=>{
+                el.classList.remove("none");
+            }) 
+        }
+    }
+    searchBar.addEventListener('input',checker);
 </script>

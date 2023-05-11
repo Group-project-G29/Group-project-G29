@@ -1,12 +1,25 @@
 <?php
 
+use app\core\Application;
 use app\core\component\Component;
 use app\core\form\Form;
+use app\models\Prescription;
+
     $form=new Form();
     $component=new Component();
+    $prescriptoinModel=new Prescription();
  
 ?>
+<div class="switcher shake-2">
+    <img src=".\media\images\common\switch.png">
+</div>
+<script>
+    const poper=document.querySelector(".switcher");
+    poper.addEventListener('click',()=>{
+        location.href="doctor-move";
+    })
 
+</script>
 <section class="main-dashboard">
 <section>
     <?php $form->begin('','post');?>
@@ -16,7 +29,6 @@ use app\core\form\Form;
                 <?=$form->textarea($prescriptionModel,'note','note','Note',2,100,$prescriptionModel->note,''); ?>
             </div>
             <div class="refills">
-                <?=$form->spanfield($prescriptionModel,'refills','Refills','field','number',''); ?>
             </div>
         </div>
         <br>
@@ -37,6 +49,14 @@ use app\core\form\Form;
             
             <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
         </div>
+    </section>
+    <section>
+        <?php $pres=$prescriptoinModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'))?>
+        <?php $med=$prescriptoinModel->fetchAssocAllByName(['prescription_ID'=>$pres],'prescription_medicine');?>
+        <?php $res=$prescriptoinModel->fetchAssocAll(['prescription_ID'=>$prescriptionModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'))]) ?>
+        <?php if($med && !$res[0]['order_ID']):?>
+            <?=$component->button('sendbtn','',"Send Prescription to Pharmacy",'button--class-0','sendp')?>
+        <?php endif;?>
     </section>
     <?php $form->end(); ?>
 
@@ -127,4 +147,9 @@ use app\core\form\Form;
             location.href="doctor-prescription?spec=prescription&cmd=delete&id="+el.id
         })
     })
+    const send=document.getElementById('sendp');
+    send.addEventListener('click',(event)=>{
+            event.preventDefault();
+            location.href="doctor-prescription?cmd=send";
+        })
 </script>

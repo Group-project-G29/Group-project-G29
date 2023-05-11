@@ -19,6 +19,7 @@ use app\models\Appointment;
 use app\models\Payment;
 use app\core\SummaryReportsPayment;
 use app\core\SummaryReportsPatients;
+use app\models\Patient;
 
 class AdminController extends Controller{
     // create add,view channeling session
@@ -580,7 +581,7 @@ class AdminController extends Controller{
     }
 
 
-    public function test(Request $request){
+         public function test(Request $request){
 
         $parameters=$request->getParameters();
         // var_dump($parameters);exit;
@@ -596,4 +597,5 @@ class AdminController extends Controller{
 
         }
     }
+    
 }

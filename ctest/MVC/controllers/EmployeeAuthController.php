@@ -72,15 +72,16 @@ class EmployeeAuthController extends Controller{
             if($request->isPost()){
                 
                 $employee->loadData($request->getBody());
-                $pat=$employee->fetchAssocAll(['email'=>$employee->email,'employee_status'=>'active'])[0];
+                $pat=$employee->fetchAssocAll(['email'=>$employee->email,'employee_status'=>'active']);
             
                 if(!$pat){
-                    $employee->customAddError('nic',"No  Exists with this Email");
+                    $employee->customAddError('nic',"No Account Exists with this NIC number");
                     return $this->render('get-nic',[
                         'patient'=>$employee
                     ]);
                 }
                 else{
+                    $pat=$pat[0];
                     $OTP=new OTP();
                     Application::$app->session->set('temp_user',$pat['emp_ID']);
                     $p=$employee->findOne(['emp_ID'=>$pat['emp_ID']]);

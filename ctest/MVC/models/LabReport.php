@@ -71,8 +71,12 @@ use app\core\PDF;
         public function getAllParameterValue($patient,$template_ID){
             $contents=$this->distinctPatientTests($patient,$template_ID);
             $contentArray=[];
+            $patientModel=new Patient();
             foreach($contents as $content){
-                $contentArray[$content['name']]=[$this->getTestValue($patient,$content['content_ID'])];
+                if($patientModel->isValidParam($content['content_ID'])){
+                    $contentArray[$content['name']]=[$this->getTestValue($patient,$content['content_ID'])];
+
+                }
             }
         
             return $contentArray;

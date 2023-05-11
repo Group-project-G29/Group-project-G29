@@ -433,6 +433,7 @@ button:hover{
     margin-left: 4vw;
     display: flex;
     align-items: center;
+    margin-top: 2vh;
     margin-bottom: 2vh;
 }
 
@@ -494,4 +495,25 @@ button:hover{
 .open-channeling-btn{
     margin-left: 1vw;
     width: 300px;
+}
+/* after */
+
+.upper-update{
+    background-color: white;
+    border-radius:10px;
+    padding-block: 0.5vh;
+}
+.lower-update{
+    background-color: white;
+    border-radius:10px;
+    padding-block: 0.5vh; 
+    margin-top:1vh; 
+}
+
+.desc{
+    font-size:18;
+    margin-bottom:1.5vh;
+}
+.width-set{
+    max-width:1vw;
 }

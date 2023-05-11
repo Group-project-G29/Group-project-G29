@@ -124,6 +124,7 @@ $app->router->get('/ctest/notification',[DoctorController::class,'handleNotis'])
 $app->router->post('/ctest/notification',[DoctorController::class,'handleNotis']);
 $app->router->get('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
 $app->router->post('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
+$app->router->get('/ctest/doctor-move',[DoctorController::class,'mover']);
 
 
 //-------------------pharmacy routers-----------------------------------------

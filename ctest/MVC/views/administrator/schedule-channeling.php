@@ -53,13 +53,13 @@ $form=Form::begin('','post');
             <table style="margin-top:-15vh;">    
                 <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Select'=>'','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday'])?>
                 <?php echo $form->spanfield($channelingmodel,'time','Starting Time*','field','time') ?>
-                <?php echo $form->spanfield($channelingmodel,'session_duration','Session Duration*','field without_ampm','time') ?>
+                <?php echo $form->spanfield($channelingmodel,'session_duration','Session Duration(hours)*','field without_ampm','text') ?>
                 <?php echo $form->spanfield($channelingmodel,'start_date','Starting Date*','field','date') ?>
 
                 <?php echo $form->spanfield($channelingmodel,'open_before','Open before','field','text') ?>
 
-                <?php echo $form->spanfield($channelingmodel,'schedule_for','Schedule For*','field','text') ?>
-                <?php echo $form->spanselect($channelingmodel,'schedule_type','','field',['Select'=>'','Week'=>'weeks','Month'=>'months','Year'=>'years'])?>
+                <?php echo $form->spanfield($channelingmodel,'schedule_for','Schedule For*','field width-set','text') ?>
+                <?php echo $form->spanselect($channelingmodel,'schedule_type','','field width-set',['Select'=>'','Week'=>'weeks','Month'=>'months','Year'=>'years'])?>
                 
 
 

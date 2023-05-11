@@ -48,5 +48,9 @@ class Form{
     public function editableselectversion2($name,$label,$class,$options){
         return new EditableSelectVersion2($name,$label,$class,$options);
     }
+    public function specspanselect(Model $model,$name,$label,$class,$options,$id=""){
+        return new SpanSelect($model,$name,$label,$class,$options,$id);
+    }
+    
  }
 ?>

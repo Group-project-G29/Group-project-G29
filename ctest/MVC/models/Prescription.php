@@ -144,7 +144,7 @@ class Prescription extends DbModel{
         //check if there is prescription
         $prescription=$this->isTherePrescription($patientID,$channelingID);
         $note=$_POST['note'];
-        $refills=$_POST['refills'];
+        $refills=0;
         if(!$prescription){
             $prescription=$this->createNewPrescription($patientID);
         }
@@ -521,6 +521,7 @@ class Prescription extends DbModel{
         
 
     }
+
     public function prescriptionToPDF($presID){
         $pdfModel=new PDF();
         
@@ -530,7 +531,7 @@ class Prescription extends DbModel{
         $medrows='<tr><th>Medicine</th><th>Frequency</th><th>Amount per Dose</th><th>Dispense</th></tr>';
         $devrows='<tr><th>Device</th><th>Amount</th></tr>';
         $note=($header['note'])?'*'.$header['note']:'';
-        $last=($header['last_processed_timestamp'])?'(Last Processed Date :'.$header['last_processed_timestamp'].")":'';
+        $last=($header['last_processed_timestamp'])?'Last Processed Date :'.$header['last_processed_timestamp']."":'';
         $head="<h3>Medical Devices</h3>";
         if($meds){
             foreach($meds as $med){
@@ -577,7 +578,7 @@ class Prescription extends DbModel{
                         </div>
                         <div>
                                 <br>Patient :".$header['name']."
-                                <br><br>Refills :".$header['refills']."  ".$last."
+                                <br><br>".$last."
                             </div>
 
                         
@@ -632,6 +633,26 @@ class Prescription extends DbModel{
      public function reset_total ( $pres_ID ) {
          return $this->customFetchAll(" UPDATE prescription SET total_price=0 WHERE prescription_ID = $pres_ID; ");
      }
+
+    //  new function added by nimantha
+    public function checkAmount($order_ID){
+        $prescriptionModel=new Prescription();
+        $medicinesModel=new Medicine();
+        $nameds=[];
+        $prescriptions=$prescriptionModel->fetchAssocAll(['order_ID'=>$order_ID,'type'=>'softcopy prescription']);
+        foreach($prescriptions as $prescription){
+            $medicines=$prescriptionModel->fetchAssocAllByName(['prescription_ID'=>$prescription['prescription_ID']],'prescription_medicine');
+            foreach($medicines as $medicine){
+                $orderamount=$medicine['total_med_amount'];
+                $avamount=$medicinesModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0]['amount'];
+                if($orderamount>$avamount){
+                    array_push($nameds,$medicinesModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0]['name']);
+                }
+            }
+
+        }
+        return $nameds;
+    }
  
 
 }   

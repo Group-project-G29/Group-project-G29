@@ -39,7 +39,7 @@ use app\models\Appointment;
                         <h3>Fee :LKR <?=number_format($value['fee'],2,'.','')?></h3>
                     </div>
                     <?php if(Application::$app->session->get('user')): ?>
-                    <div>
+                    <div class="set-w">
                        
                         <?php if($openedChanneling->isPatientIn(Application::$app->session->get('user'),$value['opened_channeling_ID'])):?>
                                 <?php echo "Already have an appointment" ?>
@@ -49,7 +49,7 @@ use app\models\Appointment;
                             <?php echo "Not taking any appointments" ?>
                         <?php elseif(!$openedChanneling->isPatientIn(Application::$app->session->get('user'),$value['opened_channeling_ID'])):?>
                             <?= $component->button('add-appointment','','+ Add Consultation Appointment','button--class-1 width-10',$value['opened_channeling_ID']);?>
-                        <?php if($appointmentModel->labReportEligibility(Application::$app->session->get('user'),$value['nic'],$value['opened_channeling_ID'])):?>
+                        <?php if(!$appointmentModel->labReportEligibility(Application::$app->session->get('user'),$value['nic'],$value['opened_channeling_ID'])):?>
                             <?= $component->button('add-appointment','','+ Add Medical Report Consultation','button--class-5',$value['opened_channeling_ID']);?>
                         <?php endif; ?>
                         <?php endif; ?>

@@ -1018,5 +1018,40 @@
     background-color: var(--clr-dark);
     color:white;
 }
+.switcher{
+    position: fixed;
+    top:17vh;
+    left:90vw;
+    width:10vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:5vw;
+    height:10vh;
+    z-index:100;
+    background-color: white;
+    border-radius: 100%;
+    z-index: 100;
+    box-shadow: 0px 0px 20px 1px #e7e7e7;
+    background-color: rgba(11, 11, 245, 0.548);
+}
+.switcher img{
+    width:3vw;
+    height:5vh;
+}
+.shake-2{
+    animation:shaker 4s infinite;
 
+}
 
+@keyframes shaker{
+    0%{margin-top:-3px;}
+    12%{margin-top:3px}
+    25%{margin-top:-3px}
+    37%{margin-top:3px}
+    50%{margin-top:-3px}
+    67%{margin-top:3px}
+    75%{margin-top:0px}
+    87%{margin-top:0px}
+    100%{margin-top:0px}
+}

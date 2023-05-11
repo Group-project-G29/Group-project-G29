@@ -259,12 +259,7 @@
     })
 
 
-    elementsArray = document.querySelectorAll(".view-prescription");
-    elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href="view-softcopy?id="+elem.id; 
-        });
-    });
+
 
     function show(day){
         var x = document.getElementById(day);

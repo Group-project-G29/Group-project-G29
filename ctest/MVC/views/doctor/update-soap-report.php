@@ -37,7 +37,7 @@ use app\core\form\Form;
                 <?= $form->select($model,'report_ID','','',['SOAP Report'=>'soap-report','Consultation Report'=>'consultation-report','Medical History Report'=>'medical-history-report','Refferal'=>'referral'],'select-main') ?>
             </div>
             <div class="write-referral-btn">
-                <?= $component->button('','submit','Add Report','button--class-0'); ?>
+                <?= $component->button('','submit','Update Report','button--class-0'); ?>
             </div>
         </div>
         <div>
