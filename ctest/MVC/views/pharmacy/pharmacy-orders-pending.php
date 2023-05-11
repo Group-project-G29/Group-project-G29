@@ -157,27 +157,27 @@
 <script>
     elementsArray1 = document.querySelectorAll(".orders-pending-with-note");
     elementsArray1.forEach(function(elem) {
-        comp=""+elem.id; 
-        comp=comp.split("-");
         elem.addEventListener("click", function() {
+            comp=""+elem.id; 
+            comp=comp.split("-");
             location.href='pharmacy-view-pending-order?id='+comp[0]; 
         });
     });
 
     elementsArray2 = document.querySelectorAll(".table-row_green");
     elementsArray2.forEach(function(elem) {
-        comp=""+elem.id; 
-        comp=comp.split("-");
         elem.addEventListener("click", function() {
+            comp=""+elem.id; 
+            comp=comp.split("-");
             location.href='pharmacy-view-pending-order?id='+comp[0]; 
         });
     });
 
     elementsArray3 = document.querySelectorAll(".orders-pending-with-note_row_gray_view");
     elementsArray3.forEach(function(elem) {
-        comp=""+elem.id; 
-        comp=comp.split("-");
         elem.addEventListener("click", function() {
+            comp=""+elem.id; 
+            comp=comp.split("-");
             location.href='pharmacy-view-pending-order?id='+comp[0]; 
         });
     });

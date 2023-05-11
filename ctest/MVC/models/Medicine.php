@@ -172,6 +172,10 @@ class Medicine extends DbModel{
         return $this->fetchAssocAll(['med_ID'=>$med_ID])[0]['unit_price'];
     }
 
+    public function MedicineIDbyNameStrength($name,$strength){
+        return $this->fetchAssocAll(['name'=>$name,'strength'=>$strength]);
+    }
+
     
 }   
 

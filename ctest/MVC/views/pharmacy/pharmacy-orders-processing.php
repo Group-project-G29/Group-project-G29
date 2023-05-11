@@ -69,9 +69,9 @@
 
     elementsArray = document.querySelectorAll(".table-row");
     elementsArray.forEach(function(elem) {
-        comp=""+elem.id; 
-        comp=comp.split("-");
         elem.addEventListener("click", function() {
+            comp=""+elem.id; 
+            comp=comp.split("-");
             location.href='pharmacy-view-processing-order?id='+comp[0]; 
         });
     });

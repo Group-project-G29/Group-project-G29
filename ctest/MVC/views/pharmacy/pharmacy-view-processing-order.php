@@ -4,6 +4,7 @@
     $component=new Component();
     $total = 0;
     $NA_count =0;
+
     // var_dump($sf_orders);exit;
 ?>
 
@@ -147,22 +148,29 @@
                             <?php $form->begin('pharmacy-new-order-items?presid='.$sf_order['prescription_ID'],'post');?>
                                 <div class="prescription-field-container">
                                     <table border=0>
-                                    <tr>
-                                        <td>
-                                            <div class="cls-name">
-                                                <?=$form->editableselect('name'.$sf_order['prescription_ID'],'Medical Product*','',$medicine_array);  ?>
-                                            </div> 
-                                        </td>
-                                        <td>
-                                            <div class="cls-amount">
-                                                <?=$form->editableselect('amount','Amount*','',[]); ?>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="cls-name">
+                                                    <?=$form->editableselect('name'.$sf_order['prescription_ID'],'Medical Product*','',$medicine_array);  ?>
+                                                </div> 
+                                            </td>
+                                            <td>
+                                                <div class="cls-amount">
+                                                    <?=$form->editableselect('amount','Amount*','',[]); ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
+                                            </td>
+                                        </tr>
                                     </table>
+                                    <?php
+                                        if (isset($err)){
+                                            if($err === "incorrect_medicine"){
+                                                echo '<p class="err-msg"><em><b>*Incorrect Medicine Name Entered</b></em></p>';
+                                            }
+                                        }
+                                    ?>
                                 </div>
                             <?php $form->end(); ?>
                             <button><a class="view-prescription" target="_blank"  href="view-softcopy?id=<?=$sf_order['prescription_ID']?>" >
@@ -213,7 +221,7 @@
                                                 }
                                             ?>    
                                         </td>
-                                        <td></td>
+                                        <td> <a class="delete-med" id=<?= $sf_order['prescription_ID'].'-'.$sf_pres_medicine['med_ID'] ?> >Delete</a> </td>
                                         <?php $NA_count = $NA_count + 1 ?>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
@@ -269,9 +277,9 @@
 
     elementsArray = document.querySelectorAll(".delete-med");
     elementsArray.forEach(function(elem) {
-        comp=""+elem.id; 
-        comp=comp.split("-");
         elem.addEventListener("click", function() {
+            comp=""+elem.id; 
+            comp=comp.split("-");
             location.href='pharmacy-delete-pres-med?pid='+comp[0]+'&mid='+comp[1]; 
         });
     });

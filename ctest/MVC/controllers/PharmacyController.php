@@ -897,29 +897,71 @@ public function viewSoftcopy(Request $request){
         // get the medicine name array
         $medName = explode('-',$_POST['name'.$pres_ID]);
         $medicineModel = new Medicine();
-        // get medicine id using the above array
-        $med_ID = $medicineModel->getMedicineID($medName[0],$medName[1]);
-        // get medicine details
-        $med_details = $medicineModel->get_medicine_details($med_ID);
+
+        if ( isset($medName[0]) && isset($medName[1])){
+            // get medicine id using the above array
+            $med_ID = $medicineModel->MedicineIDbyNameStrength($medName[0],$medName[1]);
+
+            if( $med_ID ){
+                // get medicine details
+                $med_details = $medicineModel->get_medicine_details($med_ID[0]['med_ID']);
+                
+                // get order details
+                $prescriptionModel = new Prescription();
+                $pres_order_ID = $prescriptionModel->get_order_ID_by_pres_ID($pres_ID);
+
+                // add medicine to the prescription
+                if ( $med_details[0]["amount"]>=$_POST["amount"] ) { 
+                    // if available reduce stocks
+                    $reduce_med_amount = $medicineModel->reduceMedicine($med_ID[0]['med_ID'], $_POST["amount"], true);
+                    $prescreption_medicine = $prescriptionModel->add_med_rec($med_ID[0]['med_ID'], $parameters[0]['presid'], $_POST["amount"], $med_details[0]["unit_price"],'include');
+                } else {
+                    $prescreption_medicine = $prescriptionModel->add_med_rec($med_ID[0]['med_ID'], $parameters[0]['presid'], $_POST["amount"], $med_details[0]["unit_price"],'exclude');
+                }
+                
+                $this->setLayout("pharmacy",['select'=>'Orders']);
+                $orderModel=new Order();
+                $medicine_array = $medicineModel->getAllMedicine();
+                $order_details = $orderModel->get_order_details($pres_order_ID[0]["order_ID"]);
+                
+                // online medicine details
+                $online_orders = $orderModel->view_online_order_details($pres_order_ID[0]["order_ID"]);  
+                
+                // softcopy prescription details
+                $sf_orders = $orderModel->take_sf_orders($pres_order_ID[0]["order_ID"]);                 
+                $sf_pres_med = [];
+                foreach ($sf_orders as $key=>$sf_order){
+                    $sf_pres_med[$sf_order['prescription_ID']] = $orderModel->view_prescription_details($sf_order['prescription_ID']);
+                }
+                // e-prescription details
+                $ep_orders = $orderModel->take_ep_orders($pres_order_ID[0]["order_ID"]);                 
+                $ep_pres_med = [];
+                foreach ($ep_orders as $key=>$ep_order){
+                    $ep_pres_med[$ep_order['prescription_ID']] = $orderModel->view_prescription_details($ep_order['prescription_ID']);
+                }
+                
+                return $this->render('pharmacy/pharmacy-view-processing-order',[
+                    'order_details'=>$order_details,
+                    'online_orders'=>$online_orders,
+                    'sf_pres_med'=>$sf_pres_med,
+                    'ep_pres_med'=>$ep_pres_med,
+                    'ep_orders'=>$ep_orders,
+                    'sf_orders'=>$sf_orders,
+                    'model'=>$orderModel,
+                    'medicine_array'=>$medicine_array
+                ]);
+            } 
+        }
         
         // get order details
         $prescriptionModel = new Prescription();
         $pres_order_ID = $prescriptionModel->get_order_ID_by_pres_ID($pres_ID);
-
-        // add medicine to the prescription
-        if ( $med_details[0]["amount"]>=$_POST["amount"] ) { 
-            // if available reduce stocks
-            $reduce_med_amount = $medicineModel->reduceMedicine($med_ID, $_POST["amount"], true);
-            $prescreption_medicine = $prescriptionModel->add_med_rec($med_ID, $parameters[0]['presid'], $_POST["amount"], $med_details[0]["unit_price"],'include');
-        } else {
-            $prescreption_medicine = $prescriptionModel->add_med_rec($med_ID, $parameters[0]['presid'], $_POST["amount"], $med_details[0]["unit_price"],'exclude');
-        }
-
+        
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $orderModel=new Order();
         $medicine_array = $medicineModel->getAllMedicine();
         $order_details = $orderModel->get_order_details($pres_order_ID[0]["order_ID"]);
-
+        
         // online medicine details
         $online_orders = $orderModel->view_online_order_details($pres_order_ID[0]["order_ID"]);  
         
@@ -935,7 +977,7 @@ public function viewSoftcopy(Request $request){
         foreach ($ep_orders as $key=>$ep_order){
             $ep_pres_med[$ep_order['prescription_ID']] = $orderModel->view_prescription_details($ep_order['prescription_ID']);
         }
-
+        
         return $this->render('pharmacy/pharmacy-view-processing-order',[
             'order_details'=>$order_details,
             'online_orders'=>$online_orders,
@@ -944,7 +986,8 @@ public function viewSoftcopy(Request $request){
             'ep_orders'=>$ep_orders,
             'sf_orders'=>$sf_orders,
             'model'=>$orderModel,
-            'medicine_array'=>$medicine_array
+            'medicine_array'=>$medicine_array,
+            'err' => 'incorrect_medicine'
         ]);
     }
 
