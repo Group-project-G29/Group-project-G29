@@ -262,6 +262,18 @@ use app\core\DbModel;
         // public function get_frontdesk_last_order ( $name ) {
         //     return $this->customFetchAll(" SELECT * FROM _order WHERE patient_ID=$name ");
         // }
+
+        public function get_today_online_order_count( $curr_date ){
+            return $this->customFetchAll(" SELECT COUNT(order_ID) FROM _order WHERE created_date='$curr_date' ");
+        }
+
+        public function get_today_to_be_processed_online_order_count( $curr_date ){
+            return $this->customFetchAll(" SELECT COUNT(order_ID) FROM _order WHERE created_date='$curr_date' AND completed_date IS NULL ");
+        }
+
+        public function select_this_month_orders( $year_month ){
+            return $this->customFetchAll(" SELECT * FROM _order WHERE created_date LIKE '$year_month%' ");
+        }
     }
 
 ?>

@@ -112,6 +112,14 @@ use app\core\DbModel;
             return $this->customFetchAll(" DELETE FROM frontdesk_medicine WHERE order_ID = $order_ID ");
         }
 
+        public function get_today_frontdesk_order_count( $curr_date ){
+            return $this->customFetchAll(" SELECT COUNT(order_ID) FROM frontdesk_order WHERE date='$curr_date' ");
+        }
+
+        public function select_this_month_orders( $year_month ){
+            return $this->customFetchAll(" SELECT * FROM frontdesk_order WHERE date LIKE '$year_month%' ");
+        }
+
         // public function get_frontdesk_last_order ( $name ) {
         //     return $this->customFetchAll(" SELECT * FROM _order WHERE patient_ID=$name ");
         // }

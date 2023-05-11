@@ -1,32 +1,30 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
-    // var_dump($medicine_income[0][1]);exit;
-
 ?>
 
 <div class="cards">
     <div class="card">
         <div class="card-content">
-            <div class="number">45</div>
+            <div class="number"><?=$order_count['Online orders'] + $order_count['Frontdesk Orders']?></div>
             <div class="card-name">No of orders on Today</div>
         </div>
     </div>
     <div class="card">
         <div class="card-content">
-            <!-- <div class="number"><?=$doctorsCount?></div> -->
-            <div class="card-name">Orders to be processed</div>
+            <div class="number"><?= $to_be_processed_orders ?></div>
+            <div class="card-name">Orders to be processed via Online</div>
         </div>
     </div>
     <div class="card">
         <div class="card-content">
-            <!-- <div class="number"><?=$employeesCount?></div> -->
+            <div class="number"><?= $no_of_orders_this_month ?></div>
             <div class="card-name">No of Orders in this month</div>
         </div>
     </div>
     <div class="card">
         <div class="card-content">
-            <!-- <div class="number"><?=$thisMonthEarnings?></div> -->
+            <div class="number"><?= $income_in_this_month ?></div>
             <div class="card-name">This Month Income</div>
         </div>
     </div>
@@ -40,7 +38,8 @@
     </div>
 
     <div class="chart" >
-        <h2>Number of orders</h2>
+        <h2>Today Orders</h2>
+        <canvas id="itemChart" height="240px"></canvas>
     </div>
 
 </div>
@@ -97,6 +96,43 @@
         }
     });
 
+    const order_count = <?= json_encode($order_count); ?>;
+
+    var ctx = document.getElementById('itemChart').getContext('2d');
+    var itemChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Online orders','Frontdesk Orders'],
+            datasets: [{
+                // label: 'My Pie Chart',
+                data: [<?=$order_count['Online orders']?>,<?=$order_count['Frontdesk Orders']?>],
+                backgroundColor: [
+                    '#1746A2',
+                    '#38B6FF'
+                ]
+            }]
+        },
+        options: {
+            title: {
+                display: false,
+                text: 'Categories of Requests',
+                fontSize: 24,
+                fontColor: '#000',
+                fontFamily: 'inter'
+            },
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    boxWidth: 10,
+                    fontSize: 10,
+                }
+            },
+            layout:{
+                padding: 0
+           }
+        }
+    });
 
 </script>
 

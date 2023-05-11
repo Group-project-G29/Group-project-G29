@@ -1178,24 +1178,24 @@ public function viewSoftcopy(Request $request){
 //==============================REPORTS===========================================    
 
     //View Reports
-    public function viewReports(){
-        $this->setLayout("pharmacy",['select'=>'Report']);
+    public function viewReports(){        
         // get current date
         $curr_date = date("Y-m-d");
+        // var_dump($curr_date);exit;
         // get current date into an array
         $date_arr = explode('-',$curr_date);
         $current_year = (int)$date_arr[0];
         $previous_year = (int)$date_arr[0]-1;
 
+        // ----- DATA FOR GRAPH -----
         // define an array to store the total income for past 12 months separately
         $monthly_income_from_orders = [0,0,0,0,0,0,0,0,0,0,0,0];
         // labels for months
         $month_labels = [1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'May',6=>'Jun',7=>'Jul',8=>'Aug',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec'];
-
         $orderModel=new Order();
+        $orderFrontModel=new FrontdeskOrder();      //get frontdesk separately
         // get pickedup orders
         $orders=$orderModel->get_pickedup_orders(); 
-
         // calculating the incomes for past 12 months
         foreach ($orders as $order){
             if( (int)explode('-',$order["completed_date"])[1] < (int)$date_arr[1] && 
@@ -1204,9 +1204,8 @@ public function viewSoftcopy(Request $request){
             } else if ((int)explode('-',$order["completed_date"])[1] >= (int)$date_arr[1] && 
                 (int)explode('-',$order["completed_date"])[0] === (int)$date_arr[0]-1 ) {
                     $monthly_income_from_orders[ (int)explode('-',$order["completed_date"])[1]-1 ] += $order['total_price'] ; 
-            }          
+            }         
         }
-
         // arrange the months into a order
         $position = 0;
         $arranged_monthly_income_from_orders = [];
@@ -1223,8 +1222,45 @@ public function viewSoftcopy(Request $request){
             $position++;
         }
 
+
+        // ----- DATA FOR PIE CHART - ORDER COUNTS -----
+        $today_online_orders = $orderModel->get_today_online_order_count($curr_date)[0]["COUNT(order_ID)"];
+        $today_frontdesk_orders = $orderFrontModel->get_today_frontdesk_order_count($curr_date)[0]["COUNT(order_ID)"];
+        // $today_online_orders = 12;
+        // $today_frontdesk_orders = 14;
+        $order_count = ['Online orders'=>(int)$today_online_orders, 'Frontdesk Orders'=>(int)$today_frontdesk_orders];
+
+
+        // ----- DATA FOR CARDS -----
+        $to_be_processed_orders = $orderModel->get_today_to_be_processed_online_order_count($curr_date)[0]["COUNT(order_ID)"];
+
+
+        // ----- DATA FOR THIS MONTH -----
+        $curr_month_string = $date_arr[0].'-'.$date_arr[1];
+        $this_month_online_orders = $orderModel->select_this_month_orders($curr_month_string);
+        $this_month_frontdesk_orders = $orderFrontModel->select_this_month_orders($curr_month_string);
+        $no_of_orders_this_month = 0;
+        $income_in_this_month = 0;
+
+        foreach ($this_month_online_orders as $this_month_online_order){
+            $no_of_orders_this_month++;
+            if($this_month_online_order["completed_date"] !== NULL){
+                $income_in_this_month = $income_in_this_month + $this_month_online_order["total_price"];
+            }
+        }
+        foreach ($this_month_frontdesk_orders as $this_month_frontdesk_order){
+            $no_of_orders_this_month++;
+            $income_in_this_month = $income_in_this_month + $this_month_frontdesk_order["total"];
+        }
+
+
+        $this->setLayout("pharmacy",['select'=>'Report']);
         return $this->render('pharmacy/pharmacy-view-report',[
-            'medicine_income'=>$arranged_monthly_income_from_orders
+            'medicine_income'=>$arranged_monthly_income_from_orders,
+            'order_count' => $order_count,
+            'to_be_processed_orders'=>$to_be_processed_orders,
+            'no_of_orders_this_month'=>$no_of_orders_this_month,
+            'income_in_this_month'=>$income_in_this_month
         ]);
     }
 
