@@ -44,7 +44,7 @@ use app\core\DbModel;
         public function addItem(string $itemID,string $cartID,string $amount){
             $medicineModel=new Medicine();
             //check item is in the cart
-            $cart_item=$this->fetchAssocAllByName(['med_ID'=>$itemID,'cart_ID'=>$cartID],'medicine_cart');
+            $cart_item=$this->fetchAssocAllByName(['med_ID'=>$itemID,'cart_ID'=>$cartID],'medicine_in_cart');
             $unit_price=$medicineModel->getMedicinePrice($itemID);
             //update if it is in cart
             if($cart_item){

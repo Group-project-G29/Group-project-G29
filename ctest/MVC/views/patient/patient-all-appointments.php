@@ -26,6 +26,7 @@ $component=new Component();
                 <div class="btn-content">
                 <div class="patient-appointment-tile--1">
                     <img src="media/images/common/delete.png" id=<?='"'.$channeling['appointment_ID'].'"'?> class="image">
+                    <h3><?='Queue Number :'.$channeling['queue_no']?></h3>  
                     <h3><?='Doctor :'.$channeling['name']?></h3>  
                     <h3><?='Speciality :'.$channeling['speciality']?></h3>
                     <h4><?='Channeling date :'.$channeling['channeling_date']?></h4>
@@ -47,6 +48,7 @@ $component=new Component();
                 <div class="btn-content">
                     <div class="patient-appointment-tile--2">
                         <img src="media/images/common/delete.png" id=<?='"'.$channeling['appointment_ID'].'"'?>  class="image">
+                        <h3><?='Queue Number :'.$channeling['queue_no']?></h3>  
                         <h3><?='Doctor :'.$channeling['name']?></h3>  
                         <h3><?='Speciality :'.$channeling['speciality']?></h3>
                         <h4><?='Channeling date :'.$channeling['channeling_date']?></h4>

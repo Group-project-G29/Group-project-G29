@@ -53,14 +53,13 @@ $form=Form::begin('','post');
             <table style="margin-top:-15vh;">    
                 <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Select'=>'','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday'])?>
                 <?php echo $form->spanfield($channelingmodel,'time','Starting Time*','field','time') ?>
-                
-                <?php echo $form->spanfield($channelingmodel,'session_duration','Session Duration*','field','time') ?>
+                <?php echo $form->spanfield($channelingmodel,'session_duration','Session Duration(hours)*','field without_ampm','text') ?>
                 <?php echo $form->spanfield($channelingmodel,'start_date','Starting Date*','field','date') ?>
 
                 <?php echo $form->spanfield($channelingmodel,'open_before','Open before','field','text') ?>
 
-                <?php echo $form->spanfield($channelingmodel,'schedule_for','Schedule For*','field','text') ?>
-                <?php echo $form->spanselect($channelingmodel,'schedule_type','','field',['Select'=>'','Week'=>'weeks','Month'=>'months','Year'=>'years'])?>
+                <?php echo $form->spanfield($channelingmodel,'schedule_for','Schedule For*','field width-set','text') ?>
+                <?php echo $form->spanselect($channelingmodel,'schedule_type','','field width-set',['Select'=>'','Week'=>'weeks','Month'=>'months','Year'=>'years'])?>
                 
 
 
@@ -116,9 +115,9 @@ $form=Form::begin('','post');
                                 </div>
                                 <div class="error-texts">
                                     <?php if($nurseOverlaps && isset($nurseOverlaps[count($nurseOverlaps)-1]) and $nurseOverlaps[count($nurseOverlaps)-1]['emp_ID']!=$nurseOverlaps[0]['emp_ID']): ?>
-                                        <?="<br><a class='sh-error' href=update-channeling?cmd=view&id=".$nurseOverlaps[0]['channeling_ID'].">"."<font color='red'>Nurse".$nurseOverlaps[count($nurseOverlaps)-1]."is assigned to channeling ".$nurseOverlaps[count($nurseOverlaps)-1]['channeling_ID']." at ".$nurseOverlaps[count($nurseOverlaps)-1]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM')." </font>" ?> 
+                                        <?="<br><a class='sh-error' href=update-channeling?cmd=view&id=".$nurseOverlaps[0]['channeling_ID'].">"."<font color='red'>Nurse".$nurseOverlaps[count($nurseOverlaps)-1]."is assigned to channeling ".$nurseOverlaps[count($nurseOverlaps)-1]['channeling_ID']." at ".$nurseOverlaps[count($nurseOverlaps)-1]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM')." </font></a>" ?> 
                                         <?php else:?>
-                                    <?php echo "<a class='sh-error' href=update-channeling?cmd=view&id=".$nurseOverlaps[0]['channeling_ID'].">"."Nurse ".$nurseOverlaps[0]['name']." is assigned to channeling ".$nurseOverlaps[0]['channeling_ID']." at ".$nurseOverlaps[0]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM') ?> 
+                                    <?php echo "<a class='sh-error' href=update-channeling?cmd=view&id=".$nurseOverlaps[0]['channeling_ID'].">"."Nurse ".$nurseOverlaps[0]['name']." is assigned to channeling ".$nurseOverlaps[0]['channeling_ID']." at ".$nurseOverlaps[0]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM')."</a>" ?> 
                                         <?php endif;?>
                             
                                 </div>

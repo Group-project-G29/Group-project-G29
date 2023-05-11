@@ -38,7 +38,7 @@
 
     <table border="0">
         <tr class="row-height header-underline none " id="header">
-        <th>Doctor</th> <th>Specialtity</th> <th>Time</th><th>Start Day</th><th>Fee</th><th></th>
+        <th>Doctor</th> <th>Specialtity</th> <th>Time</th><th>Channeling Day Day</th><th>Fee</th><th></th>
             
         </tr>
         <div class="patient-container">
@@ -56,19 +56,23 @@
             <td><?php if ($Ochanneling['time']<$time){
           echo $Ochanneling['time']." A.M";}
           else{echo $Ochanneling['time']." P.M";}?> </td>
-            <td><?=$Ochanneling['start_date'].' ('.$Ochanneling['day'].')'?></td>
-            <td><?=$Ochanneling['fee']?></td>
+            <td><?=$Ochanneling['channeling_date'].' ('.$Ochanneling['day'].')'?></td>
+            <td><?="LKR ".number_format($Ochanneling['fee'],2,'.','')?></td>
             <td>
                 <div>
                     <?php if($openedChanneling->isPatientIn($patient[0]['patient_ID'],$Ochanneling['opened_channeling_ID'])):?>
-                    <div style="color:green"><?php echo "Already have an appointment" ?></div>
-                    <?php else: ?>
-                        <?php if($appoinment->labReportEligibility($patient[0]['patient_ID'],$Ochanneling['nic'],$Ochanneling['opened_channeling_ID'])):?>
+                            <div style="color:green"><?php echo "Already have an appointment" ?></div>
+                        <?php elseif($Ochanneling['total_patients']!=0 && $Ochanneling['remaining_appointments']<=0): ?>
+                            <?php echo "All appointments has been taken" ?>
+                        <?php elseif($Ochanneling['status']!='Opened'): ?>
+                            <?php echo "Not taking any appointments" ?>
+                        <?php elseif($appoinment->labReportEligibility($patient[0]['patient_ID'],$Ochanneling['nic'],$Ochanneling['opened_channeling_ID'])):?>
                             <?php echo $component->button('update',' ','Add Lab Report Appointment','button--class-0 new-lab',$Ochanneling['opened_channeling_ID']) ?>
+                            <?php echo $component->button('update',' ','Add Ordinary Appointment','button--class-0 new-app',$Ochanneling['opened_channeling_ID']) ?>
                         <?php else:?>
                             <?php echo $component->button('update',' ','Add Ordinary Appointment','button--class-0 new-app',$Ochanneling['opened_channeling_ID']) ?>
-                            <?php endif; ?>
-                    <?php endif; ?>
+                        <?php endif; ?>
+               
                 </div>
             </td>
          

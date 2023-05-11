@@ -71,6 +71,7 @@ $app->router->get('/ctest/nic', [PatientAuthController::class,'getNIC']);
 $app->router->post('/ctest/nic', [PatientAuthController::class,'getNIC']);
 $app->router->get('/ctest/otp', [PatientAuthController::class,'OTP']);
 $app->router->post('/ctest/otp', [PatientAuthController::class,'OTP']);
+$app->router->get('/ctest/testme', [PatientAuthController::class,'test']);
 
 
 
@@ -89,7 +90,7 @@ $app->router->post('/ctest/employee-otp', [EmployeeAuthController::class,'OTP'])
 // $app->router->get('/ctest/nurse',[SiteController::class, 'doctor']);
 $app->router->get('/ctest/nurse',[NurseController::class, 'todayClinics']);
 $app->router->get('/ctest/nurse',[NurseController::class, 'channelingCategoriesView']);
-$app->router->get('/ctest/my-detail',[NurseController::class, 'viewUserDetails']);
+$app->router->get('/ctest/my-details',[NurseController::class, 'viewUserDetails']);
 $app->router->get('/ctest/all-channelings',[NurseController::class, 'channelingCategoriesView']);
 $app->router->get('/ctest/all-channeling-more',[NurseController::class, 'viewAllClinicsMore']);
 $app->router->get('/ctest/today-channelings',[NurseController::class, 'todayClinics']);
@@ -124,6 +125,7 @@ $app->router->get('/ctest/notification',[DoctorController::class,'handleNotis'])
 $app->router->post('/ctest/notification',[DoctorController::class,'handleNotis']);
 $app->router->get('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
 $app->router->post('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
+$app->router->get('/ctest/doctor-move',[DoctorController::class,'mover']);
 
 
 //-------------------pharmacy routers-----------------------------------------
@@ -215,7 +217,6 @@ $app->router->get('/ctest/delivery-online',[DeliveryController::class,'makeOnlin
 $app->router->get('/ctest/delivery-offline',[DeliveryController::class,'makeOffline']);
 
 
-
 // ------------------laboratorist routers----------------------------------------
 $app->router->get('/ctest/test',[LabController::class,'viewTest']);
 
@@ -302,6 +303,15 @@ $app->router->get('/ctest/lab-test-delete',[LabController::class,'handleTest']);
 $app->router->post('/ctest/lab-test-delete',[LabController::class,'handleTest']);
 $app->router->get('/ctest/lab-add-new-template',[LabController::class,'handleTemplate']);
 $app->router->post('/ctest/lab-add-new-template',[LabController::class,'handleTemplate']);
+
+$app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']);
+$app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);
+$app->router->get('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
+$app->router->post('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
+$app->router->get('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
+$app->router->post('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
+$app->router->get('/ctest/lab-edit-report-detail',[LabController::class,'editReport']);
+$app->router->post('/ctest/lab-edit-report-detail',[LabController::class,'editReport']);
 
 $app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']);
 $app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);

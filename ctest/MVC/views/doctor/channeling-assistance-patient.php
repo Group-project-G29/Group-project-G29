@@ -22,13 +22,16 @@ $form=new Form();
 $chart=new ChartModel();
 $class='';
 $popup=Application::$app->session->get('popup')??null;
-if( (isset($popup)) || $popup=='unset' ) $class='hide';
-Application::$app->session->set('popup','unset');
+if($popup==null || $popup=='unset') $class='hide';
+Application::$app->session->set('popup','unset')??null;
+
 ?>
+
     <?php $component=new Component(); ?>
-    <div class='background--1 hide'> </div>
+    <div class=<?='"background--1'.' '.$class.'"'?>> </div>
     <div class=<?='"labtest-popup'.' '."$class".'"'?> id=<?="'".$class."'"?>>
-        <h3>Add lab test here</h3>
+        <h2>Add lab test here</h2>
+        <br>
         <?php $form->begin('/ctest/doctor-labtest','post'); ?>
         <div class="labtest-request-con1">
             <div>
@@ -36,18 +39,18 @@ Application::$app->session->set('popup','unset');
                 <?= $form->textarea(new LabTestRequest,'note','note','Note',3,28,'');?>
             </div>
             <div>
-                <?= $component->button('btn','submit','Request','',''); ?>
+                <?= $component->button('btn','submit','Request','button--class-0',''); ?>
             </div>
         </div>
         <?php $form->end(); ?>
         <div class="scrollable-labtest-container">
             <?php $labrequests=$labrequestModel->getLabTestRequests();?>
-            <h3>Lab test requests </h3>
+            <h2>Lab test requests </h2><br>
             <?php foreach($labrequests as $labrequest): ?>
                 <?php if(!$labreportModel->isreport($labrequest['request_ID'])): ?>
-                    <div>
+                    <div class="flex lab-test-itm">
                         <h4><?=$labrequest['name']."  date :".$labrequest['requested_date_time']?></h4>
-                        <?=$component->button('btn','','Cancel','rqst-rmv',$labrequest['request_ID']); ?>
+                        <?=$component->button('btn','','X','rqst-rmv button-cancel',$labrequest['request_ID']); ?>
                     </div>
                 <?php endif; ?>
             <?php endforeach; ?>
@@ -56,20 +59,25 @@ Application::$app->session->set('popup','unset');
     </div>
     <div class="labreport-popup hide" id="popup-report">
         <div class="labreport-popup-wrapper">
-            <h3 class="fs-50">Add Lab reports here.</h3>
+            <h2>Add Lab reports here.</h2>
+            <br>
             <?php $form2=Form::begin("upload-reports",'post');?>
-            <?php echo $form->editableselect('type','Report Type','field',['CBC'=>'CBC(Complete Blood Count)']) ?>
+            <div class="editable-test">
+                <?php echo $form->editableselect('type','Report Type','field',['CBC chem 7 panel'=>'CBC chem 7 panel','']) ?>
+            </div>
+            <br>
             <input type='file' name='report[]' multiple/> 
             <?=$component->button("Done","submit","Done","button--class-0",);?>
             <?php $form2=Form::end();?>
         </div>        
     </div>
+
     <div class="assistance-container">
         <div class="assistance-subcontainer ">
             
             <div class="flex-0">
                 <?= $component->button('referral','','Referral','button--class-doc1 btn-1','referrals');?>
-                <?=  $component->button('consultaion','','Recent reports ','button--class-doc1 btn-1',"last-consultation");?>
+                <?=  $component->button('consultaion','','Recent Reports ','button--class-doc1 btn-1',"last-consultation");?>
             </div>
             <div class="variable-container--1">
                 <div class="wrapper--referrals">
@@ -179,8 +187,8 @@ Application::$app->session->set('popup','unset');
                         
                         <div id=<?='"'.'c'.join('_',explode(' ',$val)).'"'?> class=<?='"'.'c'.join('_',explode(' ',$val)).' hide gcontainer"'?> class="chart-ast">
                             
-                            <canvas id=<?='"myChart'.$val.'"'?> style="width:100%;max-width:700px chart-ast"></canvas>
-                            <?=$chart->lineChart($test['labels'],[],$test['data'],[],$val,'rgb(0,0,0)',$val);?>
+                            <canvas id=<?='"myChart'.join("-",explode(" ",trim($val))).'"'?> style="width:100%;max-width:700px chart-ast"></canvas>
+                            <?=$chart->lineChartAssis($test['labels'],[],$test['data'],[],$val,'rgb(0,0,0)',$val);?>
                         </div>
                         <?php endforeach;?>
                     </div>
@@ -190,13 +198,13 @@ Application::$app->session->set('popup','unset');
         </div>
         <div class="assistance-subcontainer">
             <div class="flex-0">
-                <?=$component->button('report','','View Reports','button--class-doc1 btn-2',"reports");?>
-                <?=$component->button('prescription','','View Prescription','button--class-doc1 btn-2',"prescriptions");?>
-                <?=$component->button('lab test','','View Lab Tests','button--class-doc1 btn-2',"lab-tests");?>
+                <?=$component->button('report','','Reports','button--class-doc1 btn-2',"reports");?>
+                <?=$component->button('prescription','','Prescriptions','button--class-doc1 btn-2',"prescriptions");?>
+                <?=$component->button('lab test','','Lab Reports','button--class-doc1 btn-2',"lab-tests");?>
             </div>
             <div class="variable-container--2">
                 <div class="wrapper--reports">
-                    <div class="variable-container-item flex">
+                    <div class="variable-container">
                         <div>
                             <table>
                                 <tr>
@@ -217,7 +225,7 @@ Application::$app->session->set('popup','unset');
                     </div>
                 </div>
                 <div class="wrapper--prescriptions none">
-                    <div class="variable-container-item flex">
+                    <div class="variable-container">
                         <div>
                             <table>
                                 <tr>
@@ -237,7 +245,7 @@ Application::$app->session->set('popup','unset');
                     </div>
                 </div>
                 <div class="wrapper--lab-tests none">
-                    <div class="variable-container-item flex">
+                    <div class="variable-container">
                         <div>
                             <table>
                                 <tr>

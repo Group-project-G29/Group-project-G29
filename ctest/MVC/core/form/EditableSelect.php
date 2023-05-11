@@ -33,8 +33,8 @@
             }
 
             $str='<div class="edsecon">
-                <label>%s  </label><input type="text" name="%s" id="input-%s" class="sl-%s in">
-                <div class="ed-se-item-container-%s %s edse-container">
+                <label>%s  </label><input type="text" name="%s" id="input-%s" autocomplete="off" class="sl-%s in">
+                <div class="edse-container ed-se-item-container-%s %s ">
                     '.$str.'
                 </div>
             </div>
@@ -44,7 +44,7 @@
                  items%s=document.querySelectorAll(".ed-se-item-%s");
                  text_input%s=document.querySelector(".sl-%s");
                 text_input%s.addEventListener("input",()=>{
-                        var re=new RegExp(("^"+text_input%s.value).toLowerCase())
+                        var re=new RegExp(("[a-zA-Z0-9]*"+text_input%s.value+"[a-zA-Z0-9]*").toLowerCase())
                         items%s.forEach(element => {
                             if(re.test(element.id.toLowerCase())){ 
                                 element.classList.remove("hide");
@@ -76,10 +76,11 @@
                         })
                     })
                 })
+             
             </script>
         
         ';
-          return sprintf($str,$this->label,$this->name,$this->name,$this->name,$this->name,$this->class,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name);
+          return sprintf($str,$this->label,$this->name,$this->name,$this->name,$this->name,$this->class,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name,$this->name);
         }
     }
 

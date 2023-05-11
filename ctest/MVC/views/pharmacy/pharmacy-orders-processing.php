@@ -53,7 +53,7 @@
                         <td><?=$order['pickup_status']?></td> 
                         <!-- deliveryd by -> delivery rider -->
                         <td><?=$order['created_date']?></td> 
-                        <td><?=$order['created_time']?></td> 
+                        <td><?= $timeModel->time_format($order['created_time']) ?></td> 
                     </tr>
             <?php endforeach; ?>
         </table>
@@ -69,9 +69,9 @@
 
     elementsArray = document.querySelectorAll(".table-row");
     elementsArray.forEach(function(elem) {
+        comp=""+elem.id; 
+        comp=comp.split("-");
         elem.addEventListener("click", function() {
-            comp=""+elem.id; 
-            comp=comp.split("-");
             location.href='pharmacy-view-processing-order?id='+comp[0]; 
         });
     });
@@ -90,6 +90,7 @@
     btn3.addEventListener('click',function(){
         location.href="pharmacy-orders-delivering"; //get
     })
+
 
     const orders=document.querySelectorAll('.search-class');
     const searchBar=document.getElementById('search');

@@ -32,9 +32,9 @@ use app\models\Payment;
                             $appointmentDetail=($appointmentModel->getAppointmentDetail($payment['appointment_ID']))?$appointmentModel->getAppointmentDetail($payment['appointment_ID'])[0]:[];
                             $name="Dr.".($appointmentDetail['name']??'')." channeling appointment";
                             break;
-                        case 'labreport':
-                            $labreportDetail=$labreport->getReport($payment['name']);
-                            $name=$labreportDetail[0]['title'];
+                        case 'lab':
+                            $labreportDetail=$labreport->getReportByRequest($payment['request_ID']);
+                            $name=$labreportDetail[0]['title']??'';
                             break;
 
                     }    

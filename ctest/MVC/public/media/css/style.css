@@ -3,7 +3,8 @@
  /* -------------------------------------------- */
  :root{
     /* colors */
-    --clr-dark:#1746A2;
+    --clr-dark:rgb(23, 70, 162);
+    --clr-dark-report:rgba(23, 70, 162,2);
     --clr-light:#38B6FF;
     --clr-white:white;
     --clr-hover:#EEF1FF;
@@ -930,4 +931,8 @@ padding-left:5vh;
     75%{margin-top:0px}
     87%{margin-top:0px}
     100%{margin-top:0px}
+}
+.prescription-table-pay table td{
+    width:15vw;
+    text-align: center;
 }

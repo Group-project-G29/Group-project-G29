@@ -88,19 +88,42 @@ class PharmacyController extends Controller{
         // get the medicine name array
         $medName = explode('-',$_POST['name']);
         $medicineModel = new Medicine();
-        // get medicine id using the above array
-        $med_ID = $medicineModel->getMedicineID($medName[0],$medName[1]);
-        // get medicine details
-        $med_details = $medicineModel->get_medicine_details($med_ID);
+
+        if ( isset($medName[0]) && isset($medName[1])){
+            // get medicine id using the above array
+            $med_ID = $medicineModel->MedicineIDbyNameStrength($medName[0],$medName[1]);
+
+            if( $med_ID ){
+                // get medicine id using the above array
+                $med_ID = $medicineModel->getMedicineID($medName[0],$medName[1]);
+                // get medicine details
+                $med_details = $medicineModel->get_medicine_details($med_ID);
+
+                $orderModel = new FrontdeskOrder();
+                if ( $med_details[0]["amount"]>=$_POST["amount"] ) { 
+                    // if available reduce stocks
+                    $reduce_med_amount = $medicineModel->reduceMedicine($med_ID, $_POST["amount"], true);
+                    $frontdesk_medicine = $orderModel->add_new_front_item($parameters[0]['id'], $med_ID, $_POST["amount"], $med_details[0]["unit_price"],'include');
+                } else {
+                    $frontdesk_medicine = $orderModel->add_new_front_item($parameters[0]['id'], $med_ID, $_POST["amount"], $med_details[0]["unit_price"],'exclude');
+                }
+
+                //all medicine details
+                $medicine_array = $medicineModel->getAllMedicine();
+
+                $order_details = $orderModel->get_order_details($parameters[0]['id'])[0];
+                $order_medicines = $orderModel->get_order_medicines($parameters[0]['id']);
+
+                $this->setLayout("pharmacy",['select'=>'Front Desk Orders']);
+                return $this->render('pharmacy/pharmacy-frontdesk-view-pending',[
+                    'order_details'=>$order_details,
+                    'order_medicines'=>$order_medicines,
+                    'medicine_array' => $medicine_array
+                ]);
+            }
+        }
 
         $orderModel = new FrontdeskOrder();
-        if ( $med_details[0]["amount"]>=$_POST["amount"] ) { 
-            // if available reduce stocks
-            $reduce_med_amount = $medicineModel->reduceMedicine($med_ID, $_POST["amount"], true);
-            $frontdesk_medicine = $orderModel->add_new_front_item($parameters[0]['id'], $med_ID, $_POST["amount"], $med_details[0]["unit_price"],'include');
-        } else {
-            $frontdesk_medicine = $orderModel->add_new_front_item($parameters[0]['id'], $med_ID, $_POST["amount"], $med_details[0]["unit_price"],'exclude');
-        }
 
         //all medicine details
         $medicine_array = $medicineModel->getAllMedicine();
@@ -112,7 +135,8 @@ class PharmacyController extends Controller{
         return $this->render('pharmacy/pharmacy-frontdesk-view-pending',[
             'order_details'=>$order_details,
             'order_medicines'=>$order_medicines,
-            'medicine_array' => $medicine_array
+            'medicine_array' => $medicine_array,
+            'err' => 'incorrect_medicine'
         ]);
     }
 

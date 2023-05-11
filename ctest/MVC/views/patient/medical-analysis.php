@@ -18,22 +18,22 @@ use app\models\LabReport;
     <div class="medical-analysis-section">
         <section class="medical-analysis-types">
             <table>
-                <tr><td><?=$form->spanselect($labreports,'type','Choose Report To Analyse','',$reports,'choose')?></td><tr>
+                <tr><td><?=$form->specspanselect($labreports,'type','','choose',$reports,'choose')?></td></tr>
                 <?php foreach($keys as $key): ?>
                     <tr>
                         <td class="test-key" id=<?="'".join('-',explode(' ',$key))."'" ?>>
                             <center>
-                                <div >
-                                    <?php echo $key; ?>
+                                <div>
+                                    <?php echo $key;?>
                                     
                                 </div>
                             </center>
                         </td>
-                        <tr>
-                            <?php endforeach ;?>
-                        </table>
-                    </section>
-                    <section class="medical-analysis-charts">
+                    </tr>
+                <?php endforeach;?>
+            </table>
+            </section>
+                <section class="medical-analysis-charts">
             <?php foreach($keys as $key): ?>
                 <div class="test-chart" id=<?="'".join('-',explode(' ',$key))."'" ?>>
                     <?php $row=$labreports->makeChartInputs($mainArray[$key]); ?>

@@ -49,9 +49,9 @@
                                 <div class="contact"><?=$order['contact']?></div>
                                 <div class="address"><?=$order['address']?></div>
                                 <!-- <div class="total_price"><?=$order['total_price']?></div> -->
-                                <div class="pickup_status"><?=$order['pickup_status']?></div>
+                                <div class="pickup_status"><?= ucfirst($order['pickup_status']) ?></div>
                                 <div class="date"><?=$order['created_date']?></div>
-                                <div class="time"><?=$order['created_time']?></div>
+                                <div class="time"><?= $timeModel->time_format($order['created_time']) ?></div>
                                 <div class="delete_status"></div>
                             </div>
                             <?php if($order['text']!=NULL): ?>
@@ -71,9 +71,9 @@
                                 <div class="contact orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['contact']?></div>
                                 <div class="address orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['address']?></div>
                                 <!-- <div class="total_price orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['total_price']?></div> -->
-                                <div class="pickup_status orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['pickup_status']?></div>
+                                <div class="pickup_status orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?= ucfirst($order['pickup_status']) ?></div>
                                 <div class="date orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['created_date']?></div>
-                                <div class="time orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?=$order['created_time']?></div>
+                                <div class="time orders-pending-with-note_row_gray_view" id=<?=$order['order_ID']?> ><?= $timeModel->time_format($order['created_time']) ?></div>
                                 <div class="delete_status delete-order" id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)">Delete Order</div>
                             </div>
                             <?php if($order['text']!=NULL): ?>
@@ -92,9 +92,9 @@
                                 <div class="contact"><?=$order['contact']?></div>
                                 <div class="address"><?=$order['address']?></div>
                                 <!-- <div class="total_price"><?=$order['total_price']?></div> -->
-                                <div class="pickup_status"><?=$order['pickup_status']?></div>
+                                <div class="pickup_status"><?= ucfirst($order['pickup_status']) ?></div>
                                 <div class="date"><?=$order['created_date']?></div>
-                                <div class="time"><?=$order['created_time']?></div>
+                                <div class="time"><?= $timeModel->time_format($order['created_time']) ?></div>
                                 <div class="delete_status"></div>
                             </div>
                             <?php if($order['text']!=NULL): ?>
@@ -113,9 +113,9 @@
                                 <div class="contact"><?=$order['contact']?></div>
                                 <div class="address"><?=$order['address']?></div>
                                 <!-- <div class="total_price"><?=$order['total_price']?></div> -->
-                                <div class="pickup_status"><?=$order['pickup_status']?></div>
+                                <div class="pickup_status"><?= ucfirst($order['pickup_status']) ?></div>
                                 <div class="date"><?=$order['created_date']?></div>
-                                <div class="time"><?=$order['created_time']?></div>
+                                <div class="time"><?= $timeModel->time_format($order['created_time']) ?></div>
                                 <div class="delete_status delete-order" id=<?=$order['order_ID']?> onclick="openPopup_confirmation(<?=$order['order_ID']?>)"><a>Delete Order</a></div>
                             </div>
                         </div>

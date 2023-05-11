@@ -9,11 +9,16 @@ $form=new Form();
 $form->begin('update-channeling?cmd=update&id='.Application::$app->session->get('selected_channeling'),'post');
 $component=new Component();
 $employeemodel=new Employee();
+
 ?>
 <section>
     <section class="upper-update">
         <div class="update-deatails">
             <div class="update-deatails-items">
+                <table class="desc">
+                    <tr><td>Doctor Name :</td><td><?=$employeemodel->fetchAssocAll(['nic'=>$model->doctor])[0]['name'] ?></td></tr>
+                    <tr><td>Scheduled Day :</td><td><?=$model->day ?></td></tr>
+                </table>
                     <?=$form->spanfield($model,'speciality','Speciality','field','text',''); ?>
                     <?=$form->spanfield($model,'fee','Fee','field','number',''); ?>
                     <?php if(isset($roomOverlaps)):?>
@@ -74,6 +79,7 @@ $employeemodel=new Employee();
         <?php $form->end() ?>
     </section>
     <section class="lower-update">
+       <center> <h2>Currently Opened Channelings</h2> </center>
         <?php foreach($openedchannelings as $op): ?>
             <div class="open-channeling">
                 <div class="open-channeling-date flex">

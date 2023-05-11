@@ -1,3 +1,4 @@
+/*  ============================ view user */
 .container{
     display: flex;
     margin-top: 2vh;
@@ -32,6 +33,32 @@
 .data-row-left{
     width: 10vw;
 }
+
+/* ====================== update user */
+.update-form-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.form-body-fields{
+    margin-top: 3vh;
+}
+.update-form-body table {
+    border-collapse: separate;
+    border-style: hidden;
+    border-spacing: 0px 2vh;
+}
+.update-form-body button{
+    width: 100%;
+    margin-top: 1vh;
+}
+.update-form-body .btn-div{
+    width: 100%;
+    text-align: center;
+}
+
+
+
 
 
 .no-clinic-desc{
@@ -149,9 +176,7 @@
 
 /* Patiyent Channeling LIST */
 
-.nimg .pimg{
-    width: 7vw;
-}
+
 
 .patient-change-div{
     display: flex;
@@ -186,14 +211,14 @@
     border-bottom: 1px solid var(--clr-borders);
 }
 .input-row-col-1{
-    width: 120px;
+    width: 135px;
 }
 .input-row-col-2{
     width: 50px;
 }
 .input-row-col-3{
     margin-left: 1vw;
-    width: 50px;
+    width: 55px;
 }
 .save-button{
     margin-top: 3vh;
@@ -239,7 +264,8 @@
 }
 .chart-div{
     background-color: rgb(229, 247, 252);
-    height: 400px;
+    padding: 50px;
+    padding-top: 0;
 }
 .chart-tital{
     text-align: center;
@@ -332,6 +358,82 @@
 }
 
 
+/* .sidebar{
+    width: 250px;
+}
+.sidebar_grid-item {
+    width: 250px;
+}
+.sub-container{
+    left: 250px;
+} */
+
+
+
+
+@media(max-width:1145px){
+    #sidebar{
+        width: 250px;
+        transform: translateX(-250px);
+        transition: transform 250ms ease-in-out;
+        z-index: 9999;
+    }
+    .sidebar_grid-item {
+        width: 250px;
+    }
+    .sub-container{
+        left: 0;
+        width: 100%!important;
+        margin-left: 0!important;
+        padding: 3vh 5vw!important;
+    }
+    .table-container {
+        width: 100%!important;
+    }
+    .table-container>table {
+        margin: 0!important;
+        width: 100%!important;
+
+    }
+
+    .toggle-icon div{
+        background: #f1e8e6;
+        width: 100%;
+        height: 3px;
+    }
+    .toggle-icon{
+        position: absolute;
+        top: 100px;
+        left: 15px;
+        width: 22px;
+        height: 22px;
+        z-index: 9999;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .bar-center{
+        margin: 3px 0;
+    }
+
+    #sidebar.active{
+        transform: translateX(0);
+    }
+    input[type="checkbox"]:checked ~ .toggle-icon > .bar-top{
+        transform: rotate(135deg);
+        margin-top: 8px;
+    }
+    input[type="checkbox"]:checked ~ .toggle-icon > .bar-center{
+        opacity: 0;
+    }
+    input[type="checkbox"]:checked ~ .toggle-icon > .bar-bottom{
+        transform: rotate(-135deg);
+        margin-top: -12px;
+    }
+
+}
+.toggle-sidebar{
+    display: none;
+}
 
 
 
@@ -370,3 +472,6 @@
 
     }
 }
+
+
+

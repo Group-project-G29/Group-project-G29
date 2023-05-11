@@ -2509,3 +2509,15 @@ select{
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);}
+
+    .today-ch-container{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap:5vw;
+    }
+    .background-done{
+        color:gainsboro;
+        border-color: gainsboro;
+
+    }

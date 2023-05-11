@@ -1,11 +1,14 @@
 <?php
 
+use app\core\Calendar;
+use app\models\Patient;
 use app\models\Prescription;
-
-    $pres=new Prescription();
+    $patient=new Patient();
+var_dump("Dfdfd");
+    var_dump($patient->isValidParam(11));
  
 
 ?>
-<section>
-      <?php echo $pres->getPrice(70);?>
-</section>
+
+
+

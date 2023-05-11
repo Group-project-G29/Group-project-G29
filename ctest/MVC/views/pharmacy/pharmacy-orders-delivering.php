@@ -1,6 +1,8 @@
 <?php
     use app\core\component\Component;
+    use app\core\Time;
     $component=new Component();
+    $timeModel = new Time();
 
 ?>
 
@@ -50,10 +52,11 @@
                                     <?= 'NA' ?>
                                     <?php endif; ?>
                                 </td>  -->
-                                <td><?=$order['pickup_status']?></td> 
+                                <td><?= ucfirst($order['pickup_status']) ?></td> 
                                 <!-- deliveryd by -> delivery rider -->
                         <td><?=$order['created_date']?></td> 
-                        <td><?=$order['created_time']?></td> 
+                        <!-- <td><?=$order['created_time']?></td>  -->
+                        <td><?= $timeModel->time_format($order['created_time']) ?></td> 
                         <td style="text-align: right;" ><?= 'LKR. '. number_format($order['total_price'],2,'.','') ?></td> 
                     </tr>
             <?php endforeach; ?>

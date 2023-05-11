@@ -3,8 +3,6 @@ use app\core\DbModel;
 use \app\core\form\Form;
 use app\core\Application;
 use app\core\component\Component;
-use app\models\Appointment;
-use app\models\OpenedChanneling;
 
 $component = new Component();
 ?>
@@ -13,7 +11,6 @@ $component = new Component();
 // var_dump($clinic);
 // echo("  <br> <br>");
 // var_dump($openClinic[0]);
-$appointmentModel=new Appointment();
 ?>
 <div class="column-flex">
     <div class="main-detail-title">
@@ -23,7 +20,7 @@ $appointmentModel=new Appointment();
         <div class="number-content">
             <h2>Patients</h2>
             <div class="number-pad">
-                <div class="number-item fs-200"><?=$appointmentModel->getTotoalPatient($channeling[0]['channeling_ID']);?></div>
+                <div class="number-item fs-200"><?php if($channeling[0]['total_patients'] == -1){echo("Unlimit");}else{echo($channeling[0]['total_patients']);}?></div>
             </div>
         </div>
 
@@ -68,7 +65,7 @@ $appointmentModel=new Appointment();
             <?php $session = 1; ?>
         <?php foreach($openedchanneling as $key=>$clinic): ?>
 
-            <tr class="table-row row-height hover" id="<?= $clinic['opened_channeling_ID'] ?>">
+            <tr class="table-row row-height" id="<?= $clinic['opened_channeling_ID'] ?>">
                 <td><?php echo("Session - ".$session); ?></td>
                 <td><?= $clinic['channeling_date'] ?></td>
                 <td><?php if($clinic['remaining_appointments']== -1){echo("Unlimit");}else{echo($clinic['remaining_appointments']);} ?></td>
@@ -80,7 +77,7 @@ $appointmentModel=new Appointment();
             
         <?php endforeach; ?>
 
-        <script>
+        <!-- <script>
             elementsArray = document.querySelectorAll(".table-row");
             elementsArray.forEach(function(elem) {
                 elem.addEventListener("click", function() {
@@ -88,7 +85,7 @@ $appointmentModel=new Appointment();
                     location.href="nurse-list-patient?id="+elem.id+"&view=1";
                 });
             });
-        </script>
+        </script> -->
     </table>
     </div>
 

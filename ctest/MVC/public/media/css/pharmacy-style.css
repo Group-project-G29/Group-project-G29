@@ -4,8 +4,8 @@
 :root {
     /* =========== colors =========== */
     --clr-dark:#1746A2;
-    /* --clr-light:#1c7db6; */
-    --clr-light:#38B6FF;
+    --clr-light:#1c7db6;
+    /* --clr-light:#38B6FF; */
     --clr-white:white;
     --clr-hover:#EEF1FF;
     --clr-grey:rgb(180, 180, 180);
@@ -1217,8 +1217,8 @@ select {
 :root {
     /* =========== colors =========== */
     --clr-dark:#1746A2;
-    /* --clr-light:#1c7db6; */
-    --clr-light:#38B6FF;
+    --clr-light:#1c7db6;
+    /* --clr-light:#38B6FF; */
     --clr-white:white;
     --clr-hover:#EEF1FF;
     --clr-grey:rgb(180, 180, 180);

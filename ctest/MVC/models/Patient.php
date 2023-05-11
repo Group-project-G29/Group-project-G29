@@ -61,7 +61,7 @@ class Patient extends DbModel{
                 'age'=>[self::RULE_REQUIRED],
                 'gender'=>[self::RULE_REQUIRED],
                 'guardian_name'=>[self::RULE_REQUIRED],
-                'nic'=>[self::RULE_REQUIRED],
+                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
                 'contact'=>[self::RULE_REQUIRED],
                 'email'=>[self::RULE_EMAIL],
                // 'password'=>[self::RULE_PASSWORD_VALIDATION]
@@ -70,7 +70,7 @@ class Patient extends DbModel{
         }
         return [
             'name'=>[self::RULE_REQUIRED],
-            'nic'=>[/*self::RULE_REQUIRED,[self::RULE_MIN,'min'=>12],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee'],*/[self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>'NIC number']],
+            'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>12],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'patient'],[self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>'NIC number']],
             'age'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120]],
             'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
             'email'=>[self::RULE_EMAIL],
@@ -109,6 +109,17 @@ class Patient extends DbModel{
         else return false;   
     }
     
+    public function isValidParam($content_ID){
+        $results=$this->customFetchAll("SELECT * FROM lab_report_content_allocation left join lab_report_allocation on lab_report_content_allocation.report_ID=lab_report_allocation.report_ID where lab_report_content_allocation.content_ID=".$content_ID."  and lab_report_allocation.patient_ID=".Application::$app->session->get('user'));
+        $total=true;
+        foreach($results as $result){
+            if(!is_numeric($result['int_value'])){
+                $total=false;
+            }
+        }
+        
+        return $total;
+    }
 
     public function fileDestination(): array
     {

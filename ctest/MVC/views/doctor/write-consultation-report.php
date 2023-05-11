@@ -63,4 +63,24 @@
         location.href="/ctest/doctor-report?spec="+mainSelect.value;
 
     })
+    //delete buttons
+    const deletes=document.querySelectorAll(".ref-delete");
+    deletes.forEach((el)=>{     
+        el.addEventListener('click',(event)=>{
+            event.preventDefault();
+            console.log("change");
+            location.href="/ctest/doctor-report?cmd=delete&id="+el.id;
+    
+        })
+    })
+
+    //update buttons
+    const updates=document.querySelectorAll(".ref-update");
+    updates.forEach((el)=>{     
+        el.addEventListener('click',(event)=>{
+            event.preventDefault();
+            location.href="/ctest/doctor-report?mod=update&id="+el.id;
+    
+        })
+    })
 </script>

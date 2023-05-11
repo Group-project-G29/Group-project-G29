@@ -109,9 +109,10 @@ use app\models\Employee;
         
         var re=new RegExp(("^"+searchBar.value).toLowerCase())
         patients.forEach((el)=>{
-            comp=""+el.id; //kimuthu-978678578-986875
+            comp=""+el.id;
+            console.log(el.id);
             comp=comp.split("-");
-          
+          ;
             if(searchBar.value.length==0){
                 // el.classList.add("none")
             }

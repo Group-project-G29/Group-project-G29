@@ -45,10 +45,10 @@
                                     <?= 'NA' ?>
                                 <?php endif; ?>
                             </td> 
-                            <td><?=$order['pickup_status']?></td> 
+                            <td><?= ucfirst($order['pickup_status']) ?></td> 
                             <!-- deliveryd by -> delivery rider -->
                             <td><?=$order['created_date']?></td> 
-                            <td><?=$order['created_time']?></td> 
+                            <td><?= $timeModel->time_format($order['created_time']) ?></td> 
                         </tr>
                 <?php elseif($order['processing_status']=='deleted'): ?> 
                         <tr class="table-row_red" id=<?=$order['order_ID']?> >
@@ -64,9 +64,9 @@
                                     <?= 'NA' ?>
                                 <?php endif; ?>
                             </td> 
-                            <td><?=$order['pickup_status']?></td> 
+                            <td><?= ucfirst($order['pickup_status']) ?></td> 
                             <td><?=$order['created_date']?></td> 
-                            <td><?=$order['created_time']?></td> 
+                            <td><?= $timeModel->time_format($order['created_time']) ?></td> 
                         </tr>  
                 <?php endif; ?>
             <?php endforeach; ?>

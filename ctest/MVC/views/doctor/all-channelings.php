@@ -16,6 +16,12 @@ use app\models\PreChannelingTest;
     $adminN=new AdminNotification();
     $channelingModel=new Channeling();
     
+    $array=$preModel->customFetchAll("select * from pre_channeling_tests");
+    $t=[];
+    foreach($array as $el){
+        $t[$el['name']]=$el['name'];
+    } 
+  
 ?>
 
 <div style="margin-left:-18vw; width:105vw; margin-top:-5vh;" class="background hide">
@@ -30,7 +36,7 @@ use app\models\PreChannelingTest;
                 <div class=<?="'"."popup-channeling-setting popup_".$channeling['channeling_ID']." hide pops'"?>>
             <?php endif; ?>
             <div class="popup-button-flex">
-                <?=$form->editableselect("test_".$channeling['channeling_ID'],"Select Pre-channeling Test",'tinput_'.$channeling['channeling_ID'],['weight'=>'weight','height'=>'height','blood pressure'=>'blood pressure']); ?>
+                <?=$form->editableselect("test_".$channeling['channeling_ID'],"Select Pre-channeling Test",'tinput_'.$channeling['channeling_ID'],$t); ?>
                 <?= $component->button('btn','','Add','add-btn button--class-0',$channeling['channeling_ID'] ); ?>
             </div>
                 <div>

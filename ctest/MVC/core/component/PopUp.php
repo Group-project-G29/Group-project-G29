@@ -33,13 +33,13 @@
             </div>".
             "<script>
                 
-                const bg=document.querySelector('.bg');
+                bgo=document.querySelector('.bg');
                 const div=document.getElementById('popup-main');  
                 const yes=document.getElementById('yes');
                 const cancel=document.getElementById('cancel');
                 cancel.addEventListener('click',()=>{
                     div.style.display='none';
-                    bg.classList.remove('background');
+                    bgo.classList.remove('background');
                     
                 });
               

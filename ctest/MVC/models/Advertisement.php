@@ -54,12 +54,21 @@ class Advertisement extends DbModel{
         if($this->type=='pharmacy'){
             return ['img'=>"media/images/advertisements/pharmacy/".$this->img];
         }
+        if($this->type=='lab'){
+            return ['img'=>"media/images/advertisements/lab/".$this->img];
+        }
+
         return ['img'=>"media/images/advertisements/".$this->img];
     }
+
     public function deleteImage($imgName, $type){
         if($type=='pharmacy'){
             $path = "media/images/advertisements/pharmacy/".$imgName;
-        }else{
+        }
+        else if($type=='lab'){
+            $path = "media/images/advertisements/lab/".$imgName;
+        }
+        else{
             $path = "media/images/advertisements/".$imgName;
         }
         unlink($path);

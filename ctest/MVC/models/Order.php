@@ -7,13 +7,14 @@ use app\core\DbModel;
     class Order extends DbModel{
         public string $pickup_status="";
         public string $patient_ID="";
-        public string $cart_ID="";
+        public ?string $cart_ID="";
         public ?string $delivery_ID="";
         public string $payment_status="pending"; //pending,completed
         public string $processing_status="pending";
         public string $name='';
         public string $address='';
         public string $contact='';
+        public int $total_price=0;
 
         public function __construct(){
 
@@ -41,12 +42,12 @@ use app\core\DbModel;
         }
         
         public function tableRecords(): array{
-            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status','name','address','contact']];
+            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status','name','address','contact','total_price']];
         }
 
         public function attributes(): array
         {
-            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status','name','address','contact']];
+            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status','name','address','contact','total_price']];
         }
 
         public function completePayment($orderID){
@@ -76,7 +77,7 @@ use app\core\DbModel;
         }
 
         public function addItem($order,$item,$amount,$unit_price){
-            return $this->saveByName(['medicine_in_order'=>['order_ID'=>$order,'med_ID'=>$item,'amount'=>$amount,'order_current_price'=>$unit_price,'status'=>'include']]);
+            return $this->saveByName(['medicine_in_order'=>['order_ID'=>$order,'med_ID'=>$item,'amount'=>$amount,'order_current_price'=>$unit_price,'status'=>"'include'"]]);
         }
 
         public function getPrescriptionsInOrder($order){
@@ -150,9 +151,25 @@ use app\core\DbModel;
             return $this->customFetchAll("SELECT * FROM _order WHERE order_ID = $orderID");
         }
 
-        public function getPatientOrder(){
+        public function getPatientOrder($that=false){
             $patientID=Application::$app->session->get('user');
-            return $this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'completed'")[0]??'';
+            $reuslt=$this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'pickedup'");
+            if($that){
+                if($reuslt){
+                    return $reuslt[0];
+                }
+                else return '';
+
+            }
+            else{
+                 $od=$this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'pickedup' and _order.processing_status<>'deleted' and _order.processing_status<>'rejected'");
+                 if($od){
+                    return $od[0];
+                 }
+                 $result=$this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status='pickedup' order by _order.order_ID desc");
+                 if($result) return $result[0];
+                 else return '';
+            }
         }
         public function getLackedItems(){
             $order=$this->getPatientOrder()['order_ID']??'';

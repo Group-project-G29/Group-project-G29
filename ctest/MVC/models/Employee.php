@@ -36,7 +36,8 @@ class Employee extends DbModel{
         $id=parent::save();
         if($this->role=='delivery'){
             $this->customFetchAll("insert into delivery_rider values(".$id[0]['last_insert_id()'].",'NA') ");
-        }   $this->enqueue_rider($id[0]['last_insert_id()']);
+           $this->enqueue_rider($id[0]['last_insert_id()']);
+        }
         return $id; //save data in the database
         
     }
@@ -212,6 +213,7 @@ class Employee extends DbModel{
         }
     }
     
+    
     public function get_employee_details($emp_ID) {
         return $this->customFetchAll("SELECT * FROM employee WHERE emp_ID=$emp_ID");
     }
@@ -244,12 +246,6 @@ class Employee extends DbModel{
     public function get_rider_availability( $delivery_rider ) {
         return $this->customFetchAll("SELECT availability FROM delivery_rider WHERE emp_ID = $delivery_rider");
     }
-
-    //update personal info - not working
-    // public function change_details ( $user_ID, $new_name, $new_contact, $new_address ) {
-    //     return $this->customFetchAll("UPDATE employee SET name = '$new_name', contact = '$new_contact', address = '$new_address' WHERE emp_ID = $user_ID");
-    // }
-
 
      public function updateAccounts($id){
         if(Application::$app->session->get('userObject')->role=='admin'){

@@ -32,7 +32,7 @@
             return $str;
         }
 
-        public function lineChart($xlabels,$ylabels,$xvalues,$yvalues,$label,$color,$canvasname){
+        public function lineChart($xlabels,$ylabels,$xvalues,$yvalues,$label,$color,$canvasname,$min,$max){
             $xlabels=$this->makeArrayStr($xlabels);
             $ylabels=$this->makeArrayStr($ylabels);
             $xvalues=$this->makeArrayNum($xvalues);
@@ -55,13 +55,56 @@
                     data: %s
                     }]
                 },
-                options: {}
+                options: {
+                      scales: {
+            y: {
+                min:%s,
+                max: %s
+                }
+            }
+
+                }
                 });
 
                 
 
 
-                </script>',$xvalues,$yvalues,$canvasname,$xlabels,$label,$color,$xvalues );
+                </script>',$xvalues,$yvalues,$canvasname,$xlabels,$label,$color,$xvalues);
+        }
+         public function lineChartAssis($xlabels,$ylabels,$xvalues,$yvalues,$label,$color,$canvasname){
+            $xlabels=$this->makeArrayStr($xlabels);
+            $ylabels=$this->makeArrayStr($ylabels);
+            $xvalues=$this->makeArrayNum($xvalues);
+            $yvalues=$this->makeArrayNum($yvalues);
+            return sprintf('
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+                <script>
+                var xValues =%s;
+                var yValues = %s;
+
+                new Chart("myChart%s", {
+                type: "line",
+                data: {
+                    labels: %s,
+                    datasets: [{
+                    label:"%s",
+                    fill: false,
+                    pointRadius: 1,
+                    borderColor: "%s",
+                    data: %s
+                    }]
+                },
+                options: {
+                     
+            }
+
+                
+                });
+
+                
+
+
+                </script>',$xvalues,$yvalues,join("-",explode(" ",trim($canvasname))),$xlabels,join("-",explode(" ",trim($label))),$color,$xvalues);
         }
 
         public function barchart($xlabels,$ylabels,$xvalues,$yvalues,$label,$color,$canvasname,$text){

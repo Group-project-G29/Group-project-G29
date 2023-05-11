@@ -9,7 +9,7 @@ $component = new Component();
 // var_dump($contents);
 // exit;
 ?>
-<div class="semi-header-container">
+<div class="semi-header-container" style="left: 20vw;">
     <div class="field-container" style="margin-left: 5vw;">
         <h1 class="fs-200 fc-color--dark">Add Report</h1>
         <?php $age = "18" ?>
@@ -31,21 +31,14 @@ $component = new Component();
             <?php echo $component->button('Add', '', 'Add', 'button--class-0  width-10 ', 'add'); ?>
         </div>
         <?php foreach ($contents as $key => $content) : ?>
-            <!-- <?php if ($content["type"] === 'image') : ?>
-                    <div class="inputbox">
-                    <label for="image"><?php echo $content["cname"] ?></label><br>
-                    <input type='file' id=<?= $content["content_ID"] ?> name=<?= $content["content_ID"] ?>><br>
-                    </form>
-                    </div> -->
-            <!-- <?php else : ?> -->
-            <div class="inputbox">
-                <table border="0">
-               <tr> <label for="cname"><?php echo $content["cname"] ?></label></tr>
-               <tr><input type='text' id=<?= $content["content_ID"] ?> name=<?= $content["content_ID"] ?>></tr>
-               <tr> <label for="cname"><?php echo $content["metric"] ?></label><br><br></tr>
-                </table>
+
+            <div class="subscribe">
+             <label for="cname"><?php echo $content["cname"] ?></label></tr>
+                <input  class="subscribe-input" name=<?= $content["content_ID"] ?> type="email">
+                <!-- <label for="cname"><?php echo $content["metric"] ?></label><br><br></tr> -->
+
+                <br>
             </div>
-            <!-- <?php endif; ?> -->
         <?php endforeach; ?>
 
 

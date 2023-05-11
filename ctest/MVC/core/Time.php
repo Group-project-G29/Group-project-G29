@@ -161,6 +161,20 @@ class Time{
 
 
     }
+
+    public function time_format($time){
+        $time_array = explode(':',$time);
+        if($time_array[0]>22){
+            $formatted_time = ($time_array[0]-12).':'.$time_array[1].' PM';
+        } else if($time_array[0]>=12){
+            $formatted_time = '0'.($time_array[0]-12).':'.$time_array[1].' PM';
+        } else if ($time_array[0]>=10) {
+            $formatted_time = ($time_array[0]).':'.$time_array[1].' AM';
+        } else {
+            $formatted_time = '0'.($time_array[0]).':'.$time_array[1].' AM';
+        }
+        return $formatted_time;
+    }
 }
 
     

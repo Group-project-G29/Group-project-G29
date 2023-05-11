@@ -124,17 +124,32 @@ class Prescription extends DbModel{
             return false;
         }
     }
+    public function validator($value,$typename){
+        if($typename=='amount') return is_numeric($value);
+        elseif($typename=='frequency'){
+            $freqs=['Daily','BID','TID','QID','QHS','QWK'];   
+            return in_array($value,$freqs);
+        }
+    }
+    public function checkdispanse($num,$str){
+        
+        if(is_numeric($num) && is_string($str)){
+            return true;
+        }
+        else return false;
+    }
     //med_ID 	prescription_ID 	amount 	route 	dispense 	frequency 	
     public function addPrescriptionMedicine($patientID,$channelingID){
         $medicineModel=new Medicine();
+        //check if there is prescription
         $prescription=$this->isTherePrescription($patientID,$channelingID);
         $note=$_POST['note'];
-        $refills=$_POST['refills'];
+        $refills=0;
         if(!$prescription){
             $prescription=$this->createNewPrescription($patientID);
         }
         $this->customFetchAll("update prescription set note='$note',refills=$refills where prescription_ID=".$prescription);
-        if(($_POST['amount']!='')  && ($_POST['frequency']!='') && ($_POST['name']!='')){
+        if(($_POST['amount']!='')  && ($_POST['frequency']!='') && ($_POST['name']!='') && ($_POST['dispense']!='')){
             $dispense=explode(' ',$_POST['dispense'])??[];
             $name=explode('-',$_POST['name'])[0]??[];
             $strength=explode('-',$_POST['name'])[1]??null;
@@ -143,12 +158,21 @@ class Prescription extends DbModel{
             if($dispense_count=='')$dispense_count=null;
             $amount=explode(' ',$_POST['amount'])[0];
             $frequency=$_POST['frequency'];
-        
+            
         }
         else{
             return [$note,$refills,$prescription];       
         }
+       
+        //validation
         $med_ID=$medicineModel->getMedicineID($name,$strength);
+        $amountF=$this->validator($amount,'amount');
+        $freqF=$this->validator($frequency,'frequency');
+        $diF=$this->checkdispanse($dispense_count,$dispense_type);
+        if(!$med_ID || !$amountF || !$freqF || !$diF){
+            return [$note,$refills,$prescription,!$med_ID,!$amountF,!$freqF , !$diF];
+        }
+        
         if($this->alreadyIn($prescription,$med_ID)){
             $this->customFetchAll("update prescription_medicine set med_amount=$amount,dispense_type=$dispense_type,dispense_count='$dispense_count',frequency='$frequency' where med_ID=$med_ID and prescription_ID=$prescription");
             $this->changeMedicineAmount($prescription,$med_ID);
@@ -156,9 +180,9 @@ class Prescription extends DbModel{
         }
         $this->customFetchAll("insert into prescription_medicine (med_ID,prescription_ID,med_amount,dispense_type,dispense_count,frequency,status) values('$med_ID','$prescription','$amount',$dispense_type,$dispense_count,'$frequency','include') ");
         $this->changeMedicineAmount($prescription,$med_ID);
-
+        
         return [$note,$refills,$prescription];   
-
+        
     }
     
     public function isInCart($pres){
@@ -209,6 +233,12 @@ class Prescription extends DbModel{
             $total=$prescriptionModel->getPrice($pres['prescription_ID']);
              $this->customFetchAll("update prescription set order_ID='$orderID' ,cart_ID=null where cart_ID='$cartID'");
              $this->customFetchAll("update prescription set total_price=$total where prescription_ID=".$pres['prescription_ID']);
+             $this->updateLastProcessed($pres['prescription_ID']);
+
+        }
+        $prescriptions=$this->customFetchAll("select prescription_ID from prescription where cart_ID=$cartID and type='softcopy prescription'");
+        foreach($prescriptions as $pres){
+             $this->customFetchAll("update prescription set order_ID='$orderID' ,cart_ID=null where cart_ID='$cartID'");
              $this->updateLastProcessed($pres['prescription_ID']);
 
         }
@@ -309,7 +339,7 @@ class Prescription extends DbModel{
     public function getPatientPrescriptionPrice($pres_ID){
         $res=$this->fetchAssocAll(['prescription_ID'=>$pres_ID])[0]['total_price'];
         if($res) return $res;
-        else return false;
+        else return 0;
     }
     public function excludePrescriptionMeds(){
         $cartModel=new Cart();
@@ -491,6 +521,7 @@ class Prescription extends DbModel{
         
 
     }
+
     public function prescriptionToPDF($presID){
         $pdfModel=new PDF();
         
@@ -500,7 +531,7 @@ class Prescription extends DbModel{
         $medrows='<tr><th>Medicine</th><th>Frequency</th><th>Amount per Dose</th><th>Dispense</th></tr>';
         $devrows='<tr><th>Device</th><th>Amount</th></tr>';
         $note=($header['note'])?'*'.$header['note']:'';
-        $last=($header['last_processed_timestamp'])?'(Last Processed Date :'.$header['last_processed_timestamp'].")":'';
+        $last=($header['last_processed_timestamp'])?'Last Processed Date :'.$header['last_processed_timestamp']."":'';
         $head="<h3>Medical Devices</h3>";
         if($meds){
             foreach($meds as $med){
@@ -547,7 +578,7 @@ class Prescription extends DbModel{
                         </div>
                         <div>
                                 <br>Patient :".$header['name']."
-                                <br><br>Refills :".$header['refills']."  ".$last."
+                                <br><br>".$last."
                             </div>
 
                         
@@ -580,15 +611,15 @@ class Prescription extends DbModel{
     }
     
     public function get_curr_orders($prescription_ID) {
-    return $this->customFetchAll("SELECT *, prescription_medicine.amount AS order_amount, prescription_medicine.prescription_current_price AS current_price, medical_products.amount AS available_amount FROM prescription_medicine INNER JOIN prescription ON prescription_medicine.prescription_ID=prescription.prescription_ID INNER JOIN medical_products ON prescription_medicine.med_ID=medical_products.med_ID WHERE prescription_medicine.prescription_ID=$prescription_ID; ");
+        return $this->customFetchAll("SELECT *, prescription_medicine.amount AS order_amount, prescription_medicine.prescription_current_price AS current_price, medical_products.amount AS available_amount FROM prescription_medicine INNER JOIN prescription ON prescription_medicine.prescription_ID=prescription.prescription_ID INNER JOIN medical_products ON prescription_medicine.med_ID=medical_products.med_ID WHERE prescription_medicine.prescription_ID=$prescription_ID; ");
     }
     
     public function get_patient_details($prescription_ID) {
-    return $this->customFetchAll("SELECT * FROM prescription INNER JOIN patient ON prescription.patient=patient.patient_ID WHERE prescription.prescription_ID=$prescription_ID;");
+        return $this->customFetchAll("SELECT * FROM prescription INNER JOIN patient ON prescription.patient=patient.patient_ID WHERE prescription.prescription_ID=$prescription_ID;");
     }
     
     public function get_prescription_location( $order_ID ) {
-    return $this->customFetchAll(" SELECT *, patient.name AS p_name FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID INNER JOIN prescription ON _order.order_ID=prescription.order_ID WHERE prescription.order_ID=$order_ID ");
+        return $this->customFetchAll(" SELECT *, patient.name AS p_name FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID INNER JOIN prescription ON _order.order_ID=prescription.order_ID WHERE prescription.order_ID=$order_ID ");
     }
     
     public function get_order_ID_by_pres_ID ( $pres_ID ){
@@ -614,5 +645,25 @@ class Prescription extends DbModel{
     public function get_med_rec_details( $pres_ID, $med_ID ){
         return $this->customFetchAll(" SELECT * FROM prescription_medicine INNER JOIN prescription ON prescription_medicine.prescription_ID=prescription.prescription_ID WHERE prescription_medicine.med_ID=$med_ID AND prescription_medicine.prescription_ID=$pres_ID; ");
     }
+    //  new function added by nimantha
+    public function checkAmount($order_ID){
+        $prescriptionModel=new Prescription();
+        $medicinesModel=new Medicine();
+        $nameds=[];
+        $prescriptions=$prescriptionModel->fetchAssocAll(['order_ID'=>$order_ID,'type'=>'softcopy prescription']);
+        foreach($prescriptions as $prescription){
+            $medicines=$prescriptionModel->fetchAssocAllByName(['prescription_ID'=>$prescription['prescription_ID']],'prescription_medicine');
+            foreach($medicines as $medicine){
+                $orderamount=$medicine['total_med_amount'];
+                $avamount=$medicinesModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0]['amount'];
+                if($orderamount>$avamount){
+                    array_push($nameds,$medicinesModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0]['name']);
+                }
+            }
+
+        }
+        return $nameds;
+    }
+ 
 
 }   

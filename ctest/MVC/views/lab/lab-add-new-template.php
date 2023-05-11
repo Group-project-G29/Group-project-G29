@@ -22,8 +22,8 @@ use \app\core\form\Form; ?>
         <div class="header-container" style="display:flex; flex-direction:column; margin-top:-15vh; ">
             <div style="text-align:left; margin-left:14vw; display:flex; flex-direction:column; gap:3vh;">
            <h3><b>Test Name :</b><?=$testDetail[0]['name']?></h3>
-           <h3><b> Test Fee :</b><?=$testDetail[0]['test_fee']?></h3>
-           <h3><b> Hospital Fee :</b><?=$testDetail[0]['hospital_fee']?></h3>
+           <h3><b> Test Fee :</b><?="LKR ".$testDetail[0]['test_fee'].".00"?></h3>
+           <h3><b> Hospital Fee :</b><?="LKR ".$testDetail[0]['hospital_fee'].".00"?></h3>
             </div>
           <div class="" style="margin-top:3vw">
             <?= $component->button('btn', '', 'Add Template', 'button--class-0', 'btn-1'); ?>

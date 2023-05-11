@@ -7,15 +7,15 @@ use app\core\UserModel;
 
 class LabTest extends DbModel{
     public string $name='';
-    public int $test_fee=0;
-    public int $hospital_fee=0;
+    public string $test_fee='';
+    public string $hospital_fee='';
 
     public ?int $template_ID=null;
     
    
 
     public function addTest(){
-        $this->name=join("-",explode(' ',$this->name));
+        $this->name=$this->name;
         return parent::save();
     }
  
@@ -75,7 +75,7 @@ class LabTest extends DbModel{
  
 
     public function updateLabtest($prev_name){
-        $this->name=join("-",explode(' ',$this->name));
+        $this->name=$this->name;
         $name = $this->name;
         $test_fee = $this->test_fee;
         $hospital_fee = $this->hospital_fee;
@@ -84,7 +84,7 @@ class LabTest extends DbModel{
             $template_ID="NULL";
         }
 
-        return [$this->customFetchAll("UPDATE lab_tests SET  hospital_fee =$hospital_fee, test_fee =$test_fee, template_ID =$template_ID WHERE name ='$prev_name'"),$this->customFetchAll("UPDATE `lab_tests` SET `name` ='$name'  WHERE `lab_tests`.`name` = '$prev_name';")];
+        return [$this->customFetchAll("UPDATE lab_tests SET  hospital_fee =$hospital_fee, test_fee =$test_fee WHERE name ='$prev_name'"),$this->customFetchAll("UPDATE `lab_tests` SET `name` ='$name'  WHERE `lab_tests`.`name` = '$prev_name';")];
     }
 
     public function update_temp_ID_on_test($test_name, $temp_ID){

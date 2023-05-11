@@ -308,10 +308,7 @@
     gap:2vh;
     flex-direction:column;
 }
-.width-10{
-    width:25vw; 
-    height:7vh;
-}
+
 .item{
     font-size: 0.8em;
     padding-inline: 2vh;
@@ -724,6 +721,7 @@
     background-color: var(--clr-white);
     border: 1px solid var(--clr-button-green);
     border-radius: 2px;
+    width:10vw;
 }
 
 .button--class-5:hover{
@@ -974,8 +972,16 @@
     gap:2.5vh;
     
 }
+.prescription-table table{
+    margin-top:-3vh;
+}
 .prescription-table table td{
-    width:15vw;
+    width: 20vw;
+    text-align: center;
+    height:5vh;
+}
+.prescription-table table th{
+    width: 20vw;
     text-align: center;
     height:5vh;
 }
@@ -983,6 +989,17 @@
     display: flex;
     
     
+}
+.spec-h{
+    max-height:4vh;
+    max-width:2vw;
+
+}
+.total-container{
+    background-color: var(--clr-dark);
+    color: white;
+    padding-inline:20px;
+    padding-block:7px;
 }
 .image-pres{
     display: flex;
@@ -1020,7 +1037,7 @@
    justify-content: center;
    gap:4vw;
    margin-top: 5vh;
-   margin-left:5vw;
+   margin-left:-2vw;
    
    
 }
@@ -1140,6 +1157,10 @@
     padding-inline:2vw;
     border-radius: 10px;
     height:80vh;    
+}
+.payment-table td{
+    height:7vh;
+    width:15vw;
 }
 .why-body{
     border-radius: 5px;
@@ -1481,4 +1502,47 @@
 .NIC img{
     width:5vw;
     height:10vh;
+}
+.main-else{
+    opacity:0.6;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+    margin-left:8vw;
+    margin-top:18vh;
+    font-size: 28 ;
+}
+.main-else img{
+     width:20vw;
+    height:35vh;
+}
+
+.noti-black-bg{
+    background-color: rgba(0, 0, 0, .75);
+    height: 100vh;
+    width: 120vw;
+    z-index: 100;
+    position: fixed;
+    left:-20vw;
+    top:14vh;
+}
+.track-popup{
+    background-color:white;
+    z-index: 100;
+    position: fixed;
+    left:35vw;
+    height:40vh;
+    width:30vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap:3vh;
+    padding-block:2vh;
+    padding-inline:2vw;
+    border-radius:10px;
+}
+
+.set-w{
+    min-width:10px;
+ 
 }

@@ -54,7 +54,7 @@ use app\models\Prescription;
             <?php foreach($medicines as $medicine): ?>
                 <?php $medicinei=$medicineModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0];?>
                 <?php $total=$total+$medicine['unit_price']*$medicine['amount'] ?>
-           <tr> <td><?=$medicinei['name']." ".$medicinei['unit']?></td><td><?=$medicine['amount']?></td><td><?=$medicine['unit_price']*$medicine['amount'] ?></td></tr>
+           <tr> <td><?=$medicinei['name']." ".$medicinei['unit']?></td><td><?=$medicine['amount']?></td><td><?="LKR ".number_format($medicine['unit_price']*$medicine['amount'],'2','.','') ?></td></tr>
             <?php endforeach;?>
         </table>
         <?php if(!$medicines): ?>
@@ -67,7 +67,7 @@ use app\models\Prescription;
             <?php $grand_total=$grand_total+$total ?>
         </div>
     </div>
-    <div class="prescription-table">
+    <div class="prescription-table-pay">
         <div style="display:flex; flex-direction:column; align-items:center;">
             <div class="flex pre">
                 <h2>Prescriptions</h2>

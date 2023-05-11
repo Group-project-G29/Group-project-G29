@@ -17,6 +17,7 @@ $component=new Component();
     </div>
     <h3 class="fs-50">Add any soft copy referal here. Please consider that referal should be clear and valid.</h3>
     <?php $form=Form::begin("receptionist-patient-appointment?mod=referral&id=".$appointment->appointment_ID,'post');?>
+    <div style="display:flex; flex-direction:column; gap:2vh; align-items:center;">
     <?= $form->field($model,'name','Refarrel','field-input--class1 flex','file');?>
     <?=$component->button("Done","submit","Done","button--class-0",$appointment->appointment_ID);?>
     <!-- <?php $form=Form::end();?> -->

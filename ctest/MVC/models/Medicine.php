@@ -132,7 +132,13 @@ class Medicine extends DbModel{
     }
     public function getMedicineID($name,$strength){
         
-        return $this->fetchAssocAll(['name'=>$name,'strength'=>$strength])[0]['med_ID'];
+        $result=$this->fetchAssocAll(['name'=>$name,'strength'=>$strength]);
+        if($result){
+            return $result[0]['med_ID'];
+        }
+        else{
+            return false;
+        }
     }
     public function getMedicineByID($ID){
         return $this->fetchAssocAll(['med_ID'=>$ID])[0]['name'];
