@@ -7,8 +7,8 @@ use app\core\UserModel;
 
 class LabTest extends DbModel{
     public string $name='';
-    public int $test_fee=0;
-    public int $hospital_fee=0;
+    public string $test_fee='';
+    public string $hospital_fee='';
 
     public ?int $template_ID=null;
     

@@ -1055,4 +1055,8 @@ class PatientAuthController extends Controller{
         ]);
     } 
 
+    public function test(){
+           return $this->render('patient/test'); 
+    }
+
 }

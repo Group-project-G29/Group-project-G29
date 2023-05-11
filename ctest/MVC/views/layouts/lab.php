@@ -18,7 +18,7 @@ include "../views/layouts/navbar/lab-navbar.php";
         <div class="sub-container">
             <div>
                 <?php if(Application::$app->session->getFlash('success')):?>
-                 <div class="flash-message">
+                 <div class="flash-message disap">
                      <?php echo Application::$app->session->getFlash('success');?>
                  </div>
                 <?php endif;?>

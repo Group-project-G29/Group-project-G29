@@ -19,13 +19,13 @@
 <div class="table-container">
 
     <table border="0">
-        <tr class="row-height header-underline none" id="header">
+        <tr class="row-height header-underline " id="header">
         <th>Name</th> <th>NIC</th> <th>Contact Number</th><th></th><th></th><th></th>
             
         </tr>
         <div class="patient-container" >
         <?php foreach ($patients as $key => $patient) : ?>
-        <tr class="table-row  none " id=<?= '"' . $patient['name'] . "&" . $patient['patient_ID'] . '"' ?>>
+        <tr class="table-row" id=<?= '"' . $patient['name'] . "&" . $patient['patient_ID'] . '"' ?>>
             
             <td><?= $patient['name'] ?></td>
             <td><?= $patient['nic'] ?></td>  
@@ -82,16 +82,19 @@
 
         patients.forEach((el) => {
             comp = (el.id).split("&");
-            if (searchBar.value.length == 0) {
-                el.classList.add("none")
-                header.classList.add("none");
-            } else if (re.test((el.id).toLowerCase()) || re.test(comp[1].toLowerCase())) {
+            
+            if (re.test((el.id).toLowerCase()) || re.test(comp[1].toLowerCase())) {
                 el.classList.remove("none");
                 header.classList.remove("none");
             } else {
                 el.classList.add("none");
                 header.classList.add("none");
 
+            }
+            if(searchBar.value.length==0){
+              doctors.forEach((el)=>{
+                    el.classList.remove("none");
+                }) 
             }
         })
     }

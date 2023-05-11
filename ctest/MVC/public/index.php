@@ -71,6 +71,7 @@ $app->router->get('/ctest/nic', [PatientAuthController::class,'getNIC']);
 $app->router->post('/ctest/nic', [PatientAuthController::class,'getNIC']);
 $app->router->get('/ctest/otp', [PatientAuthController::class,'OTP']);
 $app->router->post('/ctest/otp', [PatientAuthController::class,'OTP']);
+$app->router->get('/ctest/testme', [PatientAuthController::class,'test']);
 
 
 
@@ -288,6 +289,15 @@ $app->router->get('/ctest/lab-test-delete',[LabController::class,'handleTest']);
 $app->router->post('/ctest/lab-test-delete',[LabController::class,'handleTest']);
 $app->router->get('/ctest/lab-add-new-template',[LabController::class,'handleTemplate']);
 $app->router->post('/ctest/lab-add-new-template',[LabController::class,'handleTemplate']);
+
+$app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']);
+$app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);
+$app->router->get('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
+$app->router->post('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
+$app->router->get('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
+$app->router->post('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
+$app->router->get('/ctest/lab-edit-report-detail',[LabController::class,'editReport']);
+$app->router->post('/ctest/lab-edit-report-detail',[LabController::class,'editReport']);
 
 $app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']);
 $app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);

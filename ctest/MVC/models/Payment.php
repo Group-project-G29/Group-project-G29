@@ -127,11 +127,11 @@ class Payment extends DbModel{
     public function payNow($amount,$text,Patient $patientModel,$order,$hash,$return_complete,$return_fail){
         $hash1 = strtoupper(
                             md5(
-                                '1223094'. 
+                                '1222960'. 
                                 "Medicine Order-".Application::$app->session->get('user'). 
                                 number_format($amount, 2, '.', ''). 
                                 'LKR'.  
-                                strtoupper(md5('NDA0Mjc0OTcyMzQxOTM0OTkwMzIyMjQxMTI4NzEzNDAwNjY0MjQ0NQ==')) 
+                                strtoupper(md5('MzA1MDU0OTcyMjM4NDk5OTEyMTMwNzQ1NjE1ODAxMzI3Nzc3MjIx')) 
                             ) 
         );
         $str='<script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
@@ -185,7 +185,7 @@ class Payment extends DbModel{
         payhere.startPayment(payment);
     
 </script>';   
-        return sprintf($str,$return_complete,$return_fail,$return_fail,$order,$text,$amount,$hash1,explode(" ",$patientModel->name)[0],explode(" ",$patientModel->name)[1]??'',$patientModel->email,$patientModel->contact,$patientModel->address);
+        return sprintf($str,$return_complete,$return_fail,$return_fail,$order,$text,number_format($amount,'0','.',''),$hash1,explode(" ",$patientModel->name)[0],explode(" ",$patientModel->name)[1]??'',$patientModel->email,$patientModel->contact,$patientModel->address);
     }
 
     public function update_payment_status ($order_ID) {

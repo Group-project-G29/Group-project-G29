@@ -67,7 +67,7 @@ use app\core\PDF;
             return $this->customFetchAll("SELECT * FROM  lab_report_content_allocation  as l left join lab_report_content as c  on c.content_ID=l.content_ID left join lab_report_allocation as a on a.report_ID=l.report_ID left join lab_report as r on  r.report_ID=l.report_ID where a.patient_id=".$patient." and l.content_ID=".$testID);
         }
   
-        //changed
+          //changed
         public function getAllParameterValue($patient,$template_ID){
             $contents=$this->distinctPatientTests($patient,$template_ID);
             $contentArray=[];
@@ -116,7 +116,7 @@ use app\core\PDF;
 
     
         } 
-        public function create_new_report($fee, $type, $label, $template_ID, $location, $request_ID){
+   	public function create_new_report($fee, $type, $label, $template_ID, $location, $request_ID){
             $labTestModel=new LabTest();
             //get total fee 
             $values=$labTestModel->fetchAssocAll(['template_ID'=>$template_ID])[0];
@@ -155,7 +155,20 @@ use app\core\PDF;
             else return false;
         }
 
-        //show any labreport in PDF format
+        public function updateReportValue($report_ID){
+            $reports=$_POST;
+            foreach($reports as $key=>$value){
+                if(is_numeric($key)){
+
+                    $this->customFetchAll("update lab_report_content_allocation set int_value='".$value."' where content_ID=$key and report_ID=".$report_ID) ;
+                }
+            }
+            
+            return true;
+
+
+        }
+	  //show any labreport in PDF format
         public function labreporttoPDF($reportID){
             $valuerows=$this->getReport($reportID);
             $request=$this->customFetchAll("select * from lab_report left join lab_request on lab_report.request_ID=lab_request.request_ID where lab_report.report_ID=".$reportID)[0];
@@ -258,8 +271,8 @@ use app\core\PDF;
                 <html>";
                 $pdfModel->createPDF($str,'reports-'.$date);
             }
-        }   
-
+        }  
+      
 
 
 ?>

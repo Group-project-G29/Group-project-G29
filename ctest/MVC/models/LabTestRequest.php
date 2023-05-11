@@ -56,7 +56,6 @@ class LabTestRequest extends DbModel{
         $model->status='pending';
         return $model->savenofiles();
     }
-
     public function isThereTest($name){
         $result=$this->fetchAssocAll(['name'=>$name]);
         if($result){
