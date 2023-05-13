@@ -78,7 +78,8 @@ class Employee extends DbModel{
             return [
                 'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
                 'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],
-                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee']],
+                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"],
+                [self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee']],
                 'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
                 'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
                 'email'=>[self::RULE_EMAIL,[self::RULE_UNIQUE,'attribute'=>'email','tablename'=>'employee']],
