@@ -1,6 +1,8 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
+    use app\core\Time;
+    $timeModel = new Time();
 ?>
 
 <p class="navigation-text-line-p"> 
@@ -32,12 +34,12 @@
         
             <?php foreach($orders as $key=>$order): ?>
                 <?php if($order['processing_status']=='pickedup'): ?>  
-                        <tr class="table-row" id=<?=$order['order_ID']?> >
+                        <tr class="table-row search-class" id=<?= $order['order_ID'].'-'.$order['ordered_person'] ?> >
                             <td><?=$order['order_ID']?></td>
                             <td><?=$order['name']?></td> 
                             <td><?=$order['contact']?></td> 
                             <td><?=$order['address']?></td> 
-                            <td><?=$order['total_price']?></td> 
+                            <td><?= 'LKR. '. number_format($order['total_price'],2,'.','') ?></td> 
                             <td>
                                 <?php if($order['text']!=NULL): ?>
                                     <?=$order['text']?>
@@ -51,12 +53,12 @@
                             <td><?= $timeModel->time_format($order['created_time']) ?></td> 
                         </tr>
                 <?php elseif($order['processing_status']=='deleted'): ?> 
-                        <tr class="table-row_red" id=<?=$order['order_ID']?> >
+                        <tr class="table-row_red search-class" id=<?= $order['order_ID'].'-'.$order['ordered_person'] ?> >
                             <td><?=$order['order_ID']?></td>
                             <td><?=$order['name']?></td> 
                             <td><?=$order['contact']?></td> 
                             <td><?=$order['address']?></td> 
-                            <td><?=$order['total_price']?></td> 
+                            <td><?= 'LKR. '. number_format($order['total_price'],2,'.','') ?></td> 
                             <td>
                                 <?php if($order['text']!=NULL): ?>
                                     <?=$order['text']?>
@@ -79,10 +81,40 @@
 
 <!-- ==================== -->
 <script>
+
     elementsArray = document.querySelectorAll(".table-row");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
-            location.href='pharmacy-view-previous-order?id='+elem.id; 
+            comp=""+elem.id; 
+            comp=comp.split("-");
+            location.href='pharmacy-view-previous-order?id='+comp[0]; 
         });
     });
+
+    const orders=document.querySelectorAll('.search-class');
+    const searchBar=document.getElementById('search');
+    searchBar.addEventListener('input',checker);
+    function checker(){
+        var re=new RegExp(("^"+searchBar.value).toLowerCase())
+        orders.forEach((el)=>{
+        comp=""+el.id; 
+        comp=comp.split("-");
+        
+        if(searchBar.value.length==0){
+            // el.classList.add("none")
+        }
+        else if(re.test(comp[0].toLowerCase()) || re.test(comp[1].toLowerCase()) ){
+            el.classList.remove("none");
+        }
+        else{
+            el.classList.add("none");
+            
+        }
+        })
+        if(searchBar.value.length==0){
+            orders.forEach((el)=>{
+                el.classList.remove("none");
+            }) 
+        }
+    }
 </script>

@@ -1070,7 +1070,12 @@
     height:50vh
 
 }
-
+.txta>textarea{
+     border:1px solid gainsboro;
+    background-color: white;
+    border-radius: 10px;
+    margin-top:-5vh ;
+}
 .nothing>textarea{
     border:1px solid gainsboro;
     background-color: white;
@@ -1544,5 +1549,5 @@
 
 .set-w{
     min-width:10px;
- 
 }
+

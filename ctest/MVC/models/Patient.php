@@ -61,10 +61,8 @@ class Patient extends DbModel{
                 'age'=>[self::RULE_REQUIRED],
                 'gender'=>[self::RULE_REQUIRED],
                 'guardian_name'=>[self::RULE_REQUIRED],
-                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
-                'contact'=>[self::RULE_REQUIRED],
                 'email'=>[self::RULE_EMAIL],
-               // 'password'=>[self::RULE_PASSWORD_VALIDATION]
+                'contact'=>[self::RULE_REQUIRED],
                 'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
             ];
         }
@@ -73,11 +71,10 @@ class Patient extends DbModel{
             'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>12],[self::RULE_MAX,'max'=>15],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'patient'],[self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>'NIC number']],
             'age'=>[self::RULE_REQUIRED,self::RULE_NUMBERS,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120]],
             'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
-            'email'=>[self::RULE_EMAIL],
+            'email'=>[self::RULE_EMAIL,[self::RULE_UNIQUE,'attribute'=>'email','tablename'=>'patient']],
             'address'=>[],       
             'gender'=>[self::RULE_REQUIRED],
-            //'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)]]
-                'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
+            'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
                
 
         ];

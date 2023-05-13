@@ -54,11 +54,11 @@ class Employee extends DbModel{
         if($this->emp_ID!=''){
              return [
                 'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
-                'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],
+                'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15,[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee']],
                 [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
                 'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
                 'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
-                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
+                'email'=>[self::RULE_EMAIL,[self::RULE_UNIQUE,'attribute'=>'email','tablename'=>'employee']],
                 'address'=>[],       
             ];    
         }
@@ -69,7 +69,7 @@ class Employee extends DbModel{
                 [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
                 'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
                 'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
-                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
+                'email'=>[self::RULE_EMAIL,[self::RULE_UNIQUE,'attribute'=>'email','tablename'=>'employee']],
                 'address'=>[],       
                 'role'=>[self::RULE_REQUIRED],
                 'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
@@ -78,10 +78,10 @@ class Employee extends DbModel{
             return [
                 'name'=>[self::RULE_REQUIRED,[self::RULE_CHARACTER_VALIDATION,'regex'=>"/^[a-z ,.'-]+$/i",'attribute'=>'name']],
                 'nic'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>9],[self::RULE_MAX,'max'=>15],
-                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"]],
+                [self::RULE_CHARACTER_VALIDATION,'regex'=>"^([0-9]{9}[x|X|v|V]|[0-9]{12})$^",'attribute'=>"nic"],[self::RULE_UNIQUE,'attribute'=>'nic','tablename'=>'employee']],
                 'age'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>0],[self::RULE_MAX,'max'=>120],self::RULE_NUMBERS],
                 'contact'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>10]],
-                'email'=>[self::RULE_EMAIL.self::RULE_UNIQUE],
+                'email'=>[self::RULE_EMAIL,[self::RULE_UNIQUE,'attribute'=>'email','tablename'=>'employee']],
                 'address'=>[],       
                 'role'=>[self::RULE_REQUIRED],
                 'password'=>[self::RULE_REQUIRED,[self::RULE_MIN,'min'=>8],[self::RULE_MATCH,'retype'=>($this->cpassword)],[self::RULE_PASSWORD_VALIDATION,'regex'=>"$\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$",'attribute'=>"password"]]
@@ -214,15 +214,18 @@ class Employee extends DbModel{
     }
     
     
-    public function get_employee_details($emp_ID) {
+     public function get_employee_details($emp_ID) {
         return $this->customFetchAll("SELECT * FROM employee WHERE emp_ID=$emp_ID");
     }
 
-    public function select_suitable_rider( $postal_code, $order_ID ) {
-        //error in query -> no elements in array
-        return $this->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.pickup_status='delivery' AND delivery_rider.availability='AV' AND _order.order_ID != $order_ID AND delivery.postal_code BETWEEN $postal_code-10 AND $postal_code+10");
+    // public function select_suitable_rider( $postal_code, $order_ID ) {
+    //     //error in query -> no elements in array
+    //     return $this->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.pickup_status='delivery' AND delivery_rider.availability='AV' AND _order.order_ID != $order_ID AND delivery.postal_code BETWEEN $postal_code-10 AND $postal_code+10");
+    // }
+    
+    public function select_suitable_rider( $city, $order_ID ) {
+            return $this->customFetchAll("SELECT * FROM delivery INNER JOIN delivery_rider ON delivery.delivery_rider = delivery_rider.emp_ID INNER JOIN _order ON delivery.delivery_ID = _order.delivery_ID WHERE _order.pickup_status='delivery' AND delivery_rider.availability='AV' AND _order.order_ID != $order_ID AND delivery.city=$city");
     }
-
     public function select_queue_rider() {
         return $this->customFetchAll("SELECT * FROM delivery_riders_queue");
     }
@@ -269,6 +272,26 @@ class Employee extends DbModel{
         
         
         return true;
+    }
+    public function updateemployee($data){
+        
+        $this->customFetchAll("UPDATE `employee` SET
+            name = '$data->name',
+            nic = '$data->nic',
+            gender = '$data->gender',
+            contact = '$data->contact',
+            email = '$data->email',
+            address = '$data->address',
+            img = '$data->img',
+            age = $data->age
+            WHERE emp_ID = $data->emp_ID
+        ");
+
+        return true;
+    }
+
+    public function get_employee_details_by_NIC($nic) {
+        return $this->customFetchAll("SELECT * FROM employee WHERE nic=$nic");
     }
 
  

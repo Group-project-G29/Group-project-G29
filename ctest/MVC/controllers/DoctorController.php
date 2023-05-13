@@ -807,7 +807,10 @@ class DoctorController extends Controller{
 
         if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='delete'){
             $pid=$prescriptionModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
-            $prescriptionModel->deleteRecordByName(['prescription_ID'=>$pid,'med_ID'=>$parameters[2]['id']],'prescription_medicine');
+            if($prescriptionModel->fetchAssocAll(['prescription_ID'=>$parameters[2]['id']]));{
+
+                $prescriptionModel->deleteRecordByName(['prescription_ID'=>$pid,'med_ID'=>$parameters[2]['id']],'prescription_medicine');
+            }
             $response->redirect('doctor-prescription');
         }
         if(isset($parameters[1]['mod']) && $parameters[1]['mod']=='view'){
@@ -828,6 +831,7 @@ class DoctorController extends Controller{
         }
         
         if($request->isPost()){
+
             //take current prescritption or create new one add medicine to it
             $prescription=$prescriptionModel->addPrescriptionMedicine(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling')); 
             $prescriptionModel->note=$prescription[0];

@@ -1,6 +1,7 @@
 <?php
 
 use app\core\form\Form;
+use app\core\form\SpanSelectAnaly;
 use app\models\ChartModel;
 use app\models\LabReport;
 
@@ -8,6 +9,7 @@ use app\models\LabReport;
     $labreports=new LabReport();
     $chartModel=new ChartModel();
     $form=new Form();
+   
 
 ?>
 
@@ -18,7 +20,7 @@ use app\models\LabReport;
     <div class="medical-analysis-section">
         <section class="medical-analysis-types">
             <table>
-                <tr><td><?=$form->specspanselect($labreports,'type','','choose',$reports,'choose')?></td></tr>
+                <tr><td><?=$form->spanselectanaly('field',$reports,'choose')?></td></tr>
                 <?php foreach($keys as $key): ?>
                     <tr>
                         <td class="test-key" id=<?="'".join('-',explode(' ',$key))."'" ?>>

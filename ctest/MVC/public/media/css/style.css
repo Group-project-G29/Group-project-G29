@@ -204,7 +204,7 @@ select{
     justify-content: space-between;
     align-items: center;
     height: 15vh;
-    padding-right:100px ;
+    padding-right:50px ;
 }
 
 .nav_row--top_logo img{
@@ -213,7 +213,7 @@ select{
 }
 
 .nav_row--top_user img{
-    width:4vw;
+    width:70px;
     height:7.5vh;
     border-radius: 100%;
 }

@@ -7,6 +7,7 @@ use app\core\Calendar;
 use app\core\Date;
 use app\core\UserModel;
 use app\core\Time;
+use PhpParser\Node\Expr\FuncCall;
 
 class OpenedChanneling extends DbModel{
     public string $channeling_ID='';
@@ -49,7 +50,6 @@ class OpenedChanneling extends DbModel{
     public function generateOpenedChannelings($start_date,$startday,$finday,$duration,$op,$hop='0 weeks'){
         $calendarModel=new Calendar();
         $dates=$calendarModel->generateDays($start_date,$startday,$finday,$duration,$hop);
-        var_dump($dates);
         foreach($dates as $date){
             $op->channeling_date=$date;
             $op->saveData();
@@ -236,7 +236,9 @@ class OpenedChanneling extends DbModel{
         return $past->saveData();
 
     }
-   
+    public function getDoctorByOpen($openedChanneling){
+        return $this->customFetchAll("select employee.name,channeling.day from  channeling  left join employee on employee.nic=channeling.doctor where channeling.channeling_ID=".$openedChanneling);
+    }
     
 }   
 

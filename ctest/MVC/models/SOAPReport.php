@@ -54,8 +54,8 @@ class SOAPReport extends DbModel{
     
     public function SOAPreportToPDF($reportID){
         $reports=$this->customFetchAll("Select s.subjective, s.objective,s.assessment,s.plan,s.additional_note,s.report_ID,m.uploaded_date,m.type,m.name as report_name,m.label,p.name,p.age,p.gender,p.type  from soap_report as s right join medical_report as m on m.report_ID=s.report_ID right join patient  as p on p.patient_ID=m.patient
-        where s.report_ID=".$reportID);
-        $report_doctor=$this->customFetchAll("Select e.name from soap_report as s right join medical_report as m on m.report_ID=s.report_ID right join employee as e on e.nic=m.doctor  where s.report_ID=".$reportID);
+        where s.report_ID=".$reportID)[0];
+        $report_doctor=$this->customFetchAll("Select e.name from soap_report as s right join medical_report as m on m.report_ID=s.report_ID right join employee as e on e.nic=m.doctor  where s.report_ID=".$reportID)[0];
         $pdfModel=new PDF();
         $addstr='';
         if($reports['subjective'] && $reports['subjective']!=''){
@@ -81,7 +81,7 @@ class SOAPReport extends DbModel{
 
         }
         $str="
-            <html>
+     <html>
                 <head>
                 <style>
                     .show{    
@@ -90,22 +90,34 @@ class SOAPReport extends DbModel{
                 </style>
                 </head>
                 <body>
-                    <section class='show'>
-                        <div>Patient Name :".$reports['name']."</div>
-                        <div>Patient Gender :".$reports['gender']."</div><br>
-                        <div>Patient Age :".$reports['age']."</div><br>
+                    <sesction>
+                        <span>
+                        
+                            <h2 style='color:#38B6FF; font-size:32px;'>Anspaugh<font style='color:#1746A2;  font-size:32px;'>Care</font><br>
+                            <font style='color:#1746A2;  font-size:22px;' > Channeling Center</font></h2>
+                        
 
+                        
+                        <span>
+                        
+                    </section>
+                    
+                    <section  style='border:1px solid #38B6FF; padding:10px; border-radius:5px; '>
+                        <div>Patient examination :".$reports['name']."</div>
+                        <div>Patient Gender :".$reports['gender']."</div>
+                        <div>Patient Age :".$reports['age']."</div><br>
+                        
                         <div>Issued Doctor :".$report_doctor['name']."</div>"."
                         <div>Issued date :".$reports['uploaded_date']."</div>
                         
                     </section>
-                    <section>
-                        ".$addstr."
-                    </section>
-                </body>
-            <html>
-        ";
-        $pdfModel->createPDF($str,'reports-'.$reports['date']);
+                    <div><center><h2>SOAP Report</h2></center> </div>
+        <section>
+        ".$addstr."
+        </section>
+        </body>
+        <html>";
+        $pdfModel->createPDF($str,'soap-report');
 
 
     } 

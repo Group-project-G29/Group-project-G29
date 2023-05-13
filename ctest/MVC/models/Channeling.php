@@ -35,6 +35,8 @@ class Channeling extends DbModel{
 
     }
     public function savedata(){
+        $str="0"+$this->session_duration.":00";
+        $this->session_duration=$str;
         return parent::save();
     }
     //set validation rule
@@ -84,6 +86,7 @@ class Channeling extends DbModel{
         }
         return [false];
     }
+
     public function checkOverlap(){
         if(!$this->validate()){
             return ['validation'];
@@ -108,7 +111,6 @@ class Channeling extends DbModel{
         }
 
         if($array){
-            var_dump($array[count($array)-1]['opened_channeling_ID']);
             if($array[0]['channeling_ID']==$array[count($array)-1]['channeling_ID']){
                 $this->customAddError('time',"<a class='sh-error' href=update-channeling?cmd=view&id=".$array[0]['channeling_ID'].">Time overlap with channeling:".$array[0]['channeling_ID']." at ".$array[0]['time'].(($array[0]['time']>='12:00')?'PM':'AM')."</a>");
                 return $array;
@@ -208,6 +210,7 @@ class Channeling extends DbModel{
             if($results) return $results;
             else return false;
    }
+   
 
    
 
@@ -293,7 +296,6 @@ return $channelingArry;
    }
 
    public function updateChannelingRecord($channeling){
-        $speciality=$_POST['speciality'];
         $fee=$_POST['fee'];
         $room=$_POST['room'];
         if(isset($_POST['total_patients'])){
@@ -305,7 +307,7 @@ return $channelingArry;
         }
 
         $percentage=$_POST['percentage'];
-        $this->customFetchAll("update channeling set speciality='$speciality',fee=$fee,room='$room',total_patients=$total_patients,percentage=$percentage where channeling_ID=".$channeling);
+        $this->customFetchAll("update channeling set fee=$fee,room='$room',total_patients=$total_patients,percentage=$percentage where channeling_ID=".$channeling);
         if($total_patients!=0){
             $this->customFetchAll("update opened_channeling set remaining_appointments=$total_patients where channeling_ID=".$channeling);
         }

@@ -15,6 +15,7 @@ use app\core\DbModel;
         public string $address='';
         public string $contact='';
         public int $total_price=0;
+        public string $text='';
 
         public function __construct(){
 
@@ -24,7 +25,9 @@ use app\core\DbModel;
         }
         public function rules(): array
         {
-            return []; 
+            return [
+                
+            ]; 
         }
         public function fileDestination(): array
         {
@@ -42,12 +45,12 @@ use app\core\DbModel;
         }
         
         public function tableRecords(): array{
-            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status','name','address','contact','total_price']];
+            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status','name','address','contact','total_price','text']];
         }
 
         public function attributes(): array
         {
-            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status','name','address','contact','total_price']];
+            return ['_order'=>['pickup_status','patient_ID','cart_ID','delivery_ID','payment_status','processing_status','name','address','contact','total_price','text']];
         }
 
         public function completePayment($orderID){
@@ -153,7 +156,7 @@ use app\core\DbModel;
 
         public function getPatientOrder($that=false){
             $patientID=Application::$app->session->get('user');
-            $reuslt=$this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'pickedup'");
+            $reuslt=$this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'pickedup'  and _order.processing_status<>'deleted' and _order.processing_status<>'rejected' order by _order.order_ID desc");
             if($that){
                 if($reuslt){
                     return $reuslt[0];
@@ -162,7 +165,8 @@ use app\core\DbModel;
 
             }
             else{
-                 $od=$this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and _order.processing_status<>'pickedup' and _order.processing_status<>'deleted' and _order.processing_status<>'rejected'");
+                 $od=$this->customFetchAll("select * from delivery right join _order on _order.delivery_ID=delivery.delivery_ID where _order.patient_ID=$patientID and (_order.processing_status<>'pickedup' and _order.processing_status<>'deleted' and _order.processing_status<>'rejected')");                
+               
                  if($od){
                     return $od[0];
                  }
@@ -273,7 +277,7 @@ use app\core\DbModel;
         }
 
         public function update_payment_status ( $order_ID ) {
-            return $this->customFetchAll(" UPDATE _order SET payment_status='completed' WHERE order_ID = $order_ID; ");
+            return $this->customFetchAll(" UPDATE _order SET payment_status='done' WHERE order_ID = $order_ID; ");
         }
 
         // public function get_frontdesk_last_order ( $name ) {

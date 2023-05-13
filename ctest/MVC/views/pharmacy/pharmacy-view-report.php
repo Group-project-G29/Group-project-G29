@@ -24,7 +24,7 @@
     </div>
     <div class="card">
         <div class="card-content">
-            <div class="number"><?= $income_in_this_month ?></div>
+            <div class="number"><?= 'LKR. '. number_format($income_in_this_month,2,'.','') ?></div>
             <div class="card-name">This Month Income</div>
         </div>
     </div>
@@ -39,7 +39,13 @@
 
     <div class="chart" >
         <h2>Today Orders</h2>
-        <canvas id="itemChart" height="240px"></canvas>
+        <?php if( $order_count['Online orders']==0 && $order_count['Frontdesk Orders']==0 ): ?>
+            <center><div>
+                <h1>No orders yet</h1>
+            </div></center>
+        <?php else: ?>
+            <canvas id="itemChart" height="240px"></canvas>
+        <?php endif; ?>
     </div>
 
 </div>
@@ -50,51 +56,100 @@
 <script>
     const ctx1 = document.getElementById('line-chart');
     new Chart(ctx1, {
-        type: 'line',
-        data: {
-            labels: [
-                '<?= $medicine_income[0][1].'-'.$medicine_income[0][0]?>',
-                '<?= $medicine_income[1][1].'-'.$medicine_income[1][0]?>',
-                '<?= $medicine_income[2][1].'-'.$medicine_income[2][0]?>',
-                '<?= $medicine_income[3][1].'-'.$medicine_income[3][0]?>',
-                '<?= $medicine_income[4][1].'-'.$medicine_income[4][0]?>',
-                '<?= $medicine_income[5][1].'-'.$medicine_income[5][0]?>',
-                '<?= $medicine_income[6][1].'-'.$medicine_income[6][0]?>',
-                '<?= $medicine_income[7][1].'-'.$medicine_income[7][0]?>',
-                '<?= $medicine_income[8][1].'-'.$medicine_income[8][0]?>',
-                '<?= $medicine_income[9][1].'-'.$medicine_income[9][0]?>',
-                '<?= $medicine_income[10][1].'-'.$medicine_income[10][0]?>',
-                '<?= $medicine_income[11][1].'-'.$medicine_income[11][0]?>'
-            ],
-            datasets: [{
-                label: 'Income (Rs)',
-                data: [
-                    <?=$medicine_income[0][2]?>,
-                    <?=$medicine_income[1][2]?>,
-                    <?=$medicine_income[2][2]?>,
-                    <?=$medicine_income[3][2]?>,
-                    <?=$medicine_income[4][2]?>,
-                    <?=$medicine_income[5][2]?>,
-                    <?=$medicine_income[6][2]?>,
-                    <?=$medicine_income[7][2]?>,
-                    <?=$medicine_income[8][2]?>,
-                    <?=$medicine_income[9][2]?>,
-                    <?=$medicine_income[10][2]?>,
-                    <?=$medicine_income[11][2]?>
+            type: 'line',
+            data: {
+                labels: [
+                    '<?= $medicine_income[0][1].'-'.$medicine_income[0][0]?>',
+                    '<?= $medicine_income[1][1].'-'.$medicine_income[1][0]?>',
+                    '<?= $medicine_income[2][1].'-'.$medicine_income[2][0]?>',
+                    '<?= $medicine_income[3][1].'-'.$medicine_income[3][0]?>',
+                    '<?= $medicine_income[4][1].'-'.$medicine_income[4][0]?>',
+                    '<?= $medicine_income[5][1].'-'.$medicine_income[5][0]?>',
+                    '<?= $medicine_income[6][1].'-'.$medicine_income[6][0]?>',
+                    '<?= $medicine_income[7][1].'-'.$medicine_income[7][0]?>',
+                    '<?= $medicine_income[8][1].'-'.$medicine_income[8][0]?>',
+                    '<?= $medicine_income[9][1].'-'.$medicine_income[9][0]?>',
+                    '<?= $medicine_income[10][1].'-'.$medicine_income[10][0]?>',
+                    '<?= $medicine_income[11][1].'-'.$medicine_income[11][0]?>'
                 ],
-                backgroundColor:[
-                    '#38B6FF'
-                ],
-                borderColor: [
-                    '#38B6FF'
-                ],
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true
+                datasets: [
+                    {
+                        label: 'Income from Online Orders (LKR)',
+                        data: [
+                            <?=$medicine_income[0][2]?>,
+                            <?=$medicine_income[1][2]?>,
+                            <?=$medicine_income[2][2]?>,
+                            <?=$medicine_income[3][2]?>,
+                            <?=$medicine_income[4][2]?>,
+                            <?=$medicine_income[5][2]?>,
+                            <?=$medicine_income[6][2]?>,
+                            <?=$medicine_income[7][2]?>,
+                            <?=$medicine_income[8][2]?>,
+                            <?=$medicine_income[9][2]?>,
+                            <?=$medicine_income[10][2]?>,
+                            <?=$medicine_income[11][2]?>
+                        ],
+                        backgroundColor:[
+                            '#38B6FF'
+                        ],
+                        borderColor: [
+                            '#38B6FF'
+                        ],
+                        borderWidth: 2
+                    }, {
+                        label: 'Income from Frontdesk Orders (LKR)',
+                        data: [
+                            <?=$medicine_income[0][2]+$frontdesk_medicine_income[0][2]?>,
+                            <?=$medicine_income[1][2]+$frontdesk_medicine_income[1][2]?>,
+                            <?=$medicine_income[2][2]+$frontdesk_medicine_income[2][2]?>,
+                            <?=$medicine_income[3][2]+$frontdesk_medicine_income[3][2]?>,
+                            <?=$medicine_income[4][2]+$frontdesk_medicine_income[4][2]?>,
+                            <?=$medicine_income[5][2]+$frontdesk_medicine_income[5][2]?>,
+                            <?=$medicine_income[6][2]+$frontdesk_medicine_income[6][2]?>,
+                            <?=$medicine_income[7][2]+$frontdesk_medicine_income[7][2]?>,
+                            <?=$medicine_income[8][2]+$frontdesk_medicine_income[8][2]?>,
+                            <?=$medicine_income[9][2]+$frontdesk_medicine_income[9][2]?>,
+                            <?=$medicine_income[10][2]+$frontdesk_medicine_income[10][2]?>,
+                            <?=$medicine_income[11][2]+$frontdesk_medicine_income[11][2]?>
+                        ],
+                        backgroundColor:[
+                            '#1746A2'
+                        ],
+                        borderColor: [
+                            '#1746A2'
+                        ],
+                        borderWidth: 2
+                    }, {
+                        label: 'Total Income (LKR)',
+                        data: [
+                            <?=$frontdesk_medicine_income[0][2]?>,
+                            <?=$frontdesk_medicine_income[1][2]?>,
+                            <?=$frontdesk_medicine_income[2][2]?>,
+                            <?=$frontdesk_medicine_income[3][2]?>,
+                            <?=$frontdesk_medicine_income[4][2]?>,
+                            <?=$frontdesk_medicine_income[5][2]?>,
+                            <?=$frontdesk_medicine_income[6][2]?>,
+                            <?=$frontdesk_medicine_income[7][2]?>,
+                            <?=$frontdesk_medicine_income[8][2]?>,
+                            <?=$frontdesk_medicine_income[9][2]?>,
+                            <?=$frontdesk_medicine_income[10][2]?>,
+                            <?=$frontdesk_medicine_income[11][2]?>
+                        ],
+                        backgroundColor:[
+                            'red'
+                        ],
+                        borderColor: [
+                            'red'
+                        ],
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true
+            }
         }
-    });
+    );
 
     const order_count = <?= json_encode($order_count); ?>;
 
@@ -135,4 +190,3 @@
     });
 
 </script>
-

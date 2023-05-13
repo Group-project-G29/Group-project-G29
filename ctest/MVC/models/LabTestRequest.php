@@ -57,7 +57,8 @@ class LabTestRequest extends DbModel{
         return $model->savenofiles();
     }
     public function isThereTest($name){
-        $result=$this->fetchAssocAll(['name'=>$name]);
+        $labtest=new LabTest();
+        $result=$labtest->fetchAssocAll(['name'=>$name]);
         if($result){
             return true;
         }

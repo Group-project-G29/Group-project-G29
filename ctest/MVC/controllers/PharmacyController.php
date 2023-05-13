@@ -440,7 +440,7 @@ public function viewSoftcopy(Request $request){
                     // reduce medicine amount from stocks -  already reduced when adding
                     // $reduce_med_amount = $medicineModel->reduceMedicine($sf_pres_med_separate['med_ID'],$sf_pres_med_separate['order_amount'], true);
                     // update prescription total for available medicines
-                    $update_prescription_total = $prescriptionModel->update_prescription_total($sf_pres_med_separate["prescription_ID"],$sf_pres_med_separate["order_amount"]*$sf_pres_med_separate["current_price"]);
+                    // $update_prescription_total = $prescriptionModel->update_prescription_total($sf_pres_med_separate["prescription_ID"],$sf_pres_med_separate["order_amount"]*$sf_pres_med_separate["current_price"]);
                     // calculate total
                     $sf_total = $sf_total + $sf_pres_med_separate["order_amount"]*$sf_pres_med_separate["current_price"];
                 }
@@ -675,32 +675,42 @@ public function viewSoftcopy(Request $request){
         $this->setLayout("pharmacy",['select'=>'Orders']);
         $riderMOdel = new Employee;
         $orderModel=new Order();
+        $prescriptionModel = new Prescription();
 
         // get the postal code and other details of the order
         $postal_code = $orderModel->get_postal_code($parameters[0]['id']);
 
-        // check for the pickup status - pickup|delivery
-        if ( $postal_code[0]["pickup_status"] == 'delivery' ) {
-        // =====IF DELIVERY=====
-            // select a suitable rider who has been already assigned to deliver an order to a nearby address (postal code)
-            $rider = $riderMOdel->select_suitable_rider($postal_code[0]["postal_code"], $postal_code[0]["order_ID"]);
-            $deliveryModel = new Delivery;
-            if($rider) {
-                $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider"]);
-            } else {
-                // if there is no such rider ten assign a rider from the queue
-                $rider = $riderMOdel->select_queue_rider();
+        //e-prescription details
+        $prescriptionModel = new Prescription();
+        $ep_orders = $orderModel->take_ep_orders($parameters[0]['id']);                 //prescription details
+        foreach ($ep_orders as $key=>$ep_order){
+            $updated_last_processed_date = $prescriptionModel->set_last_processed_date($ep_order["prescription_ID"]);
+        }
 
-                if ($rider) {
-                    // if rider is assigned from the queue
-                    $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider_ID"]);
-                    //dequeue a delivery rider - check something went wrong-> deleted few records at once
-                    $deleted_rider = $riderMOdel->dequeue_rider($rider[0]["delivery_rider_ID"]);
-
+        if ( $postal_code != NULL ){
+            // check for the pickup status - pickup|delivery
+            if ( $postal_code[0]["pickup_status"] == 'delivery' ) {
+            // =====IF DELIVERY=====
+                // select a suitable rider who has been already assigned to deliver an order to a nearby address (postal code)
+                $rider = $riderMOdel->select_suitable_rider($postal_code[0]["postal_code"], $postal_code[0]["order_ID"]);
+                $deliveryModel = new Delivery;
+                if($rider) {
+                    $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider"]);
                 } else {
-                    // if there were no rider available in the queue
-                    // delivery is waiting until rider comes to the queue
-                    $updated_order=$deliveryModel->set_delivery_without_rider($parameters[0]['id']);
+                    // if there is no such rider ten assign a rider from the queue
+                    $rider = $riderMOdel->select_queue_rider();
+
+                    if ($rider) {
+                        // if rider is assigned from the queue
+                        $updated_rider_ID=$deliveryModel->update_rider_ID($postal_code[0]["delivery_ID"], $rider[0]["delivery_rider_ID"]);
+                        //dequeue a delivery rider - check something went wrong-> deleted few records at once
+                        $deleted_rider = $riderMOdel->dequeue_rider($rider[0]["delivery_rider_ID"]);
+
+                    } else {
+                        // if there were no rider available in the queue
+                        // delivery is waiting until rider comes to the queue
+                        $updated_order=$deliveryModel->set_delivery_without_rider($parameters[0]['id']);
+                    }
                 }
             }
         }
@@ -709,6 +719,7 @@ public function viewSoftcopy(Request $request){
         $updated_total_order = $orderModel->write_total($parameters[0]['id'],$parameters[1]['total']);
         // set processing status from processing to packed
         $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'packed');
+
         // get packed orders
         $orders=$orderModel->get_packed_orders();
         return $this->render('pharmacy/pharmacy-orders-delivering',[
@@ -737,7 +748,6 @@ public function viewSoftcopy(Request $request){
         $order_details = $orderModel->get_order_details($parameters[0]['id']);
         
         if ($request->isPost()){
-            // var_dump($order_details);exit;
             
             if ( isset($_POST["picked-up"]) ) {
                 if ( $order_details[0]['payment_status']=='pending' && isset($_POST['payment_status']) ) {
@@ -748,10 +758,10 @@ public function viewSoftcopy(Request $request){
                     
                     // update payment in order table
                     $updated_payment_order=$orderModel->update_payment_status($parameters[0]['id']);
-                    
+
                     // update payment status in payment table
                     $paymentModel = new Payment();
-                    $updated_payment_status=$paymentModel->update_payment_status($parameters[0]['id']);
+                    $updated_payment_status=$paymentModel->update_payment_status($parameters[0]['id'],$parameters[1]['total']);
                     
                     $this->setLayout("pharmacy",['select'=>'Previous Orders']);
                     // get previous orders - pickedup|deleted
@@ -796,22 +806,33 @@ public function viewSoftcopy(Request $request){
                 // set processing status from packed to processing
                 $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'processing');
 
-                // online medicine details
-                $online_orders = $orderModel->view_online_order_details($parameters[0]['id']); 
-                
-                // softcopy prescription details
-                $sf_orders = $orderModel->take_sf_orders($parameters[0]['id']);           
+                $this->setLayout("pharmacy",['select'=>'Orders']);
+                $orderModel=new Order();
+                $medicineModel=new Medicine();
+                $prescriptionModel=new Prescription();
+
+                //all medicine details
+                $medicine_array = $medicineModel->getAllMedicine();
+
+                //order details
+                $order_details = $orderModel->get_order_details($parameters[0]['id']);
+
+                //online medicine details
+                $online_orders = $orderModel->view_online_order_details($parameters[0]['id']);  
+
+                //softcopy prescription details
+                $sf_orders = $orderModel->take_sf_orders($parameters[0]['id']);                 
                 $sf_pres_med = [];
                 foreach ($sf_orders as $key=>$sf_order){
                     $sf_pres_med[$sf_order['prescription_ID']] = $orderModel->view_prescription_details($sf_order['prescription_ID']);
                 }
-                // e-prescription details
-                $ep_orders = $orderModel->take_ep_orders($parameters[0]['id']);             
+                //e-prescription details
+                $ep_orders = $orderModel->take_ep_orders($parameters[0]['id']);                 //prescription details
                 $ep_pres_med = [];
                 foreach ($ep_orders as $key=>$ep_order){
                     $ep_pres_med[$ep_order['prescription_ID']] = $orderModel->view_prescription_details($ep_order['prescription_ID']);
                 }
-                $this->setLayout("pharmacy",['select'=>'Orders']);
+
                 return $this->render('pharmacy/pharmacy-view-processing-order',[
                     'order_details'=>$order_details,
                     'online_orders'=>$online_orders,
@@ -819,7 +840,9 @@ public function viewSoftcopy(Request $request){
                     'ep_pres_med'=>$ep_pres_med,
                     'ep_orders'=>$ep_orders,
                     'sf_orders'=>$sf_orders,
-                    'model'=>$orderModel,
+                    'ordermodel'=>$orderModel,
+                    'prescriptionmodel'=>$prescriptionModel,
+                    'medicine_array'=>$medicine_array
                 ]);
             }
 
@@ -841,6 +864,10 @@ public function viewSoftcopy(Request $request){
             $ep_pres_med[$ep_order['prescription_ID']] = $orderModel->view_prescription_details($ep_order['prescription_ID']);
         }
 
+        $medicineModel=new Medicine();
+        //all medicine details
+        $medicine_array = $medicineModel->getAllMedicine();
+
         $this->setLayout("pharmacy",['select'=>'Orders']);
         return $this->render('pharmacy/pharmacy-track-order',[
             'order_details'=>$order_details,
@@ -850,6 +877,7 @@ public function viewSoftcopy(Request $request){
             'ep_orders'=>$ep_orders,
             'sf_orders'=>$sf_orders,
             'model'=>$orderModel,
+            'medicine_array'=>$medicine_array
         ]);
     }
 
@@ -939,6 +967,7 @@ public function viewSoftcopy(Request $request){
                     // if available reduce stocks
                     $reduce_med_amount = $medicineModel->reduceMedicine($med_ID[0]['med_ID'], $_POST["amount"], true);
                     $prescreption_medicine = $prescriptionModel->add_med_rec($med_ID[0]['med_ID'], $parameters[0]['presid'], $_POST["amount"], $med_details[0]["unit_price"],'include');
+                    $update_prescription_total = $prescriptionModel->update_prescription_total($parameters[0]['presid'],$_POST["amount"]*$med_details[0]["unit_price"]);
                 } else {
                     $prescreption_medicine = $prescriptionModel->add_med_rec($med_ID[0]['med_ID'], $parameters[0]['presid'], $_POST["amount"], $med_details[0]["unit_price"],'exclude');
                 }
@@ -1019,6 +1048,11 @@ public function viewSoftcopy(Request $request){
         $parameters=$request->getParameters();
         $prescriptionModel = new Prescription();
         $pres_med_details = $prescriptionModel->get_med_rec_details($parameters[0]['pid'],$parameters[1]['mid']);
+        // var_dump($parameters[0]['pid']);
+        // var_dump($pres_med_details);
+        // var_dump($pres_med_details[0]["total_med_amount"]*$pres_med_details[0]["prescription_current_price"]);
+        // exit;
+        $reduced_prescription_price = $prescriptionModel->reduced_update_prescription_total($parameters[0]['pid'],(int)$pres_med_details[0]["total_med_amount"]*(int)$pres_med_details[0]["prescription_current_price"]);
         $deleted_med = $prescriptionModel->remove_med_from_prescription($parameters[0]['pid'],$parameters[1]['mid']);
         $medicineModel = new Medicine();
         $increase_med_amount = $medicineModel->increaseMedicine($parameters[1]['mid'], $pres_med_details[0]['total_med_amount'], true); 
@@ -1151,6 +1185,7 @@ public function viewSoftcopy(Request $request){
         $this->setLayout("pharmacy",['select'=>'Medicines']);
         $medicineModel=new Medicine();
         $medicines=$medicineModel->select_medical_products();
+        // var_dump($medicines);exit;
         return $this->render('pharmacy/pharmacy-view-medicine',[
             'medicines'=>$medicines,
             'model'=>$medicineModel
@@ -1257,13 +1292,16 @@ public function viewSoftcopy(Request $request){
         // ----- DATA FOR GRAPH -----
         // define an array to store the total income for past 12 months separately
         $monthly_income_from_orders = [0,0,0,0,0,0,0,0,0,0,0,0];
+        $monthly_income_from_frontdesk_orders = [0,0,0,0,0,0,0,0,0,0,0,0];
         // labels for months
         $month_labels = [1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'May',6=>'Jun',7=>'Jul',8=>'Aug',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dec'];
         $orderModel=new Order();
         $orderFrontModel=new FrontdeskOrder();      //get frontdesk separately
         // get pickedup orders
         $orders=$orderModel->get_pickedup_orders(); 
-        // calculating the incomes for past 12 months
+        $frontdesk_orders=$orderFrontModel->get_frontdesk_finished_orders(); 
+
+        // calculating the incomes for online orders in past 12 months
         foreach ($orders as $order){
             if( (int)explode('-',$order["completed_date"])[1] < (int)$date_arr[1] && 
                 (int)explode('-',$order["completed_date"])[0] === (int)$date_arr[0] ) {
@@ -1286,6 +1324,33 @@ public function viewSoftcopy(Request $request){
             $arranged_monthly_income_from_orders[$position][0]=$current_year;
             $arranged_monthly_income_from_orders[$position][1]=$month_labels[$i];
             $arranged_monthly_income_from_orders[$position][2]=$monthly_income_from_orders[$i-1];
+            $position++;
+        }
+
+
+        // calculating the incomes for frontdesk orders in past 12 months
+        foreach ($frontdesk_orders as $frontdesk_order){
+            if( (int)explode('-',$frontdesk_order["date"])[1] < (int)$date_arr[1] && 
+                (int)explode('-',$frontdesk_order["date"])[0] === (int)$date_arr[0] ) {
+                    $monthly_income_from_frontdesk_orders[ (int)explode('-',$frontdesk_order["date"])[1]-1 ] += $frontdesk_order['total'] ; 
+            } else if ((int)explode('-',$frontdesk_order["date"])[1] >= (int)$date_arr[1] && 
+                (int)explode('-',$frontdesk_order["date"])[0] === (int)$date_arr[0]-1 ) {
+                    $monthly_income_from_frontdesk_orders[ (int)explode('-',$frontdesk_order["date"])[1]-1 ] += $frontdesk_order['total'] ; 
+            }         
+        }
+        // arrange the months into a order
+        $position = 0;
+        $arranged_monthly_income_from_frontdesk_orders = [];
+        for ( $i=(int)$date_arr[1]; $i<=12; $i++ ) {
+            $arranged_monthly_income_from_frontdesk_orders[$position][0]=$previous_year;
+            $arranged_monthly_income_from_frontdesk_orders[$position][1]=$month_labels[$i];
+            $arranged_monthly_income_from_frontdesk_orders[$position][2]=$monthly_income_from_frontdesk_orders[$i-1];
+            $position++;
+        }
+        for ( $i=1; $i<(int)$date_arr[1]; $i++ ) {
+            $arranged_monthly_income_from_frontdesk_orders[$position][0]=$current_year;
+            $arranged_monthly_income_from_frontdesk_orders[$position][1]=$month_labels[$i];
+            $arranged_monthly_income_from_frontdesk_orders[$position][2]=$monthly_income_from_frontdesk_orders[$i-1];
             $position++;
         }
 
@@ -1324,6 +1389,7 @@ public function viewSoftcopy(Request $request){
         $this->setLayout("pharmacy",['select'=>'Report']);
         return $this->render('pharmacy/pharmacy-view-report',[
             'medicine_income'=>$arranged_monthly_income_from_orders,
+            'frontdesk_medicine_income'=>$arranged_monthly_income_from_frontdesk_orders,
             'order_count' => $order_count,
             'to_be_processed_orders'=>$to_be_processed_orders,
             'no_of_orders_this_month'=>$no_of_orders_this_month,
@@ -1380,12 +1446,13 @@ public function viewSoftcopy(Request $request){
                 $employeeModel->cpassword = $curr_employee[0]['password'];
 
                 if($employeeModel->validate() && $employeeModel->updateRecord(['emp_ID'=>$parameters[1]['id']])){
-                    $response->redirect('/ctest/pharmacy-view-advertisement'); 
+                    $response->redirect('/ctest/pharmacy-view-personal-details'); 
                     Application::$app->session->setFlash('success',"User Profile Updated Successfully.");
                     Application::$app->response->redirect('/ctest/pharmacy-view-personal-details');
                     exit; 
                 };
-                var_dump($employeeModel);
+                // var_dump($employeeModel);
+                echo 'not validated';
                 exit;
             } 
         }

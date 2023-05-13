@@ -1,21 +1,11 @@
 <?php
-
-// var_dump($template);
-// var_dump($template_name_list);
-// exit;
-
 use app\core\component\Component;
 
 $component = new Component();
-// $curr_test = $labtestmodel->name;
-// var_dump($curr_test);
-// exit;
+
 
 use app\core\DbModel;
 use \app\core\form\Form; ?>
-
-<!-- </div> -->
-
 
 <div class="semi-header-container" style="margin-left:-8vw"> 
     <div class="field-container">

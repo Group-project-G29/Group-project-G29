@@ -4,24 +4,27 @@
     $component=new Component();
     $total = 0;
     $NA_count =0;
-    // var_dump($order_details);   
-    // var_dump($order_medicines);   
-    // exit;
-    // echo 'front pending';
-    // exit;
+    use app\core\Time;
+    $timeModel = new Time();
 ?>
 
-<div class="detail">
-    <h3>Order ID : <?=$order_details['order_ID']?></h3>
-    <h3>Patient Name : <?=$order_details['name']?></h3>
-    <h3>Contact Number : <?=$order_details['contact']?></h3>
-    <h3>Date : <?=$order_details['date']?></h3>
-    <h3>Time : <?=$order_details['time']?></h3>
-    <h3>Doctor : <?=$order_details['doctor']?></h3>
+<div class="detail-front flex-del">
+    <table>
+    <tr><td>Order ID :</td><td> <div class="order_idw "><?=$order_details['order_ID']?></div></td></tr>
+    <tr><td>Patient Name : </td><td><?=$order_details['name']?></td></tr>
+    <tr><td>Contact Number : </td><td><?=$order_details['contact']?></td></tr>
+    <tr><td>Date : </td><td><?=$order_details['date']?></td></tr>
+    <tr><td>Time : </td><td><?=$order_details['time']?></td></tr>
+    <tr><td>Doctor : </td><td><?=$order_details['doctor']?></td></tr>
+    </table>
+    <div>
+        <?php echo $component->button('delete','','Delete Order','button--class-3  width-10','delete');?>
+        <?php echo $component->button('finished','','Process','button--class-0  width-10 hidden-btn','finished');?>
+    </div>
 </div>
 
 <!-- Add medicines for softcopies -->
-<section>
+<section class="editable-selects-cont">
     <?php $form=new Form(); ?>
 
     <?php $form->begin('pharmacy-new-front-items?id='.$order_details['order_ID'],'post');?>
@@ -39,10 +42,17 @@
                         </div>
                     </td>
                     <td>
-                        <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
+                        <?=$component->button('submit','submit','Add','button--class-0 set-op','addbtn'); ?>
                     </td>
                 </tr>
             </table><center>
+            <?php
+                if (isset($err)){
+                    if($err === "incorrect_medicine"){
+                        echo '<p class="err-msg"><em><b>*Incorrect Medicine Name Entered</b></em></p>';
+                    }
+                }
+            ?>
         </div>
     <?php $form->end(); ?>
 </section>
@@ -55,22 +65,22 @@
             </tr>
             <?php foreach($order_medicines as $key=>$order): ?>
                 <?php if( $order['status']=='include' ): ?>
-                    <tr class="table-row">
+                    <tr class="table-row unselectable">
                         <td><?=$order['med_ID']?></td>
                         <td><?=$order['name']?></td> 
                         <td><?=$order['strength']?></td> 
-                        <td><?=$order['current_price']?></td> 
+                        <td><?= 'LKR. '. number_format($order['current_price'],2,'.','') ?></td> 
                         <td><?=$order['order_amount']?></td> 
-                        <td><?=$order['current_price']*$order['order_amount']?></td> 
+                        <td><?= 'LKR. '. number_format($order['current_price']*$order['order_amount'],2,'.','') ?></td> 
                         <td> <a class="delete-med" id=<?= $order['order_ID'].'-'.$order['med_ID'] ?> >Delete</a> </td>
                         <?php $total = $total + $order['current_price']*$order['order_amount'] ?>
                     </tr>
                 <?php else: ?>
-                    <tr class="table-row-faded">
+                    <tr class="table-row-faded unselectable">
                         <td><?=$order['med_ID']?></td>
                         <td><?=$order['name']?></td> 
                         <td><?=$order['strength']?></td> 
-                        <td><?=$order['current_price']?></td> 
+                        <td><?= 'LKR. '. number_format($order['current_price'],2,'.','') ?></td> 
                         <td style="color:red;"><?= "Out of Stock" ?></td> 
                         <td style="color:red;">
                             <?php 
@@ -97,11 +107,10 @@
 <h1 style="text-align: right;">Total Price : <?= 'LKR. '. number_format($total,2,'.','') ?></h1>
 
 
-<div class='upper-container'>
-    <?php echo $component->button('delete','','Delete Order','button--class-3  width-10','delete');?>
+<div class='upper-container push-left'>
     <?php 
         if ($total!=0){
-            echo $component->button('finished','','Process','button--class-0  width-10','finished');
+            
         }
     ?>
 </div>
@@ -135,13 +144,8 @@
         });
     });
 
-    function show(day){
-        var x = document.getElementById(day);
-        if (x.hidden === true) {
-            x.hidden = false;
-        } else {
-            x.hidden = true;
-        }
-    }
+    <?php if( $total>0 ): ?>
+        finished.classList.remove("hidden-btn")
+    <?php endif; ?>
 
 </script>

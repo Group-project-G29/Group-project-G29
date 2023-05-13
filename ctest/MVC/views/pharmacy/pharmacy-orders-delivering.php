@@ -1,7 +1,7 @@
 <?php
     use app\core\component\Component;
-    use app\core\Time;
     $component=new Component();
+    use app\core\Time;
     $timeModel = new Time();
 
 ?>

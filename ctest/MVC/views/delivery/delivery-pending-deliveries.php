@@ -39,7 +39,7 @@
                 ?>
             </td>  
             <td><?=$delivery['time_of_creation']?></td>
-            <td><a class='pass-delivery' id=<?=$delivery['delivery_ID']?>>Get Delivery</a></td>
+            <td><a class='get-delivery' id=<?=$delivery['delivery_ID']?>><img src="./media/anim_icons/get.png"></a></td>
         </tr>
         <?php endforeach; ?>
     </table>
@@ -54,7 +54,7 @@
         });
     });
 
-    elementsArray2 = document.querySelectorAll(".pass-delivery");
+    elementsArray2 = document.querySelectorAll(".get-delivery");
     elementsArray2.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href='delivery-get-delivery?id='+elem.id;

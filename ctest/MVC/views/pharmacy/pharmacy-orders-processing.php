@@ -1,7 +1,8 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
-
+    use app\core\Time;
+    $timeModel = new Time();
 ?>
 
 <p class="navigation-text-line-p"> 

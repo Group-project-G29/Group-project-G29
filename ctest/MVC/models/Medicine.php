@@ -182,6 +182,18 @@ class Medicine extends DbModel{
         return $this->fetchAssocAll(['name'=>$name,'strength'=>$strength]);
     }
 
+    public function isUnsedmedicine ( $med_ID ){
+        $online_orders = $this->customFetchAll(" SELECT * FROM medicine_in_order WHERE med_ID = $med_ID ");
+        $cart_orders = $this->customFetchAll(" SELECT * FROM medicine_in_cart WHERE med_ID = $med_ID ");
+        $prescription_orders = $this->customFetchAll(" SELECT * FROM prescription_medicine WHERE med_ID = $med_ID ");
+
+        if ( $online_orders==NULL && $cart_orders==NULL && $prescription_orders==NULL ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     
 }   
 

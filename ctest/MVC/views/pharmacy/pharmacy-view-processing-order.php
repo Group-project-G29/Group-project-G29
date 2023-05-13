@@ -1,32 +1,47 @@
 <?php
     use app\core\component\Component;
     use \app\core\form\Form;
+    use app\models\Employee;
     $component=new Component();
     $total = 0;
     $NA_count =0;
+    use app\core\Time;
 
-    // var_dump($sf_orders);exit;
+    $timeModel = new Time();
 ?>
 
-<div class="detail">
-    <h3>Order ID : <?=$order_details[0]['order_ID']?></h3>
-    <h3>Date :<?=$order_details[0]['created_date']?></h3>
-    <h3>Time :<?=$order_details[0]['created_time']?></h3>
-    <h3>Pickup Status : <?=$order_details[0]['pickup_status']?></h3>
-    <h3>Payment Status : <?=$order_details[0]['payment_status']?></h3>
-    <hr>
-    <h3>Patient Name : <?=$order_details[0]['name']?></h3>
-    <h3>Contact Number : <?=$order_details[0]['contact']?></h3>
-    <h3>Address : <?=$order_details[0]['address']?></h3>
+<div class="detail-front flex-del">
+    <table>
+    <tr><td>Order ID :</td><td> <div class="order_idw "><?=$order_details[0]['order_ID']?></div></td></tr>
+    <tr><td>Date : </td><td><?=$order_details[0]['created_date']?></td></tr>
+    <tr><td>Time : </td><td><?= $timeModel->time_format($order_details[0]['created_time']) ?></td></tr>
+    <tr><td>Pickup Status : </td><td><?= ucfirst($order_details[0]['pickup_status']) ?></td></tr>
+    <tr><td>Patient Name : </td><td><?=$order_details[0]['name']?></td></tr>
+    <tr><td>Contact Number : </td><td><?=$order_details[0]['contact']?></td></tr>
+    <tr><td>Address : </td><td><?=$order_details[0]['address']?></td></tr>
+    <tr><td>Payment Status : </td><td>
+        <?php if($order_details[0]['payment_status']=='pending'): ?>
+            <img src="./media/anim_icons/pending.gif">
+        <?php else: ?>
+            <img src="./media/anim_icons/animcompleted.gif">
+        <?php endif; ?> </td></tr>
+    <?php if($order_details[0]['text']!=NULL): ?>
+        <tr><td class="orders-pending-note">Note* :</td><td><?=$order_details[0]['text']?></td></tr>
+    <?php endif; ?>
+    </table>
+    <div>
+        <?php echo $component->button('notify_availability','','Send Notification','button--class-0  width-10 hidden-btn','notify_availability');?>
+        <?php echo $component->button('finish-process','','Finish Process','button--class-0  width-10','finish-process');?>
+    </div>
 </div>
 
 <div class="order-type-view">
-    <?php if( $online_orders !== NULL ): ?>
+    <?php if( $online_orders != NULL ): ?>
         <div class="drop-down-container">
             <div class="one-drop-down" onclick="show('online_orders_products')">Online Ordered Products <img src="./media/images/icons/angle-down.png" alt="down arrow image"></div>
                 <div id="online_orders_products" hidden>
                     <?php $total_online=0 ?>
-                    <h3>From cart :</h3>
+                
                     <div class="table-container">
                         <table border="0">
                             <tr>
@@ -34,20 +49,20 @@
                             </tr>
                             <?php foreach($online_orders as $key=>$order): ?>
                                 <?php if( $order['status']=='include' ): ?>
-                                    <tr class="table-row">
+                                    <tr class="table-row unselectable">
                                     <td><?=$order['med_ID']?></td>
                                     <td><?=$order['name']?></td> 
                                     <td><?=$order['strength']?></td> 
-                                    <td><?=$order['current_price']?></td> 
+                                    <td><?= 'LKR. '. number_format($order['current_price'],2,'.','') ?></td> 
                                     <td><?=$order['order_amount']?></td> 
-                                    <td><?=$order['current_price']*$order['order_amount']?></td> 
+                                    <td><?= 'LKR. '. number_format($order['current_price']*$order['order_amount'],2,'.','') ?></td> 
                                     <?php $total_online = $total_online + $order['current_price']*$order['order_amount'] ?>
                                 <?php else: ?>
-                                    <tr class="table-row-faded">
+                                    <tr class="table-row-faded unselectable">
                                     <td><?=$order['med_ID']?></td>
                                     <td><?=$order['name']?></td> 
                                     <td><?=$order['strength']?></td> 
-                                    <td><?=$order['current_price']?></td> 
+                                    <td><?= 'LKR. '. number_format($order['current_price'],2,'.','') ?></td> 
                                     <td style="color:red;"><?= "Out of Stock" ?></td> 
                                     <td style="color:red;">
                                         <?php 
@@ -79,9 +94,18 @@
                 <div class="one-drop-down" onclick="show('<?= 'ep'.$key ?>')">E-prescription <img src="./media/images/icons/angle-down.png" alt="down arrow image"></div>
                     <div id="<?= 'ep'.$key ?>" hidden>    
                         <div class="detail">
-                            <h3>Doctor : <?=$ep_order['doctor']?></h3>
+                            <table>
+                                <tr><td>Doctor </td><td>
+                                    <?php 
+                                        $doctorModel = new Employee();
+                                        $doctor = $doctorModel->get_employee_details_by_NIC($ep_order['doctor'] );
+                                        echo ' : '.$doctor[0]['name'];
+                                    ?></td></tr>
+                                <?php if($ep_order["last_processed_timestamp"] != NULL): ?>
+                                    <tr><td>Last Processed </td><td> <?= ' : '.$ep_order["last_processed_timestamp"] ?></td></tr>
+                                <?php endif; ?>
+                            </table>
                         </div>
-                        <h3>From E-prescription :</h3>
 
                         <div class="table-container">
                             <table border="0">
@@ -91,20 +115,20 @@
                                 <?php $total_prescription=0 ?>
                                 <?php foreach($ep_pres_med[$ep_order['prescription_ID']] as $key=>$ep_pres_medicine): ?>
                                     <?php if( $ep_pres_medicine['status']=='include' ): ?>
-                                        <tr class="table-row">
+                                        <tr class="table-row unselectable">
                                         <td><?=$ep_pres_medicine['med_ID']?></td>
                                         <td><?=$ep_pres_medicine['name']?></td> 
                                         <td><?=$ep_pres_medicine['strength']?></td> 
-                                        <td><?=$ep_pres_medicine['current_price']?></td> 
+                                        <td><?= 'LKR. '. number_format($ep_pres_medicine['current_price'],2,'.','') ?></td> 
                                         <td><?=$ep_pres_medicine['order_amount']?></td> 
-                                        <td><?=$ep_pres_medicine['current_price']*$ep_pres_medicine['order_amount']?></td> 
+                                        <td><?= 'LKR. '. number_format($ep_pres_medicine['current_price']*$ep_pres_medicine['order_amount'],2,'.','') ?></td>  
                                         <?php $total_prescription = $total_prescription + $ep_pres_medicine['current_price']*$ep_pres_medicine['order_amount'] ?>
                                     <?php else: ?>
-                                        <tr class="table-row-faded">
+                                        <tr class="table-row-faded unselectable">
                                         <td><?=$ep_pres_medicine['med_ID']?></td>
                                         <td><?=$ep_pres_medicine['name']?></td> 
                                         <td><?=$ep_pres_medicine['strength']?></td> 
-                                        <td><?=$ep_pres_medicine['current_price']?></td> 
+                                        <td><?= 'LKR. '. number_format($ep_pres_medicine['current_price'],2,'.','') ?></td> 
                                         <td style="color:red;"><?= "Out of Stock" ?></td> 
                                         <td style="color:red;">
                                             <?php 
@@ -136,18 +160,14 @@
             <div class="drop-down-container">
                 <div class="one-drop-down" onclick="show('<?= 'sf'.$key ?>')">Softcopy prescription <img src="./media/images/icons/angle-down.png" alt="down arrow image"></div>
                     <div id="<?= 'sf'.$key ?>" hidden>
-                        <div class="detail">
-                            <h3>Doctor : <?=$sf_order['doctor']?></h3>
-                        </div>
-                        <h3>From Softcopy prescription :</h3>
 
                         <!-- Add medicines for softcopies -->
-                        <center><section>
+                        <section class="editable-selects-cont">
                             <?php $form=new Form(); ?>
 
                             <?php $form->begin('pharmacy-new-order-items?presid='.$sf_order['prescription_ID'],'post');?>
                                 <div class="prescription-field-container">
-                                    <table border=0>
+                                <center><table border=0>
                                         <tr>
                                             <td>
                                                 <div class="cls-name">
@@ -160,10 +180,10 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
+                                                <?=$component->button('submit','submit','Add','button--class-0 set-op','addbtn'); ?>
                                             </td>
                                         </tr>
-                                    </table>
+                                    </table></center>
                                     <?php
                                         if (isset($err)){
                                             if($err === "incorrect_medicine"){
@@ -173,10 +193,10 @@
                                     ?>
                                 </div>
                             <?php $form->end(); ?>
-                            <button><a class="view-prescription" target="_blank"  href="view-softcopy?id=<?=$sf_order['prescription_ID']?>" >
+                            <center><a class="view-prescription-separate" target="_blank"  href="view-softcopy?id=<?=$sf_order['prescription_ID']?>" >
                                 view prescription
-                            </a></button>
-                        </section></center>
+                            </a></center>
+                        </section>
 
 
 
@@ -194,21 +214,21 @@
                                 <?php $total_prescription=0 ?>
                                 <?php foreach($sf_pres_med[$sf_order['prescription_ID']] as $key=>$sf_pres_medicine): ?>
                                     <?php if( $sf_pres_medicine['status']=='include' ): ?>
-                                        <tr class="table-row">
+                                        <tr class="table-row unselectable">
                                         <td><?=$sf_pres_medicine['med_ID']?></td>
                                         <td><?=$sf_pres_medicine['name']?></td> 
                                         <td><?=$sf_pres_medicine['strength']?></td> 
-                                        <td><?=$sf_pres_medicine['current_price']?></td> 
+                                        <td><?= 'LKR. '. number_format($sf_pres_medicine['current_price'],2,'.','') ?></td> 
                                         <td><?=$sf_pres_medicine['order_amount']?></td> 
-                                        <td><?=$sf_pres_medicine['current_price']*$sf_pres_medicine['order_amount']?></td> 
-                                        <td> <a class="delete-med" id=<?= $sf_order['prescription_ID'].'-'.$sf_pres_medicine['med_ID'] ?> >Delete</a> </td>
+                                        <td><?= 'LKR. '. number_format($sf_pres_medicine['current_price']*$sf_pres_medicine['order_amount'],2,'.','') ?></td>  
+                                        <td> <a class="delete-med" id=<?= $sf_order['prescription_ID'].'-'.$sf_pres_medicine['med_ID'] ?> ><img class="delete-image" src="./media/anim_icons/delete.png"></a> </td>
                                         <?php $total_prescription = $total_prescription + $sf_pres_medicine['current_price']*$sf_pres_medicine['order_amount'] ?>
                                     <?php else: ?>
-                                        <tr class="table-row-faded">
+                                        <tr class="table-row-faded unselectable">
                                         <td><?=$sf_pres_medicine['med_ID']?></td>
                                         <td><?=$sf_pres_medicine['name']?></td> 
                                         <td><?=$sf_pres_medicine['strength']?></td> 
-                                        <td><?=$sf_pres_medicine['current_price']?></td> 
+                                        <td><?= 'LKR. '. number_format($sf_pres_medicine['current_price'],2,'.','') ?></td> 
                                         <td style="color:red;"><?= "Out of Stock" ?></td> 
                                         <td style="color:red;">
                                             <?php 
@@ -241,11 +261,7 @@
 <div class='upper-container'>
     <?php echo $component->button('cancle-process','','Cancle Process','button--class-3  width-10','cancle-process');?>
 
-    <?php if( $NA_count>0 ): ?>
-    <?php echo $component->button('notify-availability','','Send Notification','button--class-0  width-10','notify-availability');?>
-    <?php endif; ?>
-
-    <?php echo $component->button('finish-process','','Finish Process','button--class-0  width-10','finish-process');?>
+    
 </div>
 <!-- <div class="popup" id="popup">
         <h2>Successful !!</h2>
@@ -268,13 +284,7 @@
         location.href="pharmacy-finish-processing-order?id="+<?=$order_details[0]['order_ID']?>+'&total='+<?=$total?>; //get
     })
     
-    const btn3=document.getElementById("notify-availability");
-    // btn3.onclick=openPopup();
-    btn3.addEventListener('click',function(){
-        // openPopup();
-        location.href="pharmacy-notify-processing-order?id="+<?=$order_details[0]['order_ID']?>; //get
-    })
-
+    
     elementsArray = document.querySelectorAll(".delete-med");
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {
@@ -283,6 +293,13 @@
             location.href='pharmacy-delete-pres-med?pid='+comp[0]+'&mid='+comp[1]; 
         });
     });
+    
+    const btn3=document.getElementById("notify_availability");
+    // btn3.onclick=openPopup();
+    btn3.addEventListener('click',function(){
+        // openPopup();
+        location.href="pharmacy-notify-processing-order?id="+<?=$order_details[0]['order_ID']?>; //get
+    })
 
     function show(day){
         var x = document.getElementById(day);
@@ -292,5 +309,9 @@
             x.hidden = true;
         }
     }
+
+    <?php if( $NA_count>0 ): ?>
+        notify_availability.classList.remove("hidden-btn")
+    <?php endif; ?>
 
 </script>

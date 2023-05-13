@@ -1,6 +1,8 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
+    use app\core\Time;
+    $timeModel = new Time();
 // var_dump($orders);
 // var_dump($popup);
 // // var_dump($order_types);

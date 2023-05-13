@@ -29,6 +29,7 @@ $form=Form::begin("/ctest/delivery-complete?id=".$delivery['delivery_ID'],'post'
     
     <?php if ( $delivery['payment_status'] === 'pending' ) :  ?>
         <div>
+            <h1><?= 'LKR. '. number_format($delivery["total_price"],2,'.','') ?></h1>
             <input type="checkbox" id="payment_status" name="payment_status" value="payment_done_now">
             <label for="payment_status"> Payment Successful</label><br>
             <?php

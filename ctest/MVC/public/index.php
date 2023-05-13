@@ -5,7 +5,7 @@ date_default_timezone_set("Asia/Colombo");
 require_once __DIR__.'/../vendor/autoload.php';
 
 
-// require_once 'dompdf/autoload.inc.php';
+require_once 'dompdf/autoload.inc.php';
 require_once 'notify-php-master/autoload.php';
 use app\controllers\AdminController;
 use \app\core\Application;

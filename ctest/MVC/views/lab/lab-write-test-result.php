@@ -9,19 +9,26 @@ $component = new Component();
 // var_dump($contents);
 // exit;
 ?>
-<div class="semi-header-container" style="left: 20vw;">
-    <div class="field-container" style="margin-left: 5vw;">
-        <h1 class="fs-200 fc-color--dark">Add Report</h1>
-        <?php $age = "18" ?>
-        <h5><?php if ($contents[0]['age'] < $age) {
-                echo "*Pediatric";
-            } else {
-                echo "*Adult";
-            } ?></h5>
-        <h4><b>Request No : </b><?= $contents[0]['request_ID'] ?></h4>
-        <h4><b>Name : </b><?= $contents[0]['pname'] ?></h4>
-        <h4><b>Age : </b><?= $contents[0]['age'] ?></h4>
-        <h4><b>Gender : </b><?= $contents[0]['gender'] ?></h4>
+<div class="semi-header-container" style="left: 20vw;padding-top:0vw;">
+    <img src="./media/images/logo-1.png" style="width:15vw;margin-left:13vw">
+    <div class="field-container" style="margin-left: 5vw; line-height:1.5vw">
+        <div class="field-container-left" style="width:50%">
+            <?php $age = "18" ?>
+            <h5><?php if ($contents[0]['age'] < $age) {
+                    echo "*Pediatric";
+                } else {
+                    echo "*Adult";
+                } ?></h5>
+            <h4><b>Request No : </b><?= $contents[0]['request_ID'] ?></h4>
+            <h4><b>Doctor :</b>Dr.<?= $contents[0]['ename'] ?></h4>
+            <h4><b>Patient Name : </b><?= $contents[0]['pname'] ?></h4>
+            <h4><b>Age : </b><?= $contents[0]['age'] ?></h4>
+            <h4><b>Gender : </b><?= $contents[0]['gender'] ?></h4>
+        </div>
+        <div class="field-container-right" style="width:50%">
+            <h4><b> Test Name : </b><?= $contents[0]['tname'] ?></h4>
+            <h4><b>Note : </b><?= $contents[0]['note'] ?></h4>
+        </div>
     </div>
     <hr>
     <div class="field-container" style="margin-left: 5vw;">
@@ -32,10 +39,10 @@ $component = new Component();
         </div>
         <?php foreach ($contents as $key => $content) : ?>
 
-            <div class="subscribe">
-             <label for="cname"><?php echo $content["cname"] ?></label></tr>
-                <input  class="subscribe-input" name=<?= $content["content_ID"] ?> type="email">
-                <!-- <label for="cname"><?php echo $content["metric"] ?></label><br><br></tr> -->
+            <div class="report-container">
+                <label class="label1" for="cname"><?php echo $content["cname"] ?></label>
+                <label class="label2" for="cname"><?php echo $content["metric"] ?></label>
+                <input class="" name=<?= $content["content_ID"] ?> type="text">
 
                 <br>
             </div>

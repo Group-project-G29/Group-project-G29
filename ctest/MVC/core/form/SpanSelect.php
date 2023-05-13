@@ -39,15 +39,17 @@
             $str='
             <tr>
             <div class="%s">
-              
+               <td>
                     <label for="%s">%s</label>
-                
+                </td>
+                <td>
                     <h3 class="fs-50  fc-color--error">%s</h3>
                     <select name="%s" class="field-input--class1" id="%s">'.
                          $str
                    .'</select>
-                
-                </div>';
+                </td>
+                </div>
+            </tr>';
           return sprintf($str,$this->class,$this->label,ucfirst($this->label),($this->model->errors)[$this->attribute][0] ?? '',$this->attribute,$this->id);
         }
     }

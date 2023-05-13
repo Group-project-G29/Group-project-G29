@@ -6,44 +6,58 @@ $component = new Component();
 // var_dump($user);
 // exit;
 ?>
-<!-- <div class="detail-container" style="margin-left: 35%;"> -->
 
 
-<section class="profile">
-    <!-- <div class="img" style="margin-left:13%;">
-    <img style="width: 50%; height:auto;margin-left:5vw" src="./media/images/emp-profile-pictures/<?= $user['img'] ?>">
+<div class="container">
 
-    </div> -->
-    <div class="card-wrapper">
-        <div class="card-1">
-            <img src="./media/images/patient/Hospital-2.jpg" class="card-img">
-            <img src="./media/images/emp-profile-pictures/<?= $user['img'] ?>" class="pro-img">
-            <div class="content">
-                <p>
-            <h1 ><b><?= $user['name'] ?></b></h1>
-            <h4 ><b>NIC : </b><?= $user['nic'] ?></h4>
-            <h4 ><b>Email : </b><?= $user['email'] ?></h4>
-            <h4 ><b>Address : </b><?= $user['address'] ?></h4>
-            <h4 ><b>Contact : </b><?= $user['contact'] ?></h4>
-                </p> 
-            
-            </div>
-           
-            <div class="button" id=<?= $user['emp_ID'] ?>>
-                <?php echo $component->button('edit-details', '', 'Edit Details', 'button--class-4  width-10', 'edit-details'); ?>
-            </div>
-        </div>
-
-
+    <div class="detail-container-left">
+        <img src="./media/images/emp-profile-pictures/<?= $user['img'] ?>" >  
+        <div><?php echo $component->button('edit-details','','Edit Details','button--class-0  width-10', $user['emp_ID'])?></div>
     </div>
-
-</section>
-
-
+    
+    <div class="detail-container-right">
+        <div class="data-row">
+            <div class="data-row-left">Employee ID</div>
+            <div class="data-row-rite">: <?= $user['emp_ID'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Name</div>
+            <div class="data-row-rite">: <?= $user['name'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">NIC</div>
+            <div class="data-row-rite">: <?= $user['nic'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Gender</div>
+            <div class="data-row-rite">: <?= $user['gender'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Age</div>
+            <div class="data-row-rite">: <?= $user['age'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Contact Number</div>
+            <div class="data-row-rite">: <?= $user['contact'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Email</div>
+            <div class="data-row-rite">: <?= $user['email'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Address</div>
+            <div class="data-row-rite">: <?= $user['address'] ?></div>
+        </div>
+        <div class="data-row">
+            <div class="data-row-left">Role</div>
+            <div class="data-row-rite">: <?= $user['role'] ?></div>
+        </div>
+    </div>
+    
 </div>
 
 <script>
-    elementsArray = document.querySelectorAll(".button");
+    elementsArray = document.querySelectorAll(".button--class-0");
     console.log(elementsArray);
     elementsArray.forEach(function(elem) {
         elem.addEventListener("click", function() {

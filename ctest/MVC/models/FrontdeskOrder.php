@@ -85,7 +85,7 @@ use app\core\DbModel;
 
         public function get_last_inserted_order ( $contact_no ) {
             //order by date and time -try
-            return $this->customFetchAll(" SELECT * FROM frontdesk_order WHERE contact = $contact_no AND processing_status='pending' ORDER BY date DESC, time DESC");
+            return $this->customFetchAll(" SELECT * FROM frontdesk_order WHERE processing_status='pending' ORDER BY date DESC, time DESC");
         }
 
         public function get_order_details( $order_ID ){

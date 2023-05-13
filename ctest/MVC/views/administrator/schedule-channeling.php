@@ -53,7 +53,7 @@ $form=Form::begin('','post');
             <table style="margin-top:-15vh;">    
                 <?php echo $form->spanselect($channelingmodel,'day','Day','field',['Select'=>'','Monday'=>'Monday','Tuesday'=>'Tuesday','Wednesday'=>'Wednesday','Thursday'=>'Thursday','Friday'=>'Friday','Saturday'=>'Saturday','Sunday'=>'Sunday'])?>
                 <?php echo $form->spanfield($channelingmodel,'time','Starting Time*','field','time') ?>
-                <?php echo $form->spanfield($channelingmodel,'session_duration','Session Duration(hours)*','field without_ampm','text') ?>
+                <?php echo $form->spanfield($channelingmodel,'session_duration','Session Duration(hours)*','field without_ampm','number') ?>
                 <?php echo $form->spanfield($channelingmodel,'start_date','Starting Date*','field','date') ?>
 
                 <?php echo $form->spanfield($channelingmodel,'open_before','Open before','field','text') ?>

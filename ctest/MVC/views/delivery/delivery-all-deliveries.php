@@ -48,22 +48,3 @@
     </table>
 
 </div>
-
-<script>
-    const btn=document.getElementById("new-delivery");
-    btn.addEventListener('click',function(){
-        location.href="handle-delivery";
-    })
-    elementsArray = document.querySelectorAll(".button--class-2");
-    elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href='update-delivery?mod=update&id='+elem.id;
-        });
-    });
-    elementsArray = document.querySelectorAll(".button--class-3");
-    elementsArray.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href='handle-delivery?cmd=delete&id='+elem.id;
-        });
-    });
-</script>

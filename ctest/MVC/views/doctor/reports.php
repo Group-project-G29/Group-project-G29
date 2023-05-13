@@ -31,12 +31,12 @@
         <div class="lower-box">
             <h2>Patients Seen in Last 12 Months</h2>
         <canvas id='myChart-patient' class="fix-width"></canvas>
-            <?=$chartModel->lineChart($patientchart['labels'],[],$patientchart['values'],[],'Patient Visit Statistics','lightblue','-patient',0,2000);?>
+            <?=$chartModel->lineChartAssis($patientchart['labels'],[],$patientchart['values'],[],'Patient Visit Statistics','lightblue','-patient',0,2000);?>
         </div>
         <div class="lower-box">
             <h2>Income in Last 12 Months</h2>
               <canvas id='myChart-income' class="fix-width"></canvas>
-            <?=$chartModel->lineChart($incomechart['labels'],[],$incomechart['values'],[],'Income Statistics','lightblue','-income',1000,1000000);?>
+            <?=$chartModel->lineChartAssis($incomechart['labels'],[],$incomechart['values'],[],'Income Statistics','lightblue','-income',1000,1000000);?>
         </div>
     </div>
     <div class="l-lower-info-container">

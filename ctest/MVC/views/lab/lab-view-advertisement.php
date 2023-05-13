@@ -5,7 +5,7 @@
 ?>
 <div class='upper-container'>
     <div class="search-bar-container" style="padding-left: 20vw;">
-        <?php echo $component->searchbar($model,"title","search-bar--class1","Search by advertisement title","searh");?>
+        <?php echo $component->searchbar($model,"title","search-bar--class1","Search by advertisement title","search");?>
     </div>
     <?php echo $component->button('new-advertisement','','Add New Advertisement','button--class-0  width-10','new-advertisement');?>
     
@@ -15,7 +15,7 @@
     <tr>
     </tr>
     <?php foreach($advertisements as $key=>$advertisement): ?>
-    <tr class="table-row">
+    <tr class="table-row search-class" id=<?= $advertisement['ad_ID'].'-'.$advertisement['title'] ?> >
         <td class="row-img-col"><img class="row-img" src=<?="./media/images/advertisements/lab/".$advertisement['img']?> alt="No image"></td>
         <td class="add-dec">
             <?=$advertisement['title']?><br><hr>
@@ -49,4 +49,31 @@
             location.href='lab-handle-advertisement?cmd=delete&id='+elem.id;
         });
     });
+
+    const advertisements=document.querySelectorAll('.search-class');
+    const searchBar=document.getElementById('search');
+    searchBar.addEventListener('input',checker);
+    function checker(){
+        var re=new RegExp(("^"+searchBar.value).toLowerCase())
+        advertisements.forEach((el)=>{
+        comp=""+el.id; 
+        comp=comp.split("-");
+        
+        if(searchBar.value.length==0){
+            // el.classList.add("none")
+        }
+        else if(re.test(comp[0].toLowerCase()) || re.test(comp[1].toLowerCase()) ){
+            el.classList.remove("none");
+        }
+        else{
+            el.classList.add("none");
+            
+        }
+        })
+        if(searchBar.value.length==0){
+            advertisements.forEach((el)=>{
+                el.classList.remove("none");
+            }) 
+        }
+    }
 </script>

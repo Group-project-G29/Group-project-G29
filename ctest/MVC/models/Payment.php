@@ -188,8 +188,12 @@ class Payment extends DbModel{
         return sprintf($str,$return_complete,$return_fail,$return_fail,$order,$text,number_format($amount,'0','.',''),$hash1,explode(" ",$patientModel->name)[0],explode(" ",$patientModel->name)[1]??'',$patientModel->email,$patientModel->contact,$patientModel->address);
     }
 
-    public function update_payment_status ($order_ID) {
-        return $this->customFetchAll("UPDATE _order SET payment_status = 'done' WHERE order_ID = $order_ID;");
+    public function update_payment_status ($order_ID, $total) {
+        return $this->customFetchAll("UPDATE payment SET payment_status = 'done', amount=$total WHERE order_ID = $order_ID;");
+    }
+
+    public function update_payment_status_delivery ($order_ID) {
+        return $this->customFetchAll("UPDATE payment SET payment_status = 'done' WHERE order_ID = $order_ID;");
     }
 
 
