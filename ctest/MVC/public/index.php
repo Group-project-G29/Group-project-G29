@@ -60,7 +60,6 @@ $app->router->get('/ctest/patient-dashboard',[PatientAuthController::class,'pati
 $app->router->post('/ctest/patient-dashboard',[PatientAuthController::class,'patientDashboard']);
 $app->router->get('/ctest/patient-payment',[PatientAuthController::class,'patientPayment']);
 $app->router->post('/ctest/patient-payment',[PatientAuthController::class,'patientPayment']);
-$app->router->post('/ctest/doctor',[SiteController::class, 'doctor']);
 $app->router->get('/ctest/register', [PatientAuthController::class, 'register']);
 $app->router->post('/ctest/register', [PatientAuthController::class, 'register']);
 $app->router->get('/ctest/handle-documentation', [PatientAuthController::class, 'handleDocuments']);
@@ -104,6 +103,8 @@ $app->router->get('/ctest/nurse-patient-test-value-save',[NurseController::class
 $app->router->post('/ctest/nurse-patient-test-value-edit',[NurseController::class,'editTestValueUpdate']);
 $app->router->get('/ctest/nurse-patient-test-value-edit',[NurseController::class,'editTestValueView']);
 $app->router->get('/ctest/nurse-patient',[NurseController::class,'viewPatient']);
+$app->router->get('/ctest/update-my-details',[NurseController::class, 'updateUserDetails']);
+$app->router->post('/ctest/update-my-details',[NurseController::class, 'updateUserDetails']);
 
 
 
@@ -147,12 +148,25 @@ $app->router->get('/ctest/pharmacy-update-advertisement',[PharmacyController::cl
 $app->router->post('/ctest/pharmacy-handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
 $app->router->get('/ctest/pharmacy-handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
 
-$app->router->get('/ctest/pharmacy-orders-previous',[PharmacyController::class,'viewPreviousOrder']);
-$app->router->get('/ctest/pharmacy-view-previous-order',[PharmacyController::class,'DetailsPreviousOrder']);
 $app->router->get('/ctest/pharmacy-front-orders-pending',[PharmacyController::class,'viewFrontdeskPendingOrder']);
+$app->router->get('/ctest/pharmacy-front-orders-packed',[PharmacyController::class,'viewFrontdeskPackedOrder']);
 $app->router->get('/ctest/pharmacy-front-orders-finished',[PharmacyController::class,'viewFrontdeskFinishedOrder']);
 $app->router->get('/ctest/pharmacy-view-front-orders-pending',[PharmacyController::class,'detailsFrontdeskPending']);
+$app->router->get('/ctest/pharmacy-view-front-orders-packed',[PharmacyController::class,'detailsFrontdeskPacked']);
 $app->router->get('/ctest/pharmacy-view-front-orders-finished',[PharmacyController::class,'detailsFrontdeskFinished']);
+
+$app->router->get('/ctest/pharmacy-new-front-items',[PharmacyController::class,'addNewFrontItem']);
+$app->router->post('/ctest/pharmacy-new-front-items',[PharmacyController::class,'addNewFrontItem']);
+$app->router->get('/ctest/pharmacy-finish-front-processing-order',[PharmacyController::class,'finishFrontdeskOrder']);
+$app->router->get('/ctest/pharmacy-delete-front-processing-order',[PharmacyController::class,'deleteFrontdeskOrder']);
+$app->router->get('/ctest/pharmacy-frontdesk-cancle-order',[PharmacyController::class,'cancleFrontdeskOrder']);
+$app->router->get('/ctest/pharmacy-frontdesk-pickup-order',[PharmacyController::class,'pickupFrontdeskOrder']);
+
+$app->router->get('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewFrontdeskOrder']);
+$app->router->post('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewFrontdeskOrder']);
+
+$app->router->get('/ctest/pharmacy-view-previous-order',[PharmacyController::class,'DetailsPreviousOrder']);
+$app->router->get('/ctest/pharmacy-orders-previous',[PharmacyController::class,'viewPreviousOrder']);
 $app->router->get('/ctest/pharmacy-orders-pending',[PharmacyController::class,'viewPendingOrder']);
 $app->router->get('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'DetailsPendingOrder']);
 $app->router->get('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
@@ -173,10 +187,12 @@ $app->router->get('/ctest/pharmacy-go-to-process-order',[PharmacyController::cla
 $app->router->get('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
 $app->router->post('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
 
-$app->router->get('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
-$app->router->post('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
 $app->router->get('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
 $app->router->post('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
+
+$app->router->get('/ctest/view-softcopy',[PharmacyController::class,'viewSoftcopy']);
+$app->router->get('/ctest/pharmacy-delete-pres-med',[PharmacyController::class,'deleteOrderItem']);
+$app->router->get('/ctest/pharmacy-delete-front-med',[PharmacyController::class,'deleteFrontOrderItem']);
 
 $app->router->get('/ctest/pharmacy-view-report',[PharmacyController::class,'viewReports']);
 $app->router->get('/ctest/pharmacy-view-personal-details',[PharmacyController::class,'viewPersonalDetails']);
@@ -200,7 +216,6 @@ $app->router->post('/ctest/delivery-update-personal-details',[DeliveryController
 // active status
 $app->router->get('/ctest/delivery-online',[DeliveryController::class,'makeOnline']);
 $app->router->get('/ctest/delivery-offline',[DeliveryController::class,'makeOffline']);
-
 
 
 // ------------------laboratorist routers----------------------------------------

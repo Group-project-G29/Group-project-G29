@@ -67,7 +67,7 @@ input [type="time"]::-webkit-time-picker-indicator{
     margin-top: 3vh;
 }
 
-.form-body [type="text"],.form-body [type="file"],.form-body [type="time"],.form-body [type="date"],.form-body select{
+.form-body [type="number"],.form-body [type="text"],.form-body [type="file"],.form-body [type="time"],.form-body [type="date"],.form-body select{
     width: 20vw;
 }
 
@@ -97,18 +97,16 @@ input [type="time"]::-webkit-time-picker-indicator{
     align-items: flex-start;
 }
 .nurse-item{
-    width:20vw;
+    min-width:20vw;
     display: flex;
     gap:8px;
     padding:10px;
     align-items: center;
-    border:1px solid var(--clr-grey);
+    border:1px solid gainsboro;
     background-color: var(--clr-bg-grey);
     border-radius:3px;
-    
-    
-
 }
+
 .nurse-item img{
     width: 4vw;
     height: 8vh;
@@ -131,8 +129,9 @@ input [type="time"]::-webkit-time-picker-indicator{
     align-items: center;
     background-color: var(--clr-bg-grey);
     margin-bottom: 2vh;
-    overflow: scroll;
-    height: 10vh;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    height: 13vh;
     width: 33vw;
     flex-shrink: 0;
     flex-basis: 4vw;
@@ -438,10 +437,11 @@ button:hover{
 }
 
 .open-channeling-date{
-    width: 16vw;
+    min-width: 20vw;
+ 
 }
 .open-channeling-date span{
-    margin-left: 1vw;
+    margin-left: 0.5vw;
     font-weight: bold;
 }
 
@@ -453,6 +453,10 @@ button:hover{
     color:red;
     display: flex;
     gap:1vw;
+}
+.nurse-error-container img{
+    width:30px;
+    height:30px;
 }
 
 .instruction{
@@ -499,8 +503,8 @@ button:hover{
 /* after */
 
 .upper-update{
-    background-color: white;
     border-radius:10px;
+    margin-top: -10vh;
     padding-block: 0.5vh;
 }
 .lower-update{

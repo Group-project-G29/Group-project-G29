@@ -44,9 +44,8 @@ class DoctorController extends Controller{
         $this->setLayout('doctor',['select'=>'All Channelings']);
 
         if(isset($parameter[0]['spec']) && $parameter[0]['spec']=='pre-channeling-test'){
-        
-           
             if(isset($parameter[1]['cmd']) && $parameter[1]['cmd']=='add'){
+                
                 $testID=$testModel->getIDbyName(urldecode($parameter[2]['id']));
                 if($testID && !$testModel->isExist($parameter[3]['channeling'],$testID)){
                     $testModel->allocateChannelingTest($testID,$parameter[3]['channeling']);
@@ -742,6 +741,7 @@ class DoctorController extends Controller{
     public function labTestRequestHandle(Request $request,Response $response){
         $parameters=$request->getParameters();
         $labTestRequestModel=new LabTestRequest();
+    
         if($request->isPost()){
             //function to add new lab test request
             Application::$app->session->set('popup','set');
@@ -750,8 +750,8 @@ class DoctorController extends Controller{
                 Application::$app->response->redirect(Application::$app->session->get('churl'));
                 exit;
             } 
-            if($labTestRequestModel->isThereTest($labTestRequestModel->name)){
-                $labTestRequestModel->isExist($labTestRequestModel->name);    
+            if($labTestRequestModel->isThereTest(urldecode($labTestRequestModel->name))){
+                $labTestRequestModel->isExist(urldecode($labTestRequestModel->name));    
                 $labTestRequestModel->createLabTestRequest($labTestRequestModel);
             }
 
@@ -807,7 +807,10 @@ class DoctorController extends Controller{
 
         if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='delete'){
             $pid=$prescriptionModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
-            $prescriptionModel->deleteRecordByName(['prescription_ID'=>$pid,'med_ID'=>$parameters[2]['id']],'prescription_medicine');
+            if($prescriptionModel->fetchAssocAll(['prescription_ID'=>$parameters[2]['id']]));{
+
+                $prescriptionModel->deleteRecordByName(['prescription_ID'=>$pid,'med_ID'=>$parameters[2]['id']],'prescription_medicine');
+            }
             $response->redirect('doctor-prescription');
         }
         if(isset($parameters[1]['mod']) && $parameters[1]['mod']=='view'){
@@ -828,6 +831,7 @@ class DoctorController extends Controller{
         }
         
         if($request->isPost()){
+
             //take current prescritption or create new one add medicine to it
             $prescription=$prescriptionModel->addPrescriptionMedicine(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling')); 
             $prescriptionModel->note=$prescription[0];

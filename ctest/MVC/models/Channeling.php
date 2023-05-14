@@ -35,6 +35,8 @@ class Channeling extends DbModel{
 
     }
     public function savedata(){
+        $str="0"+$this->session_duration.":00";
+        $this->session_duration=$str;
         return parent::save();
     }
     //set validation rule
@@ -47,14 +49,15 @@ class Channeling extends DbModel{
             'room'=>[self::RULE_REQUIRED],      
             'day'=>[self::RULE_REQUIRED],
             'time'=>[self::RULE_REQUIRED,[self::RULE_TIME,'start_date'=>$this->start_date,'date'=>$this->day]],
-            'start_date'=>[self::RULE_REQUIRED],
+            'start_date'=>[self::RULE_REQUIRED,self::RULE_DATE_VALIDATION],
             'schedule_for'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
             'schedule_type'=>[self::RULE_REQUIRED],
             'frequency'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
             'frequency_type'=>[self::RULE_REQUIRED],
             'percentage'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
             'open_before'=>[self::RULE_REQUIRED,self::RULE_NUMBERS],
-            'session_duration'=>[self::RULE_REQUIRED]
+            'session_duration'=>[self::RULE_REQUIRED,self::RULE_DURATION],
+            'percentage'=>[self::RULE_REQUIRED,self::RULE_PERCENTAGE]
 
         ];
     }
@@ -66,13 +69,15 @@ class Channeling extends DbModel{
     public function timeCheckOverlap($date){
         $timeModel=new Time();
         $channelings=$this->customFetchAll("select * from opened_channeling left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.doctor='".$this->doctor."' and opened_channeling.channeling_date='".$date."'");
+
         foreach($channelings as $key=>$channeling ){
             if($this->time){
                 $ses_s='';
                 if($channeling['session_duration']) $ses_s=$channeling['session_duration'];
                 else $ses_s=$channeling['session_duration'];
+
                 if($timeModel->isInRange($channeling['time'],$ses_s,$this->time)){
-            
+                
                     return [true,$channeling];
                     
                     
@@ -84,17 +89,20 @@ class Channeling extends DbModel{
         }
         return [false];
     }
+
     public function checkOverlap(){
         if(!$this->validate()){
             return ['validation'];
         }
+        
         $openedchannelingModel=new OpenedChanneling();
         $calendarModel=new Calendar();
         $frequency=$this->frequency." ".$this->frequency_type;
         $duration=$this->schedule_for." ".$this->schedule_type;
         $dates=$calendarModel->generateDays($this->start_date,date('l', strtotime($this->start_date)),$this->day,$duration,$frequency);
-      
+        var_dump($dates);
         $array=[];
+    
         foreach($dates as $date){
            $result=$this->timeCheckOverlap($date);
             if(isset($result[1]) && !$result[0]){
@@ -108,7 +116,6 @@ class Channeling extends DbModel{
         }
 
         if($array){
-            var_dump($array[count($array)-1]['opened_channeling_ID']);
             if($array[0]['channeling_ID']==$array[count($array)-1]['channeling_ID']){
                 $this->customAddError('time',"<a class='sh-error' href=update-channeling?cmd=view&id=".$array[0]['channeling_ID'].">Time overlap with channeling:".$array[0]['channeling_ID']." at ".$array[0]['time'].(($array[0]['time']>='12:00')?'PM':'AM')."</a>");
                 return $array;
@@ -167,6 +174,7 @@ class Channeling extends DbModel{
         foreach($nurses as $nurse){
             //get all the channeling nurse is allocated to
             $channelings=$channelingModel->customFetchAll("select * from  nurse_channeling_allocataion left join channeling on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID left join employee on employee.emp_ID=nurse_channeling_allocataion.emp_ID where employee.emp_ID=".$nurse);
+            
             foreach($channelings as $channeling){
                 foreach($dates as $date){
                     $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID left join nurse_channeling_allocataion on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID left join employee on employee.emp_ID=nurse_channeling_allocataion.emp_ID where nurse_channeling_allocataion.emp_ID=$nurse  and opened_channeling.channeling_date='".$date."' and (opened_channeling.status='Opened' or opened_channeling.status='started' ) and channeling.channeling_ID=".$channeling['channeling_ID'].(($channelingModel->channeling_ID!='')?(" and channeling.channeling_ID<>".$channelingModel->channeling_ID):''));
@@ -175,7 +183,10 @@ class Channeling extends DbModel{
                             $check_time=$channelingModel->time;
                             $start_time=$conflict['time']; 
                             $result=$timeModel->isInRange($start_time,substr($conflict['session_duration'],0,5),$check_time);
-                            if($result) array_push($results,$conflict);
+                            
+                            if($result) {
+                                array_push($results,$conflict);
+                            }
                         }
                     }
                 }
@@ -190,16 +201,20 @@ class Channeling extends DbModel{
         $results=[];
         $calendarModel=new Calendar();
         $dates=$calendarModel->generateDays($channelingModel->start_date,date('l',strtotime($channelingModel->start_date)),$channelingModel->day,$channelingModel->schedule_for." ".$channelingModel->schedule_type,$channelingModel->frequency." ".$channelingModel->frequency_type);
-        $channelings=$channelingModel->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where  room='".$room."'");
-            foreach($channelings as $channeling){
-                foreach($dates as $date){
-                    $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.room='$room' and  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and opened_channeling.channeling_date='".$date."' and channeling.channeling_ID=".$channeling['channeling_ID'].(($channelingModel->channeling_ID!='')?(" and channeling.channeling_ID<>".$channelingModel->channeling_ID):''));
+        
+        $channelings=$channelingModel->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where  room like '%".$room."%'");
+        foreach($channelings as $channeling){
+            foreach($dates as $date){
+                $confilict_channelings=$this->customFetchAll("select * from  channeling right join opened_channeling on channeling.channeling_ID=opened_channeling.channeling_ID where channeling.room='$room' and  (opened_channeling.status='Opened' or opened_channeling.status='started' ) and opened_channeling.channeling_date='".$date."' and channeling.channeling_ID=".$channeling['channeling_ID'].(($channelingModel->channeling_ID!='')?(" and channeling.channeling_ID<>".$channelingModel->channeling_ID):''));
+            
                     if($confilict_channelings){
                         foreach($confilict_channelings as $conflict){
                             $check_time=$channelingModel->time;
                             $start_time=$conflict['time']; 
                             $result=$timeModel->isInRange($start_time,substr($conflict['session_duration'],0,5),$check_time);
+                          
                             if($result) array_push($results,$conflict);
+                        
                         }
                     }
                 }
@@ -208,6 +223,7 @@ class Channeling extends DbModel{
             if($results) return $results;
             else return false;
    }
+   
 
    
 
@@ -293,7 +309,6 @@ return $channelingArry;
    }
 
    public function updateChannelingRecord($channeling){
-        $speciality=$_POST['speciality'];
         $fee=$_POST['fee'];
         $room=$_POST['room'];
         if(isset($_POST['total_patients'])){
@@ -305,9 +320,10 @@ return $channelingArry;
         }
 
         $percentage=$_POST['percentage'];
-        $this->customFetchAll("update channeling set speciality='$speciality',fee=$fee,room='$room',total_patients=$total_patients,percentage=$percentage where channeling_ID=".$channeling);
+        $older=$this->fetchAssocAll(['channeling_ID'=>$channeling])[0]['total_patients'];
+        $this->customFetchAll("update channeling set fee=$fee,room='$room',total_patients=$total_patients,percentage=$percentage where channeling_ID=".$channeling);
         if($total_patients!=0){
-            $this->customFetchAll("update opened_channeling set remaining_appointments=$total_patients where channeling_ID=".$channeling);
+            $this->customFetchAll("update opened_channeling set remaining_appointments=$total_patients where (remaining_appointments=$older) and channeling_ID=".$channeling);
         }
         else{
             $this->customFetchAll("update opened_channeling set remaining_appointments=-1 where channeling_ID=".$channeling);

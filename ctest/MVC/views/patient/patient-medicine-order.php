@@ -14,9 +14,10 @@ use app\models\Medicine;
   
     <div class="pharmacy-main-form">
         <?php $form=Form::begin("patient-medicine-order?spec=order&cmd=complete",'post');?> 
-        <div class="reg-body_fields">
+        <div class="reg-body_fields txta">
             <?php echo $form->field($delivery,'name','Name of the Recipient*','field','text') ?>
             <?php echo $form->field($delivery,'contact','Recipient Contact*','field','text') ?>
+            <?php echo $form->textarea($order,'text','text','Any Order Instructions',4,50,''); ?>
             <div class="flex">
                 <label>Pickup</label><input type='radio' id='pickup' class="delivery-rbtn"  name='pickup_status' value='pickup'>
             </div>
@@ -25,8 +26,8 @@ use app\models\Medicine;
             </div>
             <div class="nothing">
                 <?php echo $form->field($delivery,'address','Recipient Address*','field','text') ?><br>
-                <?php echo $form->spanselect($delivery,'postal_code','Postal Code*','field',['select'=>'','20290-D'=>'20290','40034-K'=>'40034'],'')?><br>
                 <?php echo $form->spanselect($delivery,'city','City*','field',['select'=>'','Ciyathra'=>'Ciyathra','Howitz'=>'Howitz'],'')?><br>
+                <?php echo $form->spanselect($delivery,'postal_code','Postal Code*','field',['select'=>'','20290-D'=>'20290','40034-K'=>'40034'],'')?><br>
                 <?php echo $form->textarea($delivery,'comment','comment','Any Delivery Instruction',4,50,''); ?>
             </div>
             <div class="button-container"><input class="button--class-1" style="margin-bottom:3vh;" type="submit" value="Complete Order"></div>

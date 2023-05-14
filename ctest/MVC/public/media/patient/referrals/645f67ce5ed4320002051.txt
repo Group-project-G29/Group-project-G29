@@ -1,0 +1,31 @@
+create table Employee(
+    Emp_Number int primary key,
+    Fname text,
+    Lname text,
+    District text,
+    Gender varchar(2) check(Gender in('M','F')),
+    Age int  check(Age BETWEEN 16 and 50),
+    Department varchar(100) no null,
+    
+
+);
+
+create table LecturerDetails( 
+	Lecturer_ID int, 
+	Lname varchar(100), 
+	Fname varchar(100), 
+	Age int, 
+	Speciality varchar(50), 	
+	PRIMARY key(Lecturer_ID)
+ ); 
+
+insert into lecturerdetails values(2001,'Danushi','Dassanyake',41,'Data Science'),
+(2002,'Praveen','Dananjaya',49,'Web development'),
+(2003,'Danuka','Senarath',55,'Data Science'),
+(2004,'Owaadi','Gunasekara',48,'Information Security'),
+(2005,'Dilki','Madubashini',45,'Network Engineering');
+
+Delimeter $$
+BEGIN
+	SELECT Lecturer_ID,CONCAT(Fname,' ',Lname) from lecturerdetails where Speciality=Spec;
+END; $$

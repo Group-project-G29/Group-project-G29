@@ -9,7 +9,7 @@
                 $channeling=$channeling_model->findOne(['channeling_ID'=>$value['channeling_ID']]);
                 $day="";
                 $appointmentModel=new Appointment();
-                if(($value['channeling_date']==Date('Y-m-d') && ($value['status']!='cancelled' )) || $value['opened_channeling_ID']==284){
+                if(($value['channeling_date']==Date('Y-m-d') && ($value['status']!='cancelled' )) || $value['opened_channeling_ID']==360){
                     $class="today_channeling_tiles";
                     if($value['status']=='finished'){
                         $class="today_channeling_tiles today_channeling_tiles-inactive";

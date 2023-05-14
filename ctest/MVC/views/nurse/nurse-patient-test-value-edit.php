@@ -1,4 +1,3 @@
-<h1>HELLO</h1>
 
 <?php
 use app\core\DbModel;
@@ -9,7 +8,7 @@ $component=new Component();
 $pid = $patient[$number]['patient_ID']??'';
 $cid = $patient[$number]['channeling_ID']??'';
 $apoid = $patient[$number]['appointment_ID']??'';
-var_dump($tests);
+// var_dump($tests);
 ?> 
 
 <div class="column-flex">

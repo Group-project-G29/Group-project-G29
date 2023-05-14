@@ -4,6 +4,7 @@
 use app\core\component\Component;
 use app\core\Application;
 use app\core\Calendar;
+use app\core\Time;
 use app\models\Appointment;
 
     $component=new Component();
@@ -11,7 +12,7 @@ use app\models\Appointment;
         $openedChanneling=new OpenedChanneling();
         $appointmentModel=new Appointment();
         $calendarModel=new Calendar();
-        
+       $time=new Time(); 
        
    
        
@@ -34,7 +35,7 @@ use app\models\Appointment;
                 </div>
                 <div class="item--right">
                     <div class="channeling-vital-info">
-                        <h3>Time :<?=$value['time']?></h3>
+                        <h3>Time :<?=$time->time_format($value['time'])?></h3>
                         <h3>Date :<?=$value['channeling_date']?></h3>
                         <h3>Fee :LKR <?=number_format($value['fee'],2,'.','')?></h3>
                     </div>
@@ -49,7 +50,7 @@ use app\models\Appointment;
                             <?php echo "Not taking any appointments" ?>
                         <?php elseif(!$openedChanneling->isPatientIn(Application::$app->session->get('user'),$value['opened_channeling_ID'])):?>
                             <?= $component->button('add-appointment','','+ Add Consultation Appointment','button--class-1 width-10',$value['opened_channeling_ID']);?>
-                        <?php if(!$appointmentModel->labReportEligibility(Application::$app->session->get('user'),$value['nic'],$value['opened_channeling_ID'])):?>
+                        <?php if($appointmentModel->labReportEligibility(Application::$app->session->get('user'),$value['nic'],$value['opened_channeling_ID'])):?>
                             <?= $component->button('add-appointment','','+ Add Medical Report Consultation','button--class-5',$value['opened_channeling_ID']);?>
                         <?php endif; ?>
                         <?php endif; ?>

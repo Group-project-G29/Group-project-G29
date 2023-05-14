@@ -9,46 +9,77 @@ $component = new Component();
 // var_dump($contents);
 // exit;
 ?>
-<div class="semi-header-container" style="left: 20vw;">
-    <div class="field-container" style="margin-left: 5vw;">
-        <h1 class="fs-200 fc-color--dark">Add Report</h1>
-        <?php $age = "18" ?>
-        <h5><?php if ($contents[0]['age'] < $age) {
-                echo "*Pediatric";
-            } else {
-                echo "*Adult";
-            } ?></h5>
-        <h4><b>Request No : </b><?= $contents[0]['request_ID'] ?></h4>
-        <h4><b>Name : </b><?= $contents[0]['pname'] ?></h4>
-        <h4><b>Age : </b><?= $contents[0]['age'] ?></h4>
-        <h4><b>Gender : </b><?= $contents[0]['gender'] ?></h4>
+<div class="base-container">
+    <!-- <img src="./media/images/logo-1.png" style="width:15vw;margin-left:13vw"> -->
+    <div class="field-container-1">
+        <div class="field--container-left">
+            <?php $age = "18" ?>
+            <h3><?php if ($contents[0]['age'] < $age) {
+                    echo "*Pediatric";
+                } else {
+                    echo "*Adult";
+                } ?>
+            </h3>
+            <div class="test-name"><?= $contents[0]['tname'] ?></div>
+            
+
+            <?php if($contents[0]['note']){ ?>
+            <div class="field-content-data">
+                <div>Note : </div><?= $contents[0]['note'] ?>
+            </div>
+            <?php } ?>
+        </div>
+        <div class="field--container-right" >
+            
+            <div class="field-content-data">
+                <div>Request No : </div><?= $contents[0]['request_ID'] ?>
+            </div>
+            <div class="field-content-data">
+                <div>Doctor :</div>Dr.<?= $contents[0]['ename'] ?>
+            </div>
+            <div class="field-content-data">
+                <div>Patient Name : </div><?= $contents[0]['pname'] ?>
+            </div>
+            <div class="field-content-data">
+                <div>Age : </div><?= $contents[0]['age'] ?>
+            </div>
+            <div class="field-content-data">
+                <div>Gender : </div><?= $contents[0]['gender'] ?>
+            </div>
+        </div>
     </div>
+
     <hr>
-    <div class="field-container" style="margin-left: 5vw;">
+
+
+    <div class="field-container-2">
         <?php $form = Form::begin('', 'post'); ?>
 
-        <div class="button" style="margin-left:20vw;margin-bottom:2vw">
+        <?php if ($contents[0]['content_ID'] != NULL) : ?>
+
+        <div class="button" style="margin-left:40vw;margin-bottom:2vw">
             <?php echo $component->button('Add', '', 'Add', 'button--class-0  width-10 ', 'add'); ?>
         </div>
         <?php foreach ($contents as $key => $content) : ?>
-
-            <div class="subscribe">
-             <label for="cname"><?php echo $content["cname"] ?></label></tr>
-                <input  class="subscribe-input" name=<?= $content["content_ID"] ?> type="email">
-                <!-- <label for="cname"><?php echo $content["metric"] ?></label><br><br></tr> -->
-
+            
+            <div class="report-container">
+                <label class="label1" for="cname"><?php echo $content["cname"] ?></label>
+                <label class="label2" for="cname"><?php echo $content["metric"] ?></label>
+                <input class="" name=<?= $content["content_ID"] ?> type="text">
+                
                 <br>
             </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
 
+            <?php else : ?>
+                    <p>*No Contents Yet!!</p>
+                <?php endif; ?>
+            
 
         <?php Form::end() ?>
-
-
-
-
     </div>
 </div>
+
 
 
 

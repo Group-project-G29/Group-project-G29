@@ -77,7 +77,6 @@ class Medicine extends DbModel{
         }
     }
 
-
     public function checkStock($medicine){
         //get medicine amount if  amount=0 return false else true
         $amount=$this->getMedicineAmount($medicine);
@@ -176,6 +175,21 @@ class Medicine extends DbModel{
 
     public function getMedicinePrice($med_ID){
         return $this->fetchAssocAll(['med_ID'=>$med_ID])[0]['unit_price'];
+    }
+
+    public function MedicineIDbyNameStrength($name,$strength){
+        return $this->fetchAssocAll(['name'=>$name,'strength'=>$strength]);
+    }
+    public function isUnsedmedicine ( $med_ID ){
+        $online_orders = $this->customFetchAll(" SELECT * FROM medicine_in_order WHERE med_ID = $med_ID ");
+        $cart_orders = $this->customFetchAll(" SELECT * FROM medicine_in_cart WHERE med_ID = $med_ID ");
+        $prescription_orders = $this->customFetchAll(" SELECT * FROM prescription_medicine WHERE med_ID = $med_ID ");
+
+        if ( $online_orders==NULL && $cart_orders==NULL && $prescription_orders==NULL ){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     

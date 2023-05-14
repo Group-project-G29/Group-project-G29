@@ -19,7 +19,7 @@
 
 <center>
     <div class="view-prescription-separate" >
-        <img src=<?="./media/images/patient/".$prescription[0]['location']?> >
+        <img src=<?="./media//patient/prescriptions/".$prescription[0]['location']?> >
     </div>
 </center>
 

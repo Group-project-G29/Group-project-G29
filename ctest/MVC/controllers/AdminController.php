@@ -76,8 +76,7 @@ class AdminController extends Controller{
             $ChannelingModel->loadData($request->getBody());
             $nurseAllocationModel->loadData($request->getBody());
             //find if the new channeling session get overlapped with channeling session already scheduled
-            $result=$ChannelingModel->checkOverlap();
-        
+           $result=$ChannelingModel->checkOverlap();
             if((isset($result[0]) && $result[0]=='validation')){
                 $this->setLayout('admin',['select'=>"Schedule Channelings"]);
                 return $this->render('administrator/schedule-channeling',[
@@ -86,6 +85,8 @@ class AdminController extends Controller{
                     'doctors'=>$Doctor,
                     'nurses'=>$Nurses,
                     'rooms'=>$Room,
+                    'roomOverlaps'=>false,
+                    'nurseOverlaps'=>false,
                     
 
                 ]);
@@ -156,7 +157,9 @@ class AdminController extends Controller{
                                 'doctors'=>$Doctor,
                                 'nurses'=>$Nurses,
                                 'rooms'=>$Room,
-                                'test'=>$ChannelingModel->errors
+                                'test'=>$ChannelingModel->errors,
+                                'roomOverlaps'=>false,
+                                'nurseOverlaps'=>false,
 
                             ]);
                         }
@@ -174,7 +177,9 @@ class AdminController extends Controller{
                 'doctors'=>$Doctor,
                 'nurses'=>$Nurses,
                 'rooms'=>$Room,
-                'test'=>$ChannelingModel->errors
+                'test'=>$ChannelingModel->errors,
+                'roomOverlaps'=>false,
+                'nurseOverlaps'=>false,
 
             ]);
         }
@@ -256,7 +261,6 @@ class AdminController extends Controller{
         }
         // delete an account 
         else if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='delete'){
-            var_dump("ok");exit;
             $registerModel->deleteRecord(['emp_ID'=>$parameters[1]['id']]);
             Application::$app->session->setFlash('success',"Account successfully deleted ");
             $response->redirect('/ctest/admin');
@@ -273,7 +277,7 @@ class AdminController extends Controller{
             else{
                 $registerModel->customFetchAll("UPDATE `employee` SET employee_status = 'deactive' WHERE emp_ID = $emp_ID;");
             }
-            Application::$app->session->setFlash('success',"Account successfully deleted ");
+            Application::$app->session->setFlash('success',"Account successfully deactivated ");
             $response->redirect('/ctest/admin');
             return true;
         }
@@ -440,7 +444,7 @@ class AdminController extends Controller{
             return true;
         }
 
-        $notifications=$notificationModel->customFetchAll("SELECT * FROM `admin_notification` ORDER BY created_date_time");
+        $notifications=$notificationModel->customFetchAll("SELECT * FROM `admin_notification` ORDER BY noti_ID desc");
 
         return $this->render('administrator/view-notifications',[
             "notifications"=>$notifications,
@@ -497,11 +501,14 @@ class AdminController extends Controller{
         }
                 
         if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='view'){
+            $openedChanneling=new OpenedChanneling();
             Application::$app->session->set('selected_channeling',(isset($parameters[1]['id']))?$parameters[1]['id']:$parameters[2]['id']);
             return $this->render('administrator/update-channeling',[
                 'model'=>$channelingModel->findOne(['channeling_ID'=>$parameters[1]['id']]),
                 'rooms'=>$Room,
                 'nurses'=>$Nurses,
+                'doctor'=>$openedChanneling->getDoctorByOpen(Application::$app->session->get('selected_channeling'))[0]['name'],
+                'day'=>$openedChanneling->getDoctorByOpen(Application::$app->session->get('selected_channeling'))[0]['day'],
                 'employeemodel'=>$employeeModel,
                 'id'=>Application::$app->session->get('selected_channeling'), 
                 'openedchannelings'=>$channelingModel->getOpenedChannelings($parameters[1]['id']),
@@ -511,14 +518,18 @@ class AdminController extends Controller{
         
             if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='update'){
                 $channelingModel=new Channeling();
+                $openedChanneling=new OpenedChanneling();
                 $channeling=$channelingModel->findOne(['channeling_ID'=>$parameters[1]['id']]);
                 if($request->isPost()){
                     $roomOverlaps=$channelingModel->checkRoomOverlap($channelingModel->room,$channeling);
                     $nurseOverlaps=$channelingModel->checkNurseOverlap($_POST['emp_ID'],$channeling);
                     $channelingModel->loadData($request->getBody());
+
                     if($nurseOverlaps || $roomOverlaps){
                         return $this->render('administrator/update-channeling',[
                         'model'=>$channelingModel,
+                        'doctor'=>$openedChanneling->getDoctorByOpen(Application::$app->session->get('selected_channeling'))[0]['name'],
+                        'day'=>$openedChanneling->getDoctorByOpen(Application::$app->session->get('selected_channeling'))[0]['day'],
                         'rooms'=>$Room,
                         'nurses'=>$Nurses,
                         'employeemodel'=>$employeeModel,
@@ -534,10 +545,13 @@ class AdminController extends Controller{
                         $employeeModel->addNurse('emp_ID',Application::$app->session->get('selected_channeling'));
                         //redirect on success
                     }
+                  
                     return $this->render('administrator/update-channeling',[
                         'model'=>$channelingModel,
                         'rooms'=>$Room,
                         'nurses'=>$Nurses,
+                        'doctor'=>$openedChanneling->getDoctorByOpen(Application::$app->session->get('selected_channeling'))[0]['name'],
+                        'day'=>$openedChanneling->getDoctorByOpen(Application::$app->session->get('selected_channeling'))[0]['day'],
                         'employeemodel'=>$employeeModel,
                         'id'=>Application::$app->session->get('selected_channeling'),
                         'openedchannelings'=>$channelingModel->getOpenedChannelings(Application::$app->session->get('selected_channeling')),

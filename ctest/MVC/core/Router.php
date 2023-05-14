@@ -36,6 +36,8 @@ class Router{
         $method=$this->request->method(); // Get the Method
         $callback=$this->routes[$method][$path] ?? false;
         if($callback==false){
+            echo "<body><h1>Looks Like You Have Entered the Wrong URL</h1></body>";
+            exit;
             $this->response->setStatusCode(404);
             return $this->renderContent("Not found");
             

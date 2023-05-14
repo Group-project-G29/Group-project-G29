@@ -48,7 +48,7 @@ use app\core\DbModel;
             return $this->fetchAssocAllByName(['patient_ID'=>$patient,'test_ID'=>$testID],'pre_channeling_tests_values');
         }
         public function getIDbyName($name){
-            return $this->fetchAssocAll(['name'=>$name])[0]['test_ID'];
+            return $this->customFetchAll("select test_ID from pre_channeling_tests where name like '%".$name."%'")[0]['test_ID'];
         }
       
         //set channeling test values

@@ -324,6 +324,7 @@
 .item--left{
     display: flex;
     align-items: center;
+    min-width: 18vw;
     gap:1vw;
 }
 .item--left img{
@@ -334,10 +335,11 @@
     display: flex;
     flex-direction: column;
     gap:2vh;
-    min-width:6vw;
+    
 }
 .channeling-vital-info{
     margin-top: 5vh;
+
 }
 .appointment-container{
     margin-left: 5vw;
@@ -721,7 +723,7 @@
     background-color: var(--clr-white);
     border: 1px solid var(--clr-button-green);
     border-radius: 2px;
-    width:10vw;
+    width:100%;
 }
 
 .button--class-5:hover{
@@ -1070,7 +1072,12 @@
     height:50vh
 
 }
-
+.txta>textarea{
+     border:1px solid gainsboro;
+    background-color: white;
+    border-radius: 10px;
+    margin-top:-5vh ;
+}
 .nothing>textarea{
     border:1px solid gainsboro;
     background-color: white;
@@ -1156,7 +1163,6 @@
     padding-block:5vh;
     padding-inline:2vw;
     border-radius: 10px;
-    height:80vh;    
 }
 .payment-table td{
     height:7vh;
@@ -1544,5 +1550,29 @@
 
 .set-w{
     min-width:10px;
- 
+}
+
+.s-img img{
+    width:300px;
+    height:200px;
+}
+
+.l-img{
+    display: flex;
+    justify-content:center;
+    gap:80px
+}
+
+.main-img{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+    width: 350px;
+    border:1px solid gainsboro;
+    padding-inline:7px;
+    padding-block:7px;
+
+
 }

@@ -40,11 +40,11 @@
 
 <div class="charts">
     <div class="chart">
-        <h2>Earnings (past 12 months)</h2>
+        <h2>Earnings (12 months)</h2>
         <canvas id="line-chart"></canvas>
     </div>
     <div class="chart" id="bar-chart-div">
-        <h2>Number of patients (past 12 months)</h2>
+        <h2>Number of patients (12 months)</h2>
         <canvas id="bar-chart"></canvas>
     </div>
 </div>
@@ -57,11 +57,11 @@
     <div class="chart">
         <h2 class="chart-topic">Download Reports For This Month</h2>
         <div class="reports">
-            <div class="reports-topic">Patiyents Statistics Reports</div>
+            <div class="reports-topic">Patients Statistics Reports</div>
             <button class="btn" onclick="paytient()">Download</button>
         </div>
         <div class="reports">
-            <div class="reports-topic">income Reports</div>
+            <div class="reports-topic">Income Reports</div>
             <button class="btn" onclick="payment()">Download</button>
         </div>
     </div>
@@ -116,7 +116,7 @@
     new Chart(ctx3, {
         type: 'doughnut',
         data: {
-        labels: ['<?=$employeeEarnings[0]['type']?>', '<?=$employeeEarnings[1]['type']?>', '<?=$employeeEarnings[2]['type']?>'],
+        labels: ['<?=ucfirst($employeeEarnings[0]['type'])?>', '<?='Lab Reports'?>', '<?=ucfirst($employeeEarnings[2]['type'])?>'],
         datasets: [{
             label: 'Employees',
             data: [<?=$employeeEarnings[0]['SUM(amount)']?>, <?=$employeeEarnings[1]['SUM(amount)']?>, <?=$employeeEarnings[2]['SUM(amount)']?>],

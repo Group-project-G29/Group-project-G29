@@ -16,7 +16,7 @@ $form=Form::begin('','post');?>
     <div class="reg-body_bottom-text">Pediatric patient click <a href="/ctest/pediatric-registration"> here</a></div>
     <div class="reg-body fields">
     <?php echo $form->field($model,'name','Name*','field','text') ?>
-    <?php echo $form->field($model,'nic','NIC*','field','text') ?>
+    <?php echo $form->field($model,'nic','NIC(Username)*','field','text') ?>
     <?php echo $form->field($model,'age','Age*','field','text') ?>
     <?php echo $form->select($model,'gender',"Gender *",'field',['select','male','female'],'gender')?>
     <?php echo $form->field($model,'contact','Contact*','field','text') ?>

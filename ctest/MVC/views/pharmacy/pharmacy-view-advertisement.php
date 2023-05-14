@@ -15,7 +15,7 @@
     <tr>
     </tr>
     <?php foreach($advertisements as $key=>$advertisement): ?>
-    <tr class="table-row">
+    <tr class="table-row unselectable">
         <td class="row-img-col"><img class="row-img" src=<?="./media/images/advertisements/pharmacy/".$advertisement['img']?> alt="No image"></td>
         <td class="add-dec">
             <?=$advertisement['title']?><br><hr>

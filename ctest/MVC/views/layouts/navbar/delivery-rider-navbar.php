@@ -15,7 +15,7 @@ use app\models\Employee;
     <!-- <title>
         PHP & MySql Blog Application with Admin
     </title> -->
-    <link rel="stylesheet" href="./media/css/style.css">
+    <!-- <link rel="stylesheet" href="./media/css/style.css"> -->
     <link rel="stylesheet" href="./media/css/delivery-style.css">
     <!-- <link rel="stylesheet" href="./media/css/pharmacy-style.css"> -->
     <!-- <link rel="stylesheet" href="./media/header-footer.css"> -->
@@ -38,7 +38,7 @@ use app\models\Employee;
 
             <div class="nav-box">
                 <div class="flex">
-                    <div>
+                    <div class='hidden'>
                         <?php echo Application::$app->session->get('userObject')->name ?>
                     </div>
                     <div>
@@ -76,6 +76,12 @@ use app\models\Employee;
         
     </div>
     <div class="nav_row--bottom">
+        <input type="checkbox" class="toggle-sidebar" id="toggle-sidebar">
+        <label for="toggle-sidebar" class="toggle-icon" onclick="toggleMenu()">
+            <div class="bar-top"></div>
+            <div class="bar-center"></div>
+            <div class="bar-bottom"></div>
+        </label>
         <h2 class="uppercase">Anspaugh Care</h2>
        
     </div>
@@ -105,25 +111,9 @@ use app\models\Employee;
         }
     }
 
-    // const button=document.getElementById('sign in');
-    // if(button){
-    //     button.addEventListener('click',()=>{
-    //         location.href="/ctest/login";
-    //     })
-    // }
-
-    // const myCheckbox = document.getElementById('myCheckbox');
-
-    // const myCheckbox = document.getElementById('myCheckbox');
-
-    // myCheckbox.addEventListener('change', function() {
-    // if (myCheckbox.checked) {
-    //     // Execute code when checkbox is checked
-    //     console.log('Checkbox is checked!');
-    // } else {
-    //     // Execute code when checkbox is not checked
-    //     console.log('Checkbox is not checked!');
-    // }
-    // });
-
+</script>
+<script>
+    function toggleMenu(){
+        document.getElementById('sidebar').classList.toggle('active');
+    }
 </script>

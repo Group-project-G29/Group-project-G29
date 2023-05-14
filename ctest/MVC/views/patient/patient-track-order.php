@@ -80,7 +80,7 @@ use app\models\Prescription;
                 $process='highlight-status';
             }
            
-                ?>
+        ?>
 <?php if($order['pickup_status']=='delivery'):?>
     <section class="order-main">
     <section class="pharmacy-order-container--3">
@@ -162,6 +162,7 @@ use app\models\Prescription;
                 <?php $medicinei=$medicineModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0];?>
                 <?php $amount=$medicineModel->fetchAssocAllByName(['order_ID'=>$order['order_ID'],'med_ID'=>$medicine['med_ID']],'medicine_in_order')[0]['amount'] ;?>
                 <?php $total=$total+$medicine['order_current_price']*$amount ?>
+                <?php $grand_total=$grand_total+$total; ?>
            <tr> <td><?=$medicinei['name']." ".$medicinei['unit']?></td><td><?=$amount?></td><td><?="LKR ".number_format(($medicine['order_current_price']*$amount),'2','.','') ?></td></tr>
         
             <?php endforeach;?>
@@ -176,7 +177,6 @@ use app\models\Prescription;
                 <?php $grand_total=$grand_total+$total; ?>
             </div>
     </div>
-    <?php $total=0;?>
     <div class="prescription-table">
     <div style="display:flex; flex-direction:column; align-items:center;">
             <div class="flex pre">
@@ -191,13 +191,13 @@ use app\models\Prescription;
             <table>
                 
                 <tr><th>Prescription</th><th>Price</th></tr>
+                <?php $set=false;?>
                 <?php foreach($prescriptions as $prescription): ?>
                     <tr>
                         <td>
                             <a href=<?="'"."handle-documentation?spec=prescription&mod=view&id=".$prescription['prescription_ID']."'"?>><?=(($prescription['type']=='E-prescription')?"E-Prescription-":"SoftCopy Prescription-").$prescription['prescription_ID']?></a>
                         </td>
                         <td>
-                            <?php $set=false;?>
                             <?php if($prescription['type']=='E-prescription'): ?>
                                 <?=($prescriptionModel->getPrice($prescription['prescription_ID'])==''?'':'LKR'.$prescriptionModel->getPrice($prescription['prescription_ID']).".00") ?>
                                 <?php $grand_total=$grand_total+(($prescriptionModel->getPrice($prescription['prescription_ID'])=='')?0:$prescriptionModel->getPrice($prescription['prescription_ID']))?>
@@ -231,7 +231,7 @@ use app\models\Prescription;
                <h3><?="Prescription Price :LKR ".number_format($total,'2','.','')?></h3>
             </div>
            <?php endif; ?>
-           <?php if($val):?>
+           <?php if(!$set):?>
             <div class="total-container">
                 <h3><?="Total Price :LKR ".number_format($total,'2','.','')?></h3>
            </div>
@@ -353,7 +353,8 @@ use app\models\Prescription;
                 Total Price of Softcopy Prescriptions are calculated after the processing of order
             </div>
         </div>
-            <table>
+        <table>
+                <?php $set=false;?>
                 <tr><th>Prescription</th><th>Price</th></tr>
                 <?php foreach($prescriptions as $prescription): ?>
                     <tr>
@@ -363,7 +364,6 @@ use app\models\Prescription;
                         <td>
                           
                             <?php $val=0;?>
-                            <?php $set=false;?>
                             <?php if($prescription['type']=='E-prescription'): ?>
                                 <?=($prescriptionModel->getPrice($prescription['prescription_ID'])==''?'':'LKR '.number_format($prescriptionModel->getPrice($prescription['prescription_ID']),'2','.','')) ?>
                                 <?php $grand_total=$grand_total+(($prescriptionModel->getPrice($prescription['prescription_ID'])=='')?0:$prescriptionModel->getPrice($prescription['prescription_ID']))?>
@@ -397,7 +397,7 @@ use app\models\Prescription;
                <h3><?="Prescription Price :LKR ".number_format($total,'2','.','')?></h3>
             </div>
            <?php endif;?>
-            <?php if($set):?>
+            <?php if(!$set):?>
             <div class="total-container">
                 <h3><?="Total Price :LKR ".number_format($total,'2','.','')?></h3>
            </div>

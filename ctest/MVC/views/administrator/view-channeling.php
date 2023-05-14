@@ -1,8 +1,11 @@
 <?php
     use app\core\component\Component;
+use app\core\Time;
+
     $component=new Component();
     $popup=$component->popup("Are you sure you want to delete the channeling session","popup-value","popup--class-1","yes");
     echo $popup;
+    $timeModel=new Time();
 ?>
 <div class="upper-container">
     <div class="search-bar-container ">
@@ -24,7 +27,7 @@
             <td><?=$channeling['speciality']?></td>
             <td><?=$channeling['name']?></td>  
             <td><?=$channeling['day']?></td>
-            <td><?=substr($channeling['time'],0,5).(($channeling['time']>'12:00')?' PM':' AM')?></td>  
+            <td><?=$timeModel->time_format($channeling['time'])?></td>  
             
         </tr>
         <?php endforeach; ?>
@@ -57,7 +60,7 @@
     
         function checker(){
         
-        var re=new RegExp("^"+searchBar.value)
+        var re=new RegExp("^"+(searchBar.value).toLowerCase())
         patients.forEach((el)=>{
             comp=""+el.id;
             console.log(el.id);
@@ -66,7 +69,7 @@
             if(searchBar.value.length==0){
                 // el.classList.add("none")
             }
-            else if(re.test(comp[0]) || re.test(comp[1]) || re.test(comp[2])){
+            else if(re.test(comp[0].toLowerCase()) || re.test(comp[1].toLowerCase()) || re.test(comp[2].toLowerCase())){
                 el.classList.remove("none");
             }
             else{

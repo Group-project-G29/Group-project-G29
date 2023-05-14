@@ -15,6 +15,7 @@ use app\models\Delivery;
 use app\models\Order;
 use app\models\deliveryAdvertisement;
 use app\models\Payment;
+use app\models\Prescription;
 use LogicException;
 
 class DeliveryController extends Controller{
@@ -171,7 +172,18 @@ class DeliveryController extends Controller{
                 $update_order_status = $deliveryModel->update_processing_status_order($parameters[0]['id']);
                 // update payment status in payment table
                 $paymentModel = new Payment();
-                $updated_payment_status=$paymentModel->update_payment_status($parameters[0]['id']);
+                $updated_payment_status=$paymentModel->update_payment_status_delivery($parameters[0]['id']);
+
+                $orderModel = new Order();
+                // set processing status from packed to pickedup
+                $updated_order=$orderModel->set_processing_status($parameters[0]['id'],'pickedup');
+                    
+                // update payment in order table
+                // $updated_payment_order=$orderModel->update_payment_status($parameters[0]['id']);
+
+                // update payment status in payment table
+                $paymentModel = new Payment();
+                $updated_payment_status=$paymentModel->update_payment_status($parameters[0]['id'],$parameters[1]['total']);
                 
                         // ==== pop up implement ===============>>>
                         // if ( $confirming_delivery[0]['payment_status'] == 'pending'){
@@ -283,8 +295,6 @@ class DeliveryController extends Controller{
 
                 // var_dump($curr_employee);
                 // var_dump($_POST);
-                var_dump($employeeModel);
-                exit;
             } 
             
             // if($employeeModel->validate() && $employeeModel->register()){

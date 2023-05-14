@@ -1,6 +1,8 @@
 <?php
 
+use app\core\Calendar;
 use app\core\component\Component;
+use app\core\Date;
 use app\core\form\Form;
 use app\models\Appointment;
 use app\models\LabReport;
@@ -13,6 +15,7 @@ use app\models\Payment;
     $labreport=new LabReport();
     $total=0;
     $component=new Component();
+    $calendar=new Calendar();
 
 ?>
 <?php $form->begin('','post'); ?>
@@ -35,29 +38,33 @@ use app\models\Payment;
                         case 'lab':
                             $labreportDetail=$labreport->getReportByRequest($payment['request_ID']);
                             $name=$labreportDetail[0]['title']??'';
+                            $name=$name." report";
                             break;
 
                     }    
                     
                     
                 ?>
-                <tr>
-                    <td class="width-10" align='left'><?="$name"?></td>
-                    <td class="width-10" align='center'><?=$payment['generated_timestamp']?></td>
-                    <td class="width-10" align='center'><?="LKR ".number_format($payment['amount'], 2, '.', '')?></td>
-                    <td class="width-10" align='center'><?=ucfirst($payment['payment_status']) ?></td>
-                    <td class="width-10" align='center'>
-                    <?php if($payment['payment_status']!='done'): ?>
-                        <?php if($sel_payment==$payment['payment_ID']):?>
-                            <input type="checkbox" class="checks" name="sel_pays[]" value=<?="'".$payment['payment_ID']."'" ?> checked>
+               
+                <?php if(($payment['payment_status']=='done' and ($payment['generated_timestamp']>=$calendar->subDaysByDate(Date('Y-m-d'),'2')))|| $payment['payment_status']=='pending' ): ?>
+                    <tr>
+                        <td class="width-10" align='left'><?="$name"?></td>
+                        <td class="width-10" align='center'><?=$payment['generated_timestamp']?></td>
+                        <td class="width-10" align='center'><?="LKR ".number_format($payment['amount'], 2, '.', '')?></td>
+                        <td class="width-10" align='center'><?=ucfirst($payment['payment_status']) ?></td>
+                        <td class="width-10" align='center'>
+                        <?php if($payment['payment_status']!='done'): ?>
+                            <?php if($sel_payment==$payment['payment_ID']):?>
+                                <input type="checkbox" class="checks" name="sel_pays[]" value=<?="'".$payment['payment_ID']."'" ?> checked>
+                            <?php else:?>
+                                <input type="checkbox" class="checks" name="sel_pays[]" value=<?="'".$payment['payment_ID']."'" ?> >
+                            <?php endif;?>
                         <?php else:?>
-                            <input type="checkbox" class="checks" name="sel_pays[]" value=<?="'".$payment['payment_ID']."'" ?> >
+                            <img src="./media/anim_icons/animcompleted.gif">
                         <?php endif;?>
-                    <?php else:?>
-                        <img src="./media/anim_icons/animcompleted.gif">
-                    <?php endif;?>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                <?php endif;?>
                     <?php if($payment['payment_status']):?>
                         <?php $total=$total+$payment['amount'] ?>
                     <?php endif;?>

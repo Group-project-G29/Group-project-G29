@@ -10,6 +10,18 @@ use app\models\Prescription;
     $prescriptoinModel=new Prescription();
  
 ?>
+<div class="background-wp pos hide">
+
+</div>
+<div class="as-wrapper hide">
+    <div class="are-sure">
+        You Cannot Add or Delete Medicine After Prescription is sent to the pharmacy.
+        <div class="flex">
+            <?=$component->button('accept','','Okay','button--class-0 width-7','pwp-ok'); ?>
+            <?=$component->button('accept','','Cancel','button--class-0 width-7','pwp'); ?>
+        </div>
+    </div>
+</div>
 <div class="switcher shake-2">
     <img src=".\media\images\common\switch.png">
 </div>
@@ -46,17 +58,17 @@ use app\models\Prescription;
             <div class="cls-dispense">
             <?=$form->dispenseselect('dispense','Dispense','');?>
             </div>
+            <section>
+                <?php $pres=$prescriptoinModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'))?>
+                <?php $med=$prescriptoinModel->fetchAssocAllByName(['prescription_ID'=>$pres],'prescription_medicine');?>
+                <?php $res=$prescriptoinModel->fetchAssocAll(['prescription_ID'=>$prescriptionModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'))]) ?>
+            </section>
             
-            <?=$component->button('submit','submit','+','button-plus','addbtn'); ?>
+            <?=$component->button('submit','submit','Add','button--class-0 width-7','addbtn'); ?>
+            <?php if($med && !$res[0]['order_ID']):?>
+                <?=$component->button('sendbtn','',"Send to Pharmacy",'button--class-0 width-10','sendp')?>
+            <?php endif;?>
         </div>
-    </section>
-    <section>
-        <?php $pres=$prescriptoinModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'))?>
-        <?php $med=$prescriptoinModel->fetchAssocAllByName(['prescription_ID'=>$pres],'prescription_medicine');?>
-        <?php $res=$prescriptoinModel->fetchAssocAll(['prescription_ID'=>$prescriptionModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'))]) ?>
-        <?php if($med && !$res[0]['order_ID']):?>
-            <?=$component->button('sendbtn','',"Send Prescription to Pharmacy",'button--class-0','sendp')?>
-        <?php endif;?>
     </section>
     <?php $form->end(); ?>
 
@@ -72,7 +84,7 @@ use app\models\Prescription;
                 <td><?=$med['frequency'] ?></td>
                 <td><?=$med['med_amount'] ?></td>
                 <td><?=$med['dispense_count']." ".$med['dispense_type'] ?></td>
-                <td class="sub" style="font-size:42;" id=<?=$med['med_ID'] ?>><?="-" ?></td>
+                <td class="sub" style="font-size:42;" id=<?=$med['med_ID'] ?>><div class="remv-wp"><?="Remove" ?></div></td>
         
             </tr>
         <?php endforeach; ?>
@@ -147,9 +159,30 @@ use app\models\Prescription;
             location.href="doctor-prescription?spec=prescription&cmd=delete&id="+el.id
         })
     })
-    const send=document.getElementById('sendp');
+    const sendp=document.getElementById('sendp');
+    const popup=document.querySelector('.as-wrapper');
+    const bg=document.querySelector('.pos');
+    const canc=document.getElementById('pwp');
+    sendp.addEventListener('click',(event)=>{
+        event.preventDefault();
+        popup.classList.remove('hide');
+        bg.classList.remove('hide');
+
+    })
+    const send=document.getElementById('pwp-ok');
     send.addEventListener('click',(event)=>{
             event.preventDefault();
             location.href="doctor-prescription?cmd=send";
         })
+
+    canc.addEventListener('click',(event)=>{
+        event.preventDefault();
+        popup.classList.add('hide');
+        bg.classList.add('hide');
+
+    })
+    bg.addEventListener('click',()=>{
+        popup.classList.add('hide');
+        bg.classList.add('hide');
+    })
 </script>

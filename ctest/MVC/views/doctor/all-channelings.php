@@ -3,6 +3,7 @@
 use app\core\Application;
 use app\core\component\Component;
 use app\core\form\Form;
+use app\core\Time;
 use app\models\AdminNotification;
 use app\models\Channeling;
 use app\models\OpenedChanneling;
@@ -15,7 +16,7 @@ use app\models\PreChannelingTest;
     $openeChanneling=new OpenedChanneling();
     $adminN=new AdminNotification();
     $channelingModel=new Channeling();
-    
+    $timeModel=new Time();
     $array=$preModel->customFetchAll("select * from pre_channeling_tests");
     $t=[];
     foreach($array as $el){
@@ -27,10 +28,14 @@ use app\models\PreChannelingTest;
 <div style="margin-left:-18vw; width:105vw; margin-top:-5vh;" class="background hide">
 
 </div>
+<?php exit;?>
 <section class="doctor-channeling">
     <?php if($channelings): ?>
         <?php foreach($channelings as $channeling):  ?>
             <?php if( Application::$app->session->get("popshow") && Application::$app->session->get("popshow")==$channeling['channeling_ID']): ?>
+                <div style="margin-left:-18vw; width:105vw; margin-top:-5vh;" class="background set-bck">
+
+                </div>
                 <div class=<?="'"."popup-channeling-setting popup_".$channeling['channeling_ID']."  pops'"?>>
             <?php else: ?>
                 <div class=<?="'"."popup-channeling-setting popup_".$channeling['channeling_ID']." hide pops'"?>>
@@ -60,7 +65,7 @@ use app\models\PreChannelingTest;
                            <?php $channelingModel=new  Channeling() ?>
                             <?php $time=$channelingModel->fetchAssocAll(['channeling_ID'=>$ch['channeling_ID']])[0]['time']; ?>
                             <div class="noti-config">
-                                <?php echo '<br>'."Channeling On ".$ch['channeling_date']." at time ".substr($time,0,5).(($time>='12:00')?'PM':'AM')."<br>"; ?>
+                                <?php echo '<br>'."Channeling On ".$ch['channeling_date']." at time ".$timeModel->time_format($time)."<br>"; ?>
                                 <?php if($ch['status']=='finished'): ?>
                                     Finished
                                 <?php endif;?>

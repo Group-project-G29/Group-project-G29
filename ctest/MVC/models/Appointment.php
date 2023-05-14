@@ -132,7 +132,7 @@ class Appointment extends DbModel{
         $this->customFetchAll("update appointment set status='$status' where appointment_ID=".$id);
     }
     public function getAppointmentCount($opened_channeling){
-        return $this->customFetchAll("select count(appointment_ID) from appointment where opened_channeling_ID= ".$opened_channeling)[0]['count(appointment_ID)'];
+        return $this->customFetchAll("select count(appointment_ID) from appointment where (appointment.type='labtest' or appointment.payment_status='done') and opened_channeling_ID= ".$opened_channeling)[0]['count(appointment_ID)'];
     }
 
     public function getAppointmentDetail($appointment){

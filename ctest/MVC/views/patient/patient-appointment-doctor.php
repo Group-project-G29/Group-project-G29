@@ -4,6 +4,7 @@
 use app\core\component\Component;
 use app\core\Application;
 use app\core\Calendar;
+use app\core\Time;
 use app\models\Appointment;
 $component=new Component();
 use app\models\OpenedChanneling;
@@ -13,6 +14,7 @@ use app\models\Patient;
     $appointmentModel=new Appointment();
     $calendarModel=new Calendar();
     $patientModel=new Patient();
+    $timeModel=new Time();
    
        
     
@@ -34,7 +36,7 @@ use app\models\Patient;
                 </div>
                 <div class="item--right">
                     <div class="channeling-vital-info">
-                        <h3>Time :<?=$value['time']?></h3>
+                        <h3>Time :<?=$timeModel->time_format($value['time'])?></h3>
                         <h3>Date :<?=$value['channeling_date']?></h3>
                         <h3>Fee :LKR <?=number_format($value['fee'],2,'.','')?></h3>
                     </div>

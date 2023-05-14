@@ -11,25 +11,25 @@
 <div class="table-container">
     <table border="0">
         <tr>
-            <th>Delivery ID</th>
+            <th class='hidden'>Delivery ID</th>
             <th>Name</th>
             <th>Contact</th>
             <th>Address</th>
             <th>City</th>
             <th>Postal Code</th>
-            <th>Comment</th>
-            <th>Created Date Time</th>
+            <th class='hidden'>Comment</th>
+            <th class='hidden'>Created Date Time</th>
             <th></th>
         </tr>
         <?php foreach($deliveries as $key=>$delivery): ?>
         <tr class="table-row" id=<?=$delivery['delivery_ID']?> >
-            <td><?=$delivery['delivery_ID']?></td>  
+            <td class='hidden'><?=$delivery['delivery_ID']?></td>  
             <td><?=$delivery['name']?></td>  
             <td><?=$delivery['contact']?></td>  
             <td><?=$delivery['address']?></td>  
             <td><?=$delivery['city']?></td>  
             <td><?=$delivery['postal_code']?></td>  
-            <td>
+            <td class='hidden'>
                 <?php   
                     if($delivery['comment']){
                         echo $delivery['comment'];
@@ -38,8 +38,8 @@
                     }
                 ?>
             </td>  
-            <td><?=$delivery['time_of_creation']?></td>
-            <td><a class='pass-delivery' id=<?=$delivery['delivery_ID']?>>Get Delivery</a></td>
+            <td class='hidden'><?=$delivery['time_of_creation']?></td>
+            <td><a class='get-delivery' id=<?=$delivery['delivery_ID']?>><img src="./media/anim_icons/get.png"></a></td>
         </tr>
         <?php endforeach; ?>
     </table>
@@ -47,17 +47,18 @@
 </div>
 
 <script>
-    elementsArray1 = document.querySelectorAll(".more-details");
-    elementsArray1.forEach(function(elem) {
-        elem.addEventListener("click", function() {
-            location.href='delivery-view-delivery?id='+elem.id;
-        });
-    });
-
-    elementsArray2 = document.querySelectorAll(".pass-delivery");
+    
+    elementsArray2 = document.querySelectorAll(".get-delivery");
     elementsArray2.forEach(function(elem) {
         elem.addEventListener("click", function() {
             location.href='delivery-get-delivery?id='+elem.id;
         });
     });
+    
+    // elementsArray1 = document.querySelectorAll(".more-details");
+    // elementsArray1.forEach(function(elem) {
+    //     elem.addEventListener("click", function() {
+    //         location.href='delivery-view-delivery?id='+elem.id;
+    //     });
+    // });
 </script>

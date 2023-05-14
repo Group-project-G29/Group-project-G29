@@ -29,7 +29,7 @@ class EmployeeAuthController extends Controller{
                 
                 Application::$app->session->setFlash('success',"Welcome ".$EmployeeLoginForm->username);
                 if($user->role=="receptionist"){
-                    $response->redirect('/ctest/receptionist-handle-patient?mod=view');
+                    $response->redirect('/ctest/receptionist-today-channelings');
                 }
                 else if($user->role=='lab'){
                     $response->redirect('/ctest/lab-view-all-test');
@@ -37,6 +37,21 @@ class EmployeeAuthController extends Controller{
                 else if($user->role=='delivery'){
                     $response->redirect('/ctest/delivery-my-deliveries');
                 }
+                else if($user->role=='admin'){
+                    $response->redirect('/ctest/admin-reports');
+
+                }
+                else if($user->role=='nurse'){
+                    $response->redirect('/ctest/today-channelings');
+                }
+                else if($user->role=='lab'){
+                    $response->redirect('/ctest/lab-test-request');
+                }
+                else if($user->role=='pharmacist'){
+                    $response->redirect('/ctest/pharmacy-orders-pending');
+
+                }
+
                 else{
                     $response->redirect('/ctest/'.$user->role);
                 }

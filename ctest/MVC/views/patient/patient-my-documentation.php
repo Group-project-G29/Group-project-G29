@@ -45,7 +45,7 @@ $form=new Form();
                 <img src="./media/images/common/prescription.png">
             </div>
             <div class="referral-name">
-                <a href=<?="'"."handle-documentation?spec=prescription"."&mod=view&id=".$prescription['prescription_ID']."'" ?>><?="Prescription-".$prescription['uploaded_date']?></a>
+                <a href=<?="'"."handle-documentation?spec=prescription"."&mod=view&id=".$prescription['prescription_ID']."'" ?>><?=$prescription['type']."-".$prescription['uploaded_date']?></a>
                 <?php if(!$prescriptionModel->isInCart($prescription['prescription_ID'])):?>
                     <div>
                         <?=$component->button('btn','','Add to Cart','button--class-0 btn-presc',$prescription['prescription_ID']); ?>

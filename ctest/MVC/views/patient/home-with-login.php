@@ -34,8 +34,8 @@ use app\models\Advertisement;
                 <h1 class="fs-200 fc-color--dark">Patient Login<h1>
             </div>
             <div class="patient-login-fields">
-                <?php echo $form->field($model,'username','Username','field','text') ?>
-                <?php echo $form->field($model,'password','Password','field','password') ?>
+                <?php echo $form->loginfield($model,'username','Username','field','text','Your NIC Number') ?>
+                <?php echo $form->loginfield($model,'password','Password','field','password','') ?>
                 <div class="patient-login-lower-text">Pediatric Patient? click<a href="/ctest/pediatric"> here</a></div>
                 <div class="patient-login-lower-text">Forgot Password? click<a href="/ctest/nic"> here</a></div>
             <div><input class="button-lighter" type="submit" value="Log In"></div>
@@ -84,7 +84,40 @@ use app\models\Advertisement;
     <div style="font-size:32; letter-spacing:0.6vw; margin-top:2vh; ">
         <h1 style="font-weight:900;"><span style="color:#38B6FF;">Healing Hand.</span><span style="color:#1746A2">Caring Heart!</span></h1>
     </div>
-    <section>
+    <section class="l-img">
+        <div class="main-img">
+            <div class="s-img">
+                <img src="./media/images/patient/medicalrecord.jpg">
+            </div>
+            <div>
+                <h3>E-Medical Reports</h3>
+            </div>
+            <div>
+                Manage all your medical documents in one place. We provide E-prescriptions, Medical Reports, Lab Reports.
+            </div>
+        </div>
+        <div class="main-img">
+            <div class="s-img">
+                <img src="./media/images/patient/deliveryman.jpg">
+
+            </div>
+            <div>
+                <h3>Medicine Delivery</h3>
+            </div>
+            <div>
+                Medicine delivery to your door step. Also you can make pickup orders too.
+            </div>
+        </div>
+        <div class="main-img">
+            <div class="s-img">
+                <img src="./media/images/patient/Hospital.jpg">
+            </div>
+            <div>
+                <h3>Best Services</h3>
+            </div>
+            <div>
+                Best array of services from medication to live channeling consultation.
+            </div>
         
     </section>
 </section>

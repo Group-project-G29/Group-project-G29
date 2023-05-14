@@ -10,6 +10,7 @@
     </title> -->
     <link rel="stylesheet" href="./media/css/style.css">
     <link rel="stylesheet" href="./media/css/doctor-style.css">
+    <link rel="stylesheet" href="./media/css/sidebar.css">
     <!-- <link rel="stylesheet" href="./media/header-footer.css"> -->
     <link rel="stylesheet" href="https:unicons.iconscout.com/release/v4.0.0/css/line.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +19,7 @@
 
 </head>
 <body>
+<div class="layout-div-row">
 <nav class="nav" >
     <div class="nav_row--top">
         <div class="nav_row--top_logo">
@@ -51,6 +53,7 @@
        
     </div>
 </nav>
+</div>
 <script>
     const button=document.getElementById('sign in');
     if(button){

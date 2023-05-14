@@ -4,7 +4,7 @@
     $notificationModel=new AdminNotification();
 
     
-    $count = count($notificationModel->customFetchAll("SELECT * FROM `admin_notification` WHERE is_read = 0;"));
+    $count = count($notificationModel->customFetchAll("SELECT * FROM `admin_notification` WHERE is_read = 1;"));
 
 ?>
 
@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="./media/css/style.css">
     <link rel="stylesheet" href="./media/css/admin-style.css">
     <link rel="stylesheet" href="./media/css/nurse-style.css">
+    <link rel="stylesheet" href="./media/css/sidebar.css">
 
     <!-- <link rel="stylesheet" href="./media/header-footer.css"> -->
     <link rel="stylesheet" href="https:unicons.iconscout.com/release/v4.0.0/css/line.css">
@@ -27,6 +28,7 @@
 
 </head>
 <body>
+<div class="layout-div-row">
 <nav class="nav" >
     <div class="nav_row--top">
         <div class="nav_row--top_logo">
@@ -58,12 +60,10 @@
                             </div>
                         </ul>
             </div>
-           
-          
         </div>
     </div>
     <div class="nav_row--bottom">
-        <h2 class="uppercase">Anspaugh Care</h2>
-       
+        <h2 class="uppercase">Anspaugh Care</h2>  
     </div>
 </nav>
+</div>
