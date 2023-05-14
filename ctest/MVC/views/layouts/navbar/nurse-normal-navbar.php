@@ -1,13 +1,6 @@
 <?php 
     use app\core\Application;
-    use app\models\AdminNotification;
-    $notificationModel=new AdminNotification();
-
-    
-    $count = count($notificationModel->customFetchAll("SELECT * FROM `admin_notification` WHERE is_read = 1;"));
-
 ?>
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,7 +9,8 @@
         PHP & MySql Blog Application with Admin
     </title> -->
     <link rel="stylesheet" href="./media/css/style.css">
-    <link rel="stylesheet" href="./media/css/admin-style.css">
+    <!-- <link rel="stylesheet" href="./media/css/pharmacy-style.css"> -->
+    <link rel="stylesheet" href="./media/css/doctor-style.css">
     <link rel="stylesheet" href="./media/css/nurse-style.css">
 
     <!-- <link rel="stylesheet" href="./media/header-footer.css"> -->
@@ -30,25 +24,18 @@
 <nav class="nav" >
     <div class="nav_row--top">
         <div class="nav_row--top_logo">
-            <img src="./media/images/logo-1.png">
+            <a href="/ctest/nurse"><img src="./media/images/logo-1.png"></a>
         </div>
         <div class="nav_row--top_user flex">
-            <a href="/ctest/admin-notification"><div class="noti-icon"><img src="./media/images/patient/notification bell.png" alt="Notification Icon"> </div></a>
-            <?php if($count) { ?>
-                <div class="msg-count"><?=$count?></div>
-            <?php } else { ?>
-                <div class="msg-count-0"></div>
-            <?php } ?>
-
             <div class="nav-box">
-                        <div class="flex"> 
+                        <div class="flex">
                             <?php echo Application::$app->session->get('userObject')->name ?>
                             <img src=<?php echo "./media/images/emp-profile-pictures/".Application::$app->session->get('userObject')->img ?>>
                         </div>
                         <ul>
                             <div class="nav-box-item">
                                 <li>
-                                    <a href="/ctest/admin">Dashboard</a>
+                                    <a href="/ctest/nurse">Dashboard</a>
                                 </li>
                             </div>
                             <div class="nav-box-item">
@@ -63,7 +50,27 @@
         </div>
     </div>
     <div class="nav_row--bottom">
+
+        <!-- <input type="checkbox" class="toggle-sidebar" id="toggle-sidebar">
+        <label for="toggle-sidebar" class="toggle-icon" onclick="toggleMenu()">
+            <div class="bar-top"></div>
+            <div class="bar-center"></div>
+            <div class="bar-bottom"></div>
+        </label> -->
         <h2 class="uppercase">Anspaugh Care</h2>
        
     </div>
 </nav>
+<script>
+    const button=document.getElementById('sign in');
+    if(button){
+        button.addEventListener('click',()=>{
+            location.href="/ctest/login";
+        })
+    }
+</script>
+<script>
+    function toggleMenu(){
+        document.getElementById('sidebar').classList.toggle('active');
+    }
+</script>

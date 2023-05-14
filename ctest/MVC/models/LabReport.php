@@ -67,12 +67,16 @@ use app\core\PDF;
             return $this->customFetchAll("SELECT * FROM  lab_report_content_allocation  as l left join lab_report_content as c  on c.content_ID=l.content_ID left join lab_report_allocation as a on a.report_ID=l.report_ID left join lab_report as r on  r.report_ID=l.report_ID where a.patient_id=".$patient." and l.content_ID=".$testID);
         }
   
-        //changed
+          //changed
         public function getAllParameterValue($patient,$template_ID){
             $contents=$this->distinctPatientTests($patient,$template_ID);
             $contentArray=[];
+            $patientModel=new Patient();
             foreach($contents as $content){
-                $contentArray[$content['name']]=[$this->getTestValue($patient,$content['content_ID'])];
+                if($patientModel->isValidParam($content['content_ID'])){
+                    $contentArray[$content['name']]=[$this->getTestValue($patient,$content['content_ID'])];
+
+                }
             }
         
             return $contentArray;
@@ -112,18 +116,15 @@ use app\core\PDF;
 
     
         } 
-        public function create_new_report($fee, $type, $label, $template_ID, $location, $request_ID){
+   	public function create_new_report($fee, $type, $label, $template_ID, $location, $request_ID){
             $labTestModel=new LabTest();
-           
             //get total fee 
             $values=$labTestModel->fetchAssocAll(['template_ID'=>$template_ID])[0];
             $fee=$values['hospital_fee']+$values['test_fee'];
             $this->customFetchAll("INSERT INTO lab_report ( fee, type,label,template_ID,location,request_ID) VALUES ( $fee, 'e-report', '$label', $template_ID, '$location', $request_ID); ");
             $report_ID=$this->customFetchAll("select last_insert_id()")[0]['last_insert_id()'];
-           
             //create record in  test allocation table
             $labRequestModel=new LabTestRequest();
-           
             //get information from lab request table
             $request=$labRequestModel->fetchAssocAll(['request_ID'=>$request_ID])[0];
             $doctor=$request['doctor'];
@@ -167,8 +168,7 @@ use app\core\PDF;
 
 
         }
-
-        //show any labreport in PDF format
+	  //show any labreport in PDF format
         public function labreporttoPDF($reportID){
             $valuerows=$this->getReport($reportID);
             $request=$this->customFetchAll("select * from lab_report left join lab_request on lab_report.request_ID=lab_request.request_ID where lab_report.report_ID=".$reportID)[0];
@@ -203,7 +203,7 @@ use app\core\PDF;
                 }
             }
             $pdfModel=new PDF();
-             
+                    
             $str="
                 <html>
                     <head>
@@ -269,13 +269,10 @@ use app\core\PDF;
                         </section>
                     </body>
                 <html>";
-                
-           
-                $pdfModel->createPDF($str,'reports');
-                
+                $pdfModel->createPDF($str,'reports-'.$date);
             }
-        }   
-
+        }  
+      
 
 
 ?>

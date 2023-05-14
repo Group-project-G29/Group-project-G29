@@ -67,7 +67,7 @@ input [type="time"]::-webkit-time-picker-indicator{
     margin-top: 3vh;
 }
 
-.form-body [type="text"],.form-body [type="file"],.form-body [type="time"],.form-body [type="date"],.form-body select{
+.form-body [type="number"],.form-body [type="text"],.form-body [type="file"],.form-body [type="time"],.form-body [type="date"],.form-body select{
     width: 20vw;
 }
 
@@ -131,7 +131,7 @@ input [type="time"]::-webkit-time-picker-indicator{
     align-items: center;
     background-color: var(--clr-bg-grey);
     margin-bottom: 2vh;
-    overflow: scroll;
+    overflow-x: scroll;
     height: 10vh;
     width: 33vw;
     flex-shrink: 0;
@@ -433,6 +433,7 @@ button:hover{
     margin-left: 4vw;
     display: flex;
     align-items: center;
+    margin-top: 2vh;
     margin-bottom: 2vh;
 }
 
@@ -452,6 +453,10 @@ button:hover{
     color:red;
     display: flex;
     gap:1vw;
+}
+.nurse-error-container img{
+    width:30px;
+    height:30px;
 }
 
 .instruction{
@@ -494,4 +499,25 @@ button:hover{
 .open-channeling-btn{
     margin-left: 1vw;
     width: 300px;
+}
+/* after */
+
+.upper-update{
+    background-color: white;
+    border-radius:10px;
+    padding-block: 0.5vh;
+}
+.lower-update{
+    background-color: white;
+    border-radius:10px;
+    padding-block: 0.5vh; 
+    margin-top:1vh; 
+}
+
+.desc{
+    font-size:18;
+    margin-bottom:1.5vh;
+}
+.width-set{
+    max-width:1vw;
 }

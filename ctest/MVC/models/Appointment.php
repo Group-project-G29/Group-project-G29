@@ -49,16 +49,7 @@ class Appointment extends DbModel{
          $payment=$this->customFetchAll("Select channeling.fee from appointment left join opened_channeling on opened_channeling.opened_channeling_ID=appointment.opened_channeling_ID left join channeling on channeling.channeling_ID=opened_channeling.channeling_ID where appointment.appointment_ID=".$appointment);
          return $payment[0]['fee'];
     }
-
-    public function cancelAppointment($id){ 
-        $this->customFetchAll("delete from channeling where channeling_ID=459");
-    }
-
-    // public function completeAppointment($id){
-    //     $this->customFetchAll("update appointment set status='completed' where appointment_ID=$id");
-    // }
-
-    
+   
     public function labReportEligibility($patient,$doctor,$opened_channeling){
         $dateModel=new Date();
         $calendarModel=new Calendar();

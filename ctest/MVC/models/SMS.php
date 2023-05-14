@@ -1,9 +1,12 @@
 <?php 
+    namespace app\models;
+
+use Exception;
+use NotifyLk\Api\SmsApi;
 
     class SMS{
         public function  WriteSMS($text,$receiverModel){
-            require_once(__DIR__ . '/vendor/autoload.php');
-                $api_instance = new NotifyLk\Api\SmsApi();
+                $api_instance = new SmsApi();
                 $user_id = "24587"; // string | API User ID - Can be found in your settings page.
                 $api_key = "QIwcUFCm14UApbiVjgGv"; // string | API Key - Can be found in your settings page.
                 $message = $text; // string | Text of the message. 320 chars max.

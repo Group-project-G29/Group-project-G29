@@ -141,10 +141,11 @@ class Prescription extends DbModel{
     //med_ID 	prescription_ID 	amount 	route 	dispense 	frequency 	
     public function addPrescriptionMedicine($patientID,$channelingID){
         $medicineModel=new Medicine();
+        $orderModel=new Order();
         //check if there is prescription
         $prescription=$this->isTherePrescription($patientID,$channelingID);
         $note=$_POST['note'];
-        $refills=$_POST['refills'];
+        $refills=0;
         if(!$prescription){
             $prescription=$this->createNewPrescription($patientID);
         }
@@ -172,15 +173,17 @@ class Prescription extends DbModel{
         if(!$med_ID || !$amountF || !$freqF || !$diF){
             return [$note,$refills,$prescription,!$med_ID,!$amountF,!$freqF , !$diF];
         }
-        
-        if($this->alreadyIn($prescription,$med_ID)){
-            $this->customFetchAll("update prescription_medicine set med_amount=$amount,dispense_type=$dispense_type,dispense_count='$dispense_count',frequency='$frequency' where med_ID=$med_ID and prescription_ID=$prescription");
+        if(!$this->fetchAssocAll(['prescription_ID'=>$prescription])[0]['order_ID']){
+
+            if($this->alreadyIn($prescription,$med_ID)){
+                $this->customFetchAll("update prescription_medicine set med_amount=$amount,dispense_type=$dispense_type,dispense_count='$dispense_count',frequency='$frequency' where med_ID=$med_ID and prescription_ID=$prescription");
+                $this->changeMedicineAmount($prescription,$med_ID);
+                return [$note,$refills,$prescription];   
+            }
+            $this->customFetchAll("insert into prescription_medicine (med_ID,prescription_ID,med_amount,dispense_type,dispense_count,frequency,status) values('$med_ID','$prescription','$amount',$dispense_type,$dispense_count,'$frequency','include') ");
             $this->changeMedicineAmount($prescription,$med_ID);
-            return [$note,$refills,$prescription];   
-        }
-        $this->customFetchAll("insert into prescription_medicine (med_ID,prescription_ID,med_amount,dispense_type,dispense_count,frequency,status) values('$med_ID','$prescription','$amount',$dispense_type,$dispense_count,'$frequency','include') ");
-        $this->changeMedicineAmount($prescription,$med_ID);
         
+        }
         return [$note,$refills,$prescription];   
         
     }
@@ -327,11 +330,15 @@ class Prescription extends DbModel{
                     $total=$total+($medicine['med_amount']*$detmed['unit_price']*$qwk);
                 }
                 else{
+                    echo "amount :".$medicine['med_amount']." price :".$detmed['unit_price']." days :".$days." freq :".$freq; 
                     $total=$total+($medicine['med_amount']*$detmed['unit_price']*$days*$freq);
+                    echo "--".$medicine['med_amount']*$days*$freq."--";
 
                 }
             }
     }
+
+    exit;
         return $total;
         
 
@@ -400,11 +407,11 @@ class Prescription extends DbModel{
                     $qwk=1;
                     break;
                 case 'week':
-                    $days=7;
+                    $days=$medicine['dispense_count']*7;
                     $qwk=$medicine['dispense_count'];
                     break;
                 case 'months':
-                    $days=30;
+                    $days=$medicine['dispense_count']*30;
                     $qwk=4*$medicine['dispense_count'];
                     break;
             }
@@ -415,6 +422,7 @@ class Prescription extends DbModel{
             }
             else{
                 $total=$total+($medicine['med_amount']*$days*$freq);
+                
 
             }
             return $total;    
@@ -432,13 +440,13 @@ class Prescription extends DbModel{
                 foreach($items as $item){
                     if(!$medicineModel->checkStock($item['med_ID'])  ){
                         in_array($medicineModel->getMedicineByID($item['med_ID']),$na_array)?'':array_push($na_array,$medicineModel->getMedicineByID($item['med_ID']));
-
+                        
                     }
                     
                 }
             }
             //medicine in prescription
-            $prescriptions=$cartModel->fetchAssocAllByName(['cart_ID'=>$cart[0]['cart_ID']],'prescription');
+            $prescriptions=$cartModel->fetchAssocAllByName(['cart_ID'=>$cart[0]['cart_ID'],'type'=>'E-prescription'],'prescription');
             if($prescriptions){
                 foreach($prescriptions as $pres){
                     $items=$prescriptoinModel->getPrescriptionMedicine($pres['prescription_ID']);
@@ -521,6 +529,7 @@ class Prescription extends DbModel{
         
 
     }
+
     public function prescriptionToPDF($presID){
         $pdfModel=new PDF();
         
@@ -530,7 +539,7 @@ class Prescription extends DbModel{
         $medrows='<tr><th>Medicine</th><th>Frequency</th><th>Amount per Dose</th><th>Dispense</th></tr>';
         $devrows='<tr><th>Device</th><th>Amount</th></tr>';
         $note=($header['note'])?'*'.$header['note']:'';
-        $last=($header['last_processed_timestamp'])?'(Last Processed Date :'.$header['last_processed_timestamp'].")":'';
+        $last=($header['last_processed_timestamp'])?'Last Processed Date :'.$header['last_processed_timestamp']."":'';
         $head="<h3>Medical Devices</h3>";
         if($meds){
             foreach($meds as $med){
@@ -577,7 +586,7 @@ class Prescription extends DbModel{
                         </div>
                         <div>
                                 <br>Patient :".$header['name']."
-                                <br><br>Refills :".$header['refills']."  ".$last."
+                                <br><br>".$last."
                             </div>
 
                         
@@ -606,32 +615,71 @@ class Prescription extends DbModel{
     // =========CREATE NEW ORDER===============
     
     public function add_med_rec ($med_ID, $prescription_ID, $amount, $curr_price, $status) {
-        return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, '$status' ); ");
-     }
-     
-     public function get_curr_orders($prescription_ID) {
+        return $this->customFetchAll(" INSERT INTO prescription_medicine ( med_ID, prescription_ID, total_med_amount, prescription_current_price, status ) VALUES ( $med_ID, $prescription_ID, $amount, $curr_price, '$status' ); ");
+    }
+    
+    public function get_curr_orders($prescription_ID) {
         return $this->customFetchAll("SELECT *, prescription_medicine.amount AS order_amount, prescription_medicine.prescription_current_price AS current_price, medical_products.amount AS available_amount FROM prescription_medicine INNER JOIN prescription ON prescription_medicine.prescription_ID=prescription.prescription_ID INNER JOIN medical_products ON prescription_medicine.med_ID=medical_products.med_ID WHERE prescription_medicine.prescription_ID=$prescription_ID; ");
-     }
-     
-     public function get_patient_details($prescription_ID) {
+    }
+    
+    public function get_patient_details($prescription_ID) {
         return $this->customFetchAll("SELECT * FROM prescription INNER JOIN patient ON prescription.patient=patient.patient_ID WHERE prescription.prescription_ID=$prescription_ID;");
-     }
-     
-     public function get_prescription_location( $order_ID ) {
+    }
+    
+    public function get_prescription_location( $order_ID ) {
         return $this->customFetchAll(" SELECT *, patient.name AS p_name FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID INNER JOIN prescription ON _order.order_ID=prescription.order_ID WHERE prescription.order_ID=$order_ID ");
-     }
-     
-     public function get_order_ID_by_pres_ID ( $pres_ID ){
-         return $this->customFetchAll(" SELECT order_ID FROM prescription WHERE prescription_ID = $pres_ID ");
-     }
+    }
+    
+    public function get_order_ID_by_pres_ID ( $pres_ID ){
+        return $this->customFetchAll(" SELECT order_ID FROM prescription WHERE prescription_ID = $pres_ID ");
+    }
+
+    public function update_prescription_total ( $pres_ID, $med_total ){
+        
+        return $this->customFetchAll(" UPDATE prescription SET total_price= (total_price+$med_total) WHERE prescription_ID = $pres_ID; ");
+    }
+
+    public function reduced_update_prescription_total ( $pres_ID, $med_total ){
+        return $this->customFetchAll(" UPDATE prescription SET total_price= (total_price-$med_total) WHERE prescription_ID = $pres_ID; ");
+    }
+
+    public function reset_total ( $pres_ID ) {
+        return $this->customFetchAll(" UPDATE prescription SET total_price=0 WHERE prescription_ID = $pres_ID; ");
+    }
+
+    public function get_prescription_details ( $pres_ID ){
+        return $this->customFetchAll(" SELECT *, patient.name AS p_name FROM patient INNER JOIN _order ON patient.patient_ID=_order.patient_ID INNER JOIN prescription ON _order.order_ID=prescription.order_ID WHERE prescription.prescription_ID=$pres_ID; ");
+    }
  
-     public function update_prescription_total ( $pres_ID, $med_total ){
-         return $this->customFetchAll(" UPDATE prescription SET total_price= (total_price+$med_total) WHERE prescription_ID = $pres_ID; ");
-     }
- 
-     public function reset_total ( $pres_ID ) {
-         return $this->customFetchAll(" UPDATE prescription SET total_price=0 WHERE prescription_ID = $pres_ID; ");
-     }
+    public function remove_med_from_prescription ( $pres_ID, $med_ID ){
+        return $this->customFetchAll(" DELETE FROM prescription_medicine WHERE med_ID=$med_ID AND prescription_ID=$pres_ID; ");
+    }
+
+    public function get_med_rec_details( $pres_ID, $med_ID ){
+        return $this->customFetchAll(" SELECT * FROM prescription_medicine INNER JOIN prescription ON prescription_medicine.prescription_ID=prescription.prescription_ID WHERE prescription_medicine.med_ID=$med_ID AND prescription_medicine.prescription_ID=$pres_ID; ");
+    }
+    //  new function added by nimantha
+    public function checkAmount($order_ID){
+        $prescriptionModel=new Prescription();
+        $medicinesModel=new Medicine();
+        $nameds=[];
+        $prescriptions=$prescriptionModel->fetchAssocAll(['order_ID'=>$order_ID,'type'=>'softcopy prescription']);
+        foreach($prescriptions as $prescription){
+            $medicines=$prescriptionModel->fetchAssocAllByName(['prescription_ID'=>$prescription['prescription_ID']],'prescription_medicine');
+            foreach($medicines as $medicine){
+                $orderamount=$medicine['total_med_amount'];
+                $avamount=$medicinesModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0]['amount'];
+                if($orderamount>$avamount){
+                    array_push($nameds,$medicinesModel->fetchAssocAll(['med_ID'=>$medicine['med_ID']])[0]['name']);
+                }
+            }
+
+        }
+        return $nameds;
+    }
+    public function set_last_processed_date( $pres_ID ){
+        return $this->customFetchAll(" UPDATE prescription SET last_processed_timestamp= CURRENT_DATE WHERE prescription_ID=$pres_ID");
+    }
  
 
 }   

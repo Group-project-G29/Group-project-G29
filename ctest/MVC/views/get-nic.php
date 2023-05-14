@@ -26,7 +26,7 @@ $form=Form::begin('','post');?>
         <h4>We'll send E-mail with url to change your password.</h4>
     </div>
     <div class="OTP-container">
-       <?=$form->field($patient,'email','','Field','text',''); ?> 
+       <?=$form->field($patient,'nic','','Field','text',''); ?> 
        <?=$component->button('confirm','submit','Confirm','button--class-0',''); ?>
     </div>
 <?$form=Form::end()?>

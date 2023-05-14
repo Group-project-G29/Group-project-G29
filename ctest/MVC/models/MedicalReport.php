@@ -133,7 +133,7 @@ class MedicalReport extends DbModel{
     }
     public function updater($model,$type,$id){
         if($type=='consultation') $this->customFetchAll("update consultation_report set examination='$model->examination',consultation='$model->consultation',recommendation='$model->recommendation' where report_ID=".$id);
-        if($type=='medical-history') $this->customFetchAll("update consultation_report set examination='$model->examination',consultation='$model->consultation',recommendation='$model->recommendation' where report_ID=".$id);
-        if($type=='soap') $this->customFetchAll("update consultation_report set examination='$model->examination',consultation='$model->consultation',recommendation='$model->recommendation' where report_ID=".$id);
+        if($type=='medical-history') $this->customFetchAll("update medical_history set note='$model->note',allergies='$model->allergies',medication='$model->medication' where report_ID=".$id);
+        if($type=='soap') $this->customFetchAll("update soap_report set subjective='$model->subjective',objective='$model->objective',assessment='$model->assessment',plan='$model->plan',additional_note='$model->additional_note' where report_ID=".$id);
     }
 }

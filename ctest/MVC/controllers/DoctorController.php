@@ -20,12 +20,18 @@ use app\models\LabReport;
 use app\models\LabTestRequest;
 use app\models\MedicalReport;
 use app\models\Medicine;
+use app\models\Order;
 use app\models\Patient;
 use app\models\PreChannelingTest;
 use app\models\Prescription;
 use app\models\SOAPReport;
 
 class DoctorController extends Controller{
+
+    public function mover(Request $request,Response $response){
+        $response->redirect(Application::$app->session->get('churl'));
+        exit;
+    }
 
     public function todayChannelings(Request $request,Response $response){
         Application::$app->session->set('popshow',''); 
@@ -87,7 +93,7 @@ class DoctorController extends Controller{
             $Doctor=$Doctor->customFetchAll("Select * from employee left join  doctor on doctor.nic=employee.nic where doctor.nic=".$Channeling->doctor);
             $Nurses=$Employee->customFetchAll("Select * from employee right join nurse_channeling_allocataion on employee.emp_ID=nurse_channeling_allocataion.emp_ID  left join channeling on channeling.channeling_ID=nurse_channeling_allocataion.channeling_ID  where nurse_channeling_allocataion.channeling_ID=".$OpenedChanneling->channeling_ID);
         }
-
+        Application::$app->session->set('popup','unset');
         return $this->render('doctor/channeling-start',[
             'openedchanneling'=>$OpenedChanneling,
             'channeling'=>$Channeling,
@@ -161,7 +167,7 @@ class DoctorController extends Controller{
 
         //check whether the appointment is used or not
         if(isSet($parameters[0]['cmd']) && $parameters[0]['cmd']=='start'){
-        Application::$app->session->set('popup','unset');
+    
             $id=$parameters[1]['id']??'';
             $ch=$OpenedChanneling->findOne(['opened_channeling_ID'=>$id]); 
              if($ch->status!='finished'){
@@ -736,17 +742,18 @@ class DoctorController extends Controller{
     public function labTestRequestHandle(Request $request,Response $response){
         $parameters=$request->getParameters();
         $labTestRequestModel=new LabTestRequest();
-
         if($request->isPost()){
             //function to add new lab test request
             Application::$app->session->set('popup','set');
-            if(!$labTestRequestModel->name){
-                 Application::$app->response->redirect(Application::$app->session->get('churl'));
-                 exit;
-            } 
             $labTestRequestModel->loadData($request->getBody());
-            $labTestRequestModel->isExist($labTestRequestModel->name);
-            $labTestRequestModel->createLabTestRequest($labTestRequestModel);
+            if(!$labTestRequestModel->name){
+                Application::$app->response->redirect(Application::$app->session->get('churl'));
+                exit;
+            } 
+            if($labTestRequestModel->isThereTest($labTestRequestModel->name)){
+                $labTestRequestModel->isExist($labTestRequestModel->name);    
+                $labTestRequestModel->createLabTestRequest($labTestRequestModel);
+            }
 
             //get the url in the session to reload
             $response->redirect(Application::$app->session->get('churl'));
@@ -773,6 +780,7 @@ class DoctorController extends Controller{
     //take prescriptoin medicine and show it in PDF format
     public function handlePrescription(Request $request,Response $response){
         $this->setLayout('doctor-striped');
+        $patientModel=new Patient();
         $medicinesModel=new Medicine();
         $medicines=$medicinesModel->getAllMedicine();
         $prescriptionModel=new Prescription();
@@ -781,9 +789,28 @@ class DoctorController extends Controller{
         $presdevice=[]; 
         $parameters=$request->getParameters();
         //show the prescription
+
+        if(isset($parameters[0]['cmd']) && $parameters[0]['cmd']=='send'){
+            $order=new Order();
+            $order->pickup_status='pickup';
+            $order->patient_ID=Application::$app->session->get('cur_patient');
+            $order->cart_ID=null;
+            $order->delivery_ID=null;
+            $order->name=$patientModel->fetchAssocAll(['patient_ID'=>$order->patient_ID])[0]['name'];
+            $order->address=$patientModel->fetchAssocAll(['patient_ID'=>$order->patient_ID])[0]['address'];
+            $order->contact=$patientModel->fetchAssocAll(['patient_ID'=>$order->patient_ID])[0]['contact'];
+            $order_ID=$order->savenofiles()[0]['last_insert_id()'];
+            $prescriptionModel->customFetchAll("update prescription set order_ID=$order_ID where prescription_ID=".$prescriptionModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling')));
+            $response->redirect("doctor-prescription");
+            exit;
+        }
+
         if(isset($parameters[1]['cmd']) && $parameters[1]['cmd']=='delete'){
             $pid=$prescriptionModel->isTherePrescription(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling'));
-            $prescriptionModel->deleteRecordByName(['prescription_ID'=>$pid,'med_ID'=>$parameters[2]['id']],'prescription_medicine');
+            if($prescriptionModel->fetchAssocAll(['prescription_ID'=>$parameters[2]['id']]));{
+
+                $prescriptionModel->deleteRecordByName(['prescription_ID'=>$pid,'med_ID'=>$parameters[2]['id']],'prescription_medicine');
+            }
             $response->redirect('doctor-prescription');
         }
         if(isset($parameters[1]['mod']) && $parameters[1]['mod']=='view'){
@@ -804,10 +831,11 @@ class DoctorController extends Controller{
         }
         
         if($request->isPost()){
+
             //take current prescritption or create new one add medicine to it
             $prescription=$prescriptionModel->addPrescriptionMedicine(Application::$app->session->get('cur_patient'),Application::$app->session->get('channeling')); 
             $prescriptionModel->note=$prescription[0];
-            $prescriptionModel->refills=$prescription[1];
+            $prescriptionModel->refills=0;
             $medicines=$medicinesModel->getAllMedicine();
             if($prescription){
                 $presmeds=$prescriptionModel->getPrescriptionMedicine($prescription[2]);

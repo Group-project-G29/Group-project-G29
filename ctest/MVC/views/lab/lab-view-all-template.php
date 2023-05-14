@@ -32,13 +32,13 @@ $component = new Component();
 
 
 
-          </div>
-          <div class="flip-card-back">
-            <h3>Title:</h3>
-            <p class="title"><?= $template['title'] ?></p>
-            <h3>Sub Title:</h3>
-            <p class="title"><?= $template['subtitle'] ?> </p>
-
+            <div class="flip-card-back">
+              <h3>Title:</h3>
+              <p class="title"><?= $template['title'] ?></p>
+              <h3>Sub Title:</h3>
+              <p class="title"><?= $template['subtitle'] ?> </p>
+  
+            </div>
           </div>
         </div>
       </div>

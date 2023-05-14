@@ -71,6 +71,7 @@ $app->router->get('/ctest/nic', [PatientAuthController::class,'getNIC']);
 $app->router->post('/ctest/nic', [PatientAuthController::class,'getNIC']);
 $app->router->get('/ctest/otp', [PatientAuthController::class,'OTP']);
 $app->router->post('/ctest/otp', [PatientAuthController::class,'OTP']);
+$app->router->get('/ctest/testme', [PatientAuthController::class,'test']);
 
 
 
@@ -124,6 +125,7 @@ $app->router->get('/ctest/notification',[DoctorController::class,'handleNotis'])
 $app->router->post('/ctest/notification',[DoctorController::class,'handleNotis']);
 $app->router->get('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
 $app->router->post('/ctest/doctor-my-detail',[DoctorController::class,'myDetail']);
+$app->router->get('/ctest/doctor-move',[DoctorController::class,'mover']);
 
 
 //-------------------pharmacy routers-----------------------------------------
@@ -145,12 +147,25 @@ $app->router->get('/ctest/pharmacy-update-advertisement',[PharmacyController::cl
 $app->router->post('/ctest/pharmacy-handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
 $app->router->get('/ctest/pharmacy-handle-advertisement',[PharmacyController::class,'handleAdvertisement']);
 
-$app->router->get('/ctest/pharmacy-orders-previous',[PharmacyController::class,'viewPreviousOrder']);
-$app->router->get('/ctest/pharmacy-view-previous-order',[PharmacyController::class,'DetailsPreviousOrder']);
 $app->router->get('/ctest/pharmacy-front-orders-pending',[PharmacyController::class,'viewFrontdeskPendingOrder']);
+$app->router->get('/ctest/pharmacy-front-orders-packed',[PharmacyController::class,'viewFrontdeskPackedOrder']);
 $app->router->get('/ctest/pharmacy-front-orders-finished',[PharmacyController::class,'viewFrontdeskFinishedOrder']);
 $app->router->get('/ctest/pharmacy-view-front-orders-pending',[PharmacyController::class,'detailsFrontdeskPending']);
+$app->router->get('/ctest/pharmacy-view-front-orders-packed',[PharmacyController::class,'detailsFrontdeskPacked']);
 $app->router->get('/ctest/pharmacy-view-front-orders-finished',[PharmacyController::class,'detailsFrontdeskFinished']);
+
+$app->router->get('/ctest/pharmacy-new-front-items',[PharmacyController::class,'addNewFrontItem']);
+$app->router->post('/ctest/pharmacy-new-front-items',[PharmacyController::class,'addNewFrontItem']);
+$app->router->get('/ctest/pharmacy-finish-front-processing-order',[PharmacyController::class,'finishFrontdeskOrder']);
+$app->router->get('/ctest/pharmacy-delete-front-processing-order',[PharmacyController::class,'deleteFrontdeskOrder']);
+$app->router->get('/ctest/pharmacy-frontdesk-cancle-order',[PharmacyController::class,'cancleFrontdeskOrder']);
+$app->router->get('/ctest/pharmacy-frontdesk-pickup-order',[PharmacyController::class,'pickupFrontdeskOrder']);
+
+$app->router->get('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewFrontdeskOrder']);
+$app->router->post('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewFrontdeskOrder']);
+
+$app->router->get('/ctest/pharmacy-view-previous-order',[PharmacyController::class,'DetailsPreviousOrder']);
+$app->router->get('/ctest/pharmacy-orders-previous',[PharmacyController::class,'viewPreviousOrder']);
 $app->router->get('/ctest/pharmacy-orders-pending',[PharmacyController::class,'viewPendingOrder']);
 $app->router->get('/ctest/pharmacy-view-pending-order',[PharmacyController::class,'DetailsPendingOrder']);
 $app->router->get('/ctest/pharmacy-take-pending-order',[PharmacyController::class,'TakePendingOrder']);
@@ -171,10 +186,12 @@ $app->router->get('/ctest/pharmacy-go-to-process-order',[PharmacyController::cla
 $app->router->get('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
 $app->router->post('/ctest/pharmacy-picked-up-order',[PharmacyController::class,'pickupOrder']);
 
-$app->router->get('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
-$app->router->post('/ctest/pharmacy-new-order',[PharmacyController::class,'createNewOrder']);
 $app->router->get('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
 $app->router->post('/ctest/pharmacy-new-order-items',[PharmacyController::class,'addNewOrderItem']);
+
+$app->router->get('/ctest/view-softcopy',[PharmacyController::class,'viewSoftcopy']);
+$app->router->get('/ctest/pharmacy-delete-pres-med',[PharmacyController::class,'deleteOrderItem']);
+$app->router->get('/ctest/pharmacy-delete-front-med',[PharmacyController::class,'deleteFrontOrderItem']);
 
 $app->router->get('/ctest/pharmacy-view-report',[PharmacyController::class,'viewReports']);
 $app->router->get('/ctest/pharmacy-view-personal-details',[PharmacyController::class,'viewPersonalDetails']);
@@ -198,7 +215,6 @@ $app->router->post('/ctest/delivery-update-personal-details',[DeliveryController
 // active status
 $app->router->get('/ctest/delivery-online',[DeliveryController::class,'makeOnline']);
 $app->router->get('/ctest/delivery-offline',[DeliveryController::class,'makeOffline']);
-
 
 
 // ------------------laboratorist routers----------------------------------------
@@ -297,6 +313,12 @@ $app->router->post('/ctest/lab-view-all-report',[LabController::class,'viewRepor
 $app->router->get('/ctest/lab-edit-report-detail',[LabController::class,'editReport']);
 $app->router->post('/ctest/lab-edit-report-detail',[LabController::class,'editReport']);
 
+$app->router->get('/ctest/lab-test-request',[LabController::class,'testRequest']);
+$app->router->post('/ctest/lab-test-request',[LabController::class,'testRequest']);
+$app->router->get('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
+$app->router->post('/ctest/lab-write-test-result',[LabController::class,'writeResult']);
+$app->router->get('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
+$app->router->post('/ctest/lab-view-all-report',[LabController::class,'viewReport']);
 $app->router->get('/ctest/lab-view-report-detail',[LabController::class,'ReportDetail']);
 $app->router->post('/ctest/lab-view-report-detail',[LabController::class,'ReportDetail']);
 $app->router->get('/ctest/lab-report-upload',[LabController::class,'reportUpload']);

@@ -42,23 +42,17 @@ use app\core\DbModel;
         }
         
         public function tableRecords(): array{
-            return ['frontdesk_order'=>['name','age','date','time','doctor','payment_status','processing_status','contact','total','pharmacist_ID']];
+            return ['frontdesk_order'=>['name','age','date','time','doctor','processing_status','contact','total','pharmacist_ID']];
         }
 
         public function attributes(): array
         {
-            return ['frontdesk_order'=>['name','age','date','time','doctor','payment_status','processing_status','contact','total','pharmacist_ID']];
-        }
-
-        public function completePayment($orderID){
-            //update payment status to completed
-            return $this->updateRecord(['frontdesk_order'=>['order_ID'=>$orderID]],['_order'=>['payment_status'=>'completed']]);
+            return ['frontdesk_order'=>['name','age','date','time','doctor','processing_status','contact','total','pharmacist_ID']];
         }
 
         public function addItem($order,$item,$amount,$unit_price){
             return $this->saveByName(['frontdesk_medicine'=>['order_ID'=>$order,'med_ID'=>$item,'amount'=>$amount,'current_price'=>$unit_price]]);
         }
-
 
         public function getOrderItem($orderID){
             if(!$orderID) return false;
@@ -85,21 +79,13 @@ use app\core\DbModel;
             return $this->customFetchAll("UPDATE frontdesk_order SET processing_status = '$status' WHERE order_ID = $order_ID");
         }
 
-        // public function setOrderStatus($orderID,$status){
-        //     $this->customFetchAll("UPDATE frontdesk_order SET processing_status= $status WHERE order_ID=.$orderID");
-        // }
-        
         public function write_total ( $order_ID, $total ) {
             return $this->customFetchAll("UPDATE frontdesk_order SET total = $total WHERE order_ID = $order_ID;");
         }
 
-        public function set_payment_status( $order_ID ){
-            return $this->customFetchAll(" UPDATE frontdesk_order SET payment_status = 'completed' WHERE order_ID = $order_ID; ");
-        }
-
         public function get_last_inserted_order ( $contact_no ) {
             //order by date and time -try
-            return $this->customFetchAll(" SELECT * FROM frontdesk_order WHERE contact = $contact_no AND processing_status='pending' ORDER BY time DESC");
+            return $this->customFetchAll(" SELECT * FROM frontdesk_order WHERE contact = $contact_no AND processing_status='pending' ORDER BY date DESC, time DESC");
         }
 
         public function get_order_details( $order_ID ){
@@ -114,12 +100,24 @@ use app\core\DbModel;
             return $this->customFetchAll(" INSERT INTO frontdesk_medicine ( order_ID, med_ID, amount, current_price, status ) VALUES ( $order_ID, $med_ID, $amount, $curr_price, '$status' ); ");
         }
 
+        public function removeItem($order,$item){
+            return $this->customFetchAll(" DELETE FROM frontdesk_medicine WHERE order_ID=$order AND med_ID=$item ");
+        }
+
         public function delete_order( $order_ID ){
             return $this->customFetchAll(" DELETE FROM frontdesk_order WHERE order_ID = $order_ID ");
         }
 
         public function delete_med_record( $order_ID ){
             return $this->customFetchAll(" DELETE FROM frontdesk_medicine WHERE order_ID = $order_ID ");
+        }
+
+        public function get_today_frontdesk_order_count( $curr_date ){
+            return $this->customFetchAll(" SELECT COUNT(order_ID) FROM frontdesk_order WHERE date='$curr_date' ");
+        }
+
+        public function select_this_month_orders( $year_month ){
+            return $this->customFetchAll(" SELECT * FROM frontdesk_order WHERE date LIKE '$year_month%' ");
         }
 
         // public function get_frontdesk_last_order ( $name ) {

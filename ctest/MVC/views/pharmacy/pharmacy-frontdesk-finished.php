@@ -1,6 +1,8 @@
 <?php
     use app\core\component\Component;
     $component=new Component();
+    use app\core\Time;
+    $timeModel = new Time();
 // var_dump($orders);
 // var_dump($popup);
 // // var_dump($order_types);
@@ -22,7 +24,7 @@
 
 <div class='upper-container'>
     <div class="search-bar-container">
-        <?php echo $component->searchbar($model,"name","search-bar--class1","Search by order ID, patient 1D","searh");?>
+        <?php echo $component->searchbar($model,"name","search-bar--class1","Search by order ID, patient 1D","search");?>
     </div>
     <?php 
     echo $component->button('new-order','','Add New Order','button--class-0  width-10','new-order');
@@ -43,7 +45,7 @@
     </tr>
     <?php if($orders): ?>
         <?php foreach($orders as $key=>$order): ?>
-            <tr class="table-row" id=<?=$order['order_ID']?> >
+            <tr class="table-row search-class" id=<?= $order['order_ID'].'-'.$order['name'] ?> >
                 <td><?=$order['order_ID']?></td>
                 <td><?=$order['name']?></td> 
                 <td><?=$order['age']?></td> 
@@ -85,8 +87,10 @@
 <script>
     elementsArray1 = document.querySelectorAll(".table-row");
     elementsArray1.forEach(function(elem) {
+        comp=""+elem.id; 
+        comp=comp.split("-");
         elem.addEventListener("click", function() {
-            location.href='pharmacy-view-front-orders-finished?id='+elem.id; 
+            location.href='pharmacy-view-front-orders-finished?id='+comp[0]; 
         });
     });
 
@@ -124,6 +128,33 @@
     btn4.addEventListener('click',function(){
         location.href="pharmacy-new-order"; //get
     })
+
+    const orders=document.querySelectorAll('.search-class');
+    const searchBar=document.getElementById('search');
+    searchBar.addEventListener('input',checker);
+    function checker(){
+        var re=new RegExp(("^"+searchBar.value).toLowerCase())
+        orders.forEach((el)=>{
+        comp=""+el.id; 
+        comp=comp.split("-");
+        
+        if(searchBar.value.length==0){
+            // el.classList.add("none")
+        }
+        else if(re.test(comp[0].toLowerCase()) || re.test(comp[1].toLowerCase()) ){
+            el.classList.remove("none");
+        }
+        else{
+            el.classList.add("none");
+            
+        }
+        })
+        if(searchBar.value.length==0){
+            orders.forEach((el)=>{
+                el.classList.remove("none");
+            }) 
+        }
+    }
     
     // elementsArray4 = document.querySelectorAll(".delete-order");
     // elementsArray4.forEach(function(elem) {

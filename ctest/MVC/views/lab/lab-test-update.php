@@ -26,14 +26,13 @@ $form = Form::begin('/ctest/lab-test-update?cmd=update&id=' . Application::$app-
                 <?php echo $form->spanfield($model, 'hospital_fee', 'Hospital Fee*', 'field', 'text') ?>
 
             </table>
-            <div class="button flex" style="padding-left:25vw">
+            <div class="button flex" style="padding-left:15vw">
                 <?= $component->button('update-test', 'submit', 'Update', 'button--class-0 width-10'); ?>
-                <!-- check if test contain a template else show button to add template -->
                 <?php Form::end() ?>
-                <?php if(!$LabTest->fetchAssocAll(['name'=>join(" ",explode("%",Application::$app->session->get('labtest')))])[0]['template_ID']):?>
-                    <!-- if template id is null show add new template -->
+                <!-- check if test contain a template else show button to add template -->
+                <?php if(!$LabTest->fetchAssocAll(['name'=>urldecode(Application::$app->session->get('labtest'))])[0]['template_ID']):?>                    <!-- if template id is null show add new template -->
                     <div>
-                        <?= $component->button('update-test', 'submit', 'Add Template', 'button--class-0 btn ',Application::$app->session->get('labtest')); ?>
+                        <?= $component->button('update-test', 'submit', 'Add Template', 'button--class-0 btn',Application::$app->session->get('labtest')); ?>
                     </div>
                 <?php endif;?>
             </div>

@@ -7,7 +7,24 @@ use app\models\Appointment;
     echo $popup;
     $appointmentModel=new Appointment();
 ?>
+<div class="patient-detail"style=" padding:1vw;height:10vw" > 
+    <div class="" style="margin-left: 5vw;">
+        <h1 class="fs-200 fc-color--dark">Patient Detail</h1>
 
+        <?php $age = "18" ?>
+        <h5><?php if ($patient[0]['age'] < $age) {
+                echo " Pediatric *";
+            } else {
+                echo "Adult *";
+            } ?></h5>
+
+        <h4><b> Name  : </b><?= $patient[0]['name'] ?></h4>
+        <h4><b>NIC : </b><?= $patient[0]['nic'] ?></h4>
+        <h4><b>Age : </b><?= $patient[0]['age'] ?></h4>
+    </div>
+
+
+</div>
 
 <div class="table-container">
 <?php if($appointments):?>
@@ -15,7 +32,6 @@ use app\models\Appointment;
     <tr>
         <th>Queue Number</th><th>Doctor</th><th>Date</th><th>Time</th><th></th>
     </tr>
-    
         <?php foreach($appointments as $key=>$channeling): ?>
             <?php if($appointmentModel->isInPass($channeling['appointment_ID'])): ?>
                 <tr class="table-row">
@@ -39,8 +55,10 @@ use app\models\Appointment;
         <?php endforeach; ?>
     </table>
     <?php else: ?>
+        <img src="media/images/common/noappointment.png"  style="width:10vw;margin:3vw">
         <div class="empty-container">
-            Empty
+
+          <p>Looks like there's no Appointment</p>  
         </div>
     <?php endif; ?>
 </div>

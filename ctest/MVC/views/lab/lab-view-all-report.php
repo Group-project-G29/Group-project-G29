@@ -3,8 +3,9 @@
 use app\core\component\Component;
 
 $component = new Component();
-// var_dump($reports);
-// exit;
+
+    // var_dump($reports);
+    // exit;
 ?>
 
 <div class='upper-container'>
@@ -17,18 +18,18 @@ $component = new Component();
 <div class="large-div">
   <?php foreach ($reports as $report) : ?>
   <div class="reps"  id=<?= "'".$report['report_ID']."-".$report['pname']."'" ?>>
-  <div class="card-new" >
+  <div class="card-new" style="width:13vw" >
 
     <div class="card-details" id=<?= "'".$report['report_ID']."-".$report['pname']."'" ?>>
       <p class="text-title">Report ID :<?= $report['report_ID'] ?></p>
-          <p class="text-body"><b>Doctor Name :</b><?=$report['dname'] ?> </p>
-          <p class="text-body"><b>Patient Name :</b><?=$report['pname'] ?> </p>
+          <p class="text-body" style="color:#1746A2"><b>*<?=$report['tname'] ?></b> </p>
+          <p class="text-body"><b>Doctor :</b><?=$report['dname'] ?> </p>
+          <p class="text-body"><b>Req Date :</b><?=$report['date'] ?> </p>
+          <p class="text-body"><b>Patient :</b><?=$report['pname'] ?> </p>
     </div>
-    <!-- <button class="card-button"> -->
       <?php echo $component->button('edit-details', '', 'Edit Details', 'button--class-7 ', $report['report_ID']) ?>
       <?php echo $component->button('edit-details', '', 'Delete', 'button--class-9', $report['report_ID']) ?>
       
-      <!-- </button> -->
     </div>
   </div>
   <?php endforeach; ?>

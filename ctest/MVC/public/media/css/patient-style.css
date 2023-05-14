@@ -1037,7 +1037,7 @@
    justify-content: center;
    gap:4vw;
    margin-top: 5vh;
-   margin-left:5vw;
+   margin-left:-2vw;
    
    
 }
@@ -1070,7 +1070,12 @@
     height:50vh
 
 }
-
+.txta>textarea{
+     border:1px solid gainsboro;
+    background-color: white;
+    border-radius: 10px;
+    margin-top:-5vh ;
+}
 .nothing>textarea{
     border:1px solid gainsboro;
     background-color: white;
@@ -1516,3 +1521,33 @@
      width:20vw;
     height:35vh;
 }
+
+.noti-black-bg{
+    background-color: rgba(0, 0, 0, .75);
+    height: 100vh;
+    width: 120vw;
+    z-index: 100;
+    position: fixed;
+    left:-20vw;
+    top:14vh;
+}
+.track-popup{
+    background-color:white;
+    z-index: 100;
+    position: fixed;
+    left:35vw;
+    height:40vh;
+    width:30vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap:3vh;
+    padding-block:2vh;
+    padding-inline:2vw;
+    border-radius:10px;
+}
+
+.set-w{
+    min-width:10px;
+}
+

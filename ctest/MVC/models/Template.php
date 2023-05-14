@@ -9,15 +9,10 @@ class Template extends DbModel{
    
     public string $title='';
     public ?string $subtitle=null;
-    
-  
-    
     public ?string $name=null;
 
-   
     public function addTemplate(){
-       return parent::savenofiles(); 
-         
+       return parent::savenofiles();      
     }
  
     public function rules(): array
@@ -25,8 +20,7 @@ class Template extends DbModel{
         return [
            
             'title'=>[self::RULE_REQUIRED],
-            'created_date'=>[],
-            
+            'created_date'=>[], 
         ];
     }
     public function fileDestination(): array

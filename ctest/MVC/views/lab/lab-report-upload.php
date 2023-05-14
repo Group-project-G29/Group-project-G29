@@ -6,42 +6,50 @@ use \app\core\form\Form;
 $component = new Component();
 
 ?>
-<div class="semi-header-container">
-<div class="field-container" style="margin-left: 5vw;">
-        <h1 class="fs-200 fc-color--dark">Upload Report</h1>
-        <h4><b>Request No :</b><?= $tests[0]['request_ID'] ?> </h4>
-        <h4><b>Doctor = Dr.</b><?= $tests[0]['ename'] ?></h4>
-        <h4><b>patient :</b> <?= $tests[0]['pname'] ?></h4>
-        <h4><b>Requested date & Time :</b> <?= $tests[0]['requested_date_time'] ?></h4>
-</div>
-<hr>
-<div class="field-container" style="margin-left: 5vw;">
+<div class="semi-header-container" style="left: 20vw;padding-top:0vw;">
+    <img src="./media/images/logo-1.png" style="width:15vw;margin-left:13vw">
 
-        <?php $form = Form::begin('lab-S-report-upload?id='.$tests[0]['request_ID'], 'post'); ?>
-        
+    <div class="field-container" style="margin-left: 5vw; line-height:1.5vw">
+        <div class="field-container-left" style="width:50%">
+
+            <h4><b>Request No :</b><?= $tests[0]['request_ID'] ?> </h4>
+            <h4><b>Doctor :</b>Dr.<?= $tests[0]['ename'] ?></h4>
+            <h4><b>patient Name :</b> <?= $tests[0]['pname'] ?></h4>
+            <h4><b>Age : </b><?= $tests[0]['age'] ?></h4>
+            <h4><b>Gender : </b><?= $tests[0]['gender'] ?></h4>
+        </div>
+        <div class="field-container-right" style="width:50%">
+            <h4 style="color:red"><b>*Note : </b><?= $tests[0]['note'] ?></h4>
+        </div>
+    </div>
+    <hr>
+    <div class="field-container" style="margin-left: 5vw;">
+
+        <?php $form = Form::begin('lab-S-report-upload?id=' . $tests[0]['request_ID'], 'post'); ?>
+
         <div class="button" style="margin-left:20vw">
 
-            <?php echo $component->button('submit', 'submit', 'Submit', 'button--class-0  width-10 curser', 'add'); ?>
+            <?php echo $component->button('submit', 'submit', 'Upload', 'button--class-0  width-10 curser', 'add'); ?>
         </div>
-        <div class="inputbox">
+        <div class="report-container" style="width:100%">
             <label for="image"> </label><br>
             <input type='file' name="location"><br>
-            </div>
-       
+        </div>
 
-            <?php Form::end() ?>
+
+        <?php Form::end() ?>
 
     </div>
 
 </div>
-  
 
-    <script>
-        elementsArray = document.querySelectorAll(".button--class-0");
-        console.log(elementsArray);
-        elementsArray.forEach(function(elem) {
-            elem.addEventListener("click", function() {
-                location.href = 'lab-test-request'; //pass the variable value
-            });
+
+<script>
+    elementsArray = document.querySelectorAll(".button--class-0");
+    console.log(elementsArray);
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href = 'lab-test-request'; //pass the variable value
         });
-    </script>
+    });
+</script>

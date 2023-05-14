@@ -7,7 +7,6 @@ $component = new Component();
 use \app\core\form\Form;
 use app\core\Application;
 
-
 ?>
 
 
@@ -60,52 +59,57 @@ use app\core\Application;
 
                         <?php endif; ?>
                     </tr>
+
                 <?php endforeach; ?>
+
             </table>
 
         </div>
         <div class="">
             <?php echo $component->button('edit-details', '', 'Edit content', 'button--class-7 edit-btn', $template['template_ID']) ?>
         </div>
-
-        <?php else:?>
-        <div class="empty-div">
-        <img src="media/images/common/emptycontent.png" class="emptycontent">
-        <p class="empty-para">Looks Like There's No Content</p>
-        </div>
+        
+        <?php else : ?>
+            <div class="empty-div">
+                <img src="media/images/common/emptycontent.png" class="emptycontent">
+                <p class="empty-para">Looks Like There's No Content</p>
+            </div>
+            <div class="" style="padding-right:10vw">
+                <?php echo $component->button('edit-details', '', 'Add content', 'button--class-0 edit-btn ', $tempID['template_ID']) ?>
+            </div>
     <?php endif; ?>
 
 
 
+</div>
 
 
+<script>
+    // const txt1 = document.getElementById('template');
+    // const btn1 = document.getElementById('button');
+    // const out1 = document.getElementById('output');
 
-    <script>
-        const txt1 = document.getElementById('template');
-        // const btn1 = document.getElementById('button');
-        const out1 = document.getElementById('output');
+    function fun1() {
+        out1.innerHTML = txt1.value;
 
-        function fun1() {
-            out1.innerHTML = txt1.value;
-
-        }
-        elementsArray = document.querySelectorAll(".btn-1");
-        elementsArray.forEach(function(elem) {
-            elem.addEventListener("click", function() {
-                location.href = 'lab-view-all-template-more?cmd=delete&id=' + elem.id;
-            });
+    }
+    elementsArray = document.querySelectorAll(".btn-1");
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href = 'lab-view-all-template-more?cmd=delete&id=' + elem.id;
         });
-        elementsArray = document.querySelectorAll(".edit-btn");
-        elementsArray.forEach(function(elem) {
-            elem.addEventListener("click", function() {
-                location.href = 'lab-test-template?id=' + elem.id;
-            });
+    });
+    elementsArray = document.querySelectorAll(".edit-btn");
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href = 'lab-test-template?id=' + elem.id;
         });
+    });
 
-        elementsArray = document.querySelectorAll("#btn-4");
-        elementsArray.forEach(function(elem) {
-            elem.addEventListener("click", function() {
-                location.href = 'lab-view-all-template';
-            });
-        });
-    </script>
+    // elementsArray = document.querySelectorAll("#btn-4");
+    // elementsArray.forEach(function(elem) {
+    //     elem.addEventListener("click", function() {
+    //         location.href = 'lab-view-all-template';
+    //     });
+    // });
+</script>

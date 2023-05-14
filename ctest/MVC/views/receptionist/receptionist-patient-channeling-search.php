@@ -3,10 +3,9 @@
         Application::$app->session->set('patient',$patient[0]['patient_ID']);
         use app\models\OpenedChanneling;
         use app\models\Appointment;
-        $openedChanneling=new OpenedChanneling();
         use app\core\component\Component;
-
-
+        
+        $openedChanneling=new OpenedChanneling();
         $component=new Component();
         $appoinment = new Appointment();
         
@@ -29,7 +28,6 @@
 
 
 </div>
-<!-- </div> -->
 <div class="search-bar-container" style="margin-left:25vw">
     <?php echo $component->searchbar('','search','search-bar--class2','Search by name,specilaity','searchbar');?>
 </div>

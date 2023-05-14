@@ -8,14 +8,46 @@ use app\models\Medicine;
 
 use app\core\Application;
 use app\core\component\Component;
+use app\models\Order;
+use app\models\PatientNotification;
 use app\models\Prescription;
 
     $component=new Component();
     $prescriptionModel=new Prescription();
     $grand_total=0;
-
+    $orderModel=new Order();
+    $notificationModel=new PatientNotification();
+    $component=new Component();
+  
 ?>
 <?php if($order): ?>
+    <?php if($notificationModel->fetchAssocAll(['order_ID'=>$order['order_ID'],'is_read'=>0])):?>
+        <?php $meds=$prescriptionModel->checkAmount($order['order_ID']); ?>
+        <div class="noti-black-bg">
+    
+        </div>
+        <div class="track-popup">
+            <h2>Sorry,Following Medicines are not available</h2>
+            <table>
+                <tr><th>Medicine</th><th>Cause</th></tr>
+                <?php foreach($meds as $med): ?>
+                    <tr><td><?=$med?></td><td>Out of Stock</td></tr>
+                <?php endforeach;?>
+            </table>
+            <div><?=$component->button('btn','','Accept Order','button--class-0','acpt') ?>
+            <?=$component->button('btn','','Reject Order','button--class-0','rjct') ?></div>
+            <script>
+                const acpt=document.getElementById('acpt');
+                const rjct=document.getElementById('rjct');
+                acpt.addEventListener('click',()=>{
+                    location.href=<?='"'."patient-dashboard?spec=orders&cmd=accept&id=".$order['order_ID'].'"'?>;
+                })
+                rjct.addEventListener('click',()=>{
+                    location.href=<?='"'."patient-dashboard?spec=orders&cmd=reject&id=".$order['order_ID'].'"'?>;
+                })
+            </script>
+        </div>
+    <?php endif;?>
 
   <?php 
             $pending='';
@@ -65,7 +97,7 @@ use app\models\Prescription;
                 <tr><td>Address</td><td>: <?=$order['address'] ?></td></tr>
                 <tr><td>Time</td><td>: <?=substr($order['created_time'],0,5).(($order['created_time']>'12:00')?' PM':' AM')?></td></tr>
                 <tr><td>Date</td><td>: <?=$order['created_date']?></td></tr>
-                <tr><td>Payment</td><td>: <?=$order['payment_status']?></td></tr>
+                <tr><td>Payment</td><td>: <?=ucfirst($order['payment_status'])?></td></tr>
             
             </table>
         </div>
@@ -159,13 +191,13 @@ use app\models\Prescription;
             <table>
                 
                 <tr><th>Prescription</th><th>Price</th></tr>
+                <?php $set=false;?>
                 <?php foreach($prescriptions as $prescription): ?>
                     <tr>
                         <td>
                             <a href=<?="'"."handle-documentation?spec=prescription&mod=view&id=".$prescription['prescription_ID']."'"?>><?=(($prescription['type']=='E-prescription')?"E-Prescription-":"SoftCopy Prescription-").$prescription['prescription_ID']?></a>
                         </td>
                         <td>
-                            <?php $set=false;?>
                             <?php if($prescription['type']=='E-prescription'): ?>
                                 <?=($prescriptionModel->getPrice($prescription['prescription_ID'])==''?'':'LKR'.$prescriptionModel->getPrice($prescription['prescription_ID']).".00") ?>
                                 <?php $grand_total=$grand_total+(($prescriptionModel->getPrice($prescription['prescription_ID'])=='')?0:$prescriptionModel->getPrice($prescription['prescription_ID']))?>
@@ -199,7 +231,7 @@ use app\models\Prescription;
                <h3><?="Prescription Price :LKR ".number_format($total,'2','.','')?></h3>
             </div>
            <?php endif; ?>
-           <?php if($val):?>
+           <?php if(!$set):?>
             <div class="total-container">
                 <h3><?="Total Price :LKR ".number_format($total,'2','.','')?></h3>
            </div>
@@ -227,10 +259,10 @@ use app\models\Prescription;
             </div>
             <div>
                 <table border="0">
-                    <tr><td><h3>Recipient Name</h3></td><td><h3>: <?=(Application::$app->session->get('userObject')->name)?></h3></td></tr>
+                    <tr><td><h3>Recipient Name</h3></td><td><h3>: <?=$order['name']?></h3></td></tr>
                     <tr><td>Time</td><td>: <?=substr($order['created_time'],0,5).(($order['created_time']>'12:00')?' PM':' AM')?></td></tr>
                     <tr><td>Date</td><td>: <?=$order['created_date']?></td></tr>
-                    <tr><td><h3>Payment</h3></td><td><h3>: <?=$order['payment_status']?></h3></td></tr>
+                    <tr><td><h3>Payment</h3></td><td><h3>: <?=ucfirst($order['payment_status'])?></h3></td></tr>
                 
                 </table>
             </div>
@@ -321,7 +353,8 @@ use app\models\Prescription;
                 Total Price of Softcopy Prescriptions are calculated after the processing of order
             </div>
         </div>
-            <table>
+        <table>
+                <?php $set=false;?>
                 <tr><th>Prescription</th><th>Price</th></tr>
                 <?php foreach($prescriptions as $prescription): ?>
                     <tr>
@@ -329,13 +362,12 @@ use app\models\Prescription;
                             <a href=<?="'"."handle-documentation?spec=prescription&mod=view&id=".$prescription['prescription_ID']."'"?>><?=(($prescription['type']=='E-prescription')?"E-Prescription-":"SoftCopy Prescription-").$prescription['prescription_ID']?></a>
                         </td>
                         <td>
-                            <?php $total=0;?>
+                          
                             <?php $val=0;?>
-                            <?php $set=false;?>
                             <?php if($prescription['type']=='E-prescription'): ?>
-                                <?=($prescriptionModel->getPrice($prescription['prescription_ID'])==''?'':'LKR '.number_format($prescriptionModel->getPrice($prescription['prescription_ID']))) ?>
+                                <?=($prescriptionModel->getPrice($prescription['prescription_ID'])==''?'':'LKR '.number_format($prescriptionModel->getPrice($prescription['prescription_ID']),'2','.','')) ?>
                                 <?php $grand_total=$grand_total+(($prescriptionModel->getPrice($prescription['prescription_ID'])=='')?0:$prescriptionModel->getPrice($prescription['prescription_ID']))?>
-                                <?php $total=$total+(($prescriptionModel->getPrice($prescription['prescription_ID'])=='')?0:$prescriptionModel->getPrice($prescription['prescription_ID']))?>;
+                                <?php $total=$total+(($prescriptionModel->getPrice($prescription['prescription_ID'])=='')?0:$prescriptionModel->getPrice($prescription['prescription_ID']))?>
                             <?php else: ?>
                                 <?php $val=$prescriptionModel->getPatientPrescriptionPrice($prescription['prescription_ID']);?>
                                 <?php if($val): ?>
@@ -365,7 +397,7 @@ use app\models\Prescription;
                <h3><?="Prescription Price :LKR ".number_format($total,'2','.','')?></h3>
             </div>
            <?php endif;?>
-            <?php if($set):?>
+            <?php if(!$set):?>
             <div class="total-container">
                 <h3><?="Total Price :LKR ".number_format($total,'2','.','')?></h3>
            </div>

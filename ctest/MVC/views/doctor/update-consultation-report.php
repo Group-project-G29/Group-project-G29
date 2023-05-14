@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="write-referral-btn">
-            <?= $component->button('','submit','Add Report','button--class-0'); ?>
+            <?= $component->button('','submit','Update Report','button--class-0'); ?>
         </div>
         <div>
             <?= $form->textarea($model,'examination','examination','Examination',10,120,$model->examination);?>

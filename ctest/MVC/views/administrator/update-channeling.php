@@ -9,17 +9,32 @@ $form=new Form();
 $form->begin('update-channeling?cmd=update&id='.Application::$app->session->get('selected_channeling'),'post');
 $component=new Component();
 $employeemodel=new Employee();
+
+
 ?>
 <section>
     <section class="upper-update">
         <div class="update-deatails">
             <div class="update-deatails-items">
-                    <?=$form->spanfield($model,'speciality','Speciality','field','text',''); ?>
+                <table class="desc">
+                    <tr><td>Doctor Name :</td><td><?=$doctor?></td></tr>
+                    <tr><td>Scheduled Day :</td><td><?=$day ?></td></tr>
+                </table>
                     <?=$form->spanfield($model,'fee','Fee','field','number',''); ?>
                     <?php if(isset($roomOverlaps)):?>
-                        <img src="media/images/common/delete.png" class="delete-btn" id="room">
-                        <div>
-                            <?php var_dump($roomOverlaps); ?>
+                        <div class="nurse-error-container">
+                            <div>
+                                <img src="media/images/common/delete.png" class="delete-btn" id="room">
+                            </div>
+                            <div class="error-texts">
+                                <?php if(isset($roomOverlaps[count($roomOverlaps)-1]) and $roomOverlaps[count($roomOverlaps)-1]['channeling_ID']!=$roomOverlaps[0]['channeling_ID']): ?>
+                                    <?="<br><a class='sh-error' href=update-channeling?cmd=view&id=".$roomOverlaps[0]['channeling_ID'].">"."<font color='red'>Room is assigned to channeling ".$roomOverlaps[count($roomOverlaps)-1]['channeling_ID']." at ".$roomOverlaps[count($roomOverlaps)-1]['time'].(($roomOverlaps[count($roomOverlaps)-1]['time']>'12.00')?'PM':'AM' )." </font></a>"?> 
+                                    <?php else:?>
+                                    <?php echo "<a class='sh-error' href=update-channeling?cmd=view&id=".$roomOverlaps[0]['channeling_ID'].">"."Room is assigned to channeling ".$roomOverlaps[0]['channeling_ID']." at ".$roomOverlaps[0]['time'].(($roomOverlaps[count($roomOverlaps)-1]['time']>'12.00')?'PM':'AM')."</a>" ?> 
+                                    
+                                    <?php endif;?>
+                        
+                            </div>
                         </div>
                     <?php endif;?>
                     <?=$form->select($model,'room','Room','field',$rooms,'')?>
@@ -39,11 +54,18 @@ $employeemodel=new Employee();
                     <div>
                         <h3>Assigned Nurses</h3>
                         <?php if(isset($nurseOverlaps)):?>
-                            <div class="overlaps">
-                            <img src="media/images/common/delete.png" class="delete-btn" id="nurse">
-                            <div>
-                                <?php var_dump($nurseOverlaps); ?>
-                            </div>
+                            <div class="nurse-error-container">
+                                <div>
+                                    <img src="media/images/common/delete.png" class="delete-btn" id="room">
+                                </div>
+                                <div class="error-texts">
+                                    <?php if($nurseOverlaps && isset($nurseOverlaps[count($nurseOverlaps)-1]) and $nurseOverlaps[count($nurseOverlaps)-1]['emp_ID']!=$nurseOverlaps[0]['emp_ID']): ?>
+                                        <?="<br><a class='sh-error' href=update-channeling?cmd=view&id=".$nurseOverlaps[0]['channeling_ID'].">"."<font color='red'>Nurse".$nurseOverlaps[count($nurseOverlaps)-1]."is assigned to channeling ".$nurseOverlaps[count($nurseOverlaps)-1]['channeling_ID']." at ".$nurseOverlaps[count($nurseOverlaps)-1]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM')." </font></a>" ?> 
+                                        <?php else:?>
+                                    <?php echo "<a class='sh-error' href=update-channeling?cmd=view&id=".$nurseOverlaps[0]['channeling_ID'].">"."Nurse ".$nurseOverlaps[0]['name']." is assigned to channeling ".$nurseOverlaps[0]['channeling_ID']." at ".$nurseOverlaps[0]['time'].(($nurseOverlaps[count($nurseOverlaps)-1]['time']>'12.00')?'PM':'AM')."</a>" ?> 
+                                        <?php endif;?>
+                            
+                                </div>
                             </div>
                         <?php endif;?>
                         <div class="nurse-container"></div>
@@ -74,6 +96,7 @@ $employeemodel=new Employee();
         <?php $form->end() ?>
     </section>
     <section class="lower-update">
+       <center> <h2>Currently Opened Channelings</h2> </center>
         <?php foreach($openedchannelings as $op): ?>
             <div class="open-channeling">
                 <div class="open-channeling-date flex">

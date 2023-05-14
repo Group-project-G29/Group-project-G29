@@ -95,7 +95,7 @@ class NurseController extends Controller{
         $date = date("Y-m-d");
         // var_dump($date);exit;
         
-        $openedChanneling=$OpenedChanneling->customFetchAll("SELECT * FROM `opened_channeling` INNER JOIN `channeling` ON opened_channeling.channeling_ID = channeling.channeling_ID INNER JOIN `employee` ON channeling.doctor = employee.nic INNER JOIN `nurse_channeling_allocataion` ON channeling.channeling_ID = nurse_channeling_allocataion.channeling_ID WHERE channeling_date = '$date' AND nurse_channeling_allocataion.emp_ID = $eID;");
+        $openedChanneling=$OpenedChanneling->customFetchAll("SELECT * FROM `opened_channeling` INNER JOIN `channeling` ON opened_channeling.channeling_ID = channeling.channeling_ID INNER JOIN `employee` ON channeling.doctor = employee.nic INNER JOIN `nurse_channeling_allocataion` ON channeling.channeling_ID = nurse_channeling_allocataion.channeling_ID WHERE channeling_date = '$date' AND nurse_channeling_allocataion.emp_ID = $eID order by channeling.type");
         // var_dump($openedChanneling);exit;
         return $this->render('nurse/today-channelings',[
             "openedChanneling" => $openedChanneling
@@ -124,7 +124,7 @@ class NurseController extends Controller{
             
             // var_dump($OpenedChanneling->opened_channeling_ID);exit;
 
-            $paiedPatient = count($apointment->customFetchAll("SELECT patient_ID FROM `appointment` WHERE opened_channeling_ID=$OpenedChanneling->opened_channeling_ID AND payment_status='Payed';"));
+            $paiedPatient = count($apointment->customFetchAll("SELECT patient_ID FROM `appointment` WHERE opened_channeling_ID=$OpenedChanneling->opened_channeling_ID AND payment_status='done' OR type='labtest';"));
             // var_dump($paiedPatient);exit;
      
         }
@@ -261,7 +261,7 @@ class NurseController extends Controller{
         $docNIC = $channeling[0]['doctor'];
         $doctor = $Doctor->customFetchAll("SELECT * FROM `employee` WHERE nic=$docNIC;");
 
-        $patient = $Patient->customFetchAll("SELECT * FROM `opened_channeling` INNER JOIN `appointment` ON opened_channeling.opened_channeling_ID = appointment.opened_channeling_ID INNER JOIN `patient` ON appointment.patient_ID = patient.patient_ID WHERE opened_channeling.opened_channeling_ID=$id AND payment_status='done';");
+        $patient = $Patient->customFetchAll("SELECT * FROM `opened_channeling` INNER JOIN `appointment` ON opened_channeling.opened_channeling_ID = appointment.opened_channeling_ID INNER JOIN `patient` ON appointment.patient_ID = patient.patient_ID WHERE opened_channeling.opened_channeling_ID=$id AND payment_status='done' OR appointment.type = 'labtest' ORDER BY queue_no;");
        
         // var_dump($patient);exit;
 
@@ -285,15 +285,31 @@ class NurseController extends Controller{
                 $count = $count +1;
             }
             // var_dump($count, $qNumbers);exit;
-            if($qNumOk == -1){
-            return $this->render('nurse/nurse-list-patient',[
-                "patient" => $patient,
-                "number" => $number,
-                "id" => $id,
-                "qNumber" => $qNumOk,
-                "payedAppoCount" => $payedAppoCount,
-                "prevNum" => $prevNum
-            ]);}
+            if($qNumOk == -1){ 
+                $patient = $Patient->customFetchAll("SELECT * FROM `opened_channeling` INNER JOIN `appointment` ON opened_channeling.opened_channeling_ID = appointment.opened_channeling_ID INNER JOIN `patient` ON appointment.patient_ID = patient.patient_ID WHERE opened_channeling.opened_channeling_ID=$id AND queue_no = $number;"); 
+                $newNumber = $patient[0]['queue_no']??'';
+
+                if($patient){
+                    return $this->render('nurse/nurse-list-patient-not-payed',[
+                        "channeling" => $channeling[0],
+                        "doctor" => $doctor[0],
+                        "patient" => $patient[0],
+                        "number" => $newNumber,
+                        "id" => $id,
+                        "qNumber" => $qNumOk,
+                        "payedAppoCount" => $payedAppoCount,
+                        "prevNum" => $prevNum
+                    ]);
+                }
+                return $this->render('nurse/nurse-list-patient-not-payed',[
+                    "channeling" => $channeling[0],
+                    "doctor" => $doctor[0],
+                    "number" => $number,
+                    "id" => $id,
+                    "payedAppoCount" => $payedAppoCount,
+                    "prevNum" => $prevNum
+                ]);
+            }
         }
         // var_dump($reApp);exit;
         if($qNumOk == -1){
@@ -350,7 +366,7 @@ class NurseController extends Controller{
             "number" => $newNumber,
             "id" => $id,
             "tests" => $tests,
-            "testValues" => $testValue,
+            "testValues" => $testValue??'',
             "payedAppoCount" => $payedAppoCount,
             "prevNum" => $patient[$prevNum-1]['queue_no']??''
         ]);

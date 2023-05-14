@@ -23,8 +23,10 @@ $chart=new ChartModel();
 $class='';
 $popup=Application::$app->session->get('popup')??null;
 if($popup==null || $popup=='unset') $class='hide';
-$popup=Application::$app->session->set('popup','unset')??null;
+Application::$app->session->set('popup','unset')??null;
+
 ?>
+
     <?php $component=new Component(); ?>
     <div class=<?='"background--1'.' '.$class.'"'?>> </div>
     <div class=<?='"labtest-popup'.' '."$class".'"'?> id=<?="'".$class."'"?>>

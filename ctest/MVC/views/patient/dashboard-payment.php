@@ -34,7 +34,7 @@ use app\models\Payment;
                             break;
                         case 'lab':
                             $labreportDetail=$labreport->getReportByRequest($payment['request_ID']);
-                            $name=$labreportDetail[0]['title'];
+                            $name=$labreportDetail[0]['title']??'';
                             break;
 
                     }    

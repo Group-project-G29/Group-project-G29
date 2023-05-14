@@ -22,9 +22,7 @@ class Medicine extends DbModel{
         if($this->amount==0){
             $this->availability="NA";
         }
-        
-        return parent::save();
-        
+        return parent::save(); 
     }
  
     public function rules(): array
@@ -176,6 +174,10 @@ class Medicine extends DbModel{
 
     public function getMedicinePrice($med_ID){
         return $this->fetchAssocAll(['med_ID'=>$med_ID])[0]['unit_price'];
+    }
+
+    public function MedicineIDbyNameStrength($name,$strength){
+        return $this->fetchAssocAll(['name'=>$name,'strength'=>$strength]);
     }
 
     

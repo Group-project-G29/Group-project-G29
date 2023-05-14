@@ -16,6 +16,7 @@ abstract class Model{
     public const RULE_NUMBERS='num';
     public const RULE_PIN_VALIDATION="pin_confirm";
     public const RULE_TIME="time";
+    public const RULE_DURATION="time";
 
     public const RULE_INCOMPLETE_PAYMENT="asa";
 
@@ -90,6 +91,12 @@ abstract class Model{
                
                     $this->addError($attribute,self::RULE_MATCH);
                 }
+                if($ruleName==self::RULE_DURATION){
+                    if($value>7){
+                        $this->addError($attribute,self::RULE_MATCH);
+
+                    }
+                }
                 if($ruleName==self::RULE_UNIQUE){
                     $tablename=$rule['tablename'];
                     $attribute=$rule['attribute'];
@@ -129,7 +136,7 @@ abstract class Model{
                 if($ruleName==self::RULE_PIN_VALIDATION ){
 
                 }
-                if($ruleName==self::RULE_TIME && $rule['start_date'] && $rule['date'] && ($rule['start_date']==Date('Y-m-d') && $rule['today']==date('l',strtotime(Date('Y-m-d'))) )  && $value<$time->addTime(Date('H:i'),'00:30')){
+                if($ruleName==self::RULE_TIME && $rule['start_date'] && $rule['date'] && ($rule['start_date']==Date('Y-m-d') && $rule['date']==date('l',strtotime(Date('Y-m-d'))) )  && $value<$time->addTime(Date('H:i'),'00:30')){
                     $this->addError($attribute,self::RULE_TIME);
                     
                     
@@ -162,19 +169,22 @@ abstract class Model{
             self::RULE_MIN=>"Min length of this field must be {min}",
             self::RULE_MAX=>"Max length of this field must be {max}",
             self::RULE_MATCH=>"Passwords should match",
-            self::RULE_UNIQUE=>"{attribute} already exists",
+            self::RULE_UNIQUE=>"{attribute} already Exists",
             self::RULE_MAX_FILE_SIZE=>"Maximum size of the file should be {max_size}",
             self::RULE_CHARACTER_VALIDATION=>"Wrong {attribute}",
             self::RULE_PASSWORD_VALIDATION=>"Password should be at least length 8</br>
-                                            and should contain</br>
-                                            at least one upper case and lower case letter</br>
-                                            at least one number</br>
-                                            at least one special character
+                                            and should contain,</br>
+                                            <ul>
+                                                <li>at least one upper case and lower case letter</li>
+                                                <li>at least one number</li>
+                                                <li>at least one special character</li>
+                                            </ul>
                                             ",
             self::RULE_DATE_VALIDATION=>"Passsed date is chosen",
             self::RULE_NUMBERS=>"This field should be numeric type",
             self::RULE_PIN_VALIDATION=>"Incorrect Pin",
-            self::RULE_TIME=>"Wrong time"
+            self::RULE_TIME=>"Wrong time",
+            self::RULE_DURATION=>"Maximum Channeling Duration is 7 hours"
             // self::RULE_INCOMPLETE_PAYMENT=>"Payment not done"
         ];
     }

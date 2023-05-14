@@ -56,6 +56,16 @@ class LabTestRequest extends DbModel{
         $model->status='pending';
         return $model->savenofiles();
     }
+    public function isThereTest($name){
+        $labtest=new LabTest();
+        $result=$labtest->fetchAssocAll(['name'=>$name]);
+        if($result){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     public function isExist($name){
         $patientID=Application::$app->session->get('cur_patient');
         $doctor=Application::$app->session->get('userObject')->nic;

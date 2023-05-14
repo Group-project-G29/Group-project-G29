@@ -1,110 +1,101 @@
 <?php
 
-// var_dump($template);
-// var_dump($template_name_list);
-// exit;
-
 use app\core\component\Component;
-
+// var_dump($testDetail);
+// exit;
 $component = new Component();
-
-
-
 
 use app\core\DbModel;
 use \app\core\form\Form; ?>
 
-<!-- </div> -->
 
 
-<div class="semi-header-container" style="margin-left:-10vw; min-height:55vh">
+<div class="semi-header-container" style="margin-left:-10vw; min-height:55vh;">
     <div class="field-container">
-        <div class="header-container" style="display:flex; flex-direction:column; margin-top:-15vh; ">
-            <div style="text-align:left; margin-left:14vw; display:flex; flex-direction:column; gap:3vh;">
-           <h3><b>Test Name :</b><?=$testDetail[0]['name']?></h3>
-           <h3><b> Test Fee :</b><?="LKR ".$testDetail[0]['test_fee'].".00"?></h3>
-           <h3><b> Hospital Fee :</b><?="LKR ".$testDetail[0]['hospital_fee'].".00"?></h3>
+        <div style="background-color:#F8F8F8;width:100%;margin:3vw;border:0.2px solid">
+            <div class="header-container" style="display:flex; flex-direction:column; margin-top:-15vh; ">
+                <div style="text-align:left; margin-left:9vw; display:flex; flex-direction:column; gap:3vh;">
+                    <h3><b>Test Name :</b><?= $testDetail[0]['name'] ?></h3>
+                    <h3><b> Test Fee :</b><?= "LKR " . $testDetail[0]['test_fee'] . ".00" ?></h3>
+                    <h3><b> Hospital Fee :</b><?= "LKR " . $testDetail[0]['hospital_fee'] . ".00" ?></h3>
+                </div>
+                <div class="" style="margin-top:3vw;margin-left:14vw;margin-bottom:3vw">
+                    <?= $component->button('btn', '', 'Add Template', 'button--class-0', 'btn-1'); ?>
+                    <?= $component->button('btn', '', 'Update', 'button--class-0 update ', $testDetail[0]['name']); ?>
+                    
+                </div>
             </div>
-          <div class="" style="margin-top:3vw">
-            <?= $component->button('btn', '', 'Add Template', 'button--class-0', 'btn-1'); ?>
-            <?= $component->button('btn', '', 'Update', 'button--class-11', $testDetail[0]['name']); ?>
-            </div>
-    </div>
-       
-
-
+        </div>
     </div>
 </div>
-    <!-- popup -->
-    
-    <div class="popup-container hide" id="popup">
-        <div class="modal-form" >
+<!-- popup -->
 
-            
-            <div class="form-body" style="margin-top:0vw ;">
-                <h1>Add Report Template</h1>
-                <br>
-                <?php $form = Form::begin('lab-add-new-template?cmd=tmp&id=' .$testDetail[0]['name'], 'post'); ?>
+<div class="popup-container hide" id="popup">
+    <div class="modal-form">
 
-                <?php echo $form->field($templatemodel, 'title', 'Title*', 'field-2', 'text', 'title-1') ?>
-                <?php echo $form->field($templatemodel, 'subtitle', 'Sub Title', 'field-2', 'text', 'sub') ?>
-               
-                <div class="button" style="margin-top: 2vh;padding-left:15vw">
+
+        <div class="form-body" style="margin-top:0vw ;">
+            <h1>Add Report Template</h1>
+            <br>
+            <?php $form = Form::begin('lab-add-new-template?cmd=tmp&id=' . $testDetail[0]['name'], 'post'); ?>
+
+            <?php echo $form->field($templatemodel, 'title', 'Title*', 'field-2', 'text', 'title-1') ?>
+            <?php echo $form->field($templatemodel, 'subtitle', 'Sub Title', 'field-2', 'text', 'sub') ?>
+
+            <div class="button" style="margin-top: 2vh;padding-left:15vw">
                 <?= $component->button('btn', 'submit', 'NEXT', 'button--class-0 width-10', 'btn-2'); ?>
-                </div>
-
-                <?php Form::end() ?>
-
             </div>
-            <?= $component->button('btn', 'submit', "&times", '', 'closebtn'); ?>
+
+            <?php Form::end() ?>
 
         </div>
+        <?= $component->button('btn', 'submit', "&times", '', 'closebtn'); ?>
 
     </div>
-  
 
-    <script>
-       
-        
-        var popup = document.getElementById("popup");
-        // popup.style.display = "none";
-        elementsArray = document.querySelectorAll("#btn-2");
-        console.log(elementsArray);
-        elementsArray.forEach(function(elem) {
-            elem.addEventListener("click", function() {
-                location.href = 'lab-test-template'; //pass the variable value
-            });
+</div>
+
+
+<script>
+    var popup = document.getElementById("popup");
+    // popup.style.display = "none";
+    elementsArray = document.querySelectorAll("#btn-2");
+    console.log(elementsArray);
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href = 'lab-test-template'; //pass the variable value
         });
+    });
 
-        
-        // popup.style.display = "none";
-        elementsArray = document.querySelectorAll(".button--class-11");
-        console.log(elementsArray);
-        elementsArray.forEach(function(elem) {
-            elem.addEventListener("click", function() {
-                location.href = 'lab-test-update?mod=update&id=' + elem.id; 
-            });
+
+    // popup.style.display = "none";
+    elementsArray = document.querySelectorAll(".update");
+    console.log(elementsArray);
+    elementsArray.forEach(function(elem) {
+        elem.addEventListener("click", function() {
+            location.href = 'lab-test-update?mod=update&id=' + elem.id;
         });
-        
-        var closebtn = document.getElementById("closebtn");
-        var addtemplatebtn = document.getElementById("btn-1");
-        // var add = document.getElementById("btn-2");
-        addtemplatebtn.onclick = function(event) {
-            event.preventDefault();
-            popup.style.display = "block";
+    });
 
-        }
-        closebtn.onclick = function() {
-            popup.style.display = "none";
-        }
-        // add.onclick=function(x){
-        //     // x.disable=true;
-        //     popup.style.display="none";
-        // }
+    var closebtn = document.getElementById("closebtn");
+    var addtemplatebtn = document.getElementById("btn-1");
+    // var add = document.getElementById("btn-2");
+    addtemplatebtn.onclick = function(event) {
+        event.preventDefault();
+        popup.style.display = "block";
 
-        // window.onclick = function(event) {
-        //     if (event.target == popup) {
+    }
+    closebtn.onclick = function() {
+        popup.style.display = "none";
+    }
+    // add.onclick=function(x){
+    //     // x.disable=true;
+    //     popup.style.display="none";
+    // }
 
-        //     }
-        // }
-    </script>
+    // window.onclick = function(event) {
+    //     if (event.target == popup) {
+
+    //     }
+    // }
+</script>
