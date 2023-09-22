@@ -22,4 +22,4 @@
 ## Technologies
 The system is built on a framework made from scratch, developed using <a href="https://laravel.com/">Laravel </a> concepts. Development architecture is MVC.
 ### Languages: PHP, Javascript
-### Frontedn technologies: CSS, HTML
+#### Frontend technologies: CSS, HTML
